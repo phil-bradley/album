@@ -14,11 +14,11 @@ import javax.swing.JScrollPane;
  *
  * @author Philip.Bradley
  */
-public class PageContainerPanel extends AppPanel {
+public class PageSetContainerPanel extends AppPanel {
 
     private final PageSetPanel pageSetPanel = new PageSetPanel();
 
-    public PageContainerPanel() {
+    public PageSetContainerPanel() {
 
         JScrollPane scrollPane = new JScrollPane(pageSetPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);

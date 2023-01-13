@@ -38,7 +38,7 @@ public class MainFrame extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         imageLibraryView2 = new ie.philb.album.ui.imagelibrary.ImageLibraryView();
         jSplitPane2 = new javax.swing.JSplitPane();
-        pageContainerPanel1 = new ie.philb.album.ui.page.PageContainerPanel();
+        pageContainerPanel1 = new ie.philb.album.ui.page.PageSetContainerPanel();
         pageOverviewPanel1 = new ie.philb.album.ui.page.PageOverviewPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -101,7 +101,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JToolBar jToolBar1;
-    private ie.philb.album.ui.page.PageContainerPanel pageContainerPanel1;
+    private ie.philb.album.ui.page.PageSetContainerPanel pageContainerPanel1;
     private ie.philb.album.ui.page.PageOverviewPanel pageOverviewPanel1;
     // End of variables declaration//GEN-END:variables
 }
