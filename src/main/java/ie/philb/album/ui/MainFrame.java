@@ -57,7 +57,7 @@ public class MainFrame extends javax.swing.JFrame {
         jSplitPane1.setDividerLocation(320);
         jSplitPane1.setLeftComponent(imageLibraryView2);
 
-        jSplitPane2.setDividerLocation(400);
+        jSplitPane2.setDividerLocation(500);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane2.setTopComponent(pageContainerPanel1);
         jSplitPane2.setRightComponent(pageOverviewPanel1);

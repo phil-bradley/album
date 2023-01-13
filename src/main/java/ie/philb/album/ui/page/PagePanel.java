@@ -5,36 +5,56 @@
 package ie.philb.album.ui.page;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.AppListener;
 import ie.philb.album.ui.pagesizer.IsoPageSizer;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.ImagePanel;
+import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 
 /**
  *
  * @author Philip.Bradley
  */
-public class Page extends AppPanel {
+public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
 
     private ImagePanel imagePanel = new ImagePanel(null);
     private ImageIcon icon = null;
+    private boolean isSelected = false;
 
-    public Page() {
+    public PagePanel() {
         background(Color.WHITE);
         setLayout(null);
         add(imagePanel);
 
-        AppContext.INSTANCE.addListener((ImageLibraryEntry entry) -> {
-            icon = entry.getIcon();
-            imagePanel.setIcon(icon);
-
-            repaint();
-            revalidate();
-            repaint();
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                logger.info("Setting image entry listener to " + PagePanel.this);
+                AppContext.INSTANCE.setImageEntryListener(PagePanel.this);
+                setSelected(true);
+            }
         });
+
+        AppContext.INSTANCE.addListener(new AppListener() {
+            @Override
+            public void listenerSelected(ImageEntrySelectionListener listener) {
+                setSelected(false);
+            }
+
+        });
+    }
+
+    private void setSelected(boolean selected) {
+        this.isSelected = selected;
+        repaint();
+        revalidate();
+        repaint();
     }
 
     public void setHeight(int height) {
@@ -59,10 +79,22 @@ public class Page extends AppPanel {
         int x = inset;
         int y = inset;
 
-        g.setColor(Color.BLUE);
+        Color penColor = (isSelected) ? Color.orange : Color.BLUE;
+        g.setColor(penColor);
         g.drawRect(x, y, width, height);
 
         imagePanel.setSize(width, height);
         imagePanel.setBounds(x, y, width, height);
+    }
+
+    @Override
+    public void imageSelected(ImageLibraryEntry entry) {
+
+        icon = entry.getIcon();
+        imagePanel.setIcon(icon);
+
+        repaint();
+        revalidate();
+        repaint();
     }
 }

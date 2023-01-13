@@ -24,21 +24,21 @@ public class PageSetPanel extends AppPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(PageSetPanel.class);
 
-    private final List<Page> pages = new ArrayList<>();
+    private final List<PagePanel> pages = new ArrayList<>();
 
     public PageSetPanel() {
         background(Color.GRAY);
         setLayout(null);
 
-        addPage(new Page());
-        addPage(new Page());
-        addPage(new Page());
-        addPage(new Page());
-        addPage(new Page());
+        addPage(new PagePanel());
+        addPage(new PagePanel());
+        addPage(new PagePanel());
+        addPage(new PagePanel());
+        addPage(new PagePanel());
 
     }
 
-    public final void addPage(Page page) {
+    public final void addPage(PagePanel page) {
         pages.add(page);
         add(page);
         revalidate();
@@ -67,7 +67,7 @@ public class PageSetPanel extends AppPanel {
         int horizontalInset = defaultInset;
         int verticalInset = (parentHeight - pageHeight) / 2;
 
-        for (Page page : pages) {
+        for (PagePanel page : pages) {
             page.setWidth(pageWidth);
             page.setBounds(horizontalInset, verticalInset, page.getWidth(), page.getHeight());
             horizontalInset += pageWidth + defaultInset;
