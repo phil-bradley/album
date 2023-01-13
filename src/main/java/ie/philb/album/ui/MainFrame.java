@@ -37,7 +37,9 @@ public class MainFrame extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         imageLibraryView2 = new ie.philb.album.ui.imagelibrary.ImageLibraryView();
+        jSplitPane2 = new javax.swing.JSplitPane();
         pageContainerPanel1 = new ie.philb.album.ui.page.PageContainerPanel();
+        pageOverviewPanel1 = new ie.philb.album.ui.page.PageOverviewPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -54,7 +56,13 @@ public class MainFrame extends javax.swing.JFrame {
 
         jSplitPane1.setDividerLocation(320);
         jSplitPane1.setLeftComponent(imageLibraryView2);
-        jSplitPane1.setRightComponent(pageContainerPanel1);
+
+        jSplitPane2.setDividerLocation(400);
+        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane2.setTopComponent(pageContainerPanel1);
+        jSplitPane2.setRightComponent(pageOverviewPanel1);
+
+        jSplitPane1.setRightComponent(jSplitPane2);
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -91,7 +99,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JToolBar jToolBar1;
     private ie.philb.album.ui.page.PageContainerPanel pageContainerPanel1;
+    private ie.philb.album.ui.page.PageOverviewPanel pageOverviewPanel1;
     // End of variables declaration//GEN-END:variables
 }
