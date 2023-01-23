@@ -34,13 +34,9 @@ public class ImagePanel extends AppPanel {
 
         Insets insets = getInsets();
 
-        int availableHeight = getHeight() - insets.top - insets.bottom;
-        int availableWidth = getWidth() - insets.left - insets.right;
+        int availableHeight = getBounds().height - insets.top - insets.bottom;
+        int availableWidth = getBounds().width - insets.left - insets.right;
 
-        if (availableHeight > 200) {
-            System.out.println("");
-        }
-        
         int iconWidth = imageIcon.getIconWidth();
         int iconHeight = imageIcon.getIconHeight();
 
@@ -50,8 +46,8 @@ public class ImagePanel extends AppPanel {
         int scaledHeight = (int) (iconHeight / scale);
 
         int x = (availableWidth - scaledWidth) / 2 + insets.left;
-        int y = (availableHeight - scaledHeight) / 2 + insets.top;
+        int y = 0;
 
-        g.drawImage(imageIcon.getImage(), x, y, x + scaledWidth, y + scaledHeight, 0, 0, iconWidth, iconHeight, null);
+        g.drawImage(imageIcon.getImage(), x, y, scaledWidth, scaledHeight, null);
     }
 }

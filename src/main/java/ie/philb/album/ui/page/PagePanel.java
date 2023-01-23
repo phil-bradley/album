@@ -8,11 +8,14 @@ import ie.philb.album.AppContext;
 import ie.philb.album.AppListener;
 import ie.philb.album.ui.pagesizer.IsoPageSizer;
 import ie.philb.album.ui.common.AppPanel;
+import ie.philb.album.ui.common.BoundsChecker;
 import ie.philb.album.ui.common.ImagePanel;
 import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -25,7 +28,9 @@ import java.util.List;
 public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
 
     private final List<PagePanelEntry> pagePanelEntries = new ArrayList<>();
-    private boolean isSelected = false;
+    private boolean isPageSelected = false;
+    private PagePanelEntry selectedEntry = null;
+
     private final PageLayout pageLayout;
 
     public PagePanel(PageLayout pageLayout) {
@@ -44,23 +49,42 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
+
+                PagePanel.this.selectedEntry = getSelectedEntry(getMousePosition());
+
                 logger.info("Setting image entry listener to " + PagePanel.this);
                 AppContext.INSTANCE.setImageEntryListener(PagePanel.this);
-                setSelected(true);
+                setPageSelected(true);
             }
         });
 
         AppContext.INSTANCE.addListener(new AppListener() {
             @Override
             public void listenerSelected(ImageEntrySelectionListener listener) {
-                setSelected(false);
+                setPageSelected(false);
             }
 
         });
     }
 
-    private void setSelected(boolean selected) {
-        this.isSelected = selected;
+    private PagePanelEntry getSelectedEntry(Point mousePosition) {
+
+        for (PagePanelEntry pagePanelEntry : pagePanelEntries) {
+
+            Rectangle r = pagePanelEntry.imagePanel.getBounds();
+            
+            BoundsChecker boundsChecker = new BoundsChecker(pagePanelEntry.imagePanel.getBounds());
+
+            if (boundsChecker.isBounded(mousePosition)) {
+                return pagePanelEntry;
+            }
+        }
+
+        return null;
+    }
+
+    private void setPageSelected(boolean selected) {
+        this.isPageSelected = selected;
         repaint();
         revalidate();
         repaint();
@@ -98,16 +122,15 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
         int x = (int) (pageEntry.getOffsetX() / millisToPx);
         int y = (int) (pageEntry.getOffsetY() / millisToPx);
 
-//        int marginOffsetX = (int) ((double) (pageLayout.getInsets().left) / millisToPx);
-//        int marginOffsetY = (int) ((double) (pageLayout.getInsets().top) / millisToPx);
-
-//        int x = entryOffsetX + marginOffsetX;
-//        int y = entryOffsetY + marginOffsetY;
-
         imagePanel.setSize(scaledWidth, scaledHeight);
-        imagePanel.setBounds(x, y, scaledWidth, scaledWidth);
+        imagePanel.setBounds(x, y, scaledWidth, scaledHeight);
 
-        Color penColor = (isSelected) ? Color.orange : Color.BLUE;
+        Color penColor = Color.LIGHT_GRAY;
+
+        if (isPageSelected && selectedEntry == pagePanelEntry) {
+            penColor = Color.ORANGE;
+        }
+
         g.setColor(penColor);
         g.drawRect(x, y, scaledWidth, scaledHeight);
 
@@ -118,7 +141,10 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
     public void imageSelected(ImageLibraryEntry entry) {
 
         for (PagePanelEntry pagePanelEntry : pagePanelEntries) {
-            pagePanelEntry.imagePanel.setIcon(entry.getIcon());
+
+            if (selectedEntry == pagePanelEntry) {
+                pagePanelEntry.imagePanel.setIcon(entry.getIcon());
+            }
         }
 
         repaint();
