@@ -15,7 +15,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.ImageIcon;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -23,14 +24,22 @@ import javax.swing.ImageIcon;
  */
 public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
 
-    private ImagePanel imagePanel = new ImagePanel(null);
-    private ImageIcon icon = null;
+    private final List<PagePanelEntry> pagePanelEntries = new ArrayList<>();
     private boolean isSelected = false;
+    private final PageLayout pageLayout;
 
-    public PagePanel() {
+    public PagePanel(PageLayout pageLayout) {
+        this.pageLayout = pageLayout;
         background(Color.WHITE);
         setLayout(null);
-        add(imagePanel);
+
+        for (PageEntry entry : pageLayout.getPageEntries()) {
+            PagePanelEntry ppe = new PagePanelEntry();
+            ppe.imagePanel = new ImagePanel(null);
+            ppe.pageEntry = entry;
+            pagePanelEntries.add(ppe);
+            add(ppe.imagePanel);
+        }
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -69,32 +78,57 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
     public void paint(Graphics g) {
         super.paint(g);
 
-        int w = getWidth();
-        int h = getHeight();
+        for (PagePanelEntry ppe : pagePanelEntries) {
+            paintEntry(g, ppe);
+        }
 
-        int inset = 10;
-        int width = w - inset * 2;
-        int height = h - inset * 2;
+    }
 
-        int x = inset;
-        int y = inset;
+    private void paintEntry(Graphics g, PagePanelEntry pagePanelEntry) {
+
+        PageEntry pageEntry = pagePanelEntry.pageEntry;
+        ImagePanel imagePanel = pagePanelEntry.imagePanel;
+
+        // First find the scaling factor to convert from mm to our size on screen
+        double millisToPx = (double) (pageLayout.getPageSpecification().width()) / (double) getWidth();
+
+        int scaledWidth = (int) (pageEntry.getWidth() / millisToPx);
+        int scaledHeight = (int) (pageEntry.getHeight() / millisToPx);
+
+        int x = (int) (pageEntry.getOffsetX() / millisToPx);
+        int y = (int) (pageEntry.getOffsetY() / millisToPx);
+
+//        int marginOffsetX = (int) ((double) (pageLayout.getInsets().left) / millisToPx);
+//        int marginOffsetY = (int) ((double) (pageLayout.getInsets().top) / millisToPx);
+
+//        int x = entryOffsetX + marginOffsetX;
+//        int y = entryOffsetY + marginOffsetY;
+
+        imagePanel.setSize(scaledWidth, scaledHeight);
+        imagePanel.setBounds(x, y, scaledWidth, scaledWidth);
 
         Color penColor = (isSelected) ? Color.orange : Color.BLUE;
         g.setColor(penColor);
-        g.drawRect(x, y, width, height);
+        g.drawRect(x, y, scaledWidth, scaledHeight);
 
-        imagePanel.setSize(width, height);
-        imagePanel.setBounds(x, y, width, height);
+        logger.info("Component has size " + getSize() + ", drawrect size {} {}", scaledWidth, scaledHeight);
     }
 
     @Override
     public void imageSelected(ImageLibraryEntry entry) {
 
-        icon = entry.getIcon();
-        imagePanel.setIcon(icon);
+        for (PagePanelEntry pagePanelEntry : pagePanelEntries) {
+            pagePanelEntry.imagePanel.setIcon(entry.getIcon());
+        }
 
         repaint();
         revalidate();
         repaint();
+    }
+
+    class PagePanelEntry {
+
+        ImagePanel imagePanel;
+        PageEntry pageEntry;
     }
 }

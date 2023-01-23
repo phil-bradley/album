@@ -12,8 +12,10 @@ import java.awt.Dimension;
  */
 public enum PageSpecification {
 
-    A4(210, 297),
-    USLetter(216, 279);
+    A4Portrait(210, 297),
+    A4Landscape(297, 210),
+    USLetterPortrait(216, 279),
+    USLetterLandscape(279, 216);
 
     private final int width;
     private final int height;
@@ -22,17 +24,17 @@ public enum PageSpecification {
         this.width = width;
         this.height = height;
     }
-    
+
     public int height() {
         return height;
     }
-    
+
     public int width() {
         return width;
     }
-    
+
     public Dimension size() {
         return new Dimension(width, height);
     }
-    
+
 }

@@ -23,8 +23,8 @@ public class PageEntryBuilder {
     }
     
     public PageEntryBuilder size(Dimension size) {
-        width(width);
-        height(height);
+        width((int) size.getWidth());
+        height((int) size.getHeight());
         return this;
     }
 

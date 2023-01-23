@@ -9,8 +9,6 @@ import ie.philb.album.ui.common.AppPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -30,11 +28,16 @@ public class PageSetPanel extends AppPanel {
         background(Color.GRAY);
         setLayout(null);
 
-        addPage(new PagePanel());
-        addPage(new PagePanel());
-        addPage(new PagePanel());
-        addPage(new PagePanel());
-        addPage(new PagePanel());
+        List<PageLayout> pageLayouts = new PageLayoutProvider().getPageLayouts();
+
+        for (PageLayout pageLayout : pageLayouts) {
+            addPage(new PagePanel(pageLayout));
+        }
+//        addPage(new PagePanel(pageLayouts.get(0)));
+//        addPage(new PagePanel(pageLayouts.get(1)));
+//        addPage(new PagePanel(pageLayouts.get(0)));
+//        addPage(new PagePanel(pageLayouts.get(0)));
+//        addPage(new PagePanel(pageLayouts.get(0)));
 
     }
 
