@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.page;
 
+import ie.philb.album.ui.common.ImagePanelFill;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Arrays;

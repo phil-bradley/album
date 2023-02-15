@@ -4,6 +4,9 @@
  */
 package ie.philb.album.ui.page;
 
+import ie.philb.album.ui.common.ImagePanelFill;
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author Philip.Bradley
@@ -14,12 +17,30 @@ public class PageEntry {
     private int height;
     private int offsetX;
     private int offsetY;
+    private ImageIcon icon;
+    private ImagePanelFill fill = ImagePanelFill.Vertical;
 
     public PageEntry(int width, int height, int offsetX, int offsetY) {
         this.width = width;
         this.height = height;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
+    }
+
+    public ImageIcon getIcon() {
+        return icon;
+    }
+
+    public void setIcon(ImageIcon icon) {
+        this.icon = icon;
+    }
+
+    public ImagePanelFill getFill() {
+        return fill;
+    }
+
+    public void setFill(ImagePanelFill fill) {
+        this.fill = fill;
     }
 
     public int getWidth() {

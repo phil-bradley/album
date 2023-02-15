@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.page;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.ui.pagesizer.IsoPageSizer;
 import ie.philb.album.ui.common.AppPanel;
 import java.awt.Color;
@@ -29,15 +30,12 @@ public class PageSetPanel extends AppPanel {
         setLayout(null);
 
         List<PageLayout> pageLayouts = new PageLayoutProvider().getPageLayouts();
-
+        AppContext.INSTANCE.setPageLayouts(pageLayouts);
+        
         for (PageLayout pageLayout : pageLayouts) {
             addPage(new PagePanel(pageLayout));
         }
-//        addPage(new PagePanel(pageLayouts.get(0)));
-//        addPage(new PagePanel(pageLayouts.get(1)));
-//        addPage(new PagePanel(pageLayouts.get(0)));
-//        addPage(new PagePanel(pageLayouts.get(0)));
-//        addPage(new PagePanel(pageLayouts.get(0)));
+
 
     }
 

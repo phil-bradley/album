@@ -4,6 +4,8 @@
  */
 package ie.philb.album.ui;
 
+import ie.philb.album.ui.command.CreatePdfCommand;
+import ie.philb.album.ui.command.ExitCommand;
 import java.awt.Dimension;
 import javax.swing.WindowConstants;
 
@@ -33,26 +35,33 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jToolBar1 = new javax.swing.JToolBar();
-        jButton1 = new javax.swing.JButton();
+        toolBar = new javax.swing.JToolBar();
+        btnCreate = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         imageLibraryView2 = new ie.philb.album.ui.imagelibrary.ImageLibraryView();
         jSplitPane2 = new javax.swing.JSplitPane();
         pageContainerPanel1 = new ie.philb.album.ui.page.PageSetContainerPanel();
         pageOverviewPanel1 = new ie.philb.album.ui.page.PageOverviewPanel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        menuBar = new javax.swing.JMenuBar();
+        menuFile = new javax.swing.JMenu();
+        menuItemCreatePdf = new javax.swing.JMenuItem();
+        menuItemExit = new javax.swing.JMenuItem();
+        menuEdit = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jToolBar1.setRollover(true);
+        toolBar.setRollover(true);
 
-        jButton1.setText("Go");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton1);
+        btnCreate.setText("Go");
+        btnCreate.setFocusable(false);
+        btnCreate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCreate.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnCreate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateActionPerformed(evt);
+            }
+        });
+        toolBar.add(btnCreate);
 
         jSplitPane1.setDividerLocation(320);
         jSplitPane1.setLeftComponent(imageLibraryView2);
@@ -64,25 +73,42 @@ public class MainFrame extends javax.swing.JFrame {
 
         jSplitPane1.setRightComponent(jSplitPane2);
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
+        menuFile.setText("File");
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        menuItemCreatePdf.setText("Create PDF");
+        menuItemCreatePdf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemCreatePdfActionPerformed(evt);
+            }
+        });
+        menuFile.add(menuItemCreatePdf);
 
-        setJMenuBar(jMenuBar1);
+        menuItemExit.setText("jMenuItem1");
+        menuItemExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemExitActionPerformed(evt);
+            }
+        });
+        menuFile.add(menuItemExit);
+
+        menuBar.add(menuFile);
+
+        menuEdit.setText("Edit");
+        menuBar.add(menuEdit);
+
+        setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
                 .addGap(18, 18, 18))
@@ -91,17 +117,31 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
+        new CreatePdfCommand().execute();
+    }//GEN-LAST:event_btnCreateActionPerformed
+
+    private void menuItemCreatePdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCreatePdfActionPerformed
+        new CreatePdfCommand().execute();
+    }//GEN-LAST:event_menuItemCreatePdfActionPerformed
+
+    private void menuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExitActionPerformed
+        new ExitCommand().execute();
+    }//GEN-LAST:event_menuItemExitActionPerformed
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCreate;
     private ie.philb.album.ui.imagelibrary.ImageLibraryView imageLibraryView2;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu menuEdit;
+    private javax.swing.JMenu menuFile;
+    private javax.swing.JMenuItem menuItemCreatePdf;
+    private javax.swing.JMenuItem menuItemExit;
     private ie.philb.album.ui.page.PageSetContainerPanel pageContainerPanel1;
     private ie.philb.album.ui.page.PageOverviewPanel pageOverviewPanel1;
+    private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
 }

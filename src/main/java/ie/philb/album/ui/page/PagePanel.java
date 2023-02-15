@@ -72,8 +72,7 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
         for (PagePanelEntry pagePanelEntry : pagePanelEntries) {
 
             Rectangle r = pagePanelEntry.imagePanel.getBounds();
-            
-            BoundsChecker boundsChecker = new BoundsChecker(pagePanelEntry.imagePanel.getBounds());
+            BoundsChecker boundsChecker = new BoundsChecker(r);
 
             if (boundsChecker.isBounded(mousePosition)) {
                 return pagePanelEntry;
@@ -122,6 +121,7 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
         int x = (int) (pageEntry.getOffsetX() / millisToPx);
         int y = (int) (pageEntry.getOffsetY() / millisToPx);
 
+        imagePanel.setIcon(pageEntry.getIcon());
         imagePanel.setSize(scaledWidth, scaledHeight);
         imagePanel.setBounds(x, y, scaledWidth, scaledHeight);
 
@@ -143,6 +143,7 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
         for (PagePanelEntry pagePanelEntry : pagePanelEntries) {
 
             if (selectedEntry == pagePanelEntry) {
+                pagePanelEntry.pageEntry.setIcon(entry.getIcon());
                 pagePanelEntry.imagePanel.setIcon(entry.getIcon());
             }
         }
