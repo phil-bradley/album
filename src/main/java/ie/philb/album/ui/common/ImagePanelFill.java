@@ -10,6 +10,6 @@ package ie.philb.album.ui.common;
  */
 public enum ImagePanelFill {
     
-    Vertical,
-    Horizontal
+    CropToFit,
+    BestFit
 }

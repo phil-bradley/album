@@ -18,7 +18,7 @@ public class PageEntry {
     private int offsetX;
     private int offsetY;
     private ImageIcon icon;
-    private ImagePanelFill fill = ImagePanelFill.Vertical;
+    private ImagePanelFill fill = ImagePanelFill.CropToFit;
 
     public PageEntry(int width, int height, int offsetX, int offsetY) {
         this.width = width;

@@ -45,7 +45,7 @@ public class ImageLibraryViewCellRenderer extends AppPanel implements ListCellRe
     @Override
     public Component getListCellRendererComponent(JList<? extends ImageLibraryEntry> list, ImageLibraryEntry value, int index, boolean isSelected, boolean cellHasFocus) {
         imagePanel.setIcon(value.getIcon());
-        imagePanel.setFill(ImagePanelFill.Horizontal);
+        imagePanel.setFill(ImagePanelFill.BestFit);
         lblName.setText(value.getTitle());
 
         if (isSelected) {

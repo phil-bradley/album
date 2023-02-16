@@ -5,7 +5,10 @@
 package ie.philb.album.ui.common;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 /**
@@ -15,7 +18,7 @@ import javax.swing.ImageIcon;
 public class ImagePanel extends AppPanel {
 
     private ImageIcon imageIcon;
-    private ImagePanelFill fill = ImagePanelFill.Vertical;
+    private ImagePanelFill fill = ImagePanelFill.CropToFit;
 
     public ImagePanel(ImageIcon icon) {
         this.imageIcon = icon;
@@ -50,12 +53,12 @@ public class ImagePanel extends AppPanel {
         int iconWidth = imageIcon.getIconWidth();
         int iconHeight = imageIcon.getIconHeight();
 
-        if (fill == ImagePanelFill.Vertical) {
+        if (fill == ImagePanelFill.CropToFit) {
             return Math.min(iconWidth / (double) getAvailableWidth(), iconHeight / (double) getAvailableHeight());
 
         }
 
-        if (fill == ImagePanelFill.Horizontal) {
+        if (fill == ImagePanelFill.BestFit) {
             return Math.max(iconWidth / (double) getAvailableWidth(), iconHeight / (double) getAvailableHeight());
         }
 
@@ -78,11 +81,42 @@ public class ImagePanel extends AppPanel {
         int scaledWidth = (int) (iconWidth / scale);
         int scaledHeight = (int) (iconHeight / scale);
 
-        int x = (getAvailableWidth() - scaledWidth) / 2 + getInsets().left;
-        int y = 0;
+        int boundWidth = getBounds().width;
+        int boundHeight = getBounds().height;
+
+        BufferedImage scaled = getScaledInstance(imageIcon.getImage(), scaledWidth, scaledHeight);
+
+        if (fill == ImagePanelFill.BestFit) {
+            int x = (getAvailableWidth() - scaledWidth) / 2 + getInsets().left;
+            int y = 0;
+            g.drawImage(scaled, x, y, null);
+        } else {
+            try {
+                int cropWidth = Math.min(boundWidth, scaled.getWidth());
+                int cropHeight = Math.min(boundHeight, scaled.getHeight());
+
+                Image cropped = scaled.getSubimage(0, 0, cropWidth, cropHeight);
+
+                int x = (getAvailableWidth() - cropWidth) / 2 + getInsets().left;
+                int y = 0;
+
+                g.drawImage(cropped, x, y, null);
+            } catch (Exception ex) {
+                logger.info("Error", ex);
+            }
+        }
 
         // We draw the image with dimensions scaledWidth x scaledHeight rather than bounds.width x bounds.height
         // since we want to preserve the aspect ratio.
-        g.drawImage(imageIcon.getImage(), x, y, scaledWidth, scaledHeight, null);
+    }
+
+    private BufferedImage getScaledInstance(Image img, int width, int height) {
+
+        BufferedImage scaled = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = scaled.createGraphics();
+        g.drawImage(img, 0, 0, width, height, null);
+        g.dispose();
+
+        return scaled;
     }
 }
