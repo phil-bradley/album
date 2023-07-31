@@ -59,6 +59,10 @@ public class ZoomablePanel extends JPanel implements MouseWheelListener, MouseLi
         this.image = image;
     }
 
+    public BufferedImage getImage() {
+        return image;
+    }
+
     private void initComponent() {
         addMouseWheelListener(this);
         addMouseMotionListener(this);
