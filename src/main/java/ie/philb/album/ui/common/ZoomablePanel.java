@@ -34,15 +34,16 @@ public class ZoomablePanel extends JPanel implements MouseWheelListener, MouseLi
     private double zoomFactor = 1;
     private double prevZoomFactor = 1;
     private boolean zoomer;
-    private boolean dragger;
+    private boolean isDragging;
     private boolean released;
     private double xOffset = 0;
     private double yOffset = 0;
     private int xDiff;
     private int yDiff;
     private Point startPoint;
+    private Point currPoint;
 
-    private List<ZoomablePanelListener> listeners = new ArrayList<>();
+    private final List<ZoomablePanelListener> listeners = new ArrayList<>();
 
     public ZoomablePanel() {
         this(null);
@@ -52,7 +53,6 @@ public class ZoomablePanel extends JPanel implements MouseWheelListener, MouseLi
 
         this.image = image;
         initComponent();
-
     }
 
     public void setImage(BufferedImage image) {
@@ -75,41 +75,62 @@ public class ZoomablePanel extends JPanel implements MouseWheelListener, MouseLi
 
         Graphics2D g2 = (Graphics2D) g;
 
-        if (zoomer) {
-            AffineTransform at = new AffineTransform();
-
-            double xRel = MouseInfo.getPointerInfo().getLocation().getX() - getLocationOnScreen().getX();
-            double yRel = MouseInfo.getPointerInfo().getLocation().getY() - getLocationOnScreen().getY();
-
-            double zoomDiv = zoomFactor / prevZoomFactor;
-
-            xOffset = (zoomDiv) * (xOffset) + (1 - zoomDiv) * xRel;
-            yOffset = (zoomDiv) * (yOffset) + (1 - zoomDiv) * yRel;
-
-            at.translate(xOffset, yOffset);
-            at.scale(zoomFactor, zoomFactor);
-            prevZoomFactor = zoomFactor;
-            g2.transform(at);
-            zoomer = false;
-        }
-
-        if (dragger) {
-            AffineTransform at = new AffineTransform();
-            at.translate(xOffset + xDiff, yOffset + yDiff);
-            at.scale(zoomFactor, zoomFactor);
-            g2.transform(at);
-
+//        if (zoomer) {
+//            AffineTransform at = new AffineTransform();
+//
+//            double xRel = MouseInfo.getPointerInfo().getLocation().getX() - getLocationOnScreen().getX();
+//            double yRel = MouseInfo.getPointerInfo().getLocation().getY() - getLocationOnScreen().getY();
+//
+//            double zoomDiv = zoomFactor / prevZoomFactor;
+//
+//            xOffset = (zoomDiv) * (xOffset) + (1 - zoomDiv) * xRel;
+//            yOffset = (zoomDiv) * (yOffset) + (1 - zoomDiv) * yRel;
+//
+//            at.translate(xOffset, yOffset);
+//            at.scale(zoomFactor, zoomFactor);
+//            prevZoomFactor = zoomFactor;
+//            g2.transform(at);
+//            zoomer = false;
+//        }
+//
+//        if (isDragging) {
+//            AffineTransform at = new AffineTransform();
+//            at.translate(xOffset + xDiff, yOffset + yDiff);
+//            at.scale(zoomFactor, zoomFactor);
+//            g2.transform(at);
+//
             if (released) {
                 xOffset += xDiff;
                 yOffset += yDiff;
-                dragger = false;
-            }
 
-        }
+                xDiff = 0;
+                yDiff = 0;
+            }
+//            if (released) {
+//                isDragging = false;
+//            }
+//
+//        }
+
+        int x = (int) (xOffset + xDiff);
+        int y = (int) (yOffset + yDiff);
+
+        System.out.println("xOffset: " + xOffset + ", xDiff: " + xDiff + ", x: " + x);
 
         // All drawings go here
-        g2.drawImage(image, 0, 0, this);
+        g2.drawImage(image,
+                0, 0, getBounds().width, getBounds().height,
+                -x, -y, getBounds().width - x, getBounds().height - y,
+                this);
 
+    }
+
+    private void resetImage() {
+        xOffset = 0;
+        xDiff = 0;
+        yOffset = 0;
+        yDiff = 0;
+        repaint();
     }
 
     @Override
@@ -131,11 +152,11 @@ public class ZoomablePanel extends JPanel implements MouseWheelListener, MouseLi
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        Point curPoint = e.getLocationOnScreen();
-        xDiff = curPoint.x - startPoint.x;
-        yDiff = curPoint.y - startPoint.y;
+        currPoint = e.getLocationOnScreen();
+        xDiff = currPoint.x - startPoint.x;
+        yDiff = currPoint.y - startPoint.y;
 
-        dragger = true;
+        isDragging = true;
         repaint();
 
     }
@@ -146,6 +167,12 @@ public class ZoomablePanel extends JPanel implements MouseWheelListener, MouseLi
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
+        if (e.getClickCount() == 2) {
+            resetImage();
+            return;
+        }
+
         for (ZoomablePanelListener l : listeners) {
             l.zoomPanelClicked(e);
         }
@@ -160,6 +187,7 @@ public class ZoomablePanel extends JPanel implements MouseWheelListener, MouseLi
     @Override
     public void mouseReleased(MouseEvent e) {
         released = true;
+        isDragging = false;
         repaint();
     }
 

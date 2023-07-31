@@ -8,6 +8,7 @@ import ie.philb.album.AppContext;
 import ie.philb.album.ui.pagesizer.IsoPageSizer;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.BoundsChecker;
+import ie.philb.album.ui.common.ImagePanel;
 import ie.philb.album.ui.common.ZoomablePanel;
 import ie.philb.album.ui.common.ZoomablePanelListener;
 import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
@@ -43,24 +44,24 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener, 
 
         for (PageEntry entry : pageLayout.getPageEntries()) {
             PagePanelEntry ppe = new PagePanelEntry();
-            ppe.imagePanel = new ZoomablePanel();
+            ppe.imagePanel = new ImagePanel();
             ppe.imagePanel.addListener(this);
             ppe.pageEntry = entry;
             pagePanelEntries.add(ppe);
             add(ppe.imagePanel);
         }
 
-//        addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent evt) {
-//
-//                PagePanel.this.selectedEntry = getSelectedEntry(getMousePosition());
-//
-//                logger.info("Setting image entry listener to " + PagePanel.this);
-//                AppContext.INSTANCE.setImageEntryListener(PagePanel.this);
-//                setPageSelected(true);
-//            }
-//        });
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+
+                PagePanel.this.selectedEntry = getSelectedEntry(getMousePosition());
+
+                logger.info("Setting image entry listener to " + PagePanel.this);
+                AppContext.INSTANCE.setImageEntryListener(PagePanel.this);
+                setPageSelected(true);
+            }
+        });
 
         AppContext.INSTANCE.addListener((ImageEntrySelectionListener listener) -> {
             setPageSelected(false);
@@ -110,7 +111,7 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener, 
     private void paintEntry(Graphics g, PagePanelEntry pagePanelEntry) {
 
         PageEntry pageEntry = pagePanelEntry.pageEntry;
-        ZoomablePanel imagePanel = pagePanelEntry.imagePanel;
+        ImagePanel imagePanel = pagePanelEntry.imagePanel;
 
         // First find the scaling factor to convert from mm to our size on screen
         double millisToPx = (double) (pageLayout.getPageSpecification().width()) / (double) getWidth();
@@ -121,10 +122,10 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener, 
         int x = (int) (pageEntry.getOffsetX() / millisToPx);
         int y = (int) (pageEntry.getOffsetY() / millisToPx);
 
-        if (imagePanel.getImage() == null) {
-            imagePanel.setImage(ImageUtils.getBufferedImage(pageEntry.getIcon()));
+        if (imagePanel.getIcon() == null) {
+            imagePanel.setIcon(pageEntry.getIcon());
         }
-        
+
         imagePanel.setSize(scaledWidth, scaledHeight);
         imagePanel.setBounds(x, y, scaledWidth, scaledHeight);
         imagePanel.repaint();
@@ -138,7 +139,7 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener, 
         g.setColor(penColor);
         g.drawRect(x, y, scaledWidth, scaledHeight);
 
-        logger.info("Component has size " + getSize() + ", drawrect size {} {}", scaledWidth, scaledHeight);
+        //logger.info("Component has size " + getSize() + ", drawrect size {} {}", scaledWidth, scaledHeight);
     }
 
     @Override
@@ -148,7 +149,7 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener, 
 
             if (selectedEntry == pagePanelEntry) {
                 pagePanelEntry.pageEntry.setIcon(entry.getIcon());
-                pagePanelEntry.imagePanel.setImage(ImageUtils.getBufferedImage(entry.getIcon()));
+                pagePanelEntry.imagePanel.setIcon(entry.getIcon());
             }
         }
 
@@ -168,7 +169,7 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener, 
 
     class PagePanelEntry {
 
-        ZoomablePanel imagePanel;
+        ImagePanel imagePanel;
         PageEntry pageEntry;
     }
 }
