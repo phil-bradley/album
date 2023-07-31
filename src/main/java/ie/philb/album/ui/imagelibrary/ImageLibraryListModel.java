@@ -24,8 +24,13 @@ public class ImageLibraryListModel implements ListModel<ImageLibraryEntry> {
     private final List<ImageLibraryEntry> entries = new ArrayList<>();
     private final List<ListDataListener> listeners = new ArrayList<>();
 
-    public ImageLibraryListModel(File baseFolder) {
+    public ImageLibraryListModel(File baseFolder) throws Exception {
 
+        if (!baseFolder.exists() || !baseFolder.isDirectory()) {
+            logger.info("Base folder {} not found", baseFolder.getAbsoluteFile());
+            throw new Exception("Base folder not found: " + baseFolder.getAbsolutePath());
+        }
+        
         for (File file : baseFolder.listFiles()) {
             if (FileUtils.isImage(file)) {
                 entries.add(new ImageLibraryEntry(file));
