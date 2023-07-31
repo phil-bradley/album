@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
@@ -33,25 +34,31 @@ public class ImageLibraryView extends AppPanel {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        File baseFolder = new File("C:\\phil\\media\\album");
-        list.setModel(new ImageLibraryListModel(baseFolder));
-
         gridbag();
         add(scrollPane, new GridBagCellConstraints().fillBoth().weight(1));
 
         list.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                
+
                 if (evt.getClickCount() == 2) {
                     ImageLibraryEntry selected = list.getSelectedValue();
-                    
+
                     if (selected != null) {
                         AppContext.INSTANCE.imageSelected(selected);
                     }
                 }
             }
         });
+
+        File baseFolder = new File("C:\\phil\\media\\album");
+
+        try {
+            list.setModel(new ImageLibraryListModel(baseFolder));
+        } catch (Exception ex) {
+            String msg = "Failed to initialise library folder " + baseFolder + "\n" + ex.getMessage();
+            JOptionPane.showMessageDialog(null, msg);
+        }
     }
 
     public void setBaseFolder(File file) {

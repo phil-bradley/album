@@ -5,13 +5,14 @@
 package ie.philb.album.ui.page;
 
 import ie.philb.album.AppContext;
-import ie.philb.album.AppListener;
 import ie.philb.album.ui.pagesizer.IsoPageSizer;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.BoundsChecker;
-import ie.philb.album.ui.common.ImagePanel;
+import ie.philb.album.ui.common.ZoomablePanel;
+import ie.philb.album.ui.common.ZoomablePanelListener;
 import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
+import ie.philb.album.util.ImageUtils;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -22,10 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Represents a page in the book with 1 or more image entries in a M x N
+ * arrangement
  *
  * @author Philip.Bradley
  */
-public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
+public class PagePanel extends AppPanel implements ImageEntrySelectionListener, ZoomablePanelListener {
 
     private final List<PagePanelEntry> pagePanelEntries = new ArrayList<>();
     private boolean isPageSelected = false;
@@ -40,30 +43,27 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
 
         for (PageEntry entry : pageLayout.getPageEntries()) {
             PagePanelEntry ppe = new PagePanelEntry();
-            ppe.imagePanel = new ImagePanel(null);
+            ppe.imagePanel = new ZoomablePanel();
+            ppe.imagePanel.addListener(this);
             ppe.pageEntry = entry;
             pagePanelEntries.add(ppe);
             add(ppe.imagePanel);
         }
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent evt) {
+//        addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent evt) {
+//
+//                PagePanel.this.selectedEntry = getSelectedEntry(getMousePosition());
+//
+//                logger.info("Setting image entry listener to " + PagePanel.this);
+//                AppContext.INSTANCE.setImageEntryListener(PagePanel.this);
+//                setPageSelected(true);
+//            }
+//        });
 
-                PagePanel.this.selectedEntry = getSelectedEntry(getMousePosition());
-
-                logger.info("Setting image entry listener to " + PagePanel.this);
-                AppContext.INSTANCE.setImageEntryListener(PagePanel.this);
-                setPageSelected(true);
-            }
-        });
-
-        AppContext.INSTANCE.addListener(new AppListener() {
-            @Override
-            public void listenerSelected(ImageEntrySelectionListener listener) {
-                setPageSelected(false);
-            }
-
+        AppContext.INSTANCE.addListener((ImageEntrySelectionListener listener) -> {
+            setPageSelected(false);
         });
     }
 
@@ -110,7 +110,7 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
     private void paintEntry(Graphics g, PagePanelEntry pagePanelEntry) {
 
         PageEntry pageEntry = pagePanelEntry.pageEntry;
-        ImagePanel imagePanel = pagePanelEntry.imagePanel;
+        ZoomablePanel imagePanel = pagePanelEntry.imagePanel;
 
         // First find the scaling factor to convert from mm to our size on screen
         double millisToPx = (double) (pageLayout.getPageSpecification().width()) / (double) getWidth();
@@ -121,9 +121,10 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
         int x = (int) (pageEntry.getOffsetX() / millisToPx);
         int y = (int) (pageEntry.getOffsetY() / millisToPx);
 
-        imagePanel.setIcon(pageEntry.getIcon());
+        imagePanel.setImage(ImageUtils.getBufferedImage(pageEntry.getIcon()));
         imagePanel.setSize(scaledWidth, scaledHeight);
         imagePanel.setBounds(x, y, scaledWidth, scaledHeight);
+        imagePanel.repaint();
 
         Color penColor = Color.LIGHT_GRAY;
 
@@ -144,7 +145,7 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
 
             if (selectedEntry == pagePanelEntry) {
                 pagePanelEntry.pageEntry.setIcon(entry.getIcon());
-                pagePanelEntry.imagePanel.setIcon(entry.getIcon());
+                pagePanelEntry.imagePanel.setImage(ImageUtils.getBufferedImage(entry.getIcon()));
             }
         }
 
@@ -153,9 +154,18 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener {
         repaint();
     }
 
+    @Override
+    public void zoomPanelClicked(MouseEvent event) {
+        PagePanel.this.selectedEntry = getSelectedEntry(getMousePosition());
+
+        logger.info("Setting image entry listener to " + PagePanel.this);
+        AppContext.INSTANCE.setImageEntryListener(PagePanel.this);
+        setPageSelected(true);
+    }
+
     class PagePanelEntry {
 
-        ImagePanel imagePanel;
+        ZoomablePanel imagePanel;
         PageEntry pageEntry;
     }
 }

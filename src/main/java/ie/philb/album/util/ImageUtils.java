@@ -15,9 +15,15 @@ import javax.swing.ImageIcon;
 public class ImageUtils {
 
     public static BufferedImage getBufferedImage(ImageIcon icon) {
+        
+        if (icon == null) {
+            return null;
+        }
+        
         BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = bi.createGraphics();
         g.drawImage(icon.getImage(), 0, 0, icon.getIconWidth(), icon.getIconHeight(), null);
         return bi;
     }
+
 }
