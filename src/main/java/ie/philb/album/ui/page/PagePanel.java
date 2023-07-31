@@ -121,7 +121,10 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener, 
         int x = (int) (pageEntry.getOffsetX() / millisToPx);
         int y = (int) (pageEntry.getOffsetY() / millisToPx);
 
-        imagePanel.setImage(ImageUtils.getBufferedImage(pageEntry.getIcon()));
+        if (imagePanel.getImage() == null) {
+            imagePanel.setImage(ImageUtils.getBufferedImage(pageEntry.getIcon()));
+        }
+        
         imagePanel.setSize(scaledWidth, scaledHeight);
         imagePanel.setBounds(x, y, scaledWidth, scaledHeight);
         imagePanel.repaint();
