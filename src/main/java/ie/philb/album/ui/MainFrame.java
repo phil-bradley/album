@@ -7,6 +7,8 @@ package ie.philb.album.ui;
 import ie.philb.album.ui.command.CreatePdfCommand;
 import ie.philb.album.ui.command.ExitCommand;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.WindowConstants;
 
 /**
@@ -20,10 +22,19 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
-        
-        setPreferredSize(new Dimension(1200,800));
+
+        setPreferredSize(new Dimension(1200, 800));
         setSize(getPreferredSize());
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                new ExitCommand().execute();
+            }
+
+        });
     }
 
     /**
@@ -75,6 +86,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         menuFile.setText("File");
 
+        menuItemCreatePdf.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         menuItemCreatePdf.setText("Create PDF");
         menuItemCreatePdf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -83,7 +95,8 @@ public class MainFrame extends javax.swing.JFrame {
         });
         menuFile.add(menuItemCreatePdf);
 
-        menuItemExit.setText("jMenuItem1");
+        menuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menuItemExit.setText("Exit");
         menuItemExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemExitActionPerformed(evt);
@@ -128,7 +141,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void menuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExitActionPerformed
         new ExitCommand().execute();
     }//GEN-LAST:event_menuItemExitActionPerformed
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreate;

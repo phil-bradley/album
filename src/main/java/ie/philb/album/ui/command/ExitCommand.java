@@ -4,6 +4,8 @@
  */
 package ie.philb.album.ui.command;
 
+import ie.philb.album.ui.common.Dialogs;
+
 /**
  *
  * @author Philip.Bradley
@@ -12,7 +14,10 @@ public class ExitCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        System.exit(0);
+
+        if (Dialogs.confirm("Really exit?")) {
+            System.exit(0);
+        }
     }
-    
+
 }
