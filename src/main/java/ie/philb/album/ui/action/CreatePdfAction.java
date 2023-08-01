@@ -7,10 +7,17 @@ package ie.philb.album.ui.action;
 import com.lowagie.text.Document;
 import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
+import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfWriter;
+import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.page.Page;
 import ie.philb.album.ui.page.PagePanelEntry;
+import ie.philb.album.util.ImageUtils;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +52,7 @@ public class CreatePdfAction extends AbstractAction<Void> {
                     java.awt.Image croppedImage = pagePanelEntry.imagePanel.getCroppedImage();
 
                     if (croppedImage == null) {
-                        continue;
+                        croppedImage = ImageUtils.createImage(new Dimension(20, 20), Color.white);
                     }
 
                     Image img = Image.getInstance(croppedImage, null);
@@ -58,6 +65,10 @@ public class CreatePdfAction extends AbstractAction<Void> {
 
                     img.scaleToFit(widthUnits, heightUnits);
                     img.setAbsolutePosition(xOffsetUnits, yOffsetUnits);
+
+                    img.setBorder(Rectangle.BOX);
+                    img.setBorderColor(Resources.COLOR_PHOTO_BORDER);
+                    img.setBorderWidth(0.01f);
 
                     doc.add(img);
 

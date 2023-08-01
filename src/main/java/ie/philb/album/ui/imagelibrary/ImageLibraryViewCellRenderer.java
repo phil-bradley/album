@@ -4,7 +4,7 @@
  */
 package ie.philb.album.ui.imagelibrary;
 
-import ie.philb.album.ui.common.Resouces;
+import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.ImagePanel;
@@ -49,7 +49,7 @@ public class ImageLibraryViewCellRenderer extends AppPanel implements ListCellRe
         lblName.setText(value.getTitle());
 
         if (isSelected) {
-            setBackground(Resouces.COLOR_SELECTED);
+            setBackground(Resources.COLOR_SELECTED);
             lblName.setForeground(Color.white);
         } else {
             setBackground(Color.WHITE);

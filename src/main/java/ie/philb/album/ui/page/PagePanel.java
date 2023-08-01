@@ -8,6 +8,7 @@ import ie.philb.album.AppContext;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.BoundsChecker;
 import ie.philb.album.ui.common.ImagePanel;
+import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.common.ZoomablePanelListener;
 import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
@@ -129,10 +130,10 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener, 
         imagePanel.setBounds(x, y, scaledWidth, scaledHeight);
         imagePanel.repaint();
 
-        Color penColor = Color.LIGHT_GRAY;
+        Color penColor = Resources.COLOR_PHOTO_BORDER;
 
         if (isPageSelected && selectedEntry == pagePanelEntry) {
-            penColor = Color.ORANGE;
+            penColor = Resources.COLOR_PHOTO_BORDER_SELECTED;
         }
 
         g.setColor(penColor);

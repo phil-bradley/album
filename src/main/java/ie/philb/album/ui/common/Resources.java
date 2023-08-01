@@ -10,7 +10,12 @@ import java.awt.Color;
  *
  * @author Philip.Bradley
  */
-public class Resouces {
+public class Resources {
 
     public static Color COLOR_SELECTED = new Color(58, 199, 242);
+
+    public static Color COLOR_PHOTO_BORDER = Color.LIGHT_GRAY;
+
+    public static Color COLOR_PHOTO_BORDER_SELECTED = new Color(58, 199, 242);
+
 }
