@@ -32,12 +32,10 @@ public class PageSetPanel extends AppPanel {
 
         List<PageLayout> pageLayouts = new PageLayoutProvider().getPageLayouts();
         AppContext.INSTANCE.setPageLayouts(pageLayouts);
-        
-        for (PageLayout pageLayout : pageLayouts) {
-            addPage(new PagePanel(pageLayout));
+
+        for (Page page : AppContext.INSTANCE.getAlbum().getPages()) {
+            addPage(page.getPagePanel());
         }
-
-
     }
 
     public final void addPage(PagePanel page) {

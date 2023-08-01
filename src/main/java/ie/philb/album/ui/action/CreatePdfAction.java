@@ -8,8 +8,8 @@ import com.lowagie.text.Document;
 import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfWriter;
-import ie.philb.album.ui.page.PageEntry;
-import ie.philb.album.ui.page.PageLayout;
+import ie.philb.album.ui.page.Page;
+import ie.philb.album.ui.page.PagePanelEntry;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +20,12 @@ import java.util.List;
  */
 public class CreatePdfAction extends AbstractAction<Void> {
 
-    private final List<PageLayout> pageLayouts = new ArrayList<>();
+    private final List<Page> pages = new ArrayList<>();
 
     private static final double MILLIS_TO_INCH = 0.0393701d;
 
-    public CreatePdfAction(List<PageLayout> layouts) {
-        this.pageLayouts.addAll(layouts);
+    public CreatePdfAction(List<Page> pages) {
+        this.pages.addAll(pages);
     }
 
     @Override
@@ -39,23 +39,24 @@ public class CreatePdfAction extends AbstractAction<Void> {
             PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream("hello.pdf"));
             doc.open();
 
-            for (PageLayout pageLayout : pageLayouts) {
-                for (PageEntry pageEntry : pageLayout.getPageEntries()) {
+            for (Page page : pages) {
+                for (PagePanelEntry pagePanelEntry : page.getPagePanelEntries()) {
 
-                    if (pageEntry.getIcon() == null) {
+                    java.awt.Image croppedImage = pagePanelEntry.imagePanel.getCroppedImage();
+
+                    if (croppedImage == null) {
                         continue;
                     }
 
-                    Image img = Image.getInstance(pageEntry.getIcon().getImage(), null);
+                    Image img = Image.getInstance(croppedImage, null);
 
-                    int widthUnits = millisToUnits(pageEntry.getWidth());
-                    int heightUnits = millisToUnits(pageEntry.getHeight());
+                    int widthUnits = millisToUnits(pagePanelEntry.pageEntry.getWidth());
+                    int heightUnits = millisToUnits(pagePanelEntry.pageEntry.getHeight());
 
-                    int xOffsetUnits = millisToUnits(pageEntry.getOffsetX());
-                    int yOffsetUnits = millisToUnits(pageEntry.getOffsetY());
+                    int xOffsetUnits = millisToUnits(pagePanelEntry.pageEntry.getOffsetX());
+                    int yOffsetUnits = millisToUnits(pagePanelEntry.pageEntry.getOffsetY());
 
                     img.scaleToFit(widthUnits, heightUnits);
-                    //img.scaleAbsolute(widthUnits, heightUnits);
                     img.setAbsolutePosition(xOffsetUnits, yOffsetUnits);
 
                     doc.add(img);
@@ -64,8 +65,6 @@ public class CreatePdfAction extends AbstractAction<Void> {
 
                 doc.newPage();
             }
-            
-            writer.close();
         }
 
         return null;

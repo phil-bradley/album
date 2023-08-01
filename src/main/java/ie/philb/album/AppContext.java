@@ -6,9 +6,9 @@ package ie.philb.album;
 
 import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
+import ie.philb.album.ui.page.Album;
 import ie.philb.album.ui.page.PageLayout;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ public enum AppContext {
     INSTANCE;
 
     private final List<AppListener> listeners = new ArrayList<>();
-    private final List<PageLayout> pageLayouts = new ArrayList<>();
+    private final Album album = new Album();
 
     private ImageEntrySelectionListener listener;
 
@@ -46,13 +46,22 @@ public enum AppContext {
         }
     }
 
-    public void setPageLayouts(List<PageLayout> l) {
-        this.pageLayouts.clear();
-        this.pageLayouts.addAll(l);
+    public void setPageLayouts(List<PageLayout> pageLayouts) {
+
+        album.clearPages();
+
+        for (PageLayout layout : pageLayouts) {
+            album.createPage(layout);
+        }
+
+    }
+    
+    public Album getAlbum() {
+        return album;
     }
 
-    public List<PageLayout> getPageLayouts() {
-        return Collections.unmodifiableList(pageLayouts);
-    }
+//    public List<PageLayout> getPageLayouts() {
+//        return Collections.unmodifiableList(pageLayouts);
+//    }
 
 }

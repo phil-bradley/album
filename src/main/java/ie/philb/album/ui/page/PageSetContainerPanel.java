@@ -8,7 +8,6 @@ import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.JScrollPane;
 

@@ -19,6 +19,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -165,9 +166,12 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener, 
         setPageSelected(true);
     }
 
-    class PagePanelEntry {
-
-        ImagePanel imagePanel;
-        PageEntry pageEntry;
+    public List<PagePanelEntry> getPagePanelEntries() {
+        return Collections.unmodifiableList(pagePanelEntries);
     }
+
+    public PageLayout getPageLayout() {
+        return pageLayout;
+    }
+
 }

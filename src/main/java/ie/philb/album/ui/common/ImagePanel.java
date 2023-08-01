@@ -121,17 +121,21 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         return scaled;
     }
 
-    private void drawBestFit(BufferedImage image, Graphics g) {
-        int x = (getAvailableWidth() - image.getWidth()) / 2 + getInsets().left;
+    private void drawBestFit(Graphics g) {
+
+        BufferedImage scaled = getScaledImage();
+
+        int x = (getAvailableWidth() - scaled.getWidth()) / 2 + getInsets().left;
         int y = 0;
-        g.drawImage(image, x, y, null);
+        g.drawImage(scaled, x, y, null);
     }
 
-    private void drawCropped(BufferedImage image, Graphics g) {
+    private void drawCropped(Graphics g) {
 
-        int cropWidth = getCropWidth(image);
+        BufferedImage scaled = getScaledImage();
+        int cropWidth = getCropWidth();
 
-        Image cropped = getCroppedImage(image);
+        Image cropped = getCroppedImage();
 
         int x = (getAvailableWidth() - cropWidth) / 2 + getInsets().left;
         int y = 0;
@@ -139,27 +143,39 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         g.drawImage(cropped, x, y, null);
     }
 
-    public Image getCroppedImage(BufferedImage image) {
+    public Image getCroppedImage() {
+
+        BufferedImage scaled = getScaledImage();
+
+        if (scaled == null) {
+            return null;
+        }
         
-        int cropWidth = getCropWidth(image);
-        int cropHeight = getCropHeight(image);
+        int cropWidth = getCropWidth();
+        int cropHeight = getCropHeight();
 
         int w = xOffset + xDiff;
         int h = yOffset + yDiff;
 
-        Image cropped = image.getSubimage(w, h, cropWidth + w, cropHeight + h);
+        Image cropped = scaled.getSubimage(w, h, cropWidth + w, cropHeight + h);
         return cropped;
     }
 
-    private int getCropWidth(BufferedImage image) {
+    private int getCropWidth() {
+
+        BufferedImage scaled = getScaledImage();
+
         int boundWidth = getBounds().width;
-        int cropWidth = Math.min(boundWidth, image.getWidth());
+        int cropWidth = Math.min(boundWidth, scaled.getWidth());
         return cropWidth;
     }
 
-    private int getCropHeight(BufferedImage image) {
+    private int getCropHeight() {
+
+        BufferedImage scaled = getScaledImage();
+
         int boundHeight = getBounds().height;
-        int cropHeight = Math.min(boundHeight, image.getHeight());
+        int cropHeight = Math.min(boundHeight, scaled.getHeight());
         return cropHeight;
     }
 
@@ -172,14 +188,12 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
             return;
         }
 
-        BufferedImage scaled = getScaledImage();
-
         if (fill == ImagePanelFill.BestFit) {
-            drawBestFit(scaled, g);
+            drawBestFit(g);
         }
 
         if (fill == ImagePanelFill.CropToFit) {
-            drawCropped(scaled, g);
+            drawCropped(g);
         }
 
     }
@@ -227,8 +241,8 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         int xDragDiff = startPoint.x - currPoint.x;
         int yDragDiff = startPoint.y - currPoint.y;
 
-        int cropWidth = getCropWidth(getScaledImage());
-        int cropHeight = getCropHeight(getScaledImage());
+        int cropWidth = getCropWidth();
+        int cropHeight = getCropHeight();
 
         int w = xOffset + xDragDiff;
         int h = yOffset + yDragDiff;

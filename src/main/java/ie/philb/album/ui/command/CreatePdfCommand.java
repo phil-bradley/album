@@ -7,7 +7,7 @@ package ie.philb.album.ui.command;
 import ie.philb.album.AppContext;
 import ie.philb.album.ui.action.Callback;
 import ie.philb.album.ui.action.CreatePdfAction;
-import ie.philb.album.ui.page.PageLayout;
+import ie.philb.album.ui.page.Page;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -19,9 +19,9 @@ public class CreatePdfCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        List<PageLayout> pageLayouts = AppContext.INSTANCE.getPageLayouts();
+        List<Page> pages = AppContext.INSTANCE.getAlbum().getPages();
 
-        new CreatePdfAction(pageLayouts).execute(
+        new CreatePdfAction(pages).execute(
                 new Callback<Void>() {
 
             @Override
