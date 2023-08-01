@@ -5,15 +5,13 @@
 package ie.philb.album.ui.page;
 
 import ie.philb.album.AppContext;
-import ie.philb.album.ui.pagesizer.IsoPageSizer;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.BoundsChecker;
 import ie.philb.album.ui.common.ImagePanel;
-import ie.philb.album.ui.common.ZoomablePanel;
 import ie.philb.album.ui.common.ZoomablePanelListener;
 import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
-import ie.philb.album.util.ImageUtils;
+import ie.philb.album.ui.pagesizer.IsoPageSizer;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;

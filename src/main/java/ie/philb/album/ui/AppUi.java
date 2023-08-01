@@ -15,12 +15,12 @@ import javax.swing.WindowConstants;
  *
  * @author Philip.Bradley
  */
-public class MainFrame extends javax.swing.JFrame {
+public class AppUi extends javax.swing.JFrame {
 
     /**
      * Creates new form MainFrame
      */
-    public MainFrame() {
+    public AppUi() {
         initComponents();
 
         setPreferredSize(new Dimension(1200, 800));
@@ -157,4 +157,5 @@ public class MainFrame extends javax.swing.JFrame {
     private ie.philb.album.ui.page.PageOverviewPanel pageOverviewPanel1;
     private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
+
 }

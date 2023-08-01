@@ -10,7 +10,6 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfWriter;
 import ie.philb.album.ui.page.PageEntry;
 import ie.philb.album.ui.page.PageLayout;
-import java.awt.Color;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,8 @@ public class CreatePdfAction extends AbstractAction<Void> {
 
     private final List<PageLayout> pageLayouts = new ArrayList<>();
 
+    private static final double MILLIS_TO_INCH = 0.0393701d;
+
     public CreatePdfAction(List<PageLayout> layouts) {
         this.pageLayouts.addAll(layouts);
     }
@@ -31,46 +32,52 @@ public class CreatePdfAction extends AbstractAction<Void> {
     protected Void execute() throws Exception {
 
         logger.info("Creating doc...");
-        Document doc = new Document(PageSize.A4.rotate());
-        logger.info("Doc has size " + doc.getPageSize());
+        try (Document doc = new Document(PageSize.A4.rotate())) {
+            logger.info("Doc has size " + doc.getPageSize());
 
-        PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream("hello.pdf"));
-        doc.open();
-        //doc.add(new Paragraph("Howdy " + new Date().toString()));
+            // Creating the writer implicitly causes the doc to be written to the file
+            PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream("hello.pdf"));
+            doc.open();
 
-        // Unit = inch/72
-        // mm to inch = 0.0393701
-        // X mm to units = X * 72 * 0.0393701
-        for (PageLayout pageLayout : pageLayouts) {
-            for (PageEntry pageEntry : pageLayout.getPageEntries()) {
+            for (PageLayout pageLayout : pageLayouts) {
+                for (PageEntry pageEntry : pageLayout.getPageEntries()) {
 
-                if (pageEntry.getIcon() == null) {
-                    continue;
+                    if (pageEntry.getIcon() == null) {
+                        continue;
+                    }
+
+                    Image img = Image.getInstance(pageEntry.getIcon().getImage(), null);
+
+                    int widthUnits = millisToUnits(pageEntry.getWidth());
+                    int heightUnits = millisToUnits(pageEntry.getHeight());
+
+                    int xOffsetUnits = millisToUnits(pageEntry.getOffsetX());
+                    int yOffsetUnits = millisToUnits(pageEntry.getOffsetY());
+
+                    img.scaleToFit(widthUnits, heightUnits);
+                    //img.scaleAbsolute(widthUnits, heightUnits);
+                    img.setAbsolutePosition(xOffsetUnits, yOffsetUnits);
+
+                    doc.add(img);
+
                 }
 
-                Image img = Image.getInstance(pageEntry.getIcon().getImage(), null);
-
-                int width = (int) (pageEntry.getWidth() * 72d * 0.0393701d);
-                int height = (int) (pageEntry.getHeight() * 72d * 0.0393701d);
-
-                int x = (int) (pageEntry.getOffsetX() * 72d * 0.0393701d);
-                int y = (int) (pageEntry.getOffsetY() * 72d * 0.0393701d);
-
-//                img.scaleToFit(width, height);
-                img.scaleAbsolute(width, height);
-                img.setAbsolutePosition(x, y);
-
-                doc.add(img);
-
+                doc.newPage();
             }
-
-            doc.newPage();
+            
+            writer.close();
         }
-
-        doc.close();
 
         return null;
 
+    }
+
+    private int millisToUnits(int millis) {
+        // Unit = inch/72
+        // mm to inch = 0.0393701
+        // X mm to units = X * 72 * 0.0393701
+
+        return (int) (millis * 72d * MILLIS_TO_INCH);
     }
 
 }

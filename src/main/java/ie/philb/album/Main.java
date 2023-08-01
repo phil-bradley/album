@@ -5,7 +5,7 @@
 package ie.philb.album;
 
 import ie.philb.album.ui.common.LFManager;
-import ie.philb.album.ui.MainFrame;
+import ie.philb.album.ui.AppUi;
 
 /**
  *
@@ -18,7 +18,7 @@ public class Main {
         LFManager.setSystemLookAndFeel();
 
         java.awt.EventQueue.invokeLater(() -> {
-            new MainFrame().setVisible(true);
+            new AppUi().setVisible(true);
         });
     }
 }

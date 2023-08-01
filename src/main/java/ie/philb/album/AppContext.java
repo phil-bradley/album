@@ -8,7 +8,6 @@ import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.page.PageLayout;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

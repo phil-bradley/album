@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,4 +80,7 @@ public class PageSetPanel extends AppPanel {
 
     }
 
+    public List<PagePanel> getPagePanels() {
+        return Collections.unmodifiableList(pages);
+    }
 }
