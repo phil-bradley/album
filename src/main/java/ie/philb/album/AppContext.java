@@ -4,6 +4,7 @@
  */
 package ie.philb.album;
 
+import ie.philb.album.model.AlbumModel;
 import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.page.Album;
@@ -21,6 +22,7 @@ public enum AppContext {
 
     private final List<AppListener> listeners = new ArrayList<>();
     private final Album album = new Album();
+    private final AlbumModel albumModel = new AlbumModel();
 
     private ImageEntrySelectionListener listener;
 
@@ -55,13 +57,16 @@ public enum AppContext {
         }
 
     }
-    
+
     public Album getAlbum() {
         return album;
+    }
+
+    public AlbumModel getAlbumModel() {
+        return albumModel;
     }
 
 //    public List<PageLayout> getPageLayouts() {
 //        return Collections.unmodifiableList(pageLayouts);
 //    }
-
 }

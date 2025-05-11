@@ -51,7 +51,7 @@ public class ImageLibraryView extends AppPanel {
             }
         });
 
-        File baseFolder = new File("C:\\phil\\media\\album");
+        File baseFolder = new File("/home/philb/");
 
         try {
             list.setModel(new ImageLibraryListModel(baseFolder));

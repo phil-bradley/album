@@ -51,7 +51,6 @@ public class AppUi extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         imageLibraryView2 = new ie.philb.album.ui.imagelibrary.ImageLibraryView();
         jSplitPane2 = new javax.swing.JSplitPane();
-        pageContainerPanel1 = new ie.philb.album.ui.page.PageSetContainerPanel();
         pageOverviewPanel1 = new ie.philb.album.ui.page.PageOverviewPanel();
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
@@ -79,7 +78,6 @@ public class AppUi extends javax.swing.JFrame {
 
         jSplitPane2.setDividerLocation(500);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setTopComponent(pageContainerPanel1);
         jSplitPane2.setRightComponent(pageOverviewPanel1);
 
         jSplitPane1.setRightComponent(jSplitPane2);
@@ -142,7 +140,6 @@ public class AppUi extends javax.swing.JFrame {
         new ExitCommand().execute();
     }//GEN-LAST:event_menuItemExitActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreate;
     private ie.philb.album.ui.imagelibrary.ImageLibraryView imageLibraryView2;
@@ -153,7 +150,6 @@ public class AppUi extends javax.swing.JFrame {
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenuItem menuItemCreatePdf;
     private javax.swing.JMenuItem menuItemExit;
-    private ie.philb.album.ui.page.PageSetContainerPanel pageContainerPanel1;
     private ie.philb.album.ui.page.PageOverviewPanel pageOverviewPanel1;
     private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables

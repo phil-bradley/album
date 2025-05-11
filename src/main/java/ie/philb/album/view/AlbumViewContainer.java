@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ie.philb.album.ui.page;
+package ie.philb.album.view;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import java.awt.event.ComponentAdapter;
@@ -12,15 +13,15 @@ import javax.swing.JScrollPane;
 
 /**
  *
- * @author Philip.Bradley
+ * @author philb
  */
-public class PageSetContainerPanel extends AppPanel {
+public class AlbumViewContainer extends AppPanel {
 
-    private final PageSetPanel pageSetPanel = new PageSetPanel();
+    private final AlbumView albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
 
-    public PageSetContainerPanel() {
+    public AlbumViewContainer() {
 
-        JScrollPane scrollPane = new JScrollPane(pageSetPanel);
+        JScrollPane scrollPane = new JScrollPane(albumView);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -32,14 +33,11 @@ public class PageSetContainerPanel extends AppPanel {
         addComponentListener(new ResizeListener());
     }
 
-//    public List<PagePanel> getPagePanels() {
-//        return pageSetPanel.getPagePanels();
-//    }
     class ResizeListener extends ComponentAdapter {
 
         @Override
         public void componentResized(ComponentEvent e) {
-            pageSetPanel.positionPages();
+            albumView.positionPages();
         }
     }
 }

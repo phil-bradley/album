@@ -28,6 +28,11 @@ public class FileUtils {
         try {
             Path path = file.toPath();
             String fileType = Files.probeContentType(path);
+
+            if (fileType == null) {
+                return false;
+            }
+
             return (fileType.toLowerCase().startsWith("image"));
         } catch (IOException ex) {
             return false;
