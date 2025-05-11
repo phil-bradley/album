@@ -9,6 +9,7 @@ import ie.philb.album.ui.common.ImagePanel;
 import ie.philb.album.ui.common.Resources;
 import java.awt.Color;
 import java.awt.Graphics;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 /**
@@ -21,6 +22,8 @@ public class PageEntryView extends AppPanel {
 
     public PageEntryView() {
         imagePanel = new ImagePanel(new ImageIcon("/home/philb/Pictures/3.jpeg"));
+//        background(Color.orange);
+        setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
     }
 
     @Override
@@ -50,8 +53,8 @@ public class PageEntryView extends AppPanel {
 //            penColor = Resources.COLOR_PHOTO_BORDER_SELECTED;
 //        }
 //
-        g.setColor(penColor);
-        g.drawRect(0, 0, 100, 100);
+//        g.setColor(penColor);
+//        g.drawRect(0, 0, 100, 100);
         //logger.info("Component has size " + getSize() + ", drawrect size {} {}", scaledWidth, scaledHeight);
     }
 }

@@ -10,10 +10,10 @@ import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.ApplicationUi;
 import ie.philb.album.ui.page.PageSpecification;
 import ie.philb.album.view.PageViewLayout;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -21,12 +21,14 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+
     public static void main(String args[]) {
 
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.info("Failed to set LookAndFeel", ex);
         }
 
         initModel();

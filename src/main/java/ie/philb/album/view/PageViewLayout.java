@@ -5,6 +5,7 @@
 package ie.philb.album.view;
 
 import ie.philb.album.ui.page.PageSpecification;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,50 +18,86 @@ public class PageViewLayout {
     private final PageSpecification pageSpecification;
     private final List<PageEntryCoordinates> coordinates;
 
-    private final int x;
-    private final int y;
+    private final int rows;
+    private final int columns;
+    private Insets margin = new Insets(10, 10, 10, 10);
 
-    public PageViewLayout(PageSpecification pageSpecification, int x, int y) {
-        this.coordinates = new ArrayList<>(x * y);
+    // Assume 10mm gap between cells vertically and horizontally
+    private int cellVerticalGap = 10;
+    private int cellHorizontalGap = 10;
+
+    public PageViewLayout(PageSpecification pageSpecification, int rows, int columns) {
+        this.coordinates = new ArrayList<>(rows * columns);
         this.pageSpecification = pageSpecification;
-        this.x = x;
-        this.y = y;
+        this.rows = rows;
+        this.columns = columns;
 
         initCoordinates();
     }
 
+    public Insets getMargin() {
+        return margin;
+    }
+
+    public void setMargin(Insets margin) {
+        this.margin = margin;
+    }
+
     public int entryCount() {
-        return (x * y);
+        return (rows * columns);
     }
 
     private void initCoordinates() {
 
-        int offsetX = 0;
-        int offsetY = 0;
-        int width = 100;
-        int height = 100;
+        int offsetX = margin.left;
+        int offsetY = margin.top;
+        int width = getCellWidth();
+        int height = getCellHeight();
 
-        for (int y = 0; y < this.y; y++) {
-            for (int x = 0; x < this.x; x++) {
+        for (int y = 0; y < getRows(); y++) {
+            for (int x = 0; x < getColumns(); x++) {
                 PageEntryCoordinates pec = new PageEntryCoordinates(offsetX, offsetY, width, height);
                 this.coordinates.add(pec);
-                offsetX += width + 10;
+                offsetX += width + cellHorizontalGap;
             }
-            offsetY += height + 10;
+            offsetX = margin.left;
+            offsetY += height + cellVerticalGap;
         }
 
+        System.out.println("Coordinates: " + coordinates);
     }
 
-    public int getX() {
-        return x;
+    private int getCellWidth() {
+
+        int interiorPageWidth = pageSpecification.width() - (margin.left + margin.right);
+        int totalGapWidth = (getColumns() - 1) * cellHorizontalGap;
+
+        int cellSpace = interiorPageWidth - totalGapWidth;
+        return cellSpace / getColumns();
     }
 
-    public int getY() {
-        return y;
+    private int getCellHeight() {
+        int interiorPageHeight = pageSpecification.height() - (margin.top + margin.bottom);
+        int totalGapHeight = (getRows() - 1) * cellVerticalGap;
+
+        int cellSpace = interiorPageHeight - totalGapHeight;
+        return cellSpace / getRows();
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
     }
 
     public List<PageEntryCoordinates> getEntryCoordinates() {
         return coordinates;
+    }
+
+    public PageSpecification getPageSpecification() {
+        return pageSpecification;
     }
 
 }

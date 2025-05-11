@@ -65,6 +65,8 @@ public class AlbumView extends AppPanel {
             pageView.setWidth(pageWidth);
             pageView.setBounds(horizontalInset, verticalInset, pageView.getWidth(), pageView.getHeight());
             horizontalInset += pageWidth + defaultInset;
+
+            pageView.positionEntries();
         }
 
         setPreferredSize(new Dimension(horizontalInset, parentHeight));
