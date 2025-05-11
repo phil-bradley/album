@@ -6,8 +6,8 @@ package ie.philb.album.view;
 
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
+import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.pagesizer.IsoPageSizer;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,8 @@ public class PageView extends AppPanel {
 
     public PageView(PageModel model) {
         setModel(model);
-        setLayout(new GridLayout(model.getLayout().getX(), model.getLayout().getY()));
+        background(Resources.COLOUR_ALBUM_BACKGROUND);
+//        setLayout(new GridLayout(model.getLayout().getX(), model.getLayout().getY()));
     }
 
     public final void setModel(PageModel model) {
@@ -50,13 +51,12 @@ public class PageView extends AppPanel {
 
     private void createEntries() {
 
-        int i = 0;
+        int entryCount = getPageLayout().getX() * getPageLayout().getY();
 
-        for (int y = 0; y < getPageLayout().getY(); y++) {
-            for (int x = 0; x < getPageLayout().getX(); x++) {
-                PageEntryView pageEntryView = new PageEntryView();
-                entries.add(pageEntryView);
-            }
+        for (int i = 0; i < entryCount; i++) {
+            PageEntryView pageEntryView = new PageEntryView();
+            entries.add(pageEntryView);
+
         }
 
         layoutEntries();
