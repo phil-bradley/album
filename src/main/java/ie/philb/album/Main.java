@@ -5,7 +5,11 @@
 package ie.philb.album;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import ie.philb.album.model.AlbumModel;
+import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.ApplicationUi;
+import ie.philb.album.ui.page.PageSpecification;
+import ie.philb.album.view.PageViewLayout;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -25,8 +29,24 @@ public class Main {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        initModel();
+
         java.awt.EventQueue.invokeLater(() -> {
             new ApplicationUi().setVisible(true);
         });
     }
+
+    private static void initModel() {
+        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
+
+        PageModel page1 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 2, 3));
+        albumModel.addPage(page1);
+
+        PageModel page2 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 3, 3));
+        albumModel.addPage(page2);
+
+        PageModel page3 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 2, 4));
+        albumModel.addPage(page3);
+    }
+
 }

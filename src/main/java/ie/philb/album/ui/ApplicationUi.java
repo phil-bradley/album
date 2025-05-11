@@ -99,8 +99,8 @@ public class ApplicationUi extends JFrame {
                 .weight(1);
 
         add(vSplit, gbc);
-        vSplit.setDividerLocation(200);
-        hSplit.setDividerLocation(200);
+        vSplit.setDividerLocation(300);
+        hSplit.setDividerLocation(300);
 
     }
 }

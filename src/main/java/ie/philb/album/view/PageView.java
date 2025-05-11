@@ -7,6 +7,7 @@ package ie.philb.album.view;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.pagesizer.IsoPageSizer;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +19,21 @@ import java.util.List;
  */
 public class PageView extends AppPanel {
 
-    private final List<PageEntryView> entries;
+    private List<PageEntryView> entries;
     private boolean isPageSelected = false;
     private PageEntryView selectedEntry = null;
     private PageModel model;
 
     public PageView(PageModel model) {
-        this.entries = new ArrayList<>(model.getLayout().entryCount());
+        setModel(model);
+        setLayout(new GridLayout(model.getLayout().getX(), model.getLayout().getY()));
     }
 
-    public void setModel(PageModel model) {
+    public final void setModel(PageModel model) {
         this.model = model;
+        this.entries = new ArrayList<>(model.getLayout().entryCount());
+
+        createEntries();
     }
 
     public PageViewLayout getPageLayout() {
@@ -42,4 +47,28 @@ public class PageView extends AppPanel {
     public void setWidth(int width) {
         setSize(width, new IsoPageSizer().getHeightFromWidth(width));
     }
+
+    private void createEntries() {
+
+        int i = 0;
+
+        for (int y = 0; y < getPageLayout().getY(); y++) {
+            for (int x = 0; x < getPageLayout().getX(); x++) {
+                PageEntryView pageEntryView = new PageEntryView();
+                entries.add(pageEntryView);
+            }
+        }
+
+        layoutEntries();
+
+    }
+
+    private void layoutEntries() {
+
+        for (PageEntryView pageEntryView : entries) {
+            add(pageEntryView);
+        }
+
+    }
+
 }
