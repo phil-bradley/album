@@ -17,35 +17,41 @@ import java.util.List;
 public class PageModel {
 
     private PageViewLayout layout;
-    private final List<PageEntryModel> images = new ArrayList<>();
+    private List<PageEntryModel> pageEntries;
 
     public PageModel(PageViewLayout layout) {
-        this.layout = layout;
+        setLayout(layout);
     }
 
-    public List<PageEntryModel> getImages() {
-        return Collections.unmodifiableList(images);
+    public List<PageEntryModel> getPageEntries() {
+        return Collections.unmodifiableList(pageEntries);
     }
 
-    public void addImage(File file) {
-        this.images.add(new PageEntryModel(file));
+    public void addImage(File file, int index) {
+
+        if (index >= layout.entryCount()) {
+            throw new IllegalArgumentException("Cannot add image at position " + index + " with page entry count = " + layout.entryCount());
+        }
+
+        pageEntries.set(index, new PageEntryModel(file));
     }
 
-    public void addImage(PageEntryModel image) {
-        this.images.add(image);
-    }
-
-    public PageViewLayout getLayout() {
+    public final PageViewLayout getLayout() {
         return layout;
     }
 
-    public void setLayout(PageViewLayout layout) {
+    public final void setLayout(PageViewLayout layout) {
         this.layout = layout;
+        this.pageEntries = new ArrayList<>(getLayout().entryCount());
+
+        for (int i = 0; i < getLayout().entryCount(); i++) {
+            pageEntries.add(null);
+        }
     }
 
     @Override
     public String toString() {
-        return "PageModel{" + "layout=" + layout + ", images=" + images + '}';
+        return "PageModel{" + "layout=" + layout + ", images=" + pageEntries + '}';
     }
 
 }

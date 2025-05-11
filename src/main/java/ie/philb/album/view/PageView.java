@@ -116,9 +116,10 @@ public class PageView extends AppPanel {
     private void populateEntries() {
 
         int i = 0;
-        for (PageEntryModel pem : model.getImages()) {
+        for (PageEntryModel pem : model.getPageEntries()) {
             PageEntryView view = pageEntriesViews.get(i);
             view.setModel(pem);
+            i++;
         }
     }
 }

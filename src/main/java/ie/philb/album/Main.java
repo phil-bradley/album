@@ -10,6 +10,7 @@ import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.ApplicationUi;
 import ie.philb.album.ui.page.PageSpecification;
 import ie.philb.album.view.PageViewLayout;
+import java.io.File;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.slf4j.Logger;
@@ -42,13 +43,17 @@ public class Main {
         AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
 
         PageModel page1 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 2, 3).withMargin(3).withCellGap(2));
+        page1.addImage(new File("/home/philb/Pictures/1.jpeg"), 0);
+        page1.addImage(new File("/home/philb/Pictures/2.jpg"), 1);
+        page1.addImage(new File("/home/philb/Pictures/4.jpeg"), 3);
+
         albumModel.addPage(page1);
 
-        PageModel page2 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 3, 3));
-        albumModel.addPage(page2);
-
-        PageModel page3 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 2, 4));
-        albumModel.addPage(page3);
+//        PageModel page2 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 3, 3));
+//        albumModel.addPage(page2);
+//
+//        PageModel page3 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 2, 4));
+//        albumModel.addPage(page3);
     }
 
 }

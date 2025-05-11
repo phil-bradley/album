@@ -28,7 +28,7 @@ public class PageEntryView extends AppPanel {
         gridbag();
 
         imagePanel = new ImagePanel();
-        imagePanel.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/placeholder.png")));
+        showPlacholder();
 
         GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).fillBoth().weight(1);
         add(imagePanel, gbc);
@@ -36,9 +36,19 @@ public class PageEntryView extends AppPanel {
         setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
     }
 
+    private void showPlacholder() {
+        imagePanel.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/placeholder.png")));
+
+    }
+
     public void setModel(PageEntryModel model) {
         this.pageEntryModel = model;
-        this.imagePanel.setIcon(pageEntryModel.getImageIcon());
+
+        if (model == null) {
+            showPlacholder();
+        } else {
+            this.imagePanel.setIcon(pageEntryModel.getImageIcon());
+        }
     }
 
     @Override
