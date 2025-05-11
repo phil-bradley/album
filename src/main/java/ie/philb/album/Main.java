@@ -41,7 +41,7 @@ public class Main {
     private static void initModel() {
         AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
 
-        PageModel page1 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 2, 3));
+        PageModel page1 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 2, 3).withMargin(3).withCellGap(2));
         albumModel.addPage(page1);
 
         PageModel page2 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 3, 3));

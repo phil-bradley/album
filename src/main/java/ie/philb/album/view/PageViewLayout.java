@@ -39,8 +39,41 @@ public class PageViewLayout {
         return margin;
     }
 
-    public void setMargin(Insets margin) {
+    public PageViewLayout withMargin(int margin) {
+        return withMargin(new Insets(margin, margin, margin, margin));
+    }
+
+    public PageViewLayout withMargin(Insets margin) {
         this.margin = margin;
+        initCoordinates();
+        return this;
+    }
+
+    public int getCellVerticalGap() {
+        return cellVerticalGap;
+    }
+
+    public PageViewLayout withCellVerticalGap(int cellVerticalGap) {
+        this.cellVerticalGap = cellVerticalGap;
+        initCoordinates();
+        return this;
+    }
+
+    public int getCellHorizontalGap() {
+        return cellHorizontalGap;
+    }
+
+    public PageViewLayout withCellHorizontalGap(int cellHorizontalGap) {
+        this.cellHorizontalGap = cellHorizontalGap;
+        initCoordinates();
+        return this;
+    }
+
+    public PageViewLayout withCellGap(int gap) {
+        this.cellHorizontalGap = gap;
+        this.cellVerticalGap = gap;
+        initCoordinates();
+        return this;
     }
 
     public int entryCount() {
@@ -48,6 +81,8 @@ public class PageViewLayout {
     }
 
     private void initCoordinates() {
+
+        this.coordinates.clear();
 
         int offsetX = margin.left;
         int offsetY = margin.top;
@@ -98,6 +133,11 @@ public class PageViewLayout {
 
     public PageSpecification getPageSpecification() {
         return pageSpecification;
+    }
+
+    @Override
+    public String toString() {
+        return "PageViewLayout{" + "pageSpecification=" + pageSpecification + ", coordinates=" + coordinates + ", rows=" + rows + ", columns=" + columns + ", margin=" + margin + ", cellVerticalGap=" + cellVerticalGap + ", cellHorizontalGap=" + cellHorizontalGap + '}';
     }
 
 }

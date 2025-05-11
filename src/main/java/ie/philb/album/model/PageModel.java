@@ -38,4 +38,9 @@ public class PageModel {
         this.layout = layout;
     }
 
+    @Override
+    public String toString() {
+        return "PageModel{" + "layout=" + layout + ", images=" + images + '}';
+    }
+
 }

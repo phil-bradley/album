@@ -30,6 +30,7 @@ public class PageView extends AppPanel {
     private PageModel model;
 
     public PageView(PageModel model) {
+        LOG.info("Got page model " + model);
         setModel(model);
         background(Resources.COLOUR_ALBUM_BACKGROUND);
         setLayout(null);
