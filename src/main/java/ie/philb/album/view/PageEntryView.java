@@ -5,6 +5,7 @@
 package ie.philb.album.view;
 
 import ie.philb.album.ui.common.AppPanel;
+import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.ImagePanel;
 import ie.philb.album.ui.common.Resources;
 import java.awt.Color;
@@ -21,8 +22,14 @@ public class PageEntryView extends AppPanel {
     private ImagePanel imagePanel;
 
     public PageEntryView() {
+
+        gridbag();
+
         imagePanel = new ImagePanel(new ImageIcon("/home/philb/Pictures/3.jpeg"));
-//        background(Color.orange);
+
+        GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).fillBoth().weight(1);
+        add(imagePanel, gbc);
+
         setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
     }
 
