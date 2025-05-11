@@ -5,6 +5,7 @@
 package ie.philb.album.model;
 
 import ie.philb.album.view.PageViewLayout;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,17 +17,21 @@ import java.util.List;
 public class PageModel {
 
     private PageViewLayout layout;
-    private final List<ImageModel> images = new ArrayList<>();
+    private final List<PageEntryModel> images = new ArrayList<>();
 
     public PageModel(PageViewLayout layout) {
         this.layout = layout;
     }
 
-    public List<ImageModel> getImages() {
+    public List<PageEntryModel> getImages() {
         return Collections.unmodifiableList(images);
     }
 
-    public void addImage(ImageModel image) {
+    public void addImage(File file) {
+        this.images.add(new PageEntryModel(file));
+    }
+
+    public void addImage(PageEntryModel image) {
         this.images.add(image);
     }
 

@@ -4,6 +4,7 @@
  */
 package ie.philb.album.view;
 
+import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.ImagePanel;
@@ -19,18 +20,25 @@ import javax.swing.ImageIcon;
  */
 public class PageEntryView extends AppPanel {
 
-    private ImagePanel imagePanel;
+    private PageEntryModel pageEntryModel;
+    private final ImagePanel imagePanel;
 
     public PageEntryView() {
 
         gridbag();
 
-        imagePanel = new ImagePanel(new ImageIcon("/home/philb/Pictures/3.jpeg"));
+        imagePanel = new ImagePanel();
+        imagePanel.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/placeholder.png")));
 
         GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).fillBoth().weight(1);
         add(imagePanel, gbc);
 
         setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+    }
+
+    public void setModel(PageEntryModel model) {
+        this.pageEntryModel = model;
+        this.imagePanel.setIcon(pageEntryModel.getImageIcon());
     }
 
     @Override

@@ -4,6 +4,7 @@
  */
 package ie.philb.album.view;
 
+import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
@@ -24,7 +25,7 @@ public class PageView extends AppPanel {
 
     private static final Logger LOG = LoggerFactory.getLogger(PageView.class);
 
-    private List<PageEntryView> entries;
+    private List<PageEntryView> pageEntriesViews;
     private boolean isPageSelected = false;
     private PageEntryView selectedEntry = null;
     private PageModel model;
@@ -34,12 +35,11 @@ public class PageView extends AppPanel {
         setModel(model);
         background(Resources.COLOUR_ALBUM_BACKGROUND);
         setLayout(null);
-//        setLayout(new GridLayout(model.getLayout().getX(), model.getLayout().getY()));
     }
 
     public final void setModel(PageModel model) {
         this.model = model;
-        this.entries = new ArrayList<>(model.getLayout().entryCount());
+        this.pageEntriesViews = new ArrayList<>(model.getLayout().entryCount());
 
         createEntries();
     }
@@ -64,12 +64,13 @@ public class PageView extends AppPanel {
 
         for (int i = 0; i < entryCount; i++) {
             PageEntryView pageEntryView = new PageEntryView();
-            entries.add(pageEntryView);
+            pageEntriesViews.add(pageEntryView);
             add(pageEntryView);
 
         }
 
         positionEntries();
+        populateEntries();
 
     }
 
@@ -86,7 +87,7 @@ public class PageView extends AppPanel {
 
         int i = 0;
 
-        for (PageEntryView pageEntryView : entries) {
+        for (PageEntryView pageEntryView : pageEntriesViews) {
             PageEntryCoordinates entryCoordinates = coordinates.get(i);
             LOG.info("Got coordinates for entry {}: {}", i, coordinates);
 
@@ -112,19 +113,12 @@ public class PageView extends AppPanel {
         return scaled;
     }
 
-//    private Dimension getScaledEntrySize() {
-//
-//        int pageWidthPx = getSize().width;
-//        int pageHeightPx = getSize().height;
-//
-//        int cellWidthMillis = getCellWidthMillis();
-//        int cellHeightMillis = getCellHeightMillis();
-//
-//        // Find the scaling factor to convert from mm to our size on screen
-//        double millisToPx = (double) (getPageLayout().getPageSpecification().width()) / (double) getWidth();
-//        int cellWidthPx = (int) (cellWidthMillis / millisToPx);
-//        int cellHeightPx = (int) (cellHeightMillis / millisToPx);
-//
-//        return new Dimension(cellWidthPx, cellHeightPx);
-//    }
+    private void populateEntries() {
+
+        int i = 0;
+        for (PageEntryModel pem : model.getImages()) {
+            PageEntryView view = pageEntriesViews.get(i);
+            view.setModel(pem);
+        }
+    }
 }

@@ -29,7 +29,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
     private final List<ZoomablePanelListener> listeners = new ArrayList<>();
 
     private ImageIcon imageIcon;
-    private ImagePanelFill fill = ImagePanelFill.CropToFit;
+    private ImagePanelFill fill = ImagePanelFill.BestFit;
     private double zoomFactor = 1;
     private double prevZoomFactor = 1;
     private boolean zoomer;
@@ -126,7 +126,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         BufferedImage scaled = getScaledImage();
 
         int x = (getAvailableWidth() - scaled.getWidth()) / 2 + getInsets().left;
-        int y = 0;
+        int y = (getAvailableHeight() - scaled.getHeight()) / 2 + getInsets().top;
         g.drawImage(scaled, x, y, null);
     }
 
@@ -150,7 +150,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         if (scaled == null) {
             return null;
         }
-        
+
         int cropWidth = getCropWidth();
         int cropHeight = getCropHeight();
 
