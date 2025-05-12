@@ -9,6 +9,9 @@ import ie.philb.album.model.AlbumModel;
 import ie.philb.album.ui.action.Callback;
 import ie.philb.album.ui.action.CreatePdfAction;
 import ie.philb.album.ui.common.Dialogs;
+import ie.philb.album.ui.common.PdfViewDialog;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -21,11 +24,21 @@ public class CreatePdfCommand extends AbstractCommand {
         AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
 
         new CreatePdfAction(albumModel).execute(
-                new Callback<Void>() {
+                new Callback<File>() {
 
             @Override
-            public void onSuccess(Void result) {
-                Dialogs.showInfoMessage("Done!");
+            public void onSuccess(File result) {
+                boolean ok = Dialogs.confirm("Done!", "Preview the result?");
+                if (ok) {
+                    PdfViewDialog dlg = new PdfViewDialog();
+
+                    try {
+                        dlg.setFile(result);
+                        dlg.setVisible(true);
+                    } catch (IOException ex) {
+                        Dialogs.showErrorMessage("Failed to load PDF: " + ex.getMessage());
+                    }
+                }
             }
 
             @Override

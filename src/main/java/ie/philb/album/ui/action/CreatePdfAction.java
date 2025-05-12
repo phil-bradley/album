@@ -5,6 +5,7 @@
 package ie.philb.album.ui.action;
 
 import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
@@ -15,14 +16,16 @@ import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.page.PageSpecification;
 import ie.philb.album.view.PageEntryCoordinates;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
  *
  * @author Philip.Bradley
  */
-public class CreatePdfAction extends AbstractAction<Void> {
+public class CreatePdfAction extends AbstractAction<File> {
 
     private final AlbumModel albumModel;
 
@@ -33,14 +36,18 @@ public class CreatePdfAction extends AbstractAction<Void> {
     }
 
     @Override
-    protected Void execute() throws Exception {
+    protected File execute() throws Exception {
 
         logger.info("Creating doc...");
+        File outFile = null;
+
         try (Document doc = new Document(getPageSize(albumModel))) {
+            outFile = File.createTempFile("album-", "pdf");
+
             logger.info("Doc has size " + doc.getPageSize());
 
             // Creating the writer implicitly causes the doc to be written to the file
-            PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream("hello.pdf"));
+            PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(outFile));
             doc.open();
 
             for (PageModel pageModel : albumModel.getPages()) {
@@ -87,10 +94,11 @@ public class CreatePdfAction extends AbstractAction<Void> {
 
             doc.close();
             writer.close();
+        } catch (DocumentException | IOException ex) {
+
         }
 
-        return null;
-
+        return outFile;
     }
 
     private int millisToUnits(int millis) {
