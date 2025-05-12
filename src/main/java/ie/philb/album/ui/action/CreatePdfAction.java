@@ -9,17 +9,13 @@ import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfWriter;
+import ie.philb.album.model.AlbumModel;
+import ie.philb.album.model.PageEntryModel;
+import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.Resources;
-import ie.philb.album.ui.page.Page;
-import ie.philb.album.ui.page.PagePanelEntry;
-import ie.philb.album.util.ImageUtils;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.image.BufferedImage;
+import ie.philb.album.view.PageEntryCoordinates;
 import java.io.FileOutputStream;
-import java.nio.Buffer;
-import java.util.ArrayList;
-import java.util.List;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -27,41 +23,47 @@ import java.util.List;
  */
 public class CreatePdfAction extends AbstractAction<Void> {
 
-    private final List<Page> pages = new ArrayList<>();
+    private final AlbumModel albumModel;
 
     private static final double MILLIS_TO_INCH = 0.0393701d;
 
-    public CreatePdfAction(List<Page> pages) {
-        this.pages.addAll(pages);
+    public CreatePdfAction(AlbumModel albumModel) {
+        this.albumModel = albumModel;
     }
 
     @Override
     protected Void execute() throws Exception {
 
         logger.info("Creating doc...");
-        try (Document doc = new Document(PageSize.A4.rotate())) {
+        try (Document doc = new Document(getPageSize(albumModel))) {
             logger.info("Doc has size " + doc.getPageSize());
 
             // Creating the writer implicitly causes the doc to be written to the file
             PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream("hello.pdf"));
             doc.open();
 
-            for (Page page : pages) {
-                for (PagePanelEntry pagePanelEntry : page.getPagePanelEntries()) {
+            for (PageModel pageModel : albumModel.getPages()) {
 
-                    java.awt.Image croppedImage = pagePanelEntry.imagePanel.getCroppedImage();
+                int i = 0;
+                for (PageEntryModel pageEntryModel : pageModel.getPageEntries()) {
 
-                    if (croppedImage == null) {
-                        croppedImage = ImageUtils.createImage(new Dimension(20, 20), Color.white);
+                    PageEntryCoordinates coordinates = pageModel.getLayout().getEntryCoordinates().get(i);
+
+                    java.awt.Image albumImage = null;
+
+                    if (pageEntryModel != null) {
+                        albumImage = pageEntryModel.getImageIcon().getImage();
                     }
 
-                    Image img = Image.getInstance(croppedImage, null);
+                    if (albumImage == null) {
+                        albumImage = ImageIO.read(this.getClass().getResourceAsStream("/ie/philb/album/placeholder.png"));
+                    }
 
-                    int widthUnits = millisToUnits(pagePanelEntry.pageEntry.getWidth());
-                    int heightUnits = millisToUnits(pagePanelEntry.pageEntry.getHeight());
-
-                    int xOffsetUnits = millisToUnits(pagePanelEntry.pageEntry.getOffsetX());
-                    int yOffsetUnits = millisToUnits(pagePanelEntry.pageEntry.getOffsetY());
+                    Image img = Image.getInstance(albumImage, null);
+                    int widthUnits = millisToUnits(coordinates.width());
+                    int heightUnits = millisToUnits(coordinates.height());
+                    int xOffsetUnits = millisToUnits(coordinates.offsetX());
+                    int yOffsetUnits = millisToUnits(coordinates.offsetY());
 
                     img.scaleToFit(widthUnits, heightUnits);
                     img.setAbsolutePosition(xOffsetUnits, yOffsetUnits);
@@ -71,7 +73,7 @@ public class CreatePdfAction extends AbstractAction<Void> {
                     img.setBorderWidth(0.01f);
 
                     doc.add(img);
-
+                    i++;
                 }
 
                 doc.newPage();
@@ -88,6 +90,10 @@ public class CreatePdfAction extends AbstractAction<Void> {
         // X mm to units = X * 72 * 0.0393701
 
         return (int) (millis * 72d * MILLIS_TO_INCH);
+    }
+
+    private Rectangle getPageSize(AlbumModel am) {
+        return PageSize.A4.rotate();
     }
 
 }

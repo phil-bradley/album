@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui;
 
+import ie.philb.album.ui.command.CreatePdfCommand;
 import ie.philb.album.ui.command.ExitCommand;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.imagelibrary.ImageLibraryView;
@@ -40,6 +41,7 @@ public class ApplicationUi extends JFrame {
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JButton btnExit;
+    private JButton btnPdf;
 
     public ApplicationUi() {
 
@@ -106,6 +108,12 @@ public class ApplicationUi extends JFrame {
         });
 
         toolBar.add(btnExit);
+
+        btnPdf = new JButton("PDF");
+        btnPdf.addActionListener((ActionEvent ae) -> {
+            new CreatePdfCommand().execute();
+        });
+        toolBar.add(btnPdf);
     }
 
     private void layoutComponents() {
