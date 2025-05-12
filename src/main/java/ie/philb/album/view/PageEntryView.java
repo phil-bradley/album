@@ -4,13 +4,14 @@
  */
 package ie.philb.album.view;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.ImagePanel;
 import ie.philb.album.ui.common.Resources;
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
@@ -22,6 +23,7 @@ public class PageEntryView extends AppPanel {
 
     private PageEntryModel pageEntryModel;
     private final ImagePanel imagePanel;
+    private boolean isSelected = false;
 
     public PageEntryView() {
 
@@ -33,7 +35,21 @@ public class PageEntryView extends AppPanel {
         GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).fillBoth().weight(1);
         add(imagePanel, gbc);
 
-        setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+        updateBorder();
+        imagePanel.addMouseListener(this);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent evt) {
+        setSelected(!isSelected);
+    }
+
+    private void updateBorder() {
+        setBorder(BorderFactory.createLineBorder(getBorderColor()));
+    }
+
+    private Color getBorderColor() {
+        return isSelected ? Resources.COLOR_PHOTO_BORDER_SELECTED : Resources.COLOR_PHOTO_BORDER;
     }
 
     private void showPlacholder() {
@@ -51,35 +67,12 @@ public class PageEntryView extends AppPanel {
         }
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void setSelected(boolean b) {
+        this.isSelected = b;
+        updateBorder();
 
-        // First find the scaling factor to convert from mm to our size on screen
-//        double millisToPx = (double) (pageLayout.getPageSpecification().width()) / (double) getWidth();
-//
-//        int scaledWidth = (int) (pageEntry.getWidth() / millisToPx);
-//        int scaledHeight = (int) (pageEntry.getHeight() / millisToPx);
-//
-//        int x = (int) (pageEntry.getOffsetX() / millisToPx);
-//        int y = (int) (pageEntry.getOffsetY() / millisToPx);
-//
-//        if (imagePanel.getIcon() == null) {
-//            imagePanel.setIcon(pageEntry.getIcon());
-//        }
-//
-//        imagePanel.setSize(scaledWidth, scaledHeight);
-//        imagePanel.setBounds(x, y, scaledWidth, scaledHeight);
-//        imagePanel.repaint();
-//
-        Color penColor = Resources.COLOR_PHOTO_BORDER;
-//
-//        if (isPageSelected && selectedEntry == pagePanelEntry) {
-//            penColor = Resources.COLOR_PHOTO_BORDER_SELECTED;
-//        }
-//
-//        g.setColor(penColor);
-//        g.drawRect(0, 0, 100, 100);
-        //logger.info("Component has size " + getSize() + ", drawrect size {} {}", scaledWidth, scaledHeight);
+        if (isSelected) {
+            AppContext.INSTANCE.imageEntrySelected(this);
+        }
     }
 }

@@ -4,12 +4,16 @@
  */
 package ie.philb.album.ui.common;
 
-import ie.philb.album.ui.config.UiConfigListener;
 import ie.philb.album.ui.config.UiConfig;
+import ie.philb.album.ui.config.UiConfigListener;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Objects;
+import java.util.UUID;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -20,14 +24,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philip.Bradley
  */
-public class AppPanel extends JPanel implements UiConfigListener {
+public class AppPanel extends JPanel implements UiConfigListener, MouseListener {
 
     private static final long serialVersionUID = 1L;
-
+    private final UUID panelId = UUID.randomUUID();
     protected static final Logger logger = LoggerFactory.getLogger(AppPanel.class);
 
+//    private final List<MouseListener> mouseListeners = new ArrayList<>();
     public AppPanel() {
         super();
+
         gridbag();
         opaque(false);
         setName(getClass().getSimpleName());
@@ -151,6 +157,63 @@ public class AppPanel extends JPanel implements UiConfigListener {
     @Override
     public void uiConfigUpdated(UiConfig config) {
         repaint();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent me) {
+        for (var mouseListener : getMouseListeners()) {
+            mouseListener.mouseClicked(me);
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent me) {
+        for (var mouseListener : getMouseListeners()) {
+            mouseListener.mousePressed(me);
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent me) {
+        for (var mouseListener : getMouseListeners()) {
+            mouseListener.mouseReleased(me);
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent me) {
+        for (var mouseListener : getMouseListeners()) {
+            mouseListener.mouseEntered(me);
+        }
+    }
+
+    @Override
+    public void mouseExited(MouseEvent me) {
+        for (var mouseListener : getMouseListeners()) {
+            mouseListener.mouseExited(me);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 23 * hash + Objects.hashCode(this.panelId);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AppPanel other = (AppPanel) obj;
+        return Objects.equals(this.panelId, other.panelId);
     }
 
 }

@@ -4,13 +4,13 @@
  */
 package ie.philb.album;
 
-import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
+import ie.philb.album.view.PageEntryView;
 
 /**
  *
  * @author Philip.Bradley
  */
-public interface AppListener {
+public interface ApplicationListener {
 
-    void listenerSelected(ImageEntrySelectionListener listener);
+    void imageEntrySelected(PageEntryView view);
 }

@@ -46,14 +46,14 @@ public class Main {
         page1.addImage(new File("/home/philb/Pictures/1.jpeg"), 0);
         page1.addImage(new File("/home/philb/Pictures/2.jpg"), 1);
         page1.addImage(new File("/home/philb/Pictures/4.jpeg"), 3);
-
         albumModel.addPage(page1);
 
-//        PageModel page2 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 3, 3));
-//        albumModel.addPage(page2);
-//
-//        PageModel page3 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 2, 4));
-//        albumModel.addPage(page3);
+        PageModel page2 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 3, 3));
+        page2.addImage(new File("/home/philb/Pictures/7.jpg"), 2);
+        albumModel.addPage(page2);
+
+        PageModel page3 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 2, 4));
+        albumModel.addPage(page3);
     }
 
 }

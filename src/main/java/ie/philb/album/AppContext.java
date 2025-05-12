@@ -9,6 +9,7 @@ import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.page.Album;
 import ie.philb.album.ui.page.PageLayout;
+import ie.philb.album.view.PageEntryView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,46 +17,44 @@ import java.util.List;
  *
  * @author Philip.Bradley
  */
-public enum AppContext {
+public enum AppContext implements ApplicationListener {
 
     INSTANCE;
 
-    private final List<AppListener> listeners = new ArrayList<>();
+    private final List<ApplicationListener> applicationListeners = new ArrayList<>();
     private final Album album = new Album();
     private final AlbumModel albumModel = new AlbumModel();
 
-    private ImageEntrySelectionListener listener;
-
-    public void addListener(AppListener l) {
-        this.listeners.add(l);
+//    private ImageEntrySelectionListener listener;
+    public void addListener(ApplicationListener l) {
+        this.applicationListeners.add(l);
     }
 
-    public void removeListener(AppListener l) {
-        this.listeners.remove(l);
+    public void removeListener(ApplicationListener l) {
+        this.applicationListeners.remove(l);
     }
 
     public void imageSelected(ImageLibraryEntry entry) {
-        if (listener != null) {
-            listener.imageSelected(entry);
-        }
+//        if (listener != null) {
+//            listener.imageSelected(entry);
+//        }
     }
 
     public void setImageEntryListener(ImageEntrySelectionListener imageEntryListener) {
-        this.listener = imageEntryListener;
-
-        for (AppListener l : listeners) {
-            l.listenerSelected(imageEntryListener);
-        }
+//        this.listener = imageEntryListener;
+//
+//        for (ApplicationListener l : applicationListeners) {
+//            l.listenerSelected(imageEntryListener);
+//        }
     }
 
     public void setPageLayouts(List<PageLayout> pageLayouts) {
 
-        album.clearPages();
-
-        for (PageLayout layout : pageLayouts) {
-            album.createPage(layout);
-        }
-
+//        album.clearPages();
+//
+//        for (PageLayout layout : pageLayouts) {
+//            album.createPage(layout);
+//        }
     }
 
     public Album getAlbum() {
@@ -66,7 +65,10 @@ public enum AppContext {
         return albumModel;
     }
 
-//    public List<PageLayout> getPageLayouts() {
-//        return Collections.unmodifiableList(pageLayouts);
-//    }
+    @Override
+    public void imageEntrySelected(PageEntryView view) {
+        applicationListeners.forEach(appListener -> {
+            appListener.imageEntrySelected(view);
+        });
+    }
 }

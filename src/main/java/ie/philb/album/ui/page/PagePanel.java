@@ -63,9 +63,9 @@ public class PagePanel extends AppPanel implements ImageEntrySelectionListener, 
             }
         });
 
-        AppContext.INSTANCE.addListener((ImageEntrySelectionListener listener) -> {
-            setPageSelected(false);
-        });
+//        AppContext.INSTANCE.addListener((ImageEntrySelectionListener listener) -> {
+//            setPageSelected(false);
+//        });
     }
 
     private PagePanelEntry getSelectedEntry(Point mousePosition) {
