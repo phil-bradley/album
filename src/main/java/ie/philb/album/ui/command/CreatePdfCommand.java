@@ -8,7 +8,7 @@ import ie.philb.album.AppContext;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.ui.action.Callback;
 import ie.philb.album.ui.action.CreatePdfAction;
-import javax.swing.JOptionPane;
+import ie.philb.album.ui.common.Dialogs;
 
 /**
  *
@@ -25,12 +25,12 @@ public class CreatePdfCommand extends AbstractCommand {
 
             @Override
             public void onSuccess(Void result) {
-                JOptionPane.showMessageDialog(null, "Done!");
+                Dialogs.showInfoMessage("Done!");
             }
 
             @Override
             public void onFailure(Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error!\n" + ex.getMessage());
+                Dialogs.showErrorMessage("Error", "Failed to save PDF: " + ex.getMessage());
             }
         }
         );

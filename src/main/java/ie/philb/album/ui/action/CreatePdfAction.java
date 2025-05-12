@@ -13,6 +13,7 @@ import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.Resources;
+import ie.philb.album.ui.page.PageSpecification;
 import ie.philb.album.view.PageEntryCoordinates;
 import java.io.FileOutputStream;
 import javax.imageio.ImageIO;
@@ -47,6 +48,7 @@ public class CreatePdfAction extends AbstractAction<Void> {
                 int i = 0;
                 for (PageEntryModel pageEntryModel : pageModel.getPageEntries()) {
 
+                    PageSpecification pageSpecification = pageModel.getLayout().getPageSpecification();
                     PageEntryCoordinates coordinates = pageModel.getLayout().getEntryCoordinates().get(i);
 
                     java.awt.Image albumImage = null;
@@ -63,9 +65,13 @@ public class CreatePdfAction extends AbstractAction<Void> {
                     int widthUnits = millisToUnits(coordinates.width());
                     int heightUnits = millisToUnits(coordinates.height());
                     int xOffsetUnits = millisToUnits(coordinates.offsetX());
-                    int yOffsetUnits = millisToUnits(coordinates.offsetY());
 
-                    img.scaleToFit(widthUnits, heightUnits);
+                    // Coordinate system in the spec starts at top left, openpdf starts at bottom left
+                    int yOffsetUnits = millisToUnits(pageSpecification.height() - (coordinates.height() + coordinates.offsetY()));
+
+                    //img.scaleToFit(widthUnits, heightUnits);
+                    img.scaleAbsolute(widthUnits, heightUnits);
+
                     img.setAbsolutePosition(xOffsetUnits, yOffsetUnits);
 
                     img.setBorder(Rectangle.BOX);
@@ -78,6 +84,9 @@ public class CreatePdfAction extends AbstractAction<Void> {
 
                 doc.newPage();
             }
+
+            doc.close();
+            writer.close();
         }
 
         return null;

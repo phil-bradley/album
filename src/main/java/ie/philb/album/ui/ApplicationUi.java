@@ -115,7 +115,8 @@ public class ApplicationUi extends JFrame {
 
         toolBar.add(btnExit);
 
-        btnPdf = new JButton("PDF");
+        btnPdf = new JButton();
+        btnPdf.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/icons/page.png")));
         btnPdf.addActionListener((ActionEvent ae) -> {
             new CreatePdfCommand().execute();
         });
