@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.common;
 
+import ie.philb.album.ui.ApplicationUi;
 import javax.swing.JOptionPane;
 
 /**
@@ -11,13 +12,13 @@ import javax.swing.JOptionPane;
  * @author philipb
  */
 public class Dialogs {
- 
+
     public static boolean confirm(String msg) {
         return confirm(msg, "Confirm");
     }
-    
+
     public static boolean confirm(String msg, String title) {
-        int ret = JOptionPane.showConfirmDialog(null, msg, title, JOptionPane.YES_OPTION);        
+        int ret = JOptionPane.showConfirmDialog(ApplicationUi.getInstance(), msg, title, JOptionPane.YES_OPTION);
         return (ret == JOptionPane.YES_OPTION);
     }
 }

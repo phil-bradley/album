@@ -35,7 +35,7 @@ public class Main {
         initModel();
 
         java.awt.EventQueue.invokeLater(() -> {
-            new ApplicationUi().setVisible(true);
+            ApplicationUi.getInstance().setVisible(true);
         });
     }
 

@@ -31,6 +31,8 @@ import javax.swing.WindowConstants;
  */
 public class ApplicationUi extends JFrame {
 
+    private static final ApplicationUi INSTANCE = new ApplicationUi();
+
     private ImageLibraryView imageLibraryView;
     private PageOverviewPanel pageOverviewPanel;
     private AlbumViewContainer albumViewContainer;
@@ -43,7 +45,11 @@ public class ApplicationUi extends JFrame {
     private JButton btnExit;
     private JButton btnPdf;
 
-    public ApplicationUi() {
+    public static ApplicationUi getInstance() {
+        return INSTANCE;
+    }
+
+    private ApplicationUi() {
 
         initComponents();
 
