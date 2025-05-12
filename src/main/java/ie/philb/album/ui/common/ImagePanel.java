@@ -60,6 +60,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
 
     public void setIcon(ImageIcon icon) {
         this.imageIcon = icon;
+        repaint();
     }
 
     public ImageIcon getIcon() {

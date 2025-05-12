@@ -14,17 +14,21 @@ import javax.swing.ImageIcon;
  */
 public class PageEntryModel {
 
-    private final File imageFile;
+    private ImageIcon imageIcon;
 
     public PageEntryModel(File imageFile) {
-        this.imageFile = imageFile;
+        try {
+            this.imageIcon = new ImageIcon(imageFile.getCanonicalPath());
+        } catch (IOException ex) {
+            throw new RuntimeException("Cannot load icon", ex);
+        }
     }
 
     public ImageIcon getImageIcon() {
-        try {
-            return new ImageIcon(imageFile.getCanonicalPath());
-        } catch (IOException ex) {
-            return null;
-        }
+        return imageIcon;
+    }
+
+    public void setImageIcon(ImageIcon imageIcon) {
+        this.imageIcon = imageIcon;
     }
 }

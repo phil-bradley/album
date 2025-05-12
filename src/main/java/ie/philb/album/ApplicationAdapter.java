@@ -4,6 +4,7 @@
  */
 package ie.philb.album;
 
+import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.view.PageEntryView;
 
 /**
@@ -14,6 +15,10 @@ public class ApplicationAdapter implements ApplicationListener {
 
     @Override
     public void imageEntrySelected(PageEntryView view) {
+    }
+
+    @Override
+    public void libraryImageSelected(ImageLibraryEntry entry) {
     }
 
 }

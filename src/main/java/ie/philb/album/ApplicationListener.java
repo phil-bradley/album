@@ -4,6 +4,7 @@
  */
 package ie.philb.album;
 
+import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.view.PageEntryView;
 
 /**
@@ -13,4 +14,6 @@ import ie.philb.album.view.PageEntryView;
 public interface ApplicationListener {
 
     void imageEntrySelected(PageEntryView view);
+
+    void libraryImageSelected(ImageLibraryEntry entry);
 }

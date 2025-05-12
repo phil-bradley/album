@@ -27,6 +27,7 @@ public class PageEntryView extends AppPanel {
 
     public PageEntryView() {
 
+        super();
         gridbag();
 
         imagePanel = new ImagePanel();
@@ -60,7 +61,7 @@ public class PageEntryView extends AppPanel {
     public void setModel(PageEntryModel model) {
         this.pageEntryModel = model;
 
-        if (model == null) {
+        if (pageEntryModel == null) {
             showPlacholder();
         } else {
             this.imagePanel.setIcon(pageEntryModel.getImageIcon());

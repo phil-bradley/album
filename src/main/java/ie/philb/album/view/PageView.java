@@ -10,6 +10,7 @@ import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
+import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.pagesizer.IsoPageSizer;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class PageView extends AppPanel {
 
     private List<PageEntryView> pageEntriesViews;
     private boolean isPageSelected = false;
-//    private PageEntryView selectedEntry = null;
+    private PageEntryView selectedEntryView = null;
     private PageModel model;
 
     public PageView(PageModel model) {
@@ -48,12 +49,42 @@ public class PageView extends AppPanel {
 
     private void clearDeselectedViews(PageEntryView selectedView) {
 
+        this.selectedEntryView = null;
+
         for (PageEntryView pageEntryView : pageEntriesViews) {
-            if (!pageEntryView.equals(selectedView)) {
+            if (pageEntryView.equals(selectedView)) {
+                this.selectedEntryView = pageEntryView;
+            } else {
                 pageEntryView.setSelected(false);
 
             }
         }
+    }
+
+    private int getSelectedIndex() {
+
+        int selectedIndex = 0;
+        for (PageEntryView view : pageEntriesViews) {
+            if (view.equals(selectedEntryView)) {
+                return selectedIndex;
+            }
+
+            selectedIndex++;
+        }
+
+        return -1;
+    }
+
+    @Override
+    public void libraryImageSelected(ImageLibraryEntry imageLibraryEntry) {
+        int selectedIdx = getSelectedIndex();
+
+        if (selectedIdx == -1) {
+            return;
+        }
+
+        model.setImage(imageLibraryEntry.getFile(), selectedIdx);
+        selectedEntryView.setModel(model.getPageEntries().get(selectedIdx));
     }
 
     public final void setModel(PageModel model) {

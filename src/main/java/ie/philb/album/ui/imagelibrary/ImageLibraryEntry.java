@@ -46,4 +46,8 @@ public class ImageLibraryEntry {
 
         return icon;
     }
+
+    public File getFile() {
+        return file;
+    }
 }

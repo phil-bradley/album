@@ -27,7 +27,7 @@ public class PageModel {
         return Collections.unmodifiableList(pageEntries);
     }
 
-    public void addImage(File file, int index) {
+    public void setImage(File file, int index) {
 
         if (index >= layout.entryCount()) {
             throw new IllegalArgumentException("Cannot add image at position " + index + " with page entry count = " + layout.entryCount());

@@ -71,4 +71,11 @@ public enum AppContext implements ApplicationListener {
             appListener.imageEntrySelected(view);
         });
     }
+
+    @Override
+    public void libraryImageSelected(ImageLibraryEntry entry) {
+        applicationListeners.forEach(appListener -> {
+            appListener.libraryImageSelected(entry);
+        });
+    }
 }

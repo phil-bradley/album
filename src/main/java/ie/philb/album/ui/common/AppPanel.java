@@ -4,8 +4,12 @@
  */
 package ie.philb.album.ui.common;
 
+import ie.philb.album.AppContext;
+import ie.philb.album.ApplicationListener;
 import ie.philb.album.ui.config.UiConfig;
 import ie.philb.album.ui.config.UiConfigListener;
+import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
+import ie.philb.album.view.PageEntryView;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -24,7 +28,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philip.Bradley
  */
-public class AppPanel extends JPanel implements UiConfigListener, MouseListener {
+public class AppPanel extends JPanel implements UiConfigListener, MouseListener, ApplicationListener {
 
     private static final long serialVersionUID = 1L;
     private final UUID panelId = UUID.randomUUID();
@@ -37,6 +41,8 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener 
         gridbag();
         opaque(false);
         setName(getClass().getSimpleName());
+
+        AppContext.INSTANCE.addListener(this);
     }
 
     public AppPanel layoutGridBag() {
@@ -214,6 +220,14 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener 
         }
         final AppPanel other = (AppPanel) obj;
         return Objects.equals(this.panelId, other.panelId);
+    }
+
+    @Override
+    public void imageEntrySelected(PageEntryView view) {
+    }
+
+    @Override
+    public void libraryImageSelected(ImageLibraryEntry entry) {
     }
 
 }

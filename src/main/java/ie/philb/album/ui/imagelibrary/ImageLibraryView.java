@@ -45,7 +45,7 @@ public class ImageLibraryView extends AppPanel {
                     ImageLibraryEntry selected = list.getSelectedValue();
 
                     if (selected != null) {
-                        AppContext.INSTANCE.imageSelected(selected);
+                        AppContext.INSTANCE.libraryImageSelected(selected);
                     }
                 }
             }
