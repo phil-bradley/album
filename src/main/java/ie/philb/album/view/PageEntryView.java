@@ -13,7 +13,6 @@ import ie.philb.album.ui.common.Resources;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 
 /**
  *
@@ -31,7 +30,6 @@ public class PageEntryView extends AppPanel {
         gridbag();
 
         imagePanel = new ImagePanel();
-        showPlacholder();
 
         GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).fillBoth().weight(1);
         add(imagePanel, gbc);
@@ -53,17 +51,14 @@ public class PageEntryView extends AppPanel {
         return isSelected ? Resources.COLOR_PHOTO_BORDER_SELECTED : Resources.COLOR_PHOTO_BORDER;
     }
 
-    private void showPlacholder() {
-        imagePanel.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/placeholder.png")));
-
-    }
-
+//    private void showPlacholder() {
+//        imagePanel.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/placeholder.png")));
+//
+//    }
     public void setModel(PageEntryModel model) {
         this.pageEntryModel = model;
 
-        if (pageEntryModel == null) {
-            showPlacholder();
-        } else {
+        if (pageEntryModel != null) {
             this.imagePanel.setIcon(pageEntryModel.getImageIcon());
         }
     }

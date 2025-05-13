@@ -6,10 +6,10 @@ package ie.philb.album.ui.common;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Insets;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -33,6 +33,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
     private final List<ZoomablePanelListener> listeners = new ArrayList<>();
 
     private ImageIcon imageIcon;
+    private BufferedImage zoomedImage;
     private ImagePanelFill fill = ImagePanelFill.BestFit;
     private double zoomFactor = 1;
     private double prevZoomFactor = 1;
@@ -45,15 +46,18 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
     private int yDiff;
     private Point startPoint;
     private Point currPoint;
+    private boolean isPlaceholderImage = true;
 
     public ImagePanel() {
         this(null);
+        setPlaceholderImage();
     }
 
     public ImagePanel(ImageIcon icon) {
-        this.imageIcon = icon;
-
+        setIcon(icon);
         initComponent();
+
+        addComponentListener(new ResizeListener());
     }
 
     private void initComponent() {
@@ -62,9 +66,45 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         addMouseListener(this);
     }
 
-    public void setIcon(ImageIcon icon) {
+    private void setPlaceholderImage() {
+
+        this.zoomFactor = 1;
+        this.imageIcon = new ImageIcon(this.getClass().getResource("/ie/philb/album/placeholder.png"));
+        this.zoomedImage = getZoomedImage();
+        this.isPlaceholderImage = true;
+
+    }
+
+    private void setZoomFactor(double zoomFactor) {
+        this.zoomFactor = zoomFactor;
+
+        if (zoomFactor != 0) {
+            this.zoomedImage = getZoomedImage();
+        }
+    }
+
+    public final void setIcon(ImageIcon icon) {
         this.imageIcon = icon;
+
+        if (icon != null) {
+            setZoomFactor(getBestFitZoomFactor());
+            isPlaceholderImage = false;
+        }
+
         repaint();
+    }
+
+    private BufferedImage getZoomedImage() {
+
+        int zoomedWidth = (int) (imageIcon.getIconWidth() * zoomFactor);
+        int zoomedHeight = (int) (imageIcon.getIconHeight() * zoomFactor);
+
+        BufferedImage zoomed = new BufferedImage(zoomedWidth, zoomedHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = zoomed.createGraphics();
+        g.drawImage(imageIcon.getImage(), 0, 0, zoomedWidth, zoomedHeight, null);
+        g.dispose();
+
+        return zoomed;
     }
 
     public ImageIcon getIcon() {
@@ -80,81 +120,57 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
     }
 
     private int getAvailableWidth() {
-        Insets insets = getInsets();
-        int availableWidth = getBounds().width - insets.left - insets.right;
+        int availableWidth = getBounds().width;
         return availableWidth;
     }
 
     private int getAvailableHeight() {
-        Insets insets = getInsets();
-        int availableHeight = getBounds().height - insets.top - insets.bottom;
+        int availableHeight = getBounds().height;
         return availableHeight;
     }
 
-    private double getScale() {
-
-        int iconWidth = imageIcon.getIconWidth();
-        int iconHeight = imageIcon.getIconHeight();
-
-        if (fill == ImagePanelFill.CropToFit) {
-            return Math.min(iconWidth / (double) getAvailableWidth(), iconHeight / (double) getAvailableHeight());
-
-        }
-
-        if (fill == ImagePanelFill.BestFit) {
-            return Math.max(iconWidth / (double) getAvailableWidth(), iconHeight / (double) getAvailableHeight());
-        }
-
-        return 1;
-    }
-
-    private BufferedImage getScaledImage() {
+    // This is the zoom factor at which the image is as large as possible
+    // without any cropping
+    private double getBestFitZoomFactor() {
 
         if (imageIcon == null) {
-            return null;
+            return 1;
         }
 
         int iconWidth = imageIcon.getIconWidth();
         int iconHeight = imageIcon.getIconHeight();
 
-        double scale = getScale();
+        double availableWidth = getAvailableWidth();
+        double availableHeight = getAvailableHeight();
 
-        int scaledWidth = (int) (iconWidth / scale);
-        int scaledHeight = (int) (iconHeight / scale);
+        // Component not yet sized, cannot compute zoom factor
+        if (availableWidth == 0 || availableHeight == 0) {
+            return 0;
+        }
 
-        BufferedImage scaled = getScaledInstance(imageIcon.getImage(), scaledWidth, scaledHeight);
-        return scaled;
-    }
+        double bestFitZoom = Math.min(availableWidth / iconWidth, availableHeight / iconHeight);
 
-    private void drawBestFit(Graphics g) {
+        int targetWidth = (int) (iconWidth * bestFitZoom);
+        int targetHeight = (int) (iconHeight * bestFitZoom);
 
-        BufferedImage scaled = getScaledImage();
+        LOG.info("Got best fit zoom factor {}, size {}x{}, target {}x{}, Available {}x{}", bestFitZoom, iconWidth, iconHeight, targetWidth, targetHeight, (int) availableWidth, (int) availableHeight);
 
-        int x = (getAvailableWidth() - scaled.getWidth()) / 2 + getInsets().left;
-        int y = (getAvailableHeight() - scaled.getHeight()) / 2 + getInsets().top;
-        g.drawImage(scaled, x, y, null);
+        return bestFitZoom;
+
     }
 
     private void drawCropped(Graphics g) {
 
-        BufferedImage scaled = getScaledImage();
-        int cropWidth = getCropWidth();
+        BufferedImage cropped = getCroppedImage();
 
-        Image cropped = getCroppedImage();
-
-        int x = (getAvailableWidth() - cropWidth) / 2 + getInsets().left;
-        int y = 0;
+        // Centre image if it's less tall or less wide than the available space
+        int x = (getAvailableWidth() - cropped.getWidth()) / 2;
+        int y = (getAvailableHeight() - cropped.getHeight()) / 2;
 
         g.drawImage(cropped, x, y, null);
     }
 
-    public Image getCroppedImage() {
-
-        BufferedImage scaled = getScaledImage();
-
-        if (scaled == null) {
-            return null;
-        }
+    public BufferedImage getCroppedImage() {
 
         int cropWidth = getCropWidth();
         int cropHeight = getCropHeight();
@@ -162,30 +178,28 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         int w = xOffset + xDiff;
         int h = yOffset + yDiff;
 
-        Image cropped = scaled.getSubimage(w, h, cropWidth + w, cropHeight + h);
+        BufferedImage cropped = zoomedImage.getSubimage(0, 0, cropWidth, cropHeight);
         return cropped;
     }
 
     private int getCropWidth() {
-
-        BufferedImage scaled = getScaledImage();
-
         int boundWidth = getBounds().width;
-        int cropWidth = Math.min(boundWidth, scaled.getWidth());
+        int cropWidth = Math.min(boundWidth, zoomedImage.getWidth());
         return cropWidth;
     }
 
     private int getCropHeight() {
-
-        BufferedImage scaled = getScaledImage();
-
         int boundHeight = getBounds().height;
-        int cropHeight = Math.min(boundHeight, scaled.getHeight());
+        int cropHeight = Math.min(boundHeight, zoomedImage.getHeight());
         return cropHeight;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
+
+        if (zoomFactor == 0) {
+            setZoomFactor(getBestFitZoomFactor());
+        }
 
         super.paintComponent(g);
 
@@ -193,24 +207,11 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
             return;
         }
 
-        if (fill == ImagePanelFill.BestFit) {
-            drawBestFit(g);
+        if (zoomFactor == 0) {
+            return;
         }
 
-        if (fill == ImagePanelFill.CropToFit) {
-            drawCropped(g);
-        }
-
-    }
-
-    private BufferedImage getScaledInstance(Image img, int width, int height) {
-
-        BufferedImage scaled = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = scaled.createGraphics();
-        g.drawImage(img, 0, 0, width, height, null);
-        g.dispose();
-
-        return scaled;
+        drawCropped(g);
     }
 
     private void resetImage() {
@@ -241,28 +242,27 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
     @Override
     public void mouseDragged(MouseEvent e) {
 
-        currPoint = e.getLocationOnScreen();
-
-        int xDragDiff = startPoint.x - currPoint.x;
-        int yDragDiff = startPoint.y - currPoint.y;
-
-        int cropWidth = getCropWidth();
-        int cropHeight = getCropHeight();
-
-        int w = xOffset + xDragDiff;
-        int h = yOffset + yDragDiff;
-
-        if ((w > 0) && ((2 * w) + cropWidth < getScaledImage().getWidth())) {
-            xDiff = xDragDiff;
-        }
-
-        if ((h > 0) && ((2 * h) + cropHeight < getScaledImage().getHeight())) {
-            yDiff = yDragDiff;
-        }
-
-        isDragging = true;
-        repaint();
-
+//        currPoint = e.getLocationOnScreen();
+//
+//        int xDragDiff = startPoint.x - currPoint.x;
+//        int yDragDiff = startPoint.y - currPoint.y;
+//
+//        int cropWidth = getCropWidth();
+//        int cropHeight = getCropHeight();
+//
+//        int w = xOffset + xDragDiff;
+//        int h = yOffset + yDragDiff;
+//
+//        if ((w > 0) && ((2 * w) + cropWidth < getScaledImage().getWidth())) {
+//            xDiff = xDragDiff;
+//        }
+//
+//        if ((h > 0) && ((2 * h) + cropHeight < getScaledImage().getHeight())) {
+//            yDiff = yDragDiff;
+//        }
+//
+//        isDragging = true;
+//        repaint();
     }
 
     @Override
@@ -318,5 +318,17 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
 
     public void removeListener(ZoomablePanelListener l) {
         listeners.remove(l);
+    }
+
+    class ResizeListener extends ComponentAdapter {
+
+        public void componentResized(ComponentEvent e) {
+
+            if (isPlaceholderImage) {
+                return;
+            }
+
+            setZoomFactor(getBestFitZoomFactor());
+        }
     }
 }
