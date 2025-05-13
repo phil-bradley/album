@@ -8,13 +8,16 @@ import ie.philb.album.ui.ApplicationUi;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -22,9 +25,13 @@ import org.apache.pdfbox.pdmodel.PDDocument;
  */
 public class PdfViewDialog extends JDialog {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PdfViewDialog.class);
+
     private static final long serialVersionUID = 1L;
+    private static final double A4_RATIO = 1.4142;
+    private static final int MARGIN = 0;
+
     private PdfViewPanel displayPanel;
-    private JScrollPane jScrollPane;
     private JToolBar toolbar;
     private JButton btnNext;
     private JButton btnPrevious;
@@ -32,14 +39,17 @@ public class PdfViewDialog extends JDialog {
 
     public PdfViewDialog() {
 
-        super(ApplicationUi.getInstance());
-//        setLocationRelativeTo(ApplicationUi.getInstance());
-
+        super(ApplicationUi.getInstance(), "Preview");
         setModal(true);
 
-        this.btnPrevious = new JButton("<<");
-        this.btnNext = new JButton(">>");
-        this.btnPrint = new JButton("Print");
+        this.btnPrevious = new JButton();
+        btnPrevious.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/icons/arrow-left.png")));
+
+        this.btnNext = new JButton();
+        btnNext.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/icons/arrow-right.png")));
+
+        this.btnPrint = new JButton();
+        btnPrint.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/icons/print.png")));
 
         this.toolbar = new JToolBar();
         this.toolbar.setFloatable(false);
@@ -48,16 +58,14 @@ public class PdfViewDialog extends JDialog {
         this.toolbar.add(btnPrint);
 
         this.displayPanel = new PdfViewPanel();
-        this.displayPanel.setScale(1.2f);
-        this.jScrollPane = new JScrollPane(this.displayPanel);
 
         setLayout(new GridBagLayout());
 
         GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).weight(0).fillHorizontal().anchorNorth();
         add(toolbar, gbc);
 
-        gbc.xy(0, 1).fillBoth().weight(1);
-        add(jScrollPane, gbc);
+        gbc.xy(0, 1).fillBoth().weight(1).inset(MARGIN);
+        add(displayPanel, gbc);
 
         btnNext.addActionListener((ActionEvent e) -> {
             displayPanel.nextPage();
@@ -68,10 +76,18 @@ public class PdfViewDialog extends JDialog {
         });
 
         btnPrint.addActionListener((ActionEvent e) -> {
-            //?
+            try {
+                displayPanel.printDocument();
+            } catch (PrinterException ex) {
+                String msg = "Print error: " + ex.getMessage();
+                Dialogs.showErrorMessage(msg);
+            }
         });
 
-        setPreferredSize(new Dimension(displayPanel.getPreferredSize().width + 50, displayPanel.getPreferredSize().height + 80));
+        int panelWidth = 800;
+        int panelHeight = (int) (panelWidth / A4_RATIO);
+
+        setPreferredSize(new Dimension(panelWidth + (MARGIN * 2), panelHeight + (MARGIN * 2)));
         setSize(getPreferredSize());
     }
 

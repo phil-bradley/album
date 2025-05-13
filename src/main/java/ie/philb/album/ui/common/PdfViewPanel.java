@@ -5,14 +5,18 @@
 package ie.philb.album.ui.common;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.printing.PDFPageable;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -20,33 +24,29 @@ import org.apache.pdfbox.rendering.PDFRenderer;
  */
 public class PdfViewPanel extends AppPanel {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PdfViewPanel.class);
+
     private static final long serialVersionUID = 1L;
     private int currentPage = 0;
     private PDDocument document;
     private PDFRenderer renderer;
     private int numberPages = 0;
     private float scale = 1;
-    private ImagePanel imagePanel;
+    private final ImagePanel imagePanel;
 
     public PdfViewPanel() {
-        setBackground(Color.gray);
+        setBackground(Color.darkGray);
         setOpaque(true);
 
         this.imagePanel = new ImagePanel();
 
-        //this.imagePanel.setUpscaleAllowed(true);
-        this.imagePanel.setPreferredSize(new Dimension(800, 600));
-        this.imagePanel.setSize(this.imagePanel.getPreferredSize());
-        setSize(this.imagePanel.getPreferredSize());
-
-        GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).weight(1).anchorNorth().fillVertical();
-
+        GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).weight(1).anchorNorth().fillBoth().inset(0);
         add(imagePanel, gbc);
     }
 
-    void showPdf(File file) throws IOException {
-        PDDocument doc = Loader.loadPDF(file);
-        showPdf(doc);
+    public void showPdf(File file) throws IOException {
+        document = Loader.loadPDF(file);
+        showPdf(document);
     }
 
     public void showPdf(PDDocument document) {
@@ -60,7 +60,7 @@ public class PdfViewPanel extends AppPanel {
     public void showPdfPage(int pageNumber) {
         BufferedImage pageImage;
         try {
-            pageImage = renderer.renderImage(pageNumber, this.scale);
+            pageImage = renderer.renderImage(pageNumber);
             imagePanel.setIcon(new ImageIcon(pageImage));
             repaint();
         } catch (IOException ex) {
@@ -81,7 +81,6 @@ public class PdfViewPanel extends AppPanel {
             currentPage++;
             showPdfPage(currentPage);
         }
-
     }
 
     public void previousPage() {
@@ -91,4 +90,9 @@ public class PdfViewPanel extends AppPanel {
         }
     }
 
+    public void printDocument() throws PrinterException {
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setPageable(new PDFPageable(document));
+        job.print();
+    }
 }

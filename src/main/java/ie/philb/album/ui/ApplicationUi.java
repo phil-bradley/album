@@ -51,6 +51,7 @@ public class ApplicationUi extends JFrame {
 
     private ApplicationUi() {
 
+        super("Album");
         initComponents();
 
         setPreferredSize(new Dimension(1200, 800));

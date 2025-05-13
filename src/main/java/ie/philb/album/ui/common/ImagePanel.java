@@ -19,12 +19,16 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Philip.Bradley
  */
 public class ImagePanel extends AppPanel implements MouseWheelListener, MouseListener, MouseMotionListener {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ImagePanel.class);
 
     private final List<ZoomablePanelListener> listeners = new ArrayList<>();
 
