@@ -14,7 +14,12 @@ import java.util.List;
  */
 public class AlbumModel {
 
+    private final PageSize pageSize;
     private final List<PageModel> pages = new ArrayList();
+
+    public AlbumModel(PageSize pageSize) {
+        this.pageSize = pageSize;
+    }
 
     public List<PageModel> getPages() {
         return Collections.unmodifiableList(pages);

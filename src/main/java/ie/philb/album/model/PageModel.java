@@ -16,42 +16,53 @@ import java.util.List;
  */
 public class PageModel {
 
-    private PageViewLayout layout;
+    private PageGeometry geometry;
+//    private PageViewLayout layout;
     private List<PageEntryModel> pageEntries;
 
-    public PageModel(PageViewLayout layout) {
-        setLayout(layout);
+    public PageModel(PageGeometry geometry) {
+        this.geometry = geometry;
     }
 
     public List<PageEntryModel> getPageEntries() {
         return Collections.unmodifiableList(pageEntries);
     }
 
+    public int getCellCount() {
+        return geometry.getCells().size();
+    }
+    
     public void setImage(File file, int index) {
 
-        if (index >= layout.entryCount()) {
-            throw new IllegalArgumentException("Cannot add image at position " + index + " with page entry count = " + layout.entryCount());
+        if (index >= getCellCount()) {
+            throw new IllegalArgumentException("Cannot add image at position " + index + " with page entry count = " + getCellCount());
         }
 
         pageEntries.set(index, new PageEntryModel(file));
     }
-
-    public final PageViewLayout getLayout() {
-        return layout;
-    }
-
-    public final void setLayout(PageViewLayout layout) {
-        this.layout = layout;
-        this.pageEntries = new ArrayList<>(getLayout().entryCount());
-
-        for (int i = 0; i < getLayout().entryCount(); i++) {
+    
+    public final void setGeometry(PageGeometry geometry) {
+        this.geometry = geometry;
+        this.pageEntries = new ArrayList<>();
+        
+        for (PageCell cell : geometry.getCells()) {
             pageEntries.add(null);
         }
     }
 
-    @Override
-    public String toString() {
-        return "PageModel{" + "layout=" + layout + ", images=" + pageEntries + '}';
-    }
+//    public final PageViewLayout getLayout() {
+//        return layout;
+//    }
+//
+//    public final void setLayout(PageViewLayout layout) {
+//        this.layout = layout;
+//        this.pageEntries = new ArrayList<>(getLayout().entryCount());
+//
+//        for (int i = 0; i < getLayout().entryCount(); i++) {
+//            pageEntries.add(null);
+//        }
+//    }
+
+  
 
 }

@@ -5,6 +5,7 @@
 package ie.philb.album;
 
 import ie.philb.album.model.AlbumModel;
+import ie.philb.album.model.PageSize;
 import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.page.Album;
@@ -23,7 +24,7 @@ public enum AppContext implements ApplicationListener {
 
     private final List<ApplicationListener> applicationListeners = new ArrayList<>();
     private final Album album = new Album();
-    private final AlbumModel albumModel = new AlbumModel();
+    private final AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
 
 //    private ImageEntrySelectionListener listener;
     public void addListener(ApplicationListener l) {
