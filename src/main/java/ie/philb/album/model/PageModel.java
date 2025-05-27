@@ -5,6 +5,7 @@
 package ie.philb.album.model;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,21 +78,32 @@ public class PageModel {
         this.marginMillis = marginMillis;
     }
 
-    public int getCellWidthMillis() {
+    private int getUnitCellWidthMillis() {
         int horizontalCellCount = geometry.horizontalCellCount();
         int totalMarginMillis = marginMillis * (horizontalCellCount + 1);
         int availableWidth = pageSize.width() - totalMarginMillis;
         return availableWidth / geometry.horizontalCellCount();
     }
 
-    public int getCellHeightMillis() {
+    private int getUnitCellHeightMillis() {
         int verticalCellCount = geometry.verticalCellCount();
         int totalMarginMillis = marginMillis * (verticalCellCount + 1);
         int availableHeight = pageSize.height() - totalMarginMillis;
         return availableHeight / geometry.verticalCellCount();
     }
 
-    public Dimension getCellPositionMillis() {
-        return null;
+    public Dimension getCellSizeMillis(PageCell cell) {
+
+        int cellHeightMillis = (cell.size().height * getUnitCellHeightMillis()) + (cell.size().height - 1 * marginMillis);
+        int cellWidthMillis = (cell.size().width * getUnitCellWidthMillis()) + (cell.size().width - 1 * marginMillis);
+
+        return new Dimension(cellWidthMillis, cellHeightMillis);
+    }
+
+    public Point getCellPositionMillis(PageCell cell) {
+        int posX = (getUnitCellWidthMillis() * cell.location().x) + (marginMillis * (cell.location().x + 1));
+        int posY = (getUnitCellHeightMillis() * cell.location().y) + (marginMillis * (cell.location().y + 1));
+
+        return new Point(posX, posY);
     }
 }

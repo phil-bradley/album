@@ -13,6 +13,7 @@ import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -136,17 +137,16 @@ public class PageView extends AppPanel {
 
         double millisToPx = getMillisToPixelScale();
 
-        int cellWidthPx = (int) (model.getCellWidthMillis() / millisToPx);
-        int cellheightPx = (int) (model.getCellHeightMillis() / millisToPx);
-
         for (PageEntryView pageEntryView : pageEntriesViews) {
 
             PageCell cell = pageEntryView.getPageCell();
+            Dimension cellSizeMillis = model.getCellSizeMillis(cell);
+            Point cellLocationMillis = model.getCellPositionMillis(cell);
 
-            int width = cell.size().width * cellWidthPx;
-            int height = cell.size().height * cellheightPx;
-            int posX = cell.location().x * cellWidthPx;
-            int posY = cell.location().y * cellheightPx;
+            int width = (int) (cellSizeMillis.width / millisToPx);
+            int height = (int) (cellSizeMillis.height / millisToPx);
+            int posX = (int) (cellLocationMillis.x / millisToPx);
+            int posY = (int) (cellLocationMillis.y / millisToPx);
 
             pageEntryView.setPreferredSize(new Dimension(width, height));
             pageEntryView.setSize(pageEntryView.getPreferredSize());
