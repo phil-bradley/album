@@ -153,8 +153,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         int targetWidth = (int) (iconWidth * bestFitZoom);
         int targetHeight = (int) (iconHeight * bestFitZoom);
 
-        LOG.info("Got best fit zoom factor {}, size {}x{}, target {}x{}, Available {}x{}", bestFitZoom, iconWidth, iconHeight, targetWidth, targetHeight, (int) availableWidth, (int) availableHeight);
-
+        //LOG.info("Got best fit zoom factor {}, size {}x{}, target {}x{}, Available {}x{}", bestFitZoom, iconWidth, iconHeight, targetWidth, targetHeight, (int) availableWidth, (int) availableHeight);
         return bestFitZoom;
 
     }

@@ -11,6 +11,8 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.ImagePanel;
 import ie.philb.album.ui.common.Resources;
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 
@@ -36,6 +38,23 @@ public class PageEntryView extends AppPanel {
 
         updateBorder();
         imagePanel.addMouseListener(this);
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent evt) {
+
+                System.out.println("Key pressed " + evt);
+
+                if (evt.getKeyCode() == KeyEvent.VK_PLUS) {
+                    System.out.println("Zoom in");
+                }
+
+                if (evt.getKeyCode() == KeyEvent.VK_MINUS) {
+                    System.out.println("Zoom out");
+                }
+            }
+
+        });
     }
 
     @Override

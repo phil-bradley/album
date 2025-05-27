@@ -11,8 +11,6 @@ import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
-import ie.philb.album.ui.pagesizer.IsoPageSizer;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -36,7 +34,7 @@ public class PageView extends AppPanel {
     public PageView(PageModel model) {
         LOG.info("Got page model " + model);
         setModel(model);
-        background(Resources.COLOUR_ALBUM_BACKGROUND);
+        background(Resources.COLOUR_ALBUM_PAGE_BACKGROUND);
         setLayout(null);
 
         AppContext.INSTANCE.addListener(new ApplicationAdapter() {
@@ -89,39 +87,42 @@ public class PageView extends AppPanel {
 
     public final void setModel(PageModel model) {
         this.model = model;
-        this.pageEntriesViews = new ArrayList<>(model.getLayout().entryCount());
+        this.pageEntriesViews = new ArrayList<>(model.getCellCount());
 
         createEntries();
     }
 
-    public PageViewLayout getPageLayout() {
-        return model.getLayout();
-    }
-
     public void setHeight(int height) {
-        setSize(new IsoPageSizer().getWidthFromHeight(height), height);
+        int width = model.getPageSize().widthFromHeight(height);
+        setSize(width, height);
     }
 
     public void setWidth(int width) {
-        setSize(width, new IsoPageSizer().getHeightFromWidth(width));
+        int height = model.getPageSize().heigthFromWidth(width);
+        setSize(width, height);
+    }
+
+    @Override
+    public void setSize(int width, int height) {
+        LOG.info("Setting size to {}x{}", width, height);
+        super.setSize(width, height);
     }
 
     private void createEntries() {
 
-        int entryCount = getPageLayout().getRows() * getPageLayout().getColumns();
-
-        LOG.info("Creating {} entries", entryCount);
-
-        for (int i = 0; i < entryCount; i++) {
-            PageEntryView pageEntryView = new PageEntryView();
-            pageEntriesViews.add(pageEntryView);
-            add(pageEntryView);
-
-        }
-
-        positionEntries();
-        populateEntries();
-
+//        int entryCount = getPageLayout().getRows() * getPageLayout().getColumns();
+//
+//        LOG.info("Creating {} entries", entryCount);
+//
+//        for (int i = 0; i < entryCount; i++) {
+//            PageEntryView pageEntryView = new PageEntryView();
+//            pageEntriesViews.add(pageEntryView);
+//            add(pageEntryView);
+//
+//        }
+//
+//        positionEntries();
+//        populateEntries();
     }
 
     public void positionEntries() {
@@ -130,25 +131,24 @@ public class PageView extends AppPanel {
             return;
         }
 
-        double millisToPx = (double) (getPageLayout().getPageSpecification().width()) / (double) getWidth();
-        LOG.info("Page has width {} in px, {} in millis, got scaling factor {}", getWidth(), getPageLayout().getPageSpecification().width(), millisToPx);
-
-        List<PageEntryCoordinates> coordinates = getPageLayout().getEntryCoordinates();
-
+//        double millisToPx = (double) (getPageLayout().getPageSpecification().width()) / (double) getWidth();
+//        LOG.info("Page has width {} in px, {} in millis, got scaling factor {}", getWidth(), getPageLayout().getPageSpecification().width(), millisToPx);
+//
+//        List<PageEntryCoordinates> coordinates = getPageLayout().getEntryCoordinates();
         int i = 0;
 
         for (PageEntryView pageEntryView : pageEntriesViews) {
-            PageEntryCoordinates entryCoordinates = coordinates.get(i);
-            LOG.info("Got coordinates for entry {}: {}", i, coordinates);
-
-            PageEntryCoordinates scaledCoordinates = scaleCoordinates(entryCoordinates, millisToPx);
-            LOG.info("Got scaled coordinates for entry {}: {}", i, scaledCoordinates);
-
-            pageEntryView.setPreferredSize(new Dimension(scaledCoordinates.width(), scaledCoordinates.height()));
-            pageEntryView.setSize(pageEntryView.getPreferredSize());
-
-            pageEntryView.setBounds(scaledCoordinates.offsetX(), scaledCoordinates.offsetY(), scaledCoordinates.width(), scaledCoordinates.height());
-            i++;
+//            PageEntryCoordinates entryCoordinates = coordinates.get(i);
+//            LOG.info("Got coordinates for entry {}: {}", i, coordinates);
+//
+//            PageEntryCoordinates scaledCoordinates = scaleCoordinates(entryCoordinates, millisToPx);
+//            LOG.info("Got scaled coordinates for entry {}: {}", i, scaledCoordinates);
+//
+//            pageEntryView.setPreferredSize(new Dimension(scaledCoordinates.width(), scaledCoordinates.height()));
+//            pageEntryView.setSize(pageEntryView.getPreferredSize());
+//
+//            pageEntryView.setBounds(scaledCoordinates.offsetX(), scaledCoordinates.offsetY(), scaledCoordinates.width(), scaledCoordinates.height());
+//            i++;
         }
     }
 

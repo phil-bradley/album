@@ -4,7 +4,6 @@
  */
 package ie.philb.album.model;
 
-import ie.philb.album.view.PageViewLayout;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,11 +16,20 @@ import java.util.List;
 public class PageModel {
 
     private PageGeometry geometry;
-//    private PageViewLayout layout;
-    private List<PageEntryModel> pageEntries;
+    private final List<PageEntryModel> pageEntries = new ArrayList<>();
+    private final PageSize pageSize;
 
-    public PageModel(PageGeometry geometry) {
+    public PageModel(PageGeometry geometry, PageSize pageSize) {
         this.geometry = geometry;
+        this.pageSize = pageSize;
+    }
+
+    public PageGeometry getGeometry() {
+        return geometry;
+    }
+
+    public PageSize getPageSize() {
+        return pageSize;
     }
 
     public List<PageEntryModel> getPageEntries() {
@@ -31,7 +39,7 @@ public class PageModel {
     public int getCellCount() {
         return geometry.getCells().size();
     }
-    
+
     public void setImage(File file, int index) {
 
         if (index >= getCellCount()) {
@@ -40,11 +48,11 @@ public class PageModel {
 
         pageEntries.set(index, new PageEntryModel(file));
     }
-    
+
     public final void setGeometry(PageGeometry geometry) {
         this.geometry = geometry;
-        this.pageEntries = new ArrayList<>();
-        
+        this.pageEntries.clear();
+
         for (PageCell cell : geometry.getCells()) {
             pageEntries.add(null);
         }
@@ -62,7 +70,4 @@ public class PageModel {
 //            pageEntries.add(null);
 //        }
 //    }
-
-  
-
 }

@@ -18,6 +18,8 @@ public class Resources {
 
     public static Color COLOR_PHOTO_BORDER_SELECTED = new Color(58, 199, 242);
 
-    public static Color COLOUR_ALBUM_BACKGROUND = new Color(249, 248, 235);
+    public static Color COLOUR_ALBUM_BACKGROUND = Color.GRAY;
+
+    public static Color COLOUR_ALBUM_PAGE_BACKGROUND = new Color(249, 248, 235);
 
 }

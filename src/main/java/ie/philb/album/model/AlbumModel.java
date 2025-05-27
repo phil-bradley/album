@@ -21,6 +21,10 @@ public class AlbumModel {
         this.pageSize = pageSize;
     }
 
+    public PageSize getPageSize() {
+        return pageSize;
+    }
+
     public List<PageModel> getPages() {
         return Collections.unmodifiableList(pages);
     }

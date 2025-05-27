@@ -6,10 +6,11 @@ package ie.philb.album.ui;
 
 import ie.philb.album.ui.command.CreatePdfCommand;
 import ie.philb.album.ui.command.ExitCommand;
+import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.imagelibrary.ImageLibraryView;
-import ie.philb.album.ui.page.PageOverviewPanel;
 import ie.philb.album.view.AlbumViewContainer;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -34,7 +35,6 @@ public class ApplicationUi extends JFrame {
     private static final ApplicationUi INSTANCE = new ApplicationUi();
 
     private ImageLibraryView imageLibraryView;
-    private PageOverviewPanel pageOverviewPanel;
     private AlbumViewContainer albumViewContainer;
 
     private JSplitPane hSplit;
@@ -77,11 +77,10 @@ public class ApplicationUi extends JFrame {
         hSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
         imageLibraryView = new ImageLibraryView();
-        pageOverviewPanel = new PageOverviewPanel();
         albumViewContainer = new AlbumViewContainer();
 
         hSplit.setLeftComponent(albumViewContainer);
-        hSplit.setRightComponent(pageOverviewPanel);
+        hSplit.setRightComponent(new AppPanel().background(Color.red));
 
         vSplit.setLeftComponent(imageLibraryView);
         vSplit.setRightComponent(hSplit);

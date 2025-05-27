@@ -6,10 +6,7 @@ package ie.philb.album;
 
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageSize;
-import ie.philb.album.ui.imagelibrary.ImageEntrySelectionListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
-import ie.philb.album.ui.page.Album;
-import ie.philb.album.ui.page.PageLayout;
 import ie.philb.album.view.PageEntryView;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,43 +20,14 @@ public enum AppContext implements ApplicationListener {
     INSTANCE;
 
     private final List<ApplicationListener> applicationListeners = new ArrayList<>();
-    private final Album album = new Album();
     private final AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
 
-//    private ImageEntrySelectionListener listener;
     public void addListener(ApplicationListener l) {
         this.applicationListeners.add(l);
     }
 
     public void removeListener(ApplicationListener l) {
         this.applicationListeners.remove(l);
-    }
-
-    public void imageSelected(ImageLibraryEntry entry) {
-//        if (listener != null) {
-//            listener.imageSelected(entry);
-//        }
-    }
-
-    public void setImageEntryListener(ImageEntrySelectionListener imageEntryListener) {
-//        this.listener = imageEntryListener;
-//
-//        for (ApplicationListener l : applicationListeners) {
-//            l.listenerSelected(imageEntryListener);
-//        }
-    }
-
-    public void setPageLayouts(List<PageLayout> pageLayouts) {
-
-//        album.clearPages();
-//
-//        for (PageLayout layout : pageLayouts) {
-//            album.createPage(layout);
-//        }
-    }
-
-    public Album getAlbum() {
-        return album;
     }
 
     public AlbumModel getAlbumModel() {
