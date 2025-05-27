@@ -4,10 +4,15 @@
  */
 package ie.philb.album.model;
 
+import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -15,13 +20,14 @@ import java.util.List;
  */
 public class PageModel {
 
+    private int marginMillis = 10;
     private PageGeometry geometry;
     private final List<PageEntryModel> pageEntries = new ArrayList<>();
     private final PageSize pageSize;
 
     public PageModel(PageGeometry geometry, PageSize pageSize) {
-        this.geometry = geometry;
         this.pageSize = pageSize;
+        setGeometry(geometry);
     }
 
     public PageGeometry getGeometry() {
@@ -42,11 +48,16 @@ public class PageModel {
 
     public void setImage(File file, int index) {
 
-        if (index >= getCellCount()) {
-            throw new IllegalArgumentException("Cannot add image at position " + index + " with page entry count = " + getCellCount());
-        }
+        try {
+            if (index >= getCellCount()) {
+                throw new IllegalArgumentException("Cannot add image at position " + index + " with page entry count = " + getCellCount());
+            }
 
-        pageEntries.set(index, new PageEntryModel(file));
+            PageEntryModel pem = pageEntries.get(index);
+            pem.setImageIcon(new ImageIcon(file.getCanonicalPath()));
+        } catch (IOException ex) {
+            Logger.getLogger(PageModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public final void setGeometry(PageGeometry geometry) {
@@ -54,20 +65,33 @@ public class PageModel {
         this.pageEntries.clear();
 
         for (PageCell cell : geometry.getCells()) {
-            pageEntries.add(null);
+            pageEntries.add(new PageEntryModel(cell));
         }
     }
 
-//    public final PageViewLayout getLayout() {
-//        return layout;
-//    }
-//
-//    public final void setLayout(PageViewLayout layout) {
-//        this.layout = layout;
-//        this.pageEntries = new ArrayList<>(getLayout().entryCount());
-//
-//        for (int i = 0; i < getLayout().entryCount(); i++) {
-//            pageEntries.add(null);
-//        }
-//    }
+    public int getMarginMillis() {
+        return marginMillis;
+    }
+
+    public void setMarginMillis(int marginMillis) {
+        this.marginMillis = marginMillis;
+    }
+
+    public int getCellWidthMillis() {
+        int horizontalCellCount = geometry.horizontalCellCount();
+        int totalMarginMillis = marginMillis * (horizontalCellCount + 1);
+        int availableWidth = pageSize.width() - totalMarginMillis;
+        return availableWidth / geometry.horizontalCellCount();
+    }
+
+    public int getCellHeightMillis() {
+        int verticalCellCount = geometry.verticalCellCount();
+        int totalMarginMillis = marginMillis * (verticalCellCount + 1);
+        int availableHeight = pageSize.height() - totalMarginMillis;
+        return availableHeight / geometry.verticalCellCount();
+    }
+
+    public Dimension getCellPositionMillis() {
+        return null;
+    }
 }

@@ -6,19 +6,21 @@ package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.ApplicationAdapter;
+import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Represents a page in the book with 1 or more image entries in a M x N
- * arrangement
+ * Represents a page in the book with 1 or more image entries The layout of the
+ * page is determined by the PageGeometry
  *
  * @author Philip.Bradley
  */
@@ -82,7 +84,7 @@ public class PageView extends AppPanel {
         }
 
         model.setImage(imageLibraryEntry.getFile(), selectedIdx);
-        selectedEntryView.setModel(model.getPageEntries().get(selectedIdx));
+        selectedEntryView.setImage(imageLibraryEntry.getIcon());
     }
 
     public final void setModel(PageModel model) {
@@ -110,18 +112,19 @@ public class PageView extends AppPanel {
 
     private void createEntries() {
 
-//        int entryCount = getPageLayout().getRows() * getPageLayout().getColumns();
-//
-//        LOG.info("Creating {} entries", entryCount);
-//
-//        for (int i = 0; i < entryCount; i++) {
-//            PageEntryView pageEntryView = new PageEntryView();
-//            pageEntriesViews.add(pageEntryView);
-//            add(pageEntryView);
-//
-//        }
-//
-//        positionEntries();
+        int entryCount = model.getGeometry().getCells().size();
+
+        LOG.info("Creating {} entries", entryCount);
+
+        for (int i = 0; i < entryCount; i++) {
+            PageEntryModel pem = model.getPageEntries().get(i);
+            PageEntryView pageEntryView = new PageEntryView(pem);
+            pageEntriesViews.add(pageEntryView);
+            add(pageEntryView);
+
+        }
+
+        positionEntries();
 //        populateEntries();
     }
 
@@ -131,25 +134,30 @@ public class PageView extends AppPanel {
             return;
         }
 
-//        double millisToPx = (double) (getPageLayout().getPageSpecification().width()) / (double) getWidth();
-//        LOG.info("Page has width {} in px, {} in millis, got scaling factor {}", getWidth(), getPageLayout().getPageSpecification().width(), millisToPx);
-//
-//        List<PageEntryCoordinates> coordinates = getPageLayout().getEntryCoordinates();
-        int i = 0;
+        double millisToPx = getMillisToPixelScale();
+
+        int cellWidthPx = (int) (model.getCellWidthMillis() / millisToPx);
+        int cellheightPx = (int) (model.getCellHeightMillis() / millisToPx);
 
         for (PageEntryView pageEntryView : pageEntriesViews) {
-//            PageEntryCoordinates entryCoordinates = coordinates.get(i);
-//            LOG.info("Got coordinates for entry {}: {}", i, coordinates);
-//
-//            PageEntryCoordinates scaledCoordinates = scaleCoordinates(entryCoordinates, millisToPx);
-//            LOG.info("Got scaled coordinates for entry {}: {}", i, scaledCoordinates);
-//
-//            pageEntryView.setPreferredSize(new Dimension(scaledCoordinates.width(), scaledCoordinates.height()));
-//            pageEntryView.setSize(pageEntryView.getPreferredSize());
-//
-//            pageEntryView.setBounds(scaledCoordinates.offsetX(), scaledCoordinates.offsetY(), scaledCoordinates.width(), scaledCoordinates.height());
-//            i++;
+
+            PageCell cell = pageEntryView.getPageCell();
+
+            int width = cell.size().width * cellWidthPx;
+            int height = cell.size().height * cellheightPx;
+            int posX = cell.location().x * cellWidthPx;
+            int posY = cell.location().y * cellheightPx;
+
+            pageEntryView.setPreferredSize(new Dimension(width, height));
+            pageEntryView.setSize(pageEntryView.getPreferredSize());
+
+            pageEntryView.setBounds(posX, posY, width, height);
         }
+    }
+
+    private double getMillisToPixelScale() {
+        double millisToPx = (double) (model.getPageSize().height()) / (double) getHeight();
+        return millisToPx;
     }
 
     private PageEntryCoordinates scaleCoordinates(PageEntryCoordinates coordinates, double scale) {
@@ -163,13 +171,13 @@ public class PageView extends AppPanel {
         return scaled;
     }
 
-    private void populateEntries() {
-
-        int i = 0;
-        for (PageEntryModel pem : model.getPageEntries()) {
-            PageEntryView view = pageEntriesViews.get(i);
-            view.setModel(pem);
-            i++;
-        }
-    }
+//    private void populateEntries() {
+//
+//        int i = 0;
+//        for (PageEntryModel pem : model.getPageEntries()) {
+//            PageEntryView view = pageEntriesViews.get(i);
+//            view.setModel(pem);
+//            i++;
+//        }
+//    }
 }

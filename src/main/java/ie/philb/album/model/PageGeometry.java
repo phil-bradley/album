@@ -29,6 +29,29 @@ public class PageGeometry {
         return Collections.unmodifiableList(cells);
     }
 
+    public int horizontalCellCount() {
+
+        int maxWidth = 1;
+
+        for (PageCell cell : cells) {
+            maxWidth = Math.max(maxWidth, cell.location().x + cell.size().width);
+        }
+
+        return maxWidth;
+    }
+
+    public int verticalCellCount() {
+
+        int maxHeight = 1;
+
+        for (PageCell cell : cells) {
+            maxHeight = Math.max(maxHeight, cell.location().y + cell.size().height);
+        }
+
+        return maxHeight;
+    }
+
+
     /*
      * Creates a rectangular layout, width x height cells
      */
@@ -55,10 +78,10 @@ public class PageGeometry {
     }
 
     /*
-     * Allows for non rectangular arrangement. 
+     * Allows for non rectangular arrangement.
      * For examples, calling this with arguments 2, 1, 3 would result
      * in the layout below
-     * 
+     *
      *     -------------
      *     |  A  |  B  |
      *     |-----------|
@@ -66,16 +89,16 @@ public class PageGeometry {
      *     |-----------|
      *     | D | E | F |
      *     -------------
-     * 
+     *
      * The LCM of 2, 1, 3 = 6 and therefore, the page has a width
-     * of 6 cells. 
+     * of 6 cells.
      * Cells A,B have width = 3
      * Cell C has width = 6
      * Cells D,E,F have width = 2
      *
      * All cells have height = 1
      */
-    public PageGeometry withRows(int... cellCounts) {
+    public static PageGeometry withRows(int... cellCounts) {
 
         PageGeometry pageGeometry = new PageGeometry();
 
@@ -97,7 +120,7 @@ public class PageGeometry {
         return pageGeometry;
     }
 
-    public PageGeometry withColumns(int... cellCounts) {
+    public static PageGeometry withColumns(int... cellCounts) {
 
         PageGeometry pageGeometry = new PageGeometry();
 

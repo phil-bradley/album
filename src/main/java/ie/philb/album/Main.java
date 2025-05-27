@@ -46,12 +46,12 @@ public class Main {
 //        page1.setImage(new File("/home/philb/Pictures/4.jpeg"), 3);
         albumModel.addPage(page1);
 
-        PageModel page2 = new PageModel(PageGeometry.rectangle(2, 3), albumModel.getPageSize());
+        PageModel page2 = new PageModel(PageGeometry.square(2), albumModel.getPageSize());
 //        page2.setImage(new File("/home/philb/Pictures/7.jpg"), 2);
         albumModel.addPage(page2);
 //
-//        PageModel page3 = new PageModel(new PageViewLayout(PageSpecification.A4Landscape, 2, 4));
-//        albumModel.addPage(page3);
+        PageModel page3 = new PageModel(PageGeometry.withColumns(1, 2), albumModel.getPageSize());
+        albumModel.addPage(page3);
     }
 
 }

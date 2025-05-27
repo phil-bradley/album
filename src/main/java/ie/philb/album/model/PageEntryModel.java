@@ -4,8 +4,6 @@
  */
 package ie.philb.album.model;
 
-import java.io.File;
-import java.io.IOException;
 import javax.swing.ImageIcon;
 
 /**
@@ -14,14 +12,11 @@ import javax.swing.ImageIcon;
  */
 public class PageEntryModel {
 
+    private final PageCell cell;
     private ImageIcon imageIcon;
 
-    public PageEntryModel(File imageFile) {
-        try {
-            this.imageIcon = new ImageIcon(imageFile.getCanonicalPath());
-        } catch (IOException ex) {
-            throw new RuntimeException("Cannot load icon", ex);
-        }
+    public PageEntryModel(PageCell cell) {
+        this.cell = cell;
     }
 
     public ImageIcon getImageIcon() {
@@ -31,4 +26,9 @@ public class PageEntryModel {
     public void setImageIcon(ImageIcon imageIcon) {
         this.imageIcon = imageIcon;
     }
+
+    public PageCell getCell() {
+        return cell;
+    }
+
 }
