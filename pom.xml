@@ -17,7 +17,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version> <!-- This version supports JUnit 5 -->
+                <version>3.1.2</version> 
                 <configuration>
                     <useModulePath>false</useModulePath>
                 </configuration>

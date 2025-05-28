@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 public class MathUtilsTest {
 
     @Test
-    void givenValuesWithGcd_expectedGcd() {
+    public void givenValuesWithGcd_expectedGcd() {
 
         int x = 12;
         int y = 8;
