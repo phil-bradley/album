@@ -11,7 +11,8 @@ package ie.philb.album.util;
 public class MathUtils {
 
     /**
-     * Greatest common divisor, using Euclid algorithm
+     * Greatest common divisor (highest common factor), using Euclid algorithm
+     * Returns 1 if there's no common divisor
      */
     public static int gcd(int a, int b) {
         while (b != 0) {
