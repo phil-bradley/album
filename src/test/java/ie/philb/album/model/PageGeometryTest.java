@@ -4,6 +4,11 @@
  */
 package ie.philb.album.model;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.util.List;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -105,5 +110,23 @@ public class PageGeometryTest {
         // 36 = LCM(2, 9, 4)
         assertEquals(36, pg.verticalCellCount());
         assertEquals(3, pg.horizontalCellCount());
+    }
+
+    @Test
+    void givenSquareGeometry_expectSquareSizeAndDimensions() {
+
+        PageGeometry pg = PageGeometry.square(2);
+
+        List<PageCell> cells = pg.getCells();
+        assertEquals(4, cells.size());
+
+        PageCell[] expected = {
+            new PageCell(new Dimension(1, 1), new Point(0, 0)),
+            new PageCell(new Dimension(1, 1), new Point(0, 1)),
+            new PageCell(new Dimension(1, 1), new Point(1, 0)),
+            new PageCell(new Dimension(1, 1), new Point(1, 1))
+        };
+
+        assertThat(cells, containsInAnyOrder(expected));
     }
 }
