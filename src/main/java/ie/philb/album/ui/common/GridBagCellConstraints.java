@@ -44,19 +44,15 @@ public class GridBagCellConstraints extends GridBagConstraints {
     }
 
     public GridBagCellConstraints x(int x) {
-        this.gridx = x;
-        return this;
+        return gridx(x);
     }
 
     public GridBagCellConstraints y(int y) {
-        this.gridy = y;
-        return this;
+        return gridy(y);
     }
 
     public GridBagCellConstraints xy(int x, int y) {
-        this.gridx = x;
-        this.gridy = y;
-        return this;
+        return grid(x, y);
     }
 
     public GridBagCellConstraints incx() {
@@ -131,14 +127,14 @@ public class GridBagCellConstraints extends GridBagConstraints {
         return this;
     }
 
-    public GridBagCellConstraints grid(int x, int y) {
-        this.gridx = x;
+    public GridBagCellConstraints gridy(int y) {
         this.gridy = y;
         return this;
     }
 
-    public GridBagCellConstraints gridy(int y) {
-        this.gridy = y;
+    public GridBagCellConstraints grid(int x, int y) {
+        gridx(x);
+        gridy(y);
         return this;
     }
 
@@ -162,12 +158,6 @@ public class GridBagCellConstraints extends GridBagConstraints {
 
     public GridBagCellConstraints fill(int f) {
         this.fill = f;
-        return this;
-    }
-
-    public GridBagCellConstraints ipad(int p) {
-        this.ipadx = p;
-        this.ipady = p;
         return this;
     }
 
