@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author philb
  */
-public class MathUtilsTest {
+class MathUtilsTest {
 
     @Test
     public void givenValuesWithGcd_expectedGcd() {

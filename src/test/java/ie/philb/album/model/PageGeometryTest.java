@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author philb
  */
-public class PageGeometryTest {
+class PageGeometryTest {
 
     @Test
     void givenSquareGeometry_expectLayoutAsSquare() {
@@ -158,8 +158,6 @@ public class PageGeometryTest {
         List<PageCell> cells = pg.getCells();
         assertEquals(5, cells.size());
 
-        System.out.println("Got cells: " + cells);
-
         PageCell[] expected = {
             new PageCell(new Dimension(3, 1), new Point(0, 0)),
             new PageCell(new Dimension(3, 1), new Point(3, 0)),
@@ -178,8 +176,6 @@ public class PageGeometryTest {
 
         List<PageCell> cells = pg.getCells();
         assertEquals(5, cells.size());
-
-        System.out.println("Got cells: " + cells);
 
         PageCell[] expected = {
             new PageCell(new Dimension(1, 3), new Point(0, 0)),

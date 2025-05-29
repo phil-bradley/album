@@ -6,6 +6,9 @@ package ie.philb.album.model;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 /**
  *
@@ -13,6 +16,7 @@ import java.awt.Point;
  */
 public class SwingPanelPageGeometryMapper {
 
+    private static final MathContext MATH_CONTEXT = new MathContext(20, RoundingMode.HALF_EVEN);
     private final PageModel pageModel;
     private final Dimension panelSize;
 
@@ -22,21 +26,19 @@ public class SwingPanelPageGeometryMapper {
     }
 
     public Dimension getSizeOnPanel(PageCell cell) {
-        double millisToPx = getMillisToPixelScale();
         Dimension cellSizeMillis = getCellSizeMillis(cell);
 
-        int width = (int) (cellSizeMillis.width / millisToPx);
-        int height = (int) (cellSizeMillis.height / millisToPx);
+        int width = millisToPx(cellSizeMillis.width);
+        int height = millisToPx(cellSizeMillis.height);
 
         return new Dimension(width, height);
     }
 
     public Point getLocationOnPanel(PageCell cell) {
-        double millisToPx = getMillisToPixelScale();
         Point locationMillis = getCellPositionMillis(cell);
 
-        int x = (int) (locationMillis.x / millisToPx);
-        int y = (int) (locationMillis.y / millisToPx);
+        int x = millisToPx(locationMillis.x);
+        int y = millisToPx(locationMillis.y);
 
         return new Point(x, y);
     }
@@ -45,19 +47,32 @@ public class SwingPanelPageGeometryMapper {
         int verticalCellCount = pageModel.getGeometry().verticalCellCount();
         int totalMarginMillis = pageModel.getMarginMillis() * (verticalCellCount + 1);
         int availableHeight = pageModel.getPageSize().height() - totalMarginMillis;
-        return availableHeight / pageModel.getGeometry().verticalCellCount();
+        int cellHeight = availableHeight / pageModel.getGeometry().verticalCellCount();
+        return cellHeight;
     }
 
     private int getUnitCellWidthMillis() {
         int horizontalCellCount = pageModel.getGeometry().horizontalCellCount();
         int totalMarginMillis = pageModel.getMarginMillis() * (horizontalCellCount + 1);
         int availableWidth = pageModel.getPageSize().width() - totalMarginMillis;
-        return availableWidth / pageModel.getGeometry().horizontalCellCount();
+        int cellWidth = availableWidth / pageModel.getGeometry().horizontalCellCount();
+        return cellWidth;
     }
 
     private Dimension getCellSizeMillis(PageCell cell) {
-        int cellHeightMillis = (cell.size().height * getUnitCellHeightMillis()) + (cell.size().height - 1 * pageModel.getMarginMillis());
-        int cellWidthMillis = (cell.size().width * getUnitCellWidthMillis()) + (cell.size().width - 1 * pageModel.getMarginMillis());
+        // An entry might span multiple cells. We need to take the margin between
+        // cells into account when computing the size
+        // For example, if the entry spans three cells horizontally, then the
+        // cell width = 3*unitWidth + 2*margin
+
+        int unitHeight = getUnitCellHeightMillis();
+        int unitWidth = getUnitCellWidthMillis();
+        int horizontalMarginCount = cell.size().width - 1;
+        int verticalMarginCount = cell.size().height - 1;
+        int margin = pageModel.getMarginMillis();
+
+        int cellHeightMillis = (cell.size().height * unitHeight) + (verticalMarginCount * margin);
+        int cellWidthMillis = (cell.size().width * unitWidth) + (horizontalMarginCount * margin);
 
         return new Dimension(cellWidthMillis, cellHeightMillis);
     }
@@ -69,8 +84,17 @@ public class SwingPanelPageGeometryMapper {
         return new Point(posX, posY);
     }
 
-    private double getMillisToPixelScale() {
-        double millisToPx = (double) (pageModel.getPageSize().height()) / (double) panelSize.getHeight();
+    private BigDecimal getMillisToPixelScale() {
+        BigDecimal pageHeightMillis = new BigDecimal(pageModel.getPageSize().height(), MATH_CONTEXT);
+        BigDecimal panelHeightPx = new BigDecimal(panelSize.height, MATH_CONTEXT);
+        BigDecimal millisToPx = pageHeightMillis.divide(panelHeightPx, MATH_CONTEXT);
         return millisToPx;
+    }
+
+    private int millisToPx(int v) {
+        BigDecimal scale = getMillisToPixelScale();
+        BigDecimal millis = new BigDecimal(v, MATH_CONTEXT);
+        BigDecimal px = millis.divide(scale, MATH_CONTEXT);
+        return px.intValue();
     }
 }
