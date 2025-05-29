@@ -9,6 +9,7 @@ import ie.philb.album.ApplicationAdapter;
 import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageModel;
+import ie.philb.album.model.SwingPanelPageGeometryMapper;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
@@ -126,7 +127,6 @@ public class PageView extends AppPanel {
         }
 
         positionEntries();
-//        populateEntries();
     }
 
     public void positionEntries() {
@@ -135,49 +135,18 @@ public class PageView extends AppPanel {
             return;
         }
 
-        double millisToPx = getMillisToPixelScale();
+        SwingPanelPageGeometryMapper geometryMapper = new SwingPanelPageGeometryMapper(model, getSize());
 
         for (PageEntryView pageEntryView : pageEntriesViews) {
 
             PageCell cell = pageEntryView.getPageCell();
-            Dimension cellSizeMillis = model.getCellSizeMillis(cell);
-            Point cellLocationMillis = model.getCellPositionMillis(cell);
+            Dimension size = geometryMapper.getSizeOnPanel(cell);
+            Point location = geometryMapper.getLocationOnPanel(cell);
 
-            int width = (int) (cellSizeMillis.width / millisToPx);
-            int height = (int) (cellSizeMillis.height / millisToPx);
-            int posX = (int) (cellLocationMillis.x / millisToPx);
-            int posY = (int) (cellLocationMillis.y / millisToPx);
+            pageEntryView.setPreferredSize(size);
+            pageEntryView.setSize(size);
 
-            pageEntryView.setPreferredSize(new Dimension(width, height));
-            pageEntryView.setSize(pageEntryView.getPreferredSize());
-
-            pageEntryView.setBounds(posX, posY, width, height);
+            pageEntryView.setBounds(location.x, location.y, size.width, size.height);
         }
     }
-
-    private double getMillisToPixelScale() {
-        double millisToPx = (double) (model.getPageSize().height()) / (double) getHeight();
-        return millisToPx;
-    }
-
-    private PageEntryCoordinates scaleCoordinates(PageEntryCoordinates coordinates, double scale) {
-        PageEntryCoordinates scaled = new PageEntryCoordinates(
-                (int) (coordinates.offsetX() / scale),
-                (int) (coordinates.offsetY() / scale),
-                (int) (coordinates.width() / scale),
-                (int) (coordinates.height() / scale)
-        );
-
-        return scaled;
-    }
-
-//    private void populateEntries() {
-//
-//        int i = 0;
-//        for (PageEntryModel pem : model.getPageEntries()) {
-//            PageEntryView view = pageEntriesViews.get(i);
-//            view.setModel(pem);
-//            i++;
-//        }
-//    }
 }

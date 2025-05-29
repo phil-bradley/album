@@ -92,7 +92,7 @@ public class PageModel {
         return availableHeight / geometry.verticalCellCount();
     }
 
-    public Dimension getCellSizeMillis(PageCell cell) {
+    private Dimension getCellSizeMillis(PageCell cell) {
 
         int cellHeightMillis = (cell.size().height * getUnitCellHeightMillis()) + (cell.size().height - 1 * marginMillis);
         int cellWidthMillis = (cell.size().width * getUnitCellWidthMillis()) + (cell.size().width - 1 * marginMillis);
@@ -100,7 +100,7 @@ public class PageModel {
         return new Dimension(cellWidthMillis, cellHeightMillis);
     }
 
-    public Point getCellPositionMillis(PageCell cell) {
+    private Point getCellPositionMillis(PageCell cell) {
         int posX = (getUnitCellWidthMillis() * cell.location().x) + (marginMillis * (cell.location().x + 1));
         int posY = (getUnitCellHeightMillis() * cell.location().y) + (marginMillis * (cell.location().y + 1));
 

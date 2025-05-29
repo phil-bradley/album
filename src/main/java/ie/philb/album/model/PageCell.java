@@ -22,10 +22,4 @@ import java.awt.Point;
  */
 public record PageCell(Dimension size, Point location) {
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        return hash;
-    }
-
 }
