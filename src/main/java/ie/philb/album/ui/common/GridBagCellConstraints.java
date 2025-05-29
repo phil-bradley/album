@@ -20,7 +20,7 @@ public class GridBagCellConstraints extends GridBagConstraints {
     }
 
     public GridBagCellConstraints(int x, int y) {
-        this(x, y, GridBagConstraints.NORTH, GridBagConstraints.NONE);
+        this(x, y, GridBagConstraints.NORTH);
     }
 
     public GridBagCellConstraints(int x, int y, int anchor) {
@@ -28,7 +28,7 @@ public class GridBagCellConstraints extends GridBagConstraints {
     }
 
     public GridBagCellConstraints(int x, int y, int anchor, int fill) {
-        this(x, y, anchor, fill, new Insets(0, 0, 0, 0));
+        this(x, y, anchor, fill, 0);
     }
 
     public GridBagCellConstraints(int x, int y, int anchor, int fill, int insetSize) {
@@ -70,15 +70,7 @@ public class GridBagCellConstraints extends GridBagConstraints {
     }
 
     public GridBagCellConstraints setWeight(double w) {
-        if (w > 1) {
-            w = 1;
-        }
-        if (w < 0) {
-            w = 0;
-        }
-        weightx = w;
-        weighty = w;
-
+        weight(w);
         return (this);
     }
 
@@ -115,7 +107,7 @@ public class GridBagCellConstraints extends GridBagConstraints {
     }
 
     public GridBagCellConstraints weight(double w) {
-        return this.setWeight(w);
+        return this.weight(w, w);
     }
 
     public GridBagCellConstraints weight(double weightx, double weighty) {
