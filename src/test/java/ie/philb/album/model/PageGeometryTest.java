@@ -133,7 +133,7 @@ public class PageGeometryTest {
     @Test
     void givenRectangularGeometry_expectRectangularSizeAndLocation() {
 
-        PageGeometry pg = PageGeometry.rectangle(2,3);
+        PageGeometry pg = PageGeometry.rectangle(2, 3);
 
         List<PageCell> cells = pg.getCells();
         assertEquals(6, cells.size());
@@ -153,12 +153,12 @@ public class PageGeometryTest {
     @Test
     void givenRaggedWidth_expectRaggedSizeAndLocation() {
 
-        PageGeometry pg = PageGeometry.withRows(2,3);
+        PageGeometry pg = PageGeometry.withRows(2, 3);
 
         List<PageCell> cells = pg.getCells();
         assertEquals(5, cells.size());
 
-	System.out.println("Got cells: " + cells);
+        System.out.println("Got cells: " + cells);
 
         PageCell[] expected = {
             new PageCell(new Dimension(3, 1), new Point(0, 0)),
@@ -171,4 +171,24 @@ public class PageGeometryTest {
         assertThat(cells, containsInAnyOrder(expected));
     }
 
+    @Test
+    void givenRaggedHeight_expectRaggedSizeAndLocation() {
+
+        PageGeometry pg = PageGeometry.withColumns(2, 3);
+
+        List<PageCell> cells = pg.getCells();
+        assertEquals(5, cells.size());
+
+        System.out.println("Got cells: " + cells);
+
+        PageCell[] expected = {
+            new PageCell(new Dimension(1, 3), new Point(0, 0)),
+            new PageCell(new Dimension(1, 3), new Point(0, 3)),
+            new PageCell(new Dimension(1, 2), new Point(1, 0)),
+            new PageCell(new Dimension(1, 2), new Point(1, 2)),
+            new PageCell(new Dimension(1, 2), new Point(1, 4))
+        };
+
+        assertThat(cells, containsInAnyOrder(expected));
+    }
 }

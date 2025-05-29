@@ -34,7 +34,7 @@ public class PageGeometry {
         int maxWidth = 1;
 
         for (PageCell cell : cells) {
-            int cellOffset = cell.location().x * cell.size().width;
+            int cellOffset = cell.location().x;
             maxWidth = Math.max(maxWidth, cellOffset + cell.size().width);
         }
 
@@ -46,7 +46,7 @@ public class PageGeometry {
         int maxHeight = 1;
 
         for (PageCell cell : cells) {
-            int cellOffset = cell.location().y * cell.size().height;
+            int cellOffset = cell.location().y;
             maxHeight = Math.max(maxHeight, cellOffset + cell.size().height);
         }
 
@@ -114,7 +114,7 @@ public class PageGeometry {
             for (int col = 0; col < cellCounts[row]; col++) {
                 int cellWidth = pageCellWidth / cellCounts[row];
                 Dimension cellSize = new Dimension(cellWidth, 1);
-                Point cellLocation = new Point(col, row);
+                Point cellLocation = new Point(col * cellWidth, row);
 
                 pageGeometry.cells.add(new PageCell(cellSize, cellLocation));
             }
@@ -138,7 +138,7 @@ public class PageGeometry {
                 int cellHeight = pageCellHeight / cellCounts[col];
                 Dimension cellSize = new Dimension(1, cellHeight);
 
-                pageGeometry.cells.add(new PageCell(cellSize, new Point(col, row)));
+                pageGeometry.cells.add(new PageCell(cellSize, new Point(col, row * cellHeight)));
             }
         }
 
