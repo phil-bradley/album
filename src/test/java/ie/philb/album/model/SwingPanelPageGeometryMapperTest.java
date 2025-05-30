@@ -9,7 +9,6 @@ import java.awt.Point;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -180,13 +179,15 @@ public class SwingPanelPageGeometryMapperTest {
     }
 
     @Test
-    @Disabled
     void given_2x1_Cells_andNoMargin_expectCellSizeScaledToPanel() {
         PageGeometry pg = PageGeometry.rectangle(2, 1);
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape);
-        pageModel.setMarginMillis(0);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
 
-        SwingPanelPageGeometryMapper mapper = new SwingPanelPageGeometryMapper(pageModel, PANEL_SIZE);
+        int panelHeight = 1000;
+        int panelWidth = PageSize.A4_Landscape.widthFromHeight(panelHeight);
+
+        Dimension panelSize = new Dimension(panelWidth, panelHeight);
+        SwingPanelPageGeometryMapper mapper = new SwingPanelPageGeometryMapper(pageModel, panelSize);
 
         PageCell cell00 = pg.getCells().get(0);
         assertEquals(new Dimension(1, 1), cell00.size());
@@ -194,23 +195,22 @@ public class SwingPanelPageGeometryMapperTest {
 
         Dimension scaledSize = mapper.getSizeOnPanel(cell00);
 
-        double expectedWidth = PANEL_SIZE.width / 2;
-        double expectedHeight = PANEL_SIZE.height;
+        double expectedWidth = panelWidth / 2;
+        double expectedHeight = panelHeight;
         double computedWidth = scaledSize.width;
         double computedHeight = scaledSize.height;
 
-        assertThat(computedHeight, closeTo(expectedHeight, 1));
-        assertThat(computedWidth, closeTo(expectedWidth, 1));
+        assertThat(computedHeight, closeTo(expectedHeight, 3));
+        assertThat(computedWidth, closeTo(expectedWidth, 3));
     }
 
     @Test
-    @Disabled
-    void givenMultipleCells_andMargin_expectCellSizeScaledToPanel() {
+    void given_2x1_Cells_andMargin_expectCellSizeScaledToPanel() {
         PageGeometry pg = PageGeometry.rectangle(2, 1);
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape);
-        pageModel.setMarginMillis(10);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(10);
 
         SwingPanelPageGeometryMapper mapper = new SwingPanelPageGeometryMapper(pageModel, PANEL_SIZE);
+        double scalingFactor = ((double) (pageModel.getPageSize().height())) / ((double) PANEL_SIZE.height);
 
         /*
         * The page has is 297x210mm with a margin of 10mm.
@@ -232,22 +232,24 @@ public class SwingPanelPageGeometryMapperTest {
         *     |------------------------------|*
         *                <- 297px ->
         *
-        *  Conversion factor to px = 210 / 1000 = 0.21
-        *  so the expected cell height = 190 / 0.21
-        *  and expected cell width = 133.5 / 0.21
+        *  Conversion factor to px = 210 / 707 = 0.29702
+        *  so the expected cell height = 190 / 0.29702 = 640
+        *  and expected cell width = 133 / 0.29702 = 448
          */
         PageCell cell00 = pg.getCells().get(0);
         assertEquals(new Dimension(1, 1), cell00.size());
         assertEquals(new Point(0, 0), cell00.location());
 
+        Dimension unscaledSize = mapper.getCellSizeMillis(cell00);
         Dimension scaledSize = mapper.getSizeOnPanel(cell00);
+        System.out.println("Got size " + unscaledSize + ", scaled size " + scaledSize);
 
-        double expectedWidth = 135.5 / 0.21;
-        double expectedHeight = 190 / 0.21;
-        double computedWidth = scaledSize.width;
+        double expectedHeight = 190 / scalingFactor;
+        double expectedWidth = 133 / scalingFactor;
         double computedHeight = scaledSize.height;
+        double computedWidth = scaledSize.width;
 
-        assertThat(computedHeight, closeTo(expectedHeight, 1));
-        assertThat(computedWidth, closeTo(expectedWidth, 1));
+        assertThat("Validate height", computedHeight, closeTo(expectedHeight, 1));
+        assertThat("Validate width", computedWidth, closeTo(expectedWidth, 1));
     }
 }

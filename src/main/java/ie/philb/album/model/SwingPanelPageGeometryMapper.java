@@ -88,7 +88,7 @@ public class SwingPanelPageGeometryMapper {
         BigDecimal scale = getMillisToPixelScale();
         BigDecimal millis = new BigDecimal(v, MATH_CONTEXT);
         BigDecimal px = millis.divide(scale, MATH_CONTEXT);
-        return px.intValue();
+        return px.setScale(0, RoundingMode.HALF_EVEN).intValue();
     }
 
     private BigDecimal getMillisToPixelScale() {
