@@ -4,6 +4,8 @@
  */
 package ie.philb.album.model;
 
+import java.awt.Dimension;
+
 /**
  *
  * @author philb
@@ -29,6 +31,10 @@ public enum PageSize {
 
     public int height() {
         return height;
+    }
+
+    public Dimension size() {
+        return new Dimension(width, height);
     }
 
     public int heigthFromWidth(int w) {

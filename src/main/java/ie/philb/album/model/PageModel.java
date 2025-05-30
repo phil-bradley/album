@@ -75,4 +75,9 @@ public class PageModel {
     public void setMarginMillis(int marginMillis) {
         this.marginMillis = marginMillis;
     }
+
+    public PageModel withMarginMillis(int margin) {
+        setMarginMillis(margin);
+        return this;
+    }
 }

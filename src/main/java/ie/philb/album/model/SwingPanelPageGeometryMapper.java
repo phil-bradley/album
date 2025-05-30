@@ -43,7 +43,7 @@ public class SwingPanelPageGeometryMapper {
         return new Point(x, y);
     }
 
-    private int getUnitCellHeightMillis() {
+    public int getUnitCellHeightMillis() {
         int verticalCellCount = pageModel.getGeometry().verticalCellCount();
         int totalMarginMillis = pageModel.getMarginMillis() * (verticalCellCount + 1);
         int availableHeight = pageModel.getPageSize().height() - totalMarginMillis;
@@ -51,7 +51,7 @@ public class SwingPanelPageGeometryMapper {
         return cellHeight;
     }
 
-    private int getUnitCellWidthMillis() {
+    public int getUnitCellWidthMillis() {
         int horizontalCellCount = pageModel.getGeometry().horizontalCellCount();
         int totalMarginMillis = pageModel.getMarginMillis() * (horizontalCellCount + 1);
         int availableWidth = pageModel.getPageSize().width() - totalMarginMillis;
@@ -59,7 +59,7 @@ public class SwingPanelPageGeometryMapper {
         return cellWidth;
     }
 
-    private Dimension getCellSizeMillis(PageCell cell) {
+    public Dimension getCellSizeMillis(PageCell cell) {
         // An entry might span multiple cells. We need to take the margin between
         // cells into account when computing the size
         // For example, if the entry spans three cells horizontally, then the
@@ -84,17 +84,17 @@ public class SwingPanelPageGeometryMapper {
         return new Point(posX, posY);
     }
 
+    public int millisToPx(int v) {
+        BigDecimal scale = getMillisToPixelScale();
+        BigDecimal millis = new BigDecimal(v, MATH_CONTEXT);
+        BigDecimal px = millis.divide(scale, MATH_CONTEXT);
+        return px.intValue();
+    }
+
     private BigDecimal getMillisToPixelScale() {
         BigDecimal pageHeightMillis = new BigDecimal(pageModel.getPageSize().height(), MATH_CONTEXT);
         BigDecimal panelHeightPx = new BigDecimal(panelSize.height, MATH_CONTEXT);
         BigDecimal millisToPx = pageHeightMillis.divide(panelHeightPx, MATH_CONTEXT);
         return millisToPx;
-    }
-
-    private int millisToPx(int v) {
-        BigDecimal scale = getMillisToPixelScale();
-        BigDecimal millis = new BigDecimal(v, MATH_CONTEXT);
-        BigDecimal px = millis.divide(scale, MATH_CONTEXT);
-        return px.intValue();
     }
 }
