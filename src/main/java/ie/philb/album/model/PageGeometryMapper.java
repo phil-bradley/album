@@ -51,17 +51,22 @@ public class PageGeometryMapper {
     }
 
     public Point getLocationOnView(PageCell cell) {
+
         Point locationMillis = getCellPositionMillis(cell);
 
-        int x = millisToViewUnits(locationMillis.x);
-        int y = millisToViewUnits(locationMillis.y);
+        int x;
+        int y;
 
         if (originLocation == OriginLocation.NorthEast || originLocation == OriginLocation.SouthEast) {
-            x = viewSize.width - x;
+            x = millisToViewUnits((pageModel.getPageSize().width() - locationMillis.x) - cell.size().width * getUnitCellWidthMillis());
+        } else {
+            x = millisToViewUnits(locationMillis.x);
         }
 
         if (originLocation == OriginLocation.SouthEast || originLocation == OriginLocation.SouthWest) {
-            y = viewSize.height - y;
+            y = millisToViewUnits((pageModel.getPageSize().height() - locationMillis.y) - cell.size().height * getUnitCellHeightMillis());
+        } else {
+            y = millisToViewUnits(locationMillis.y);
         }
 
         return new Point(x, y);

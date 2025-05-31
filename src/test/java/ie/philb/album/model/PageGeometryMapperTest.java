@@ -252,4 +252,26 @@ public class PageGeometryMapperTest {
         assertThat("Validate height", computedHeight, closeTo(expectedHeight, 1));
         assertThat("Validate width", computedWidth, closeTo(expectedWidth, 1));
     }
+
+    @Test
+    void givenSingleCell_andAnchorNorthWest_expectPositionZeroZero() {
+        PageGeometry pg = PageGeometry.square(1);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
+
+        // Use default location for origin, as per swing panels 0,0 = top left corner
+        PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PageSize.A4_Landscape.size());
+        mapper.setOriginLocation(PageGeometryMapper.OriginLocation.NorthWest);
+
+        PageCell cell = pg.getCells().get(0);
+
+        Point location = mapper.getLocationOnView(cell);
+        assertEquals(new Point(0, 0), location);
+
+        // Pdfbox uses origin at bottom left corner. Special case where
+        // there is only 1 cell with no margin -> location = 0,0 in both cases
+        mapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);
+        Point pdfLocation = mapper.getLocationOnView(cell);
+        assertEquals(new Point(0, 0), pdfLocation);
+
+    }
 }

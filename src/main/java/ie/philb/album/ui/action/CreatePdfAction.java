@@ -6,21 +6,32 @@ package ie.philb.album.ui.action;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfWriter;
 import ie.philb.album.model.AlbumModel;
+import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
+import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
+import ie.philb.album.ui.common.Resources;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import javax.imageio.ImageIO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Philip.Bradley
  */
 public class CreatePdfAction extends AbstractAction<File> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CreatePdfAction.class);
 
     private final AlbumModel albumModel;
 
@@ -36,8 +47,13 @@ public class CreatePdfAction extends AbstractAction<File> {
         logger.info("Creating doc...");
         File outFile = null;
 
+        // Model page is measured in mm
+        // PDF page size is measured in  inch/72
+        Dimension modelPageSize = albumModel.getPageSize().size();
+        Dimension pageSize = new Dimension(millisToUnits(modelPageSize.width), millisToUnits(modelPageSize.height));
+
         try (Document doc = new Document(getPageSize(albumModel))) {
-            outFile = File.createTempFile("album-", "pdf");
+            outFile = File.createTempFile("album-", ".pdf");
 
             logger.info("Doc has size " + doc.getPageSize());
 
@@ -47,41 +63,38 @@ public class CreatePdfAction extends AbstractAction<File> {
 
             for (PageModel pageModel : albumModel.getPages()) {
 
-                int i = 0;
-                for (PageEntryModel pageEntryModel : pageModel.getPageEntries()) {
+                PageGeometryMapper geometryMapper = new PageGeometryMapper(pageModel, pageSize);
+                geometryMapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);
 
-//                    PageSpecification pageSpecification = pageModel.getLayout().getPageSpecification();
-//                    PageEntryCoordinates coordinates = pageModel.getLayout().getEntryCoordinates().get(i);
-//
-//                    java.awt.Image albumImage = null;
-//
-//                    if (pageEntryModel != null) {
-//                        albumImage = pageEntryModel.getImageIcon().getImage();
-//                    }
-//
-//                    if (albumImage == null) {
-//                        albumImage = ImageIO.read(this.getClass().getResourceAsStream("/ie/philb/album/placeholder.png"));
-//                    }
-//
-//                    Image img = Image.getInstance(albumImage, null);
-//                    int widthUnits = millisToUnits(coordinates.width());
-//                    int heightUnits = millisToUnits(coordinates.height());
-//                    int xOffsetUnits = millisToUnits(coordinates.offsetX());
-//
-//                    // Coordinate system in the spec starts at top left, openpdf starts at bottom left
-//                    int yOffsetUnits = millisToUnits(pageSpecification.height() - (coordinates.height() + coordinates.offsetY()));
-//
-//                    //img.scaleToFit(widthUnits, heightUnits);
-//                    img.scaleAbsolute(widthUnits, heightUnits);
-//
-//                    img.setAbsolutePosition(xOffsetUnits, yOffsetUnits);
-//
-//                    img.setBorder(Rectangle.BOX);
-//                    img.setBorderColor(Resources.COLOR_PHOTO_BORDER);
-//                    img.setBorderWidth(0.01f);
-//
-//                    doc.add(img);
-//                    i++;
+                for (PageEntryModel pageEntryModel : pageModel.getPageEntries()) {
+                    PageCell cell = pageEntryModel.getCell();
+
+                    java.awt.Image albumImage = null;
+
+                    if (pageEntryModel.getImageIcon() != null) {
+                        albumImage = pageEntryModel.getImageIcon().getImage();
+                    }
+
+                    if (albumImage == null) {
+                        albumImage = ImageIO.read(this.getClass().getResourceAsStream("/ie/philb/album/placeholder.png"));
+                    }
+
+                    Image img = Image.getInstance(albumImage, null);
+
+                    Dimension imageSize = geometryMapper.getSizeOnView(cell);
+                    Point imageLocation = geometryMapper.getLocationOnView(cell);
+
+//                    img.scaleToFit(imageSize.width, imageSize.height);
+                    img.setAlignment(Image.MIDDLE);
+                    img.scaleAbsolute(imageSize.width, imageSize.height);
+                    img.setAbsolutePosition(imageLocation.x, imageLocation.y);
+
+                    img.setBorder(Rectangle.BOX);
+                    img.setBorderColor(Resources.COLOR_PHOTO_BORDER);
+                    img.setBorderWidth(0.01f);
+
+//                    LOG.info("Setting image pos {} with size {}", imageLocation, imageSize);
+                    doc.add(img);
                 }
 
                 doc.newPage();
@@ -89,6 +102,7 @@ public class CreatePdfAction extends AbstractAction<File> {
 
             doc.close();
             writer.close();
+
         } catch (DocumentException | IOException ex) {
 
         }
