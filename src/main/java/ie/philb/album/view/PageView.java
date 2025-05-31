@@ -9,7 +9,7 @@ import ie.philb.album.ApplicationAdapter;
 import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageModel;
-import ie.philb.album.model.SwingPanelPageGeometryMapper;
+import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
@@ -135,13 +135,13 @@ public class PageView extends AppPanel {
             return;
         }
 
-        SwingPanelPageGeometryMapper geometryMapper = new SwingPanelPageGeometryMapper(model, getSize());
+        PageGeometryMapper geometryMapper = new PageGeometryMapper(model, getSize());
 
         for (PageEntryView pageEntryView : pageEntriesViews) {
 
             PageCell cell = pageEntryView.getPageCell();
-            Dimension size = geometryMapper.getSizeOnPanel(cell);
-            Point location = geometryMapper.getLocationOnPanel(cell);
+            Dimension size = geometryMapper.getSizeOnView(cell);
+            Point location = geometryMapper.getLocationOnView(cell);
 
             pageEntryView.setPreferredSize(size);
             pageEntryView.setSize(size);
