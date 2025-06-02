@@ -53,18 +53,19 @@ public class PageGeometryMapper {
     public Point getLocationOnView(PageCell cell) {
 
         Point locationMillis = getCellPositionMillis(cell);
+        Dimension sizeMillis = getCellSizeMillis(cell);
 
         int x;
         int y;
 
         if (originLocation == OriginLocation.NorthEast || originLocation == OriginLocation.SouthEast) {
-            x = millisToViewUnits((pageModel.getPageSize().width() - locationMillis.x) - cell.size().width * getUnitCellWidthMillis());
+            x = millisToViewUnits((pageModel.getPageSize().width() - locationMillis.x) - sizeMillis.width);
         } else {
             x = millisToViewUnits(locationMillis.x);
         }
 
         if (originLocation == OriginLocation.SouthEast || originLocation == OriginLocation.SouthWest) {
-            y = millisToViewUnits((pageModel.getPageSize().height() - locationMillis.y) - cell.size().height * getUnitCellHeightMillis());
+            y = millisToViewUnits((pageModel.getPageSize().height() - locationMillis.y) - sizeMillis.height);
         } else {
             y = millisToViewUnits(locationMillis.y);
         }

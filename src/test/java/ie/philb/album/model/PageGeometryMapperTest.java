@@ -274,4 +274,117 @@ public class PageGeometryMapperTest {
         assertEquals(new Point(0, 0), pdfLocation);
 
     }
+
+    @Test
+    void given_1x2_Cells_andNoMargin_andAnchorSouthWest_expectVerticalPositionMapped() {
+
+        PageGeometry pg = PageGeometry.rectangle(1, 2);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
+
+        Dimension mappedSize = new Dimension(1414, 1000);
+
+        // Set origin to be bottom left
+        // Mapping to size (1414,1000) so expect locations (0,0) and (0, 500)
+        PageGeometryMapper mapper = new PageGeometryMapper(pageModel, mappedSize);
+        mapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);
+
+        PageCell cell0 = pg.getCells().get(0);
+        PageCell cell1 = pg.getCells().get(1);
+
+        Point location0 = mapper.getLocationOnView(cell0);
+        Point location1 = mapper.getLocationOnView(cell1);
+
+        assertEquals(new Point(0, 500), location0);
+        assertEquals(new Point(0, 0), location1);
+    }
+
+    @Test
+    void given_1x2_Cells_andMargin_andAnchorSouthWest_expectVerticalPositionMapped() {
+
+        PageGeometry pg = PageGeometry.rectangle(1, 2);
+        int unscaledMargin = 10;
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(unscaledMargin);
+
+        Dimension mappedSize = new Dimension(1414, 1000);
+
+        PageGeometryMapper mapper = new PageGeometryMapper(pageModel, mappedSize);
+        mapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);
+
+        double scalingFactor = (double) 1000 / (double) 210; // viewHeight / pageHeight
+        double scaledMargin = ((double) unscaledMargin) * scalingFactor;
+
+        double unscaledCellHeight = (210 - 30) / 2; // = 90
+        int scaledCellHeight = (int) (unscaledCellHeight * scalingFactor);
+
+        // Expect verical locations be:
+        //    cell0: location = margin
+        //    cell1: location = margin + cellHeight + margin
+        PageCell cell0 = pg.getCells().get(0);
+        PageCell cell1 = pg.getCells().get(1);
+
+        Point location0 = mapper.getLocationOnView(cell0);
+        Point location1 = mapper.getLocationOnView(cell1);
+
+        double xPos0 = scaledMargin;
+        double yPos0 = scaledMargin + scaledCellHeight + scaledMargin;
+
+        double xPos1 = scaledMargin;
+        double yPos1 = scaledMargin;
+
+        assertThat("Validate Cell0: X Position", (double) location0.x, closeTo(xPos0, 1));
+        assertThat("Validate Cell0: Y Position", (double) location0.y, closeTo(yPos0, 1));
+
+        assertThat("Validate Cell1: X Position", (double) location1.x, closeTo(xPos1, 1));
+        assertThat("Validate Cell1: Y Position", (double) location1.y, closeTo(yPos1, 1));
+    }
+
+    @Test
+    void given_1_2_Cells_andMargin_andAnchorSouthWest_expectVerticalPositionMapped() {
+
+        /*
+        * Layout with single cell in column 0, and 2 cells in column 1
+        *   --------------------
+        *  |         |         |
+        *  |         |         |
+        *  |         |---------|
+        *  |         |         |
+        *  |         |         |
+        *  ---------------------
+        *
+         */
+        PageGeometry pg = PageGeometry.withColumns(1, 2);
+        int unscaledMargin = 10;
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(unscaledMargin);
+
+        Dimension mappedSize = new Dimension(1414, 1000);
+
+        PageGeometryMapper mapper = new PageGeometryMapper(pageModel, mappedSize);
+        mapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);
+
+        double scalingFactor = (double) 1000 / (double) 210; // viewHeight / pageHeight
+        double scaledMargin = ((double) unscaledMargin) * scalingFactor;
+
+        double unscaledCellHeight = (210 - 30) / 2; // = 90
+        int scaledCellHeight = (int) (unscaledCellHeight * scalingFactor);
+
+        // Expect verical locations be:
+        //    cell0: location = margin
+        //    cell1: location = margin + cellHeight + margin
+        PageCell cell0 = pg.getCells().get(0);
+//        PageCell cell1 = pg.getCells().get(1);
+
+        Point location0 = mapper.getLocationOnView(cell0);
+//        Point location1 = mapper.getLocationOnView(cell1);
+
+        double xPos0 = scaledMargin;
+        double yPos0 = scaledMargin;
+
+//        double xPos1 = scaledMargin;
+//        double yPos1 = scaledMargin;
+        assertThat("Validate Cell0: X Position", (double) location0.x, closeTo(xPos0, 1));
+        assertThat("Validate Cell0: Y Position", (double) location0.y, closeTo(yPos0, 1));
+
+//        assertThat("Validate Cell1: X Position", (double) location1.x, closeTo(xPos1, 1));
+//        assertThat("Validate Cell1: Y Position", (double) location1.y, closeTo(yPos1, 1));
+    }
 }

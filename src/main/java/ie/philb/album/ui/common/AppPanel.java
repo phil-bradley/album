@@ -16,7 +16,6 @@ import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Objects;
 import java.util.UUID;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -198,28 +197,6 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
         for (var mouseListener : getMouseListeners()) {
             mouseListener.mouseExited(me);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 23 * hash + Objects.hashCode(this.panelId);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final AppPanel other = (AppPanel) obj;
-        return Objects.equals(this.panelId, other.panelId);
     }
 
     @Override
