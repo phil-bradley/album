@@ -8,8 +8,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -47,6 +45,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
     private Point startPoint;
     private Point currPoint;
     private boolean isPlaceholderImage = true;
+    private boolean hasManualZoom = false;
 
     public ImagePanel() {
         this(null);
@@ -57,7 +56,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         setIcon(icon);
         initComponent();
 
-        addComponentListener(new ResizeListener());
+//        addComponentListener(new ResizeListener());
     }
 
     private void initComponent() {
@@ -76,6 +75,16 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
     }
 
     private void setZoomFactor(double zoomFactor) {
+
+        if (hasManualZoom) {
+            return;
+        }
+
+        LOG.info("Zoom factor is {}, setting to {}", this.zoomFactor, zoomFactor);
+
+        if (this.zoomFactor == 0.9411764705882353 && zoomFactor == 0.855614973262032) {
+            LOG.info("");
+        }
         this.zoomFactor = zoomFactor;
 
         if (zoomFactor != 0) {
@@ -84,6 +93,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
     }
 
     public final void setIcon(ImageIcon icon) {
+
         this.imageIcon = icon;
 
         if (icon != null) {
@@ -221,20 +231,31 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         repaint();
     }
 
+    public void zoomIn() {
+        hasManualZoom = false;
+        setZoomFactor(zoomFactor * 1.1);
+        hasManualZoom = true;
+        repaint();
+    }
+
+    public void zoomOut() {
+        hasManualZoom = false;
+        setZoomFactor(zoomFactor / 1.1);
+        hasManualZoom = true;
+        repaint();
+    }
+
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
 
         zoomer = true;
 
-        //Zoom in
         if (e.getWheelRotation() < 0) {
-            zoomFactor *= 1.1;
-            repaint();
+            zoomIn();
         }
-        //Zoom out
+
         if (e.getWheelRotation() > 0) {
-            zoomFactor /= 1.1;
-            repaint();
+            zoomOut();
         }
     }
 
@@ -319,15 +340,15 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         listeners.remove(l);
     }
 
-    class ResizeListener extends ComponentAdapter {
-
-        public void componentResized(ComponentEvent e) {
-
-            if (isPlaceholderImage) {
-                return;
-            }
-
-            setZoomFactor(getBestFitZoomFactor());
-        }
-    }
+//    class ResizeListener extends ComponentAdapter {
+//
+//        public void componentResized(ComponentEvent e) {
+//
+//            if (isPlaceholderImage) {
+//                return;
+//            }
+//
+//            setZoomFactor(getBestFitZoomFactor());
+//        }
+//    }
 }

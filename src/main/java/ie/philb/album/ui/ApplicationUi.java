@@ -4,16 +4,22 @@
  */
 package ie.philb.album.ui;
 
+import ie.philb.album.AppContext;
+import ie.philb.album.ApplicationListener;
 import ie.philb.album.ui.command.CreatePdfCommand;
 import ie.philb.album.ui.command.ExitCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
+import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.imagelibrary.ImageLibraryView;
 import ie.philb.album.view.AlbumViewContainer;
+import ie.philb.album.view.PageEntryView;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
@@ -25,17 +31,22 @@ import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author philb
  */
-public class ApplicationUi extends JFrame {
+public class ApplicationUi extends JFrame implements ApplicationListener {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationUi.class);
 
     private static final ApplicationUi INSTANCE = new ApplicationUi();
 
     private ImageLibraryView imageLibraryView;
     private AlbumViewContainer albumViewContainer;
+    private PageEntryView selectedPageEntryView;
 
     private JSplitPane hSplit;
     private JSplitPane vSplit;
@@ -44,6 +55,8 @@ public class ApplicationUi extends JFrame {
     private JMenu fileMenu;
     private JButton btnExit;
     private JButton btnPdf;
+    private JButton btnZoomIn;
+    private JButton btnZoomOut;
 
     public static ApplicationUi getInstance() {
         return INSTANCE;
@@ -66,6 +79,41 @@ public class ApplicationUi extends JFrame {
             }
 
         });
+
+        setFocusable(true);
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+                LOG.info("Key event " + e);
+                if (e.getKeyCode() == KeyEvent.VK_Z) {
+                    zoomAction();
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_X) {
+                    unZoomAction();
+                }
+            }
+        });
+
+        AppContext.INSTANCE.addListener(this);
+    }
+
+    private void zoomAction() {
+        if (selectedPageEntryView == null) {
+            return;
+        }
+
+        LOG.info("Zooming in on " + selectedPageEntryView);
+        selectedPageEntryView.zoomIn();
+    }
+
+    private void unZoomAction() {
+        if (selectedPageEntryView == null) {
+            return;
+        }
+        selectedPageEntryView.zoomOut();
     }
 
     private void initComponents() {
@@ -121,6 +169,18 @@ public class ApplicationUi extends JFrame {
             new CreatePdfCommand().execute();
         });
         toolBar.add(btnPdf);
+
+        btnZoomIn = new JButton("+");
+        btnZoomIn.addActionListener((ActionEvent ae) -> {
+            zoomAction();
+        });
+        toolBar.add(btnZoomIn);
+
+        btnZoomOut = new JButton("-");
+        btnZoomOut.addActionListener((ActionEvent ae) -> {
+            unZoomAction();
+        });
+        toolBar.add(btnZoomOut);
     }
 
     private void layoutComponents() {
@@ -144,5 +204,14 @@ public class ApplicationUi extends JFrame {
         vSplit.setDividerLocation(400);
         hSplit.setDividerLocation(600);
 
+    }
+
+    @Override
+    public void imageEntrySelected(PageEntryView view) {
+        this.selectedPageEntryView = view;
+    }
+
+    @Override
+    public void libraryImageSelected(ImageLibraryEntry entry) {
     }
 }

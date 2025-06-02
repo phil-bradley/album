@@ -12,8 +12,6 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.ImagePanel;
 import ie.philb.album.ui.common.Resources;
 import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -24,7 +22,7 @@ import javax.swing.ImageIcon;
  */
 public class PageEntryView extends AppPanel {
 
-    private PageEntryModel pageEntryModel;
+    private final PageEntryModel pageEntryModel;
     private final ImagePanel imagePanel;
     private boolean isSelected = false;
 
@@ -41,23 +39,6 @@ public class PageEntryView extends AppPanel {
 
         updateBorder();
         imagePanel.addMouseListener(this);
-
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent evt) {
-
-                System.out.println("Key pressed " + evt);
-
-                if (evt.getKeyCode() == KeyEvent.VK_PLUS) {
-                    System.out.println("Zoom in");
-                }
-
-                if (evt.getKeyCode() == KeyEvent.VK_MINUS) {
-                    System.out.println("Zoom out");
-                }
-            }
-
-        });
     }
 
     @Override
@@ -78,13 +59,6 @@ public class PageEntryView extends AppPanel {
         this.imagePanel.setIcon(image);
     }
 
-//    public void setModel(PageEntryModel model) {
-//        this.pageEntryModel = model;
-//
-//        if (pageEntryModel != null) {
-//            this.imagePanel.setIcon(pageEntryModel.getImageIcon());
-//        }
-//    }
     public void setSelected(boolean b) {
         this.isSelected = b;
         updateBorder();
@@ -96,5 +70,13 @@ public class PageEntryView extends AppPanel {
 
     public PageCell getPageCell() {
         return pageEntryModel.getCell();
+    }
+
+    public void zoomIn() {
+        this.imagePanel.zoomIn();
+    }
+
+    public void zoomOut() {
+        this.imagePanel.zoomOut();
     }
 }
