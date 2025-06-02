@@ -8,6 +8,8 @@ import ie.philb.album.ui.ApplicationUi;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.IOException;
@@ -81,6 +83,21 @@ public class PdfViewDialog extends JDialog {
             } catch (PrinterException ex) {
                 String msg = "Print error: " + ex.getMessage();
                 Dialogs.showErrorMessage(msg);
+            }
+        });
+
+        addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    displayPanel.nextPage();
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    displayPanel.previousPage();
+                }
             }
         });
 
