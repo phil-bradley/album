@@ -4,6 +4,7 @@
  */
 package ie.philb.album.model;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -23,7 +24,6 @@ public class PageEntryModel {
     private final List<PageEntryModelListener> listeners = new ArrayList<>();
     private final PageCell cell;
     private ImageIcon imageIcon;
-    private BufferedImage zoomedImage = null;
     private double zoomFactor = 1;
 
     public PageEntryModel(PageCell cell) {
@@ -37,11 +37,7 @@ public class PageEntryModel {
     public void setImageIcon(ImageIcon imageIcon) {
         this.imageIcon = imageIcon;
         setZoomFactor(1);
-        this.zoomedImage = createZoomedImage();
-
-        for (var l : listeners) {
-            l.imageUpdated();
-        }
+        fireImageUpdated();
     }
 
     public PageCell getCell() {
@@ -60,37 +56,19 @@ public class PageEntryModel {
 
         if (zoomFactor != this.zoomFactor) {
             this.zoomFactor = zoomFactor;
-            this.zoomedImage = createZoomedImage();
+            fireImageUpdated();
         }
-
     }
 
     public double getZoomFactor() {
         return zoomFactor;
     }
 
-    private BufferedImage createZoomedImage() {
+    private BufferedImage getImageWithViewZoomScale(double viewZoomScale) {
 
-        if (zoomFactor <= 0) {
+        if (imageIcon == null) {
             return null;
         }
-
-        int zoomedWidth = (int) (imageIcon.getIconWidth() * zoomFactor);
-        int zoomedHeight = (int) (imageIcon.getIconHeight() * zoomFactor);
-
-        BufferedImage zoomed = new BufferedImage(zoomedWidth, zoomedHeight, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = zoomed.createGraphics();
-        g.drawImage(imageIcon.getImage(), 0, 0, zoomedWidth, zoomedHeight, null);
-        g.dispose();
-
-        return zoomed;
-    }
-
-    public BufferedImage getZoomedImage() {
-        return zoomedImage;
-    }
-
-    public BufferedImage getImageWithViewZoomScale(double viewZoomScale) {
 
         if (zoomFactor <= 0) {
             return null;
@@ -108,11 +86,69 @@ public class PageEntryModel {
         return zoomed;
     }
 
+    public BufferedImage getViewImage(Dimension viewSize) {
+
+        if (imageIcon == null) {
+            return null;
+        }
+
+        BufferedImage scaled = getImageWithViewZoomScale(getBestFitFactor(viewSize.width, viewSize.height));
+
+        int cropWidth = Math.min(viewSize.width, scaled.getWidth());
+        int cropHeight = Math.min(viewSize.height, scaled.getHeight());
+
+        int xOffset = 0;
+        int yOffset = 0;
+
+        if (viewSize.width < scaled.getWidth()) {
+            xOffset = (scaled.getWidth() - viewSize.width) / 2;
+        }
+
+        if (viewSize.height < scaled.getHeight()) {
+            yOffset = (scaled.getHeight() - viewSize.height) / 2;
+        }
+
+        BufferedImage cropped = scaled.getSubimage(xOffset, yOffset, cropWidth, cropHeight);
+        return cropped;
+    }
+
+    // This is the zoom factor at which the image is as large as possible
+    // without any cropping
+    private double getBestFitFactor(int viewWidth, int viewHeight) {
+
+        //BufferedImage zoomed = getZoomedImage();
+        if (imageIcon == null) {
+            return 1;
+        }
+
+        // Component not yet sized, cannot compute zoom factor
+        if (viewWidth == 0 || viewHeight == 0) {
+            return 0;
+        }
+
+        double iconWidth = imageIcon.getIconWidth();
+        double iconHeight = imageIcon.getIconHeight();
+
+        double bestFitZoom = Math.min(viewWidth / iconWidth, viewHeight / iconHeight);
+        int scaledWidth = (int) (iconWidth * bestFitZoom);
+        int scaledHeight = (int) (iconHeight * bestFitZoom);
+
+        LOG.info("Got best fit zoom factor {}, size {}x{}, Available {}x{}, Scaled {}x{}", bestFitZoom, iconWidth, iconHeight, viewWidth, viewHeight, scaledWidth, scaledHeight);
+        return bestFitZoom;
+
+    }
+
     public void addListener(PageEntryModelListener listener) {
         this.listeners.add(listener);
     }
 
     public void removeListener(PageEntryModelListener listener) {
         this.listeners.remove(listener);
+    }
+
+    private void fireImageUpdated() {
+        for (var l : listeners) {
+            l.imageUpdated();
+        }
     }
 }
