@@ -18,6 +18,7 @@ import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.Resources;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -55,7 +56,7 @@ public class CreatePdfAction extends AbstractAction<File> {
         try (Document doc = new Document(getPageSize(albumModel))) {
             outFile = File.createTempFile("album-", ".pdf");
 
-            logger.info("Doc has size " + doc.getPageSize());
+            logger.info("Creating doc {} with page size {}", outFile.getAbsolutePath(), doc.getPageSize());
 
             // Creating the writer implicitly causes the doc to be written to the file
             PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(outFile));
@@ -68,12 +69,10 @@ public class CreatePdfAction extends AbstractAction<File> {
 
                 for (PageEntryModel pageEntryModel : pageModel.getPageEntries()) {
                     PageCell cell = pageEntryModel.getCell();
+                    Dimension imageSize = geometryMapper.getSizeOnView(cell);
+                    Point imageLocation = geometryMapper.getLocationOnView(cell);
 
-                    java.awt.Image albumImage = null;
-
-                    if (pageEntryModel.getImageIcon() != null) {
-                        albumImage = pageEntryModel.getImageIcon().getImage();
-                    }
+                    BufferedImage albumImage = pageEntryModel.getViewImage(imageSize);
 
                     if (albumImage == null) {
                         albumImage = ImageIO.read(this.getClass().getResourceAsStream("/ie/philb/album/placeholder.png"));
@@ -81,13 +80,11 @@ public class CreatePdfAction extends AbstractAction<File> {
 
                     Image img = Image.getInstance(albumImage, null);
 
-                    Dimension imageSize = geometryMapper.getSizeOnView(cell);
-                    Point imageLocation = geometryMapper.getLocationOnView(cell);
+                    // Centre image if it's less tall or less wide than the available space
+                    int xOffset = (imageSize.width - albumImage.getWidth()) / 2;
+                    int yOffset = (imageSize.height - albumImage.getHeight()) / 2;
 
-//                    img.scaleToFit(imageSize.width, imageSize.height);
-                    img.setAlignment(Image.MIDDLE);
-                    img.scaleAbsolute(imageSize.width, imageSize.height);
-                    img.setAbsolutePosition(imageLocation.x, imageLocation.y);
+                    img.setAbsolutePosition(imageLocation.x + xOffset, imageLocation.y + yOffset);
 
                     img.setBorder(Rectangle.BOX);
                     img.setBorderColor(Resources.COLOR_PHOTO_BORDER);
