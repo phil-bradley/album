@@ -69,7 +69,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
 
         this.zoomFactor = 1;
         this.imageIcon = new ImageIcon(this.getClass().getResource("/ie/philb/album/placeholder.png"));
-        this.zoomedImage = getZoomedImage();
+        this.zoomedImage = createZoomedImage();
         this.isPlaceholderImage = true;
 
     }
@@ -80,15 +80,11 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
             return;
         }
 
-        LOG.info("Zoom factor is {}, setting to {}", this.zoomFactor, zoomFactor);
-
-        if (this.zoomFactor == 0.9411764705882353 && zoomFactor == 0.855614973262032) {
-            LOG.info("");
-        }
+//        LOG.info("Zoom factor is {}, setting to {}", this.zoomFactor, zoomFactor);
         this.zoomFactor = zoomFactor;
 
         if (zoomFactor != 0) {
-            this.zoomedImage = getZoomedImage();
+            this.zoomedImage = createZoomedImage();
         }
     }
 
@@ -104,7 +100,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         repaint();
     }
 
-    private BufferedImage getZoomedImage() {
+    private BufferedImage createZoomedImage() {
 
         int zoomedWidth = (int) (imageIcon.getIconWidth() * zoomFactor);
         int zoomedHeight = (int) (imageIcon.getIconHeight() * zoomFactor);

@@ -42,6 +42,7 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
         setName(getClass().getSimpleName());
 
         AppContext.INSTANCE.addListener(this);
+        addMouseListener(this);
     }
 
     public AppPanel layoutGridBag() {
@@ -166,37 +167,22 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        for (var mouseListener : getMouseListeners()) {
-            mouseListener.mouseClicked(me);
-        }
     }
 
     @Override
     public void mousePressed(MouseEvent me) {
-        for (var mouseListener : getMouseListeners()) {
-            mouseListener.mousePressed(me);
-        }
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        for (var mouseListener : getMouseListeners()) {
-            mouseListener.mouseReleased(me);
-        }
     }
 
     @Override
     public void mouseEntered(MouseEvent me) {
-        for (var mouseListener : getMouseListeners()) {
-            mouseListener.mouseEntered(me);
-        }
     }
 
     @Override
     public void mouseExited(MouseEvent me) {
-        for (var mouseListener : getMouseListeners()) {
-            mouseListener.mouseExited(me);
-        }
     }
 
     @Override

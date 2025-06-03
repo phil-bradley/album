@@ -8,8 +8,8 @@ import ie.philb.album.AppContext;
 import ie.philb.album.ApplicationAdapter;
 import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
-import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageGeometryMapper;
+import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
@@ -86,7 +86,6 @@ public class PageView extends AppPanel {
         }
 
         model.setImage(imageLibraryEntry.getFile(), selectedIdx);
-        selectedEntryView.setImage(imageLibraryEntry.getIcon());
     }
 
     public final void setModel(PageModel model) {
