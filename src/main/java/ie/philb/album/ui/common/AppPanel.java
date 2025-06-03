@@ -33,7 +33,6 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
     private final UUID panelId = UUID.randomUUID();
     protected static final Logger logger = LoggerFactory.getLogger(AppPanel.class);
 
-//    private final List<MouseListener> mouseListeners = new ArrayList<>();
     public AppPanel() {
         super();
 

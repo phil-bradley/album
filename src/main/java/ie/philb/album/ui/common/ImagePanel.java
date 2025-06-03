@@ -8,6 +8,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -56,7 +58,7 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         setIcon(icon);
         initComponent();
 
-//        addComponentListener(new ResizeListener());
+        addComponentListener(new ResizeListener());
     }
 
     private void initComponent() {
@@ -336,15 +338,15 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         listeners.remove(l);
     }
 
-//    class ResizeListener extends ComponentAdapter {
-//
-//        public void componentResized(ComponentEvent e) {
-//
-//            if (isPlaceholderImage) {
-//                return;
-//            }
-//
-//            setZoomFactor(getBestFitZoomFactor());
-//        }
-//    }
+    class ResizeListener extends ComponentAdapter {
+
+        public void componentResized(ComponentEvent e) {
+
+            if (isPlaceholderImage) {
+                return;
+            }
+
+            setZoomFactor(getBestFitZoomFactor());
+        }
+    }
 }

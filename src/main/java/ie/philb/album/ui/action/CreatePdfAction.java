@@ -15,7 +15,6 @@ import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
-import ie.philb.album.ui.common.Resources;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -86,10 +85,15 @@ public class CreatePdfAction extends AbstractAction<File> {
 
                     img.setAbsolutePosition(imageLocation.x + xOffset, imageLocation.y + yOffset);
 
-                    img.setBorder(Rectangle.BOX);
-                    img.setBorderColor(Resources.COLOR_PHOTO_BORDER);
-                    img.setBorderWidth(0.01f);
-
+//                    Rectangle rect = new Rectangle(cell.location().x, cell.location().y, cell.location().x + cell.size().width, cell.location().y + cell.size().height);
+//                    rect.setBorder(Rectangle.BOX);
+//                    rect.setBorderWidth(2);
+//                    rect.setBorderColor(Color.MAGENTA);
+//
+//                    doc.add(rect);
+//                    img.setBorder(Rectangle.BOX);
+//                    img.setBorderColor(Resources.COLOR_PHOTO_BORDER);
+//                    img.setBorderWidth(0.01f);
 //                    LOG.info("Setting image pos {} with size {}", imageLocation, imageSize);
                     doc.add(img);
                 }
