@@ -35,6 +35,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     public PageEntryView(PageEntryModel entryModel) {
 
         super();
+        background(Color.white);
         setFocusable(true);
         this.pageEntryModel = entryModel;
         this.pageEntryModel.addListener(this);
@@ -47,31 +48,11 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     @Override
     protected void paintComponent(Graphics g) {
-
-        if (pageEntryModel.getImageIcon() == null) {
-            return;
-        }
-
-        drawImage(g);
-    }
-
-    private void drawImage(Graphics g) {
-
         Dimension viewSize = new Dimension(getBounds().width, getBounds().height);
         BufferedImage viewImage = pageEntryModel.getViewImage(viewSize);
         Point offset = ImageUtils.getCenteredCoordinates(viewImage, viewSize);
-
         g.drawImage(viewImage, offset.x, offset.y, null);
-    }
 
-    private int getAvailableWidth() {
-        int availableWidth = getBounds().width;
-        return availableWidth;
-    }
-
-    private int getAvailableHeight() {
-        int availableHeight = getBounds().height;
-        return availableHeight;
     }
 
     @Override
