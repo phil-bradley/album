@@ -11,10 +11,10 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfWriter;
 import ie.philb.album.model.AlbumModel;
-import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
+import ie.philb.album.util.ImageUtils;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -67,23 +67,23 @@ public class CreatePdfAction extends AbstractAction<File> {
                 geometryMapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);
 
                 for (PageEntryModel pageEntryModel : pageModel.getPageEntries()) {
-                    PageCell cell = pageEntryModel.getCell();
-                    Dimension imageSize = geometryMapper.getSizeOnView(cell);
-                    Point imageLocation = geometryMapper.getLocationOnView(cell);
+                    Dimension cellSize = geometryMapper.getCellSizeOnView(pageEntryModel);
+                    BufferedImage viewImage = pageEntryModel.getViewImage(cellSize);
 
-                    BufferedImage albumImage = pageEntryModel.getViewImage(imageSize);
+                    Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
+                    Point imageOffset = ImageUtils.getCenteredCoordinates(viewImage, cellSize);
+                    Point imageLocation = new Point(cellLocation.x + imageOffset.x, cellLocation.y + imageOffset.y);
 
-                    if (albumImage == null) {
-                        albumImage = ImageIO.read(this.getClass().getResourceAsStream("/ie/philb/album/placeholder.png"));
+                    if (viewImage == null) {
+                        viewImage = ImageIO.read(this.getClass().getResourceAsStream("/ie/philb/album/placeholder.png"));
                     }
 
-                    Image img = Image.getInstance(albumImage, null);
+                    Image img = Image.getInstance(viewImage, null);
 
                     // Centre image if it's less tall or less wide than the available space
-                    int xOffset = (imageSize.width - albumImage.getWidth()) / 2;
-                    int yOffset = (imageSize.height - albumImage.getHeight()) / 2;
-
-                    img.setAbsolutePosition(imageLocation.x + xOffset, imageLocation.y + yOffset);
+//                    int xOffset = (imageSize.width - albumImage.getWidth()) / 2;
+//                    int yOffset = (imageSize.height - albumImage.getHeight()) / 2;
+                    img.setAbsolutePosition(imageLocation.x, imageLocation.y);
 
 //                    Rectangle rect = new Rectangle(cell.location().x, cell.location().y, cell.location().x + cell.size().width, cell.location().y + cell.size().height);
 //                    rect.setBorder(Rectangle.BOX);

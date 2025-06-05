@@ -10,9 +10,11 @@ import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryModelListener;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
+import ie.philb.album.util.ImageUtils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
@@ -39,6 +41,10 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         updateBorder();
     }
 
+    public PageEntryModel getPageEntryModel() {
+        return pageEntryModel;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
 
@@ -53,12 +59,9 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         Dimension viewSize = new Dimension(getBounds().width, getBounds().height);
         BufferedImage viewImage = pageEntryModel.getViewImage(viewSize);
+        Point offset = ImageUtils.getCenteredCoordinates(viewImage, viewSize);
 
-        // Centre image if it's less tall or less wide than the available space
-        int x = (getAvailableWidth() - viewImage.getWidth()) / 2;
-        int y = (getAvailableHeight() - viewImage.getHeight()) / 2;
-
-        g.drawImage(viewImage, x, y, null);
+        g.drawImage(viewImage, offset.x, offset.y, null);
     }
 
     private int getAvailableWidth() {

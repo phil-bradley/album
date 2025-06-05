@@ -7,7 +7,10 @@ package ie.philb.album.util;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 /**
@@ -15,6 +18,8 @@ import javax.swing.ImageIcon;
  * @author Philip.Bradley
  */
 public class ImageUtils {
+
+    private static BufferedImage PLACEHOLDER_IMAGE = null;
 
     public static BufferedImage getBufferedImage(ImageIcon icon) {
 
@@ -38,5 +43,31 @@ public class ImageUtils {
         }
 
         return image;
+    }
+
+    public static Point getCenteredCoordinates(BufferedImage image, Dimension cellSize) {
+
+        // Centre image if it's less tall or less wide than the available space
+        int x = 0;
+        int y = 0;
+
+        if (image != null) {
+            x = (cellSize.width - image.getWidth()) / 2;
+            y = (cellSize.height - image.getHeight()) / 2;
+        }
+
+        return new Point(x, y);
+    }
+
+    public static BufferedImage getPlaceholderImage() {
+
+        if (PLACEHOLDER_IMAGE == null) {
+            try {
+                PLACEHOLDER_IMAGE = ImageIO.read(ImageUtils.class.getResourceAsStream("/ie/philb/album/placeholder.png"));
+            } catch (IOException ex) {
+            }
+        }
+
+        return PLACEHOLDER_IMAGE;
     }
 }

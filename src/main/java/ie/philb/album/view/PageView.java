@@ -6,7 +6,6 @@ package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.ApplicationAdapter;
-import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
@@ -138,9 +137,9 @@ public class PageView extends AppPanel {
 
         for (PageEntryView pageEntryView : pageEntriesViews) {
 
-            PageCell cell = pageEntryView.getPageCell();
-            Dimension size = geometryMapper.getSizeOnView(cell);
-            Point location = geometryMapper.getLocationOnView(cell);
+            PageEntryModel pageEntryModel = pageEntryView.getPageEntryModel();
+            Dimension size = geometryMapper.getCellSizeOnView(pageEntryModel);
+            Point location = geometryMapper.getCellLocationOnView(pageEntryView.getPageCell());
 
             pageEntryView.setPreferredSize(size);
             pageEntryView.setSize(size);

@@ -4,6 +4,7 @@
  */
 package ie.philb.album.model;
 
+import ie.philb.album.util.ImageUtils;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -89,7 +90,7 @@ public class PageEntryModel {
     public BufferedImage getViewImage(Dimension viewSize) {
 
         if (imageIcon == null) {
-            return null;
+            return ImageUtils.getPlaceholderImage();
         }
 
         BufferedImage scaled = getImageWithViewZoomScale(getBestFitFactor(viewSize.width, viewSize.height));

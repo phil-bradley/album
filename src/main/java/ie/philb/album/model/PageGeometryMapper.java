@@ -20,7 +20,23 @@ public class PageGeometryMapper {
         NorthEast,
         SouthEast,
         NorthWest,
-        SouthWest
+        SouthWest;
+
+        public boolean isNorth() {
+            return this.equals(NorthEast) || this.equals(NorthWest);
+        }
+
+        public boolean isSouth() {
+            return this.equals(SouthEast) || this.equals(SouthWest);
+        }
+
+        public boolean isEast() {
+            return this.equals(SouthEast) || this.equals(NorthEast);
+        }
+
+        public boolean isWest() {
+            return this.equals(SouthWest) || this.equals(NorthEast);
+        }
     }
 
     private static final MathContext MATH_CONTEXT = new MathContext(20, RoundingMode.HALF_EVEN);
@@ -41,7 +57,8 @@ public class PageGeometryMapper {
         this.originLocation = originLocation;
     }
 
-    public Dimension getSizeOnView(PageCell cell) {
+    public Dimension getCellSizeOnView(PageEntryModel pageEntryModel) {
+        PageCell cell = pageEntryModel.getCell();
         Dimension cellSizeMillis = getCellSizeMillis(cell);
 
         int width = millisToViewUnits(cellSizeMillis.width);
@@ -50,27 +67,26 @@ public class PageGeometryMapper {
         return new Dimension(width, height);
     }
 
-    public Point getLocationOnView(PageCell cell) {
+    public Point getCellLocationOnView(PageCell cell) {
 
         Point locationMillis = getCellPositionMillis(cell);
         Dimension sizeMillis = getCellSizeMillis(cell);
 
-        int x;
-        int y;
+        int xMillis = locationMillis.x;
+        int yMillis = locationMillis.y;
 
-        if (originLocation == OriginLocation.NorthEast || originLocation == OriginLocation.SouthEast) {
-            x = millisToViewUnits((pageModel.getPageSize().width() - locationMillis.x) - sizeMillis.width);
-        } else {
-            x = millisToViewUnits(locationMillis.x);
+        if (originLocation.isEast()) {
+            xMillis = (pageModel.getPageSize().width() - locationMillis.x) - sizeMillis.width;
         }
 
-        if (originLocation == OriginLocation.SouthEast || originLocation == OriginLocation.SouthWest) {
-            y = millisToViewUnits((pageModel.getPageSize().height() - locationMillis.y) - sizeMillis.height);
-        } else {
-            y = millisToViewUnits(locationMillis.y);
+        if (originLocation.isSouth()) {
+            yMillis = (pageModel.getPageSize().height() - locationMillis.y) - sizeMillis.height;
         }
 
-        return new Point(x, y);
+        int xView = millisToViewUnits(xMillis);
+        int yView = millisToViewUnits(yMillis);
+
+        return new Point(xView, yView);
     }
 
     public int getUnitCellHeightMillis() {

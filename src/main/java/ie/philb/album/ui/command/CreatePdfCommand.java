@@ -28,7 +28,8 @@ public class CreatePdfCommand extends AbstractCommand {
 
             @Override
             public void onSuccess(File result) {
-                boolean ok = Dialogs.confirm("Done!", "Preview the result?");
+                boolean ok = true;
+                //boolean ok = Dialogs.confirm("Done!", "Preview the result?");
                 if (ok) {
                     PdfViewDialog dlg = new PdfViewDialog();
 

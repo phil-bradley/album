@@ -29,8 +29,7 @@ public class PageGeometryMapperTest {
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
 
-        PageCell cell = pg.getCells().get(0);
-        Point location = mapper.getLocationOnView(cell);
+        Point location = mapper.getCellLocationOnView(pageModel.getPageEntries().get(0).getCell());
         assertEquals(new Point(0, 0), location);
     }
 
@@ -78,9 +77,7 @@ public class PageGeometryMapperTest {
         PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
-
-        PageCell cell = pg.getCells().get(0);
-        Dimension size = mapper.getSizeOnView(cell);
+        Dimension size = mapper.getCellSizeOnView(pageModel.getPageEntries().get(0));
 
         double computedWidth = (double) (size.width);
         double computedHeight = (double) (size.height);
@@ -98,9 +95,7 @@ public class PageGeometryMapperTest {
         PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(margin);
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
-
-        PageCell cell = pg.getCells().get(0);
-        Dimension size = mapper.getSizeOnView(cell);
+        Dimension size = mapper.getCellSizeOnView(pageModel.getPageEntries().get(0));
 
         double expectedWidth = PANEL_SIZE.width - mapper.millisToViewUnits(margin) * 2;
         double expectedHeight = PANEL_SIZE.height - mapper.millisToViewUnits(margin) * 2;
@@ -167,7 +162,7 @@ public class PageGeometryMapperTest {
         assertEquals(new Dimension(1, 1), cell00.size());
         assertEquals(new Point(0, 0), cell00.location());
 
-        Dimension scaledSize = mapper.getSizeOnView(cell00);
+        Dimension scaledSize = mapper.getCellSizeOnView(pageModel.getPageEntries().get(0));
 
         double expectedWidth = panelWidth;
         double expectedHeight = panelHeight / 2;
@@ -193,7 +188,7 @@ public class PageGeometryMapperTest {
         assertEquals(new Dimension(1, 1), cell00.size());
         assertEquals(new Point(0, 0), cell00.location());
 
-        Dimension scaledSize = mapper.getSizeOnView(cell00);
+        Dimension scaledSize = mapper.getCellSizeOnView(pageModel.getPageEntries().get(0));
 
         double expectedWidth = panelWidth / 2;
         double expectedHeight = panelHeight;
@@ -241,7 +236,7 @@ public class PageGeometryMapperTest {
         assertEquals(new Point(0, 0), cell00.location());
 
         Dimension unscaledSize = mapper.getCellSizeMillis(cell00);
-        Dimension scaledSize = mapper.getSizeOnView(cell00);
+        Dimension scaledSize = mapper.getCellSizeOnView(pageModel.getPageEntries().get(0));
         System.out.println("Got size " + unscaledSize + ", scaled size " + scaledSize);
 
         double expectedHeight = 190 / scalingFactor;
@@ -264,13 +259,13 @@ public class PageGeometryMapperTest {
 
         PageCell cell = pg.getCells().get(0);
 
-        Point location = mapper.getLocationOnView(cell);
+        Point location = mapper.getCellLocationOnView(cell);
         assertEquals(new Point(0, 0), location);
 
         // Pdfbox uses origin at bottom left corner. Special case where
         // there is only 1 cell with no margin -> location = 0,0 in both cases
         mapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);
-        Point pdfLocation = mapper.getLocationOnView(cell);
+        Point pdfLocation = mapper.getCellLocationOnView(cell);
         assertEquals(new Point(0, 0), pdfLocation);
 
     }
@@ -291,8 +286,8 @@ public class PageGeometryMapperTest {
         PageCell cell0 = pg.getCells().get(0);
         PageCell cell1 = pg.getCells().get(1);
 
-        Point location0 = mapper.getLocationOnView(cell0);
-        Point location1 = mapper.getLocationOnView(cell1);
+        Point location0 = mapper.getCellLocationOnView(cell0);
+        Point location1 = mapper.getCellLocationOnView(cell1);
 
         assertEquals(new Point(0, 500), location0);
         assertEquals(new Point(0, 0), location1);
@@ -322,8 +317,8 @@ public class PageGeometryMapperTest {
         PageCell cell0 = pg.getCells().get(0);
         PageCell cell1 = pg.getCells().get(1);
 
-        Point location0 = mapper.getLocationOnView(cell0);
-        Point location1 = mapper.getLocationOnView(cell1);
+        Point location0 = mapper.getCellLocationOnView(cell0);
+        Point location1 = mapper.getCellLocationOnView(cell1);
 
         double xPos0 = scaledMargin;
         double yPos0 = scaledMargin + scaledCellHeight + scaledMargin;
@@ -373,7 +368,7 @@ public class PageGeometryMapperTest {
         PageCell cell0 = pg.getCells().get(0);
 //        PageCell cell1 = pg.getCells().get(1);
 
-        Point location0 = mapper.getLocationOnView(cell0);
+        Point location0 = mapper.getCellLocationOnView(cell0);
 //        Point location1 = mapper.getLocationOnView(cell1);
 
         double xPos0 = scaledMargin;
