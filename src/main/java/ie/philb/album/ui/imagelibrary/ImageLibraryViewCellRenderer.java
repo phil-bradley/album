@@ -4,11 +4,11 @@
  */
 package ie.philb.album.ui.imagelibrary;
 
-import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.ImagePanel;
 import ie.philb.album.ui.common.ImagePanelFill;
+import ie.philb.album.ui.common.Resources;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;

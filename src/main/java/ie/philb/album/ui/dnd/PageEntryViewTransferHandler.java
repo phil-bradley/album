@@ -37,6 +37,7 @@ public class PageEntryViewTransferHandler extends TransferHandler {
 
             if (comp instanceof PageEntryView view) {
                 view.getPageEntryModel().setImageIcon(new ImageIcon(data));
+                view.setSelected(true);
             }
 
         } catch (UnsupportedFlavorException | IOException ex) {
