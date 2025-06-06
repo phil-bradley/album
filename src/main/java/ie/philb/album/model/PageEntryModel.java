@@ -7,6 +7,7 @@ package ie.philb.album.model;
 import ie.philb.album.util.ImageUtils;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class PageEntryModel {
     private final PageCell cell;
     private ImageIcon imageIcon;
     private double zoomFactor = 1;
+    private Point offset = new Point(0, 0);
 
     public PageEntryModel(PageCell cell) {
         this.cell = cell;
@@ -55,10 +57,12 @@ public class PageEntryModel {
 
     public void resetZoom() {
         setZoomFactor(1);
+        resetOffset();
     }
 
     public void zoomToCoverFit(Dimension viewSize) {
         setZoomFactor(getCoverFitZoomFactor(viewSize));
+        resetOffset();
     }
 
     public void setZoomFactor(double zoomFactor) {
@@ -184,5 +188,19 @@ public class PageEntryModel {
         for (var l : listeners) {
             l.imageUpdated();
         }
+    }
+
+    public void addImageViewOffset(Point dragOffset) {
+        this.offset.x += dragOffset.x;
+        this.offset.y += dragOffset.y;
+    }
+
+    public void resetOffset() {
+        this.offset.x = 0;
+        this.offset.y = 0;
+    }
+
+    public Point getOffset() {
+        return offset;
     }
 }

@@ -16,6 +16,7 @@ import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.UUID;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philip.Bradley
  */
-public class AppPanel extends JPanel implements UiConfigListener, MouseListener, ApplicationListener {
+public class AppPanel extends JPanel implements UiConfigListener, MouseListener, MouseMotionListener, ApplicationListener {
 
     private static final long serialVersionUID = 1L;
     private final UUID panelId = UUID.randomUUID();
@@ -42,6 +43,8 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
 
         AppContext.INSTANCE.addListener(this);
         addMouseListener(this);
+        addMouseMotionListener(this);
+
     }
 
     public AppPanel layoutGridBag() {
@@ -190,6 +193,14 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
 
     @Override
     public void libraryImageSelected(ImageLibraryEntry entry) {
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent me) {
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent me) {
     }
 
 }

@@ -14,8 +14,8 @@ import ie.philb.album.util.ImageUtils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
@@ -29,6 +29,11 @@ import org.slf4j.LoggerFactory;
 public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(PageEntryView.class);
+
+    private Point mouseDragStartPoint;
+    private boolean isMouseReleased = true;
+    private boolean isMouseDragging = false;
+    private Point mouseDragPreviousPoint;
 
     private final PageEntryModel pageEntryModel;
     private boolean isSelected = false;
@@ -49,20 +54,16 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     @Override
     protected void paintComponent(Graphics g) {
-        
+
         super.paintComponent(g);
-        
+
         Dimension viewSize = new Dimension(getBounds().width, getBounds().height);
         BufferedImage viewImage = pageEntryModel.getViewImage(viewSize);
         Point offset = ImageUtils.getCenteredCoordinates(viewImage, viewSize);
+        offset.x += pageEntryModel.getOffset().x;
+        offset.y += pageEntryModel.getOffset().y;
 
         g.drawImage(viewImage, offset.x, offset.y, null);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent evt) {
-        setSelected(!isSelected);
-        repaint();
     }
 
     private void updateBorder() {
@@ -89,7 +90,52 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     @Override
     public void imageUpdated() {
-        //LOG.info("Image updated on cell {} with view size {}, isVisible: {}", pageEntryModel.getCell(), getSize(), isVisible());
         repaint();
     }
+
+    @Override
+    public void mousePressed(MouseEvent me) {
+
+        setSelected(true);
+
+        isMouseReleased = false;
+        mouseDragStartPoint = MouseInfo.getPointerInfo().getLocation();
+        mouseDragPreviousPoint = mouseDragStartPoint;
+        LOG.info("Start drag at " + mouseDragStartPoint);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent me) {
+        isMouseReleased = true;
+        isMouseDragging = false;
+
+//        Point mouseDragEndpoint = MouseInfo.getPointerInfo().getLocation();
+//        LOG.info("Dragged from " + mouseDragStartPoint + " to " + mouseDragEndpoint);
+//
+//        int xOffset = mouseDragEndpoint.x - mouseDragStartPoint.x;
+//        int yOffset = mouseDragEndpoint.y - mouseDragStartPoint.y;
+//
+//        Point dragOffset = new Point(xOffset, yOffset);
+//        pageEntryModel.addImageViewOffset(dragOffset);
+        mouseDragPreviousPoint = null;
+
+        repaint();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent me) {
+
+        Point mouseDragCurrentPoint = MouseInfo.getPointerInfo().getLocation();
+        LOG.info("Dragged from " + mouseDragStartPoint + " to " + mouseDragCurrentPoint);
+
+        int xOffset = mouseDragCurrentPoint.x - mouseDragPreviousPoint.x;
+        int yOffset = mouseDragCurrentPoint.y - mouseDragPreviousPoint.y;
+
+        Point dragOffset = new Point(xOffset, yOffset);
+        pageEntryModel.addImageViewOffset(dragOffset);
+
+        mouseDragPreviousPoint = mouseDragCurrentPoint;
+        repaint();
+    }
+
 }
