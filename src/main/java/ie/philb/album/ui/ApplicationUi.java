@@ -6,9 +6,15 @@ package ie.philb.album.ui;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.ApplicationListener;
+import ie.philb.album.ui.action.Callback;
+import ie.philb.album.ui.action.ZoomInAction;
+import ie.philb.album.ui.action.ZoomOutAction;
+import ie.philb.album.ui.action.ZoomResetAction;
+import ie.philb.album.ui.action.ZoomToCoverFitAction;
 import ie.philb.album.ui.command.CreatePdfCommand;
 import ie.philb.album.ui.command.ExitCommand;
 import ie.philb.album.ui.common.AppPanel;
+import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.imagelibrary.ImageLibraryView;
@@ -57,6 +63,8 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private JButton btnPdf;
     private JButton btnZoomIn;
     private JButton btnZoomOut;
+    private JButton btnZoomReset;
+    private JButton btnZoomCover;
 
     public static ApplicationUi getInstance() {
         return INSTANCE;
@@ -88,11 +96,11 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
                 LOG.info("Key event " + e);
                 if (e.getKeyCode() == KeyEvent.VK_Z) {
-                    zoomAction();
+                    zoomInAction();
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_X) {
-                    unZoomAction();
+                    zoomOutAction();
                 }
             }
         });
@@ -100,20 +108,74 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         AppContext.INSTANCE.addListener(this);
     }
 
-    private void zoomAction() {
+    private void zoomInAction() {
         if (selectedPageEntryView == null) {
             return;
         }
 
+        new ZoomInAction(selectedPageEntryView.getPageEntryModel()).execute(new Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+            }
+
+            @Override
+            public void onFailure(Exception ex) {
+                Dialogs.showErrorMessage("Zoom failed: " + ex.getMessage());
+            }
+
+        });
         LOG.info("Zooming in on " + selectedPageEntryView);
-        selectedPageEntryView.zoomIn();
     }
 
-    private void unZoomAction() {
+    private void zoomOutAction() {
         if (selectedPageEntryView == null) {
             return;
         }
-        selectedPageEntryView.zoomOut();
+        new ZoomOutAction(selectedPageEntryView.getPageEntryModel()).execute(new Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+            }
+
+            @Override
+            public void onFailure(Exception ex) {
+                Dialogs.showErrorMessage("Zoom failed: " + ex.getMessage());
+            }
+
+        });
+    }
+
+    private void zoomResetAction() {
+        if (selectedPageEntryView == null) {
+            return;
+        }
+        new ZoomResetAction(selectedPageEntryView.getPageEntryModel()).execute(new Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+            }
+
+            @Override
+            public void onFailure(Exception ex) {
+                Dialogs.showErrorMessage("Zoom failed: " + ex.getMessage());
+            }
+
+        });
+    }
+
+    private void zoomCoverAction() {
+        if (selectedPageEntryView == null) {
+            return;
+        }
+        new ZoomToCoverFitAction(selectedPageEntryView).execute(new Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+            }
+
+            @Override
+            public void onFailure(Exception ex) {
+                Dialogs.showErrorMessage("Zoom failed: " + ex.getMessage());
+            }
+
+        });
     }
 
     private void initComponents() {
@@ -172,15 +234,27 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
         btnZoomIn = new JButton("+");
         btnZoomIn.addActionListener((ActionEvent ae) -> {
-            zoomAction();
+            zoomInAction();
         });
         toolBar.add(btnZoomIn);
 
         btnZoomOut = new JButton("-");
         btnZoomOut.addActionListener((ActionEvent ae) -> {
-            unZoomAction();
+            zoomOutAction();
         });
         toolBar.add(btnZoomOut);
+
+        btnZoomReset = new JButton("*");
+        btnZoomReset.addActionListener((ActionEvent ae) -> {
+            zoomResetAction();
+        });
+        toolBar.add(btnZoomReset);
+
+        btnZoomCover = new JButton("=");
+        btnZoomCover.addActionListener((ActionEvent ae) -> {
+            zoomCoverAction();
+        });
+        toolBar.add(btnZoomCover);
     }
 
     private void layoutComponents() {

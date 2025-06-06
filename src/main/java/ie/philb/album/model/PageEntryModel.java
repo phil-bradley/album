@@ -53,6 +53,14 @@ public class PageEntryModel {
         setZoomFactor(zoomFactor / 1.1);
     }
 
+    public void resetZoom() {
+        setZoomFactor(1);
+    }
+
+    public void zoomToCoverFit(Dimension viewSize) {
+        setZoomFactor(getCoverFitZoomFactor(viewSize));
+    }
+
     public void setZoomFactor(double zoomFactor) {
 
         if (zoomFactor != this.zoomFactor) {
@@ -93,7 +101,7 @@ public class PageEntryModel {
             return ImageUtils.getPlaceholderImage();
         }
 
-        BufferedImage scaled = getImageWithViewZoomScale(getBestFitFactor(viewSize.width, viewSize.height));
+        BufferedImage scaled = getImageWithViewZoomScale(getBestFitZoomFactor(viewSize));
 
         int cropWidth = Math.min(viewSize.width, scaled.getWidth());
         int cropHeight = Math.min(viewSize.height, scaled.getHeight());
@@ -115,27 +123,72 @@ public class PageEntryModel {
 
     // This is the zoom factor at which the image is as large as possible
     // without any cropping
-    private double getBestFitFactor(int viewWidth, int viewHeight) {
+    private double getBestFitZoomFactor(Dimension viewSize) {
 
-        //BufferedImage zoomed = getZoomedImage();
         if (imageIcon == null) {
             return 1;
         }
 
         // Component not yet sized, cannot compute zoom factor
-        if (viewWidth == 0 || viewHeight == 0) {
+        if (viewSize.width == 0 || viewSize.height == 0) {
             return 0;
         }
 
         double iconWidth = imageIcon.getIconWidth();
         double iconHeight = imageIcon.getIconHeight();
 
-        double bestFitZoom = Math.min(viewWidth / iconWidth, viewHeight / iconHeight);
+        double bestFitZoom = Math.min(viewSize.width / iconWidth, viewSize.height / iconHeight);
         int scaledWidth = (int) (iconWidth * bestFitZoom);
         int scaledHeight = (int) (iconHeight * bestFitZoom);
 
-        LOG.info("Got best fit zoom factor {}, size {}x{}, Available {}x{}, Scaled {}x{}", bestFitZoom, iconWidth, iconHeight, viewWidth, viewHeight, scaledWidth, scaledHeight);
+        LOG.info("Got best fit zoom factor {}, size {}x{}, Available {}x{}, Scaled {}x{}", bestFitZoom, iconWidth, iconHeight, viewSize.width, viewSize.height, scaledWidth, scaledHeight);
         return bestFitZoom;
+
+    }
+
+    // This is the smallest zoom factor at which the image fills the available space,
+    // cropped if necessary (cover fit)
+    private double getCoverFitZoomFactor(Dimension viewSize) {
+
+        if (imageIcon == null) {
+            return 1;
+        }
+
+        double imageWidth = (double) imageIcon.getIconWidth();
+        double imageHeight = (double) imageIcon.getIconHeight();
+        double viewWidth = (double) viewSize.getWidth();
+        double viewHeight = (double) viewSize.getHeight();
+
+        double imageAspectRatio = imageWidth / imageHeight;
+        double viewAspectRatio = viewWidth / viewHeight;
+
+        double scale = 1;
+
+//        if (imageAspectRatio < viewAspectRatio) {
+//            // Scale the width to fit
+//            scale = (imageHeight / imageWidth) * viewAspectRatio;
+//        }
+//        
+//        if (imageAspectRatio > viewAspectRatio) {
+//            // Scale the height to fit
+//        }
+        if (imageAspectRatio > 1) {
+            // Scale the height so that the width fits
+            double targetHeight = imageWidth / viewAspectRatio;
+            scale = targetHeight / imageHeight;
+        }
+
+        if (imageAspectRatio < 1) {
+            // Scale the width so that the height fits
+            double targetWidth = imageHeight * viewAspectRatio;
+            scale = targetWidth / imageWidth;
+        }
+
+//        double verticalScale = (double) imageIcon.getIconHeight() / (double) viewSize.height;
+//        double horizontalScale = (double) imageIcon.getIconWidth()/ (double) viewSize.height;
+        //double zoom = Math.max(imageAspectRatio, viewAspectRatio);
+        LOG.info("Got cover zoom factor {}, view size {}x{}, image size {}x{}", scale, viewSize.width, viewSize.height, imageIcon.getIconWidth(), imageIcon.getIconHeight());
+        return scale;
 
     }
 

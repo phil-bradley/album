@@ -15,6 +15,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
@@ -48,11 +49,14 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     @Override
     protected void paintComponent(Graphics g) {
+        
+        super.paintComponent(g);
+        
         Dimension viewSize = new Dimension(getBounds().width, getBounds().height);
         BufferedImage viewImage = pageEntryModel.getViewImage(viewSize);
         Point offset = ImageUtils.getCenteredCoordinates(viewImage, viewSize);
-        g.drawImage(viewImage, offset.x, offset.y, null);
 
+        g.drawImage(viewImage, offset.x, offset.y, null);
     }
 
     @Override
@@ -81,14 +85,6 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     public PageCell getPageCell() {
         return pageEntryModel.getCell();
-    }
-
-    public void zoomIn() {
-        this.pageEntryModel.zoomIn();
-    }
-
-    public void zoomOut() {
-        this.pageEntryModel.zoomOut();
     }
 
     @Override
