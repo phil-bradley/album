@@ -198,6 +198,7 @@ public class PageEntryModel {
     public void resetOffset() {
         this.offset.x = 0;
         this.offset.y = 0;
+        fireImageUpdated();
     }
 
     public Point getOffset() {

@@ -31,8 +31,6 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     private static final Logger LOG = LoggerFactory.getLogger(PageEntryView.class);
 
     private Point mouseDragStartPoint;
-    private boolean isMouseReleased = true;
-    private boolean isMouseDragging = false;
     private Point mouseDragPreviousPoint;
 
     private final PageEntryModel pageEntryModel;
@@ -98,32 +96,21 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         setSelected(true);
 
-        isMouseReleased = false;
+        if (pageEntryModel.getImageIcon() == null) {
+            return;
+        }
+
         mouseDragStartPoint = MouseInfo.getPointerInfo().getLocation();
         mouseDragPreviousPoint = mouseDragStartPoint;
         LOG.info("Start drag at " + mouseDragStartPoint);
     }
 
     @Override
-    public void mouseReleased(MouseEvent me) {
-        isMouseReleased = true;
-        isMouseDragging = false;
-
-//        Point mouseDragEndpoint = MouseInfo.getPointerInfo().getLocation();
-//        LOG.info("Dragged from " + mouseDragStartPoint + " to " + mouseDragEndpoint);
-//
-//        int xOffset = mouseDragEndpoint.x - mouseDragStartPoint.x;
-//        int yOffset = mouseDragEndpoint.y - mouseDragStartPoint.y;
-//
-//        Point dragOffset = new Point(xOffset, yOffset);
-//        pageEntryModel.addImageViewOffset(dragOffset);
-        mouseDragPreviousPoint = null;
-
-        repaint();
-    }
-
-    @Override
     public void mouseDragged(MouseEvent me) {
+
+        if (pageEntryModel.getImageIcon() == null) {
+            return;
+        }
 
         Point mouseDragCurrentPoint = MouseInfo.getPointerInfo().getLocation();
         LOG.info("Dragged from " + mouseDragStartPoint + " to " + mouseDragCurrentPoint);
@@ -137,5 +124,4 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         mouseDragPreviousPoint = mouseDragCurrentPoint;
         repaint();
     }
-
 }
