@@ -10,6 +10,7 @@ import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryModelListener;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
+import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
 import ie.philb.album.util.ImageUtils;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -43,6 +44,8 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         setFocusable(true);
         this.pageEntryModel = entryModel;
         this.pageEntryModel.addListener(this);
+
+        setTransferHandler(new PageEntryViewTransferHandler());
         updateBorder();
     }
 

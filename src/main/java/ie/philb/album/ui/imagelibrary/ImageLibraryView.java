@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.imagelibrary;
 
+import ie.philb.album.ui.dnd.ImageLibraryTransferHandler;
 import ie.philb.album.AppContext;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
@@ -50,6 +51,9 @@ public class ImageLibraryView extends AppPanel {
                 }
             }
         });
+
+        list.setDragEnabled(true);
+        list.setTransferHandler(new ImageLibraryTransferHandler());
 
         File baseFolder = new File("/home/philb/Pictures");
 
