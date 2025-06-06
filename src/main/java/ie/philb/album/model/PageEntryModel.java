@@ -159,37 +159,17 @@ public class PageEntryModel {
         double viewWidth = (double) viewSize.getWidth();
         double viewHeight = (double) viewSize.getHeight();
 
-        double imageAspectRatio = imageWidth / imageHeight;
         double viewAspectRatio = viewWidth / viewHeight;
 
-        double scale = 1;
+        // Scale the height so that the width fits
+        double targetHeight = imageWidth / viewAspectRatio;
+        double verticalScale = targetHeight / imageHeight;
 
-//        if (imageAspectRatio < viewAspectRatio) {
-//            // Scale the width to fit
-//            scale = (imageHeight / imageWidth) * viewAspectRatio;
-//        }
-//        
-//        if (imageAspectRatio > viewAspectRatio) {
-//            // Scale the height to fit
-//        }
-        if (imageAspectRatio > 1) {
-            // Scale the height so that the width fits
-            double targetHeight = imageWidth / viewAspectRatio;
-            scale = targetHeight / imageHeight;
-        }
+        // Scale the width so that the height fits
+        double targetWidth = imageHeight * viewAspectRatio;
+        double horizontalScale = targetWidth / imageWidth;
 
-        if (imageAspectRatio < 1) {
-            // Scale the width so that the height fits
-            double targetWidth = imageHeight * viewAspectRatio;
-            scale = targetWidth / imageWidth;
-        }
-
-//        double verticalScale = (double) imageIcon.getIconHeight() / (double) viewSize.height;
-//        double horizontalScale = (double) imageIcon.getIconWidth()/ (double) viewSize.height;
-        //double zoom = Math.max(imageAspectRatio, viewAspectRatio);
-        LOG.info("Got cover zoom factor {}, view size {}x{}, image size {}x{}", scale, viewSize.width, viewSize.height, imageIcon.getIconWidth(), imageIcon.getIconHeight());
-        return scale;
-
+        return Math.max(verticalScale, horizontalScale);
     }
 
     public void addListener(PageEntryModelListener listener) {
