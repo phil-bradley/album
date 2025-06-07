@@ -16,7 +16,8 @@ public class Icons {
     public static final ImageIcon ARROW_LEFT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/arrow-left.png"));
     public static final ImageIcon ARROW_RIGHT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/arrow-right.png"));
     public static final ImageIcon FOLDER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/folder.png"));
-    public static final ImageIcon HOME = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/home.png"));
+    public static final ImageIcon FILE_HOME = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/file-home.png"));
+    public static final ImageIcon FILE_PARENT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/file-parent.png"));
     public static final ImageIcon NEW = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/new.png"));
     public static final ImageIcon OPEN = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/open.png"));
     public static final ImageIcon PDF = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pdf.png"));

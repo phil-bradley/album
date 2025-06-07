@@ -5,16 +5,24 @@
 package ie.philb.album.ui.imagelibrary;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.ui.command.AbstractCommand;
+import ie.philb.album.ui.command.BrowseToParentCommand;
+import ie.philb.album.ui.command.HomeCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
+import ie.philb.album.ui.common.Icons;
 import ie.philb.album.ui.dnd.ImageLibraryTransferHandler;
 import ie.philb.album.util.FileUtils;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
 
 /**
@@ -24,6 +32,9 @@ import javax.swing.ScrollPaneConstants;
 public class ImageLibraryView extends AppPanel {
 
     private final JList<ImageLibraryEntry> list = new JList<>();
+    private final JToolBar toolBar = new JToolBar();
+    private JButton btnHome;
+    private JButton btnUp;
 
     public ImageLibraryView() {
 
@@ -36,8 +47,17 @@ public class ImageLibraryView extends AppPanel {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
+        initToolbarButton(btnHome, Icons.FILE_HOME, "Home", new HomeCommand());
+        initToolbarButton(btnUp, Icons.FILE_PARENT, "Up", new BrowseToParentCommand());
+
         gridbag();
-        add(scrollPane, new GridBagCellConstraints().fillBoth().weight(1));
+
+        GridBagCellConstraints gbc = new GridBagCellConstraints().fillHorizontal().weight(1, 0).anchorNorth();
+        add(toolBar, gbc);
+
+        gbc.xy(0, 1).weight(1).fillBoth();
+
+        add(scrollPane, gbc);
 
         list.addMouseListener(new MouseAdapter() {
             @Override
@@ -80,5 +100,16 @@ public class ImageLibraryView extends AppPanel {
     private void setBrowseLocation(File file) {
         ImageLibraryListModel model = new ImageLibraryListModel(file);
         list.setModel(model);
+    }
+
+    private void initToolbarButton(JButton button, ImageIcon icon, String title, AbstractCommand command) {
+
+        button = new JButton(icon);
+        button.setToolTipText(title);
+        button.addActionListener((ActionEvent ae) -> {
+            command.execute();
+        });
+
+        toolBar.add(button);
     }
 }

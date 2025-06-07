@@ -9,7 +9,6 @@ import ie.philb.album.ApplicationListener;
 import ie.philb.album.ui.command.AbstractCommand;
 import ie.philb.album.ui.command.CreatePdfCommand;
 import ie.philb.album.ui.command.ExitCommand;
-import ie.philb.album.ui.command.HomeCommand;
 import ie.philb.album.ui.command.NewAlbumCommand;
 import ie.philb.album.ui.command.OpenAlbumCommand;
 import ie.philb.album.ui.command.SaveAlbumCommand;
@@ -60,9 +59,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private JToolBar toolBar;
     private JMenuBar menuBar;
     private JMenu fileMenu;
-    private JButton btnExit;
     private JButton btnPdf;
-    private JButton btnHome;
     private JButton btnNew;
     private JButton btnOpen;
     private JButton btnSave;
@@ -154,7 +151,6 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        initToolbarButton(btnHome, Icons.HOME, "Home", new HomeCommand());
         initToolbarButton(btnNew, Icons.NEW, "New Album", new NewAlbumCommand());
         initToolbarButton(btnOpen, Icons.OPEN, "Open existing album", new OpenAlbumCommand());
         initToolbarButton(btnSave, Icons.SAVE, "Save album", new SaveAlbumCommand());
