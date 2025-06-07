@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 public class AppPanel extends JPanel implements UiConfigListener, MouseListener, MouseMotionListener, ApplicationListener {
 
     private static final long serialVersionUID = 1L;
+    protected static final Logger LOG = LoggerFactory.getLogger(AppPanel.class);
     private final UUID panelId = UUID.randomUUID();
     protected static final Logger logger = LoggerFactory.getLogger(AppPanel.class);
 
@@ -50,6 +51,8 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
     @Override
     public void removeNotify() {
         super.removeNotify();
+        removeMouseMotionListener(this);
+        removeMouseListener(this);
         AppContext.INSTANCE.removeListener(this);
     }
 
