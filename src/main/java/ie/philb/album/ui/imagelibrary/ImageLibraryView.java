@@ -4,10 +4,11 @@
  */
 package ie.philb.album.ui.imagelibrary;
 
-import ie.philb.album.ui.dnd.ImageLibraryTransferHandler;
 import ie.philb.album.AppContext;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
+import ie.philb.album.ui.dnd.ImageLibraryTransferHandler;
+import ie.philb.album.util.FileUtils;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -43,10 +44,18 @@ public class ImageLibraryView extends AppPanel {
             public void mouseClicked(MouseEvent evt) {
 
                 if (evt.getClickCount() == 2) {
+
                     ImageLibraryEntry selected = list.getSelectedValue();
 
-                    if (selected != null) {
+                    if (selected == null) {
+                        return;
+                    }
+
+                    if (selected.isDirectory()) {
+                        setBrowseLocation(selected.getFile());
+                    } else {
                         AppContext.INSTANCE.libraryImageSelected(selected);
+
                     }
                 }
             }
@@ -55,18 +64,21 @@ public class ImageLibraryView extends AppPanel {
         list.setDragEnabled(true);
         list.setTransferHandler(new ImageLibraryTransferHandler());
 
-        File baseFolder = new File("/home/philb/Pictures");
-
         try {
-            list.setModel(new ImageLibraryListModel(baseFolder));
+            list.setModel(new ImageLibraryListModel(FileUtils.getHomeDirectory()));
         } catch (Exception ex) {
-            String msg = "Failed to initialise library folder " + baseFolder + "\n" + ex.getMessage();
+            String msg = "Failed to initialise library folder " + FileUtils.getHomeDirectory() + "\n" + ex.getMessage();
             JOptionPane.showMessageDialog(null, msg);
         }
     }
 
-    public void setBaseFolder(File file) {
-
+    @Override
+    public void browseLocationUpdated(File file) {
+        setBrowseLocation(file);
     }
 
+    private void setBrowseLocation(File file) {
+        ImageLibraryListModel model = new ImageLibraryListModel(file);
+        list.setModel(model);
+    }
 }

@@ -10,6 +10,7 @@ import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.view.PageEntryView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 /**
  *
@@ -31,6 +32,10 @@ public abstract class AbstractCellActionListener implements ActionListener, Appl
 
     @Override
     public void libraryImageSelected(ImageLibraryEntry entry) {
+    }
+
+    @Override
+    public void browseLocationUpdated(File file) {
     }
 
     @Override

@@ -15,6 +15,10 @@ import java.nio.file.Path;
  */
 public class FileUtils {
 
+    public static File getHomeDirectory() {
+        return new File(System.getProperty("user.home"));
+    }
+
     public static boolean isImage(File file) {
 
         if (!file.isFile()) {

@@ -26,7 +26,13 @@ public class ImageLibraryTransferHandler extends TransferHandler {
     protected Transferable createTransferable(JComponent c) {
         JList<ImageLibraryEntry> list = (JList<ImageLibraryEntry>) c;
         ImageLibraryEntry selected = list.getSelectedValue();
+
+        // We can drag & drop a directory entry, returning null means that
+        // the DnD won't be effected
+        if (selected.isDirectory()) {
+            return null;
+        }
+
         return new StringSelection(selected.getFile().getAbsolutePath());
     }
-
 }

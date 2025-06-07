@@ -8,6 +8,7 @@ import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageSize;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.view.PageEntryView;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,13 @@ public enum AppContext implements ApplicationListener {
     public void libraryImageSelected(ImageLibraryEntry entry) {
         applicationListeners.forEach(appListener -> {
             appListener.libraryImageSelected(entry);
+        });
+    }
+
+    @Override
+    public void browseLocationUpdated(File file) {
+        applicationListeners.forEach(appListener -> {
+            appListener.browseLocationUpdated(file);
         });
     }
 }

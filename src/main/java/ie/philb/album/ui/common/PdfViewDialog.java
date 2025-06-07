@@ -13,7 +13,6 @@ import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JToolBar;
@@ -45,13 +44,13 @@ public class PdfViewDialog extends JDialog {
         setModal(true);
 
         this.btnPrevious = new JButton();
-        btnPrevious.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/icons/arrow-left.png")));
+        btnPrevious.setIcon(Icons.ARROW_LEFT);
 
         this.btnNext = new JButton();
-        btnNext.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/icons/arrow-right.png")));
+        btnNext.setIcon(Icons.ARROW_RIGHT);
 
         this.btnPrint = new JButton();
-        btnPrint.setIcon(new ImageIcon(this.getClass().getResource("/ie/philb/album/icons/print.png")));
+        btnPrint.setIcon(Icons.PRINT);
 
         this.toolbar = new JToolBar();
         this.toolbar.setFloatable(false);

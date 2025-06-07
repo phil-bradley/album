@@ -6,6 +6,7 @@ package ie.philb.album;
 
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.view.PageEntryView;
+import java.io.File;
 
 /**
  *
@@ -19,6 +20,10 @@ public class ApplicationAdapter implements ApplicationListener {
 
     @Override
     public void libraryImageSelected(ImageLibraryEntry entry) {
+    }
+
+    @Override
+    public void browseLocationUpdated(File file) {
     }
 
 }

@@ -6,6 +6,7 @@ package ie.philb.album;
 
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.view.PageEntryView;
+import java.io.File;
 
 /**
  *
@@ -16,4 +17,6 @@ public interface ApplicationListener {
     void imageEntrySelected(PageEntryView view);
 
     void libraryImageSelected(ImageLibraryEntry entry);
+
+    void browseLocationUpdated(File file);
 }

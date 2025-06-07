@@ -24,13 +24,20 @@ public class ImageLibraryListModel implements ListModel<ImageLibraryEntry> {
     private final List<ImageLibraryEntry> entries = new ArrayList<>();
     private final List<ListDataListener> listeners = new ArrayList<>();
 
-    public ImageLibraryListModel(File baseFolder) throws Exception {
+    public ImageLibraryListModel(File baseFolder) {
 
         if (!baseFolder.exists() || !baseFolder.isDirectory()) {
             logger.info("Base folder {} not found", baseFolder.getAbsoluteFile());
-            throw new Exception("Base folder not found: " + baseFolder.getAbsolutePath());
+            throw new RuntimeException("Base folder not found: " + baseFolder.getAbsolutePath());
         }
-        
+
+        for (File file : baseFolder.listFiles()) {
+            if (file.isDirectory() && !file.isHidden()) {
+                entries.add(new ImageLibraryEntry(file));
+                logger.info("Added entry " + file);
+            }
+        }
+
         for (File file : baseFolder.listFiles()) {
             if (FileUtils.isImage(file)) {
                 entries.add(new ImageLibraryEntry(file));

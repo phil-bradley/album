@@ -6,8 +6,10 @@ package ie.philb.album.ui;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.ApplicationListener;
+import ie.philb.album.ui.command.AbstractCommand;
 import ie.philb.album.ui.command.CreatePdfCommand;
 import ie.philb.album.ui.command.ExitCommand;
+import ie.philb.album.ui.command.HomeCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
@@ -23,6 +25,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -55,6 +59,10 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private JMenu fileMenu;
     private JButton btnExit;
     private JButton btnPdf;
+    private JButton btnHome;
+    private JButton btnNew;
+    private JButton btnOpen;
+    private JButton btnSave;
 
     public static ApplicationUi getInstance() {
         return INSTANCE;
@@ -137,17 +145,23 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        btnExit = new JButton(Icons.EXIT);
-        btnExit.addActionListener((ActionEvent ae) -> {
-            new ExitCommand().execute();
-        });
-        toolBar.add(btnExit);
+//        initToolbarButton(btnExit, Icons.EXIT, "Exit", new ExitCommand());
+        initToolbarButton(btnHome, Icons.HOME, "Home", new HomeCommand());
+        initToolbarButton(btnNew, Icons.NEW, "New Album", null);
+        initToolbarButton(btnOpen, Icons.OPEN, "Open existing album", null);
+        initToolbarButton(btnSave, Icons.SAVE, "Save album", null);
+        initToolbarButton(btnPdf, Icons.PDF, "Export to PDF", new CreatePdfCommand());
+    }
 
-        btnPdf = new JButton(Icons.PAGE);
-        btnPdf.addActionListener((ActionEvent ae) -> {
-            new CreatePdfCommand().execute();
+    private void initToolbarButton(JButton button, ImageIcon icon, String title, AbstractCommand command) {
+
+        button = new JButton(icon);
+        button.setToolTipText(title);
+        button.addActionListener((ActionEvent ae) -> {
+            command.execute();
         });
-        toolBar.add(btnPdf);
+
+        toolBar.add(button);
     }
 
     private void layoutComponents() {
@@ -180,5 +194,9 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
     @Override
     public void libraryImageSelected(ImageLibraryEntry entry) {
+    }
+
+    @Override
+    public void browseLocationUpdated(File file) {
     }
 }

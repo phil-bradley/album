@@ -17,6 +17,7 @@ import java.awt.LayoutManager;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
 import java.util.UUID;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -203,4 +204,7 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
     public void mouseMoved(MouseEvent me) {
     }
 
+    @Override
+    public void browseLocationUpdated(File file) {
+    }
 }
