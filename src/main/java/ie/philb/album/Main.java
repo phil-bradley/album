@@ -5,10 +5,8 @@
 package ie.philb.album;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import ie.philb.album.model.AlbumModel;
-import ie.philb.album.model.PageGeometry;
-import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.ApplicationUi;
+import ie.philb.album.ui.command.NewAlbumCommand;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.slf4j.Logger;
@@ -30,31 +28,10 @@ public class Main {
             LOG.info("Failed to set LookAndFeel", ex);
         }
 
-        initModel();
+        new NewAlbumCommand().execute();
 
         java.awt.EventQueue.invokeLater(() -> {
             ApplicationUi.getInstance().setVisible(true);
         });
     }
-
-    private static void initModel() {
-        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
-
-        PageModel page1 = new PageModel(PageGeometry.rectangle(2, 3), albumModel.getPageSize()).withMarginMillis(3);
-//        page1.setImage(new File("/home/philb/Pictures/1.jpeg"), 0);
-//        page1.setImage(new File("/home/philb/Pictures/2.jpg"), 1);
-//        page1.setImage(new File("/home/philb/Pictures/4.jpeg"), 3);
-        albumModel.addPage(page1);
-
-        PageModel page2 = new PageModel(PageGeometry.square(2), albumModel.getPageSize()).withMarginMillis(3);
-//        page2.setImage(new File("/home/philb/Pictures/7.jpg"), 2);
-        albumModel.addPage(page2);
-//
-        PageModel page3 = new PageModel(PageGeometry.withColumns(1, 2), albumModel.getPageSize()).withMarginMillis(3);
-        albumModel.addPage(page3);
-
-        PageModel page4 = new PageModel(PageGeometry.square(1), albumModel.getPageSize()).withMarginMillis(25);
-        albumModel.addPage(page4);
-    }
-
 }

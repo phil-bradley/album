@@ -45,7 +45,12 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
         AppContext.INSTANCE.addListener(this);
         addMouseListener(this);
         addMouseMotionListener(this);
+    }
 
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        AppContext.INSTANCE.removeListener(this);
     }
 
     public AppPanel layoutGridBag() {
@@ -206,5 +211,9 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
 
     @Override
     public void browseLocationUpdated(File file) {
+    }
+
+    @Override
+    public void albumUpdated() {
     }
 }

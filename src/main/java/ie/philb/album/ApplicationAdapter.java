@@ -26,4 +26,8 @@ public class ApplicationAdapter implements ApplicationListener {
     public void browseLocationUpdated(File file) {
     }
 
+    @Override
+    public void albumUpdated() {
+    }
+
 }

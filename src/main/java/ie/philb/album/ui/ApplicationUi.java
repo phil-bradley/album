@@ -10,6 +10,9 @@ import ie.philb.album.ui.command.AbstractCommand;
 import ie.philb.album.ui.command.CreatePdfCommand;
 import ie.philb.album.ui.command.ExitCommand;
 import ie.philb.album.ui.command.HomeCommand;
+import ie.philb.album.ui.command.NewAlbumCommand;
+import ie.philb.album.ui.command.OpenAlbumCommand;
+import ie.philb.album.ui.command.SaveAlbumCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
@@ -147,9 +150,9 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
 //        initToolbarButton(btnExit, Icons.EXIT, "Exit", new ExitCommand());
         initToolbarButton(btnHome, Icons.HOME, "Home", new HomeCommand());
-        initToolbarButton(btnNew, Icons.NEW, "New Album", null);
-        initToolbarButton(btnOpen, Icons.OPEN, "Open existing album", null);
-        initToolbarButton(btnSave, Icons.SAVE, "Save album", null);
+        initToolbarButton(btnNew, Icons.NEW, "New Album", new NewAlbumCommand());
+        initToolbarButton(btnOpen, Icons.OPEN, "Open existing album", new OpenAlbumCommand());
+        initToolbarButton(btnSave, Icons.SAVE, "Save album", new SaveAlbumCommand());
         initToolbarButton(btnPdf, Icons.PDF, "Export to PDF", new CreatePdfCommand());
     }
 
@@ -198,5 +201,9 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
     @Override
     public void browseLocationUpdated(File file) {
+    }
+
+    @Override
+    public void albumUpdated() {
     }
 }

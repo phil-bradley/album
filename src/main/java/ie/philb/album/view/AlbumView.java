@@ -22,7 +22,7 @@ public class AlbumView extends AppPanel {
 
     private static final Logger LOG = LoggerFactory.getLogger(AlbumView.class);
 
-    private final AlbumModel albumModel;
+    private AlbumModel albumModel;
     private final List<PageView> pageViews = new ArrayList<>();
 
     public AlbumView(AlbumModel albumModel) {
@@ -31,17 +31,44 @@ public class AlbumView extends AppPanel {
         background(COLOUR_ALBUM_BACKGROUND);
         setLayout(null);
 
+        setModel(albumModel);
+    }
+
+    public final void setModel(AlbumModel model) {
+
+        this.albumModel = model;
+
+        clearPages();
+        addPages();
+        positionPages();
+
+        repaint();
+        revalidate();
+        repaint();
+    }
+
+    private void addPages() {
+
         for (PageModel page : albumModel.getPages()) {
             PageView pageView = new PageView(page);
             this.pageViews.add(pageView);
             add(pageView);
         }
+    }
 
-        revalidate();
-        repaint();
+    private void clearPages() {
+        for (PageView pageView : pageViews) {
+            remove(pageView);
+        }
+
+        pageViews.clear();
     }
 
     public void positionPages() {
+
+        if (!canPosition()) {
+            return;
+        }
 
         int insetSize = 10;
         int parentHeight = getParent().getHeight();
@@ -62,5 +89,22 @@ public class AlbumView extends AppPanel {
         setPreferredSize(new Dimension(horizontalInset, parentHeight));
         LOG.info("Resized: Page container has size {}x{}, Page has size {}x{}", horizontalInset, parentHeight, pageWidth, pageHeight);
 
+    }
+
+    private boolean canPosition() {
+
+        if (getParent() == null) {
+            return false;
+        }
+
+        if (getParent().getWidth() == 0) {
+            return false;
+        }
+
+        if (getParent().getHeight() == 0) {
+            return false;
+        }
+
+        return true;
     }
 }

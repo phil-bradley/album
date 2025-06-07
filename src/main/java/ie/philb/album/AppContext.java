@@ -21,7 +21,7 @@ public enum AppContext implements ApplicationListener {
     INSTANCE;
 
     private final List<ApplicationListener> applicationListeners = new ArrayList<>();
-    private final AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
+    private AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
 
     public void addListener(ApplicationListener l) {
         this.applicationListeners.add(l);
@@ -31,28 +31,45 @@ public enum AppContext implements ApplicationListener {
         this.applicationListeners.remove(l);
     }
 
+    public void setAlbumModel(AlbumModel model) {
+        this.albumModel = model;
+        albumUpdated();
+    }
+
     public AlbumModel getAlbumModel() {
         return albumModel;
     }
 
     @Override
     public void imageEntrySelected(PageEntryView view) {
-        applicationListeners.forEach(appListener -> {
+        getApplicationListenersCopy().forEach(appListener -> {
             appListener.imageEntrySelected(view);
         });
     }
 
     @Override
     public void libraryImageSelected(ImageLibraryEntry entry) {
-        applicationListeners.forEach(appListener -> {
+        getApplicationListenersCopy().forEach(appListener -> {
             appListener.libraryImageSelected(entry);
         });
     }
 
     @Override
     public void browseLocationUpdated(File file) {
-        applicationListeners.forEach(appListener -> {
+        getApplicationListenersCopy().forEach(appListener -> {
             appListener.browseLocationUpdated(file);
         });
+    }
+
+    @Override
+    public void albumUpdated() {
+
+        getApplicationListenersCopy().forEach(appListener -> {
+            appListener.albumUpdated();
+        });
+    }
+
+    private List<ApplicationListener> getApplicationListenersCopy() {
+        return new ArrayList<>(applicationListeners);
     }
 }

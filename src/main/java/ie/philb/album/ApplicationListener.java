@@ -19,4 +19,6 @@ public interface ApplicationListener {
     void libraryImageSelected(ImageLibraryEntry entry);
 
     void browseLocationUpdated(File file);
+
+    void albumUpdated();
 }

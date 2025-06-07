@@ -4,8 +4,6 @@
  */
 package ie.philb.album.view;
 
-import ie.philb.album.AppContext;
-import ie.philb.album.ApplicationAdapter;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
@@ -39,13 +37,11 @@ public class PageView extends AppPanel {
         setModel(model);
         background(Resources.COLOUR_ALBUM_PAGE_BACKGROUND);
         setLayout(null);
+    }
 
-        AppContext.INSTANCE.addListener(new ApplicationAdapter() {
-            @Override
-            public void imageEntrySelected(PageEntryView view) {
-                clearDeselectedViews(view);
-            }
-        });
+    @Override
+    public void imageEntrySelected(PageEntryView view) {
+        clearDeselectedViews(view);
     }
 
     private void clearDeselectedViews(PageEntryView selectedView) {
@@ -81,6 +77,10 @@ public class PageView extends AppPanel {
         int selectedIdx = getSelectedIndex();
 
         if (selectedIdx == -1) {
+            return;
+        }
+
+        if (imageLibraryEntry == null) {
             return;
         }
 

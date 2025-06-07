@@ -105,4 +105,9 @@ public class AlbumViewContainer extends AppPanel {
     public void imageEntrySelected(PageEntryView view) {
         setButtonsEnabled(view != null && view.getPageEntryModel().getImageIcon() != null);
     }
+
+    @Override
+    public void albumUpdated() {
+        albumView.setModel(AppContext.INSTANCE.getAlbumModel());
+    }
 }
