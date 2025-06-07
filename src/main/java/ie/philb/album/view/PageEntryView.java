@@ -36,6 +36,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     private final PageEntryModel pageEntryModel;
     private boolean isSelected = false;
+    private boolean isPreviewMode = false;
 
     public PageEntryView(PageEntryModel entryModel) {
 
@@ -60,6 +61,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         Dimension viewSize = new Dimension(getBounds().width, getBounds().height);
         BufferedImage viewImage = pageEntryModel.getViewImage(viewSize);
+
         Point offset = ImageUtils.getCenteredCoordinates(viewImage, viewSize);
         offset.x += pageEntryModel.getOffset().x;
         offset.y += pageEntryModel.getOffset().y;
@@ -77,6 +79,11 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     }
 
     public void setSelected(boolean b) {
+
+        if (isPreviewMode) {
+            return;
+        }
+
         this.isSelected = b;
         updateBorder();
 
@@ -97,6 +104,10 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     @Override
     public void mousePressed(MouseEvent me) {
 
+        if (isPreviewMode) {
+            return;
+        }
+
         setSelected(true);
 
         if (pageEntryModel.getImageIcon() == null) {
@@ -110,6 +121,10 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     @Override
     public void mouseDragged(MouseEvent me) {
+
+        if (isPreviewMode) {
+            return;
+        }
 
         if (pageEntryModel.getImageIcon() == null) {
             return;
@@ -126,5 +141,9 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         mouseDragPreviousPoint = mouseDragCurrentPoint;
         repaint();
+    }
+
+    public void setPreviewMode(boolean previewMode) {
+        this.isPreviewMode = previewMode;
     }
 }

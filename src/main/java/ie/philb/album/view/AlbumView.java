@@ -24,6 +24,7 @@ public class AlbumView extends AppPanel {
 
     private AlbumModel albumModel;
     private final List<PageView> pageViews = new ArrayList<>();
+    private boolean isPreviewMode = false;
 
     public AlbumView(AlbumModel albumModel) {
         this.albumModel = albumModel;
@@ -54,6 +55,8 @@ public class AlbumView extends AppPanel {
             this.pageViews.add(pageView);
             add(pageView);
         }
+
+        setPreviewMode(isPreviewMode);
     }
 
     private void clearPages() {
@@ -106,5 +109,13 @@ public class AlbumView extends AppPanel {
         }
 
         return true;
+    }
+
+    public void setPreviewMode(boolean previewMode) {
+        this.isPreviewMode = previewMode;
+
+        for (PageView pageView : pageViews) {
+            pageView.setPreviewMode(isPreviewMode);
+        }
     }
 }

@@ -60,14 +60,19 @@ public class ImageLibraryView extends AppPanel {
             @Override
             public void mouseClicked(MouseEvent evt) {
 
-                if (evt.getClickCount() == 2) {
+                ImageLibraryEntry selected = list.getSelectedValue();
 
-                    ImageLibraryEntry selected = list.getSelectedValue();
+                if (selected == null) {
+                    return;
+                }
 
-                    if (selected == null) {
-                        return;
+                if (evt.getClickCount() == 1) {
+                    if (selected.isDirectory()) {
+                        AppContext.INSTANCE.browseLocationUpdated(selected.getFile());
                     }
+                }
 
+                if (evt.getClickCount() == 2) {
                     if (selected.isDirectory()) {
                         AppContext.INSTANCE.browseLocationUpdated(selected.getFile());
                     } else {

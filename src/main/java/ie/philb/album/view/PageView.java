@@ -31,6 +31,7 @@ public class PageView extends AppPanel {
     private boolean isPageSelected = false;
     private PageEntryView selectedEntryView = null;
     private PageModel model;
+    private boolean isPreviewMode = false;
 
     public PageView(PageModel model) {
         LOG.info("Got page model " + model);
@@ -146,6 +147,14 @@ public class PageView extends AppPanel {
             pageEntryView.setSize(size);
 
             pageEntryView.setBounds(location.x, location.y, size.width, size.height);
+        }
+    }
+
+    public void setPreviewMode(boolean previewMode) {
+        this.isPreviewMode = previewMode;
+
+        for (PageEntryView view : pageEntriesViews) {
+            view.setPreviewMode(isPreviewMode);
         }
     }
 }

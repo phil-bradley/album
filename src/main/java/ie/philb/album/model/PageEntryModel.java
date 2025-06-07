@@ -99,10 +99,27 @@ public class PageEntryModel {
         return zoomed;
     }
 
+    private BufferedImage getPlacholderImage(Dimension viewSize) {
+
+        // Return a placholder image only if it fits inside the available
+        // area with a margin of 10%
+        BufferedImage img = ImageUtils.getPlaceholderImage();
+
+        int hMargin = viewSize.width / 10;
+        int vMargin = viewSize.height / 10;
+        int margin = Math.max(vMargin, hMargin);
+
+        if (canFitImageWithMargin(img, viewSize, margin)) {
+            return img;
+        } else {
+            return null;
+        }
+    }
+
     public BufferedImage getViewImage(Dimension viewSize) {
 
         if (imageIcon == null) {
-            return ImageUtils.getPlaceholderImage();
+            return getPlacholderImage(viewSize);
         }
 
         BufferedImage scaled = getImageWithViewZoomScale(getBestFitZoomFactor(viewSize));
@@ -203,5 +220,21 @@ public class PageEntryModel {
 
     public Point getOffset() {
         return offset;
+    }
+
+    private boolean canFitImageWithMargin(BufferedImage viewImage, Dimension viewSize, int margin) {
+
+        int availableWidth = viewSize.width - (2 * margin);
+        int availableHeight = viewSize.height - (2 * margin);
+
+        if (viewImage.getWidth() > availableWidth) {
+            return false;
+        }
+
+        if (viewImage.getHeight() > availableHeight) {
+            return false;
+        }
+
+        return true;
     }
 }

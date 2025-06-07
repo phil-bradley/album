@@ -12,14 +12,13 @@ import ie.philb.album.ui.command.ExitCommand;
 import ie.philb.album.ui.command.NewAlbumCommand;
 import ie.philb.album.ui.command.OpenAlbumCommand;
 import ie.philb.album.ui.command.SaveAlbumCommand;
-import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.imagelibrary.ImageLibraryView;
+import ie.philb.album.view.AlbumOverviewPanel;
 import ie.philb.album.view.AlbumViewContainer;
 import ie.philb.album.view.PageEntryView;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -52,6 +51,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
     private ImageLibraryView imageLibraryView;
     private AlbumViewContainer albumViewContainer;
+    private AlbumOverviewPanel albumOverviewPanel;
     private PageEntryView selectedPageEntryView;
 
     private JSplitPane hSplit;
@@ -116,9 +116,10 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
         imageLibraryView = new ImageLibraryView();
         albumViewContainer = new AlbumViewContainer();
+        albumOverviewPanel = new AlbumOverviewPanel();
 
         hSplit.setLeftComponent(albumViewContainer);
-        hSplit.setRightComponent(new AppPanel().background(Color.red));
+        hSplit.setRightComponent(albumOverviewPanel);
 
         vSplit.setLeftComponent(imageLibraryView);
         vSplit.setRightComponent(hSplit);
