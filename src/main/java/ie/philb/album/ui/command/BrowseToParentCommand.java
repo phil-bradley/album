@@ -5,6 +5,7 @@
 package ie.philb.album.ui.command;
 
 import ie.philb.album.AppContext;
+import java.io.File;
 
 /**
  *
@@ -14,7 +15,12 @@ public class BrowseToParentCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        AppContext.INSTANCE.browseLocationUpdated(AppContext.INSTANCE.getBrowseLocation().getParentFile());
+        File currentLocation = AppContext.INSTANCE.getBrowseLocation();
+        File parent = currentLocation.getParentFile();
+
+        if (parent != null) {
+            AppContext.INSTANCE.browseLocationUpdated(parent);
+        }
     }
 
 }

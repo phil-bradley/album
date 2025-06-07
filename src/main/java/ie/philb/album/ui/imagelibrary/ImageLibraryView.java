@@ -5,7 +5,6 @@
 package ie.philb.album.ui.imagelibrary;
 
 import ie.philb.album.AppContext;
-import ie.philb.album.ui.command.AbstractCommand;
 import ie.philb.album.ui.command.BrowseToParentCommand;
 import ie.philb.album.ui.command.HomeCommand;
 import ie.philb.album.ui.common.AppPanel;
@@ -17,7 +16,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -47,8 +45,7 @@ public class ImageLibraryView extends AppPanel {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        initToolbarButton(btnHome, Icons.FILE_HOME, "Home", new HomeCommand());
-        initToolbarButton(btnUp, Icons.FILE_PARENT, "Up", new BrowseToParentCommand());
+        initToolBar();
 
         gridbag();
 
@@ -72,7 +69,7 @@ public class ImageLibraryView extends AppPanel {
                     }
 
                     if (selected.isDirectory()) {
-                        setBrowseLocation(selected.getFile());
+                        AppContext.INSTANCE.browseLocationUpdated(selected.getFile());
                     } else {
                         AppContext.INSTANCE.libraryImageSelected(selected);
 
@@ -95,6 +92,7 @@ public class ImageLibraryView extends AppPanel {
     @Override
     public void browseLocationUpdated(File file) {
         setBrowseLocation(file);
+        btnUp.setEnabled(file.getParent() != null);
     }
 
     private void setBrowseLocation(File file) {
@@ -102,14 +100,22 @@ public class ImageLibraryView extends AppPanel {
         list.setModel(model);
     }
 
-    private void initToolbarButton(JButton button, ImageIcon icon, String title, AbstractCommand command) {
+    private void initToolBar() {
 
-        button = new JButton(icon);
-        button.setToolTipText(title);
-        button.addActionListener((ActionEvent ae) -> {
-            command.execute();
+        btnHome = new JButton(Icons.FILE_HOME);
+        btnHome.setToolTipText("Home");
+        btnHome.addActionListener((ActionEvent ae) -> {
+            new HomeCommand().execute();
         });
 
-        toolBar.add(button);
+        toolBar.add(btnHome);
+
+        btnUp = new JButton(Icons.FILE_PARENT);
+        btnUp.setToolTipText("Up");
+        btnUp.addActionListener((ActionEvent ae) -> {
+            new BrowseToParentCommand().execute();
+        });
+
+        toolBar.add(btnUp);
     }
 }

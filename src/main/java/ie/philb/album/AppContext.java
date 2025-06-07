@@ -12,6 +12,8 @@ import ie.philb.album.view.PageEntryView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -20,6 +22,8 @@ import java.util.List;
 public enum AppContext implements ApplicationListener {
 
     INSTANCE;
+
+    private static final Logger LOG = LoggerFactory.getLogger(AppContext.class);
 
     private final List<ApplicationListener> applicationListeners = new ArrayList<>();
     private AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
@@ -63,6 +67,7 @@ public enum AppContext implements ApplicationListener {
     @Override
     public void browseLocationUpdated(File file) {
 
+        LOG.info("Setting browse location to " + file.getAbsolutePath());
         this.browseLocation = file;
 
         getApplicationListenersCopy().forEach(appListener -> {

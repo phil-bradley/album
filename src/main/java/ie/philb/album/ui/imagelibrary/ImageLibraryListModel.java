@@ -34,14 +34,12 @@ public class ImageLibraryListModel implements ListModel<ImageLibraryEntry> {
         for (File file : baseFolder.listFiles()) {
             if (file.isDirectory() && !file.isHidden()) {
                 entries.add(new ImageLibraryEntry(file));
-                logger.info("Added entry " + file);
             }
         }
 
         for (File file : baseFolder.listFiles()) {
             if (FileUtils.isImage(file)) {
                 entries.add(new ImageLibraryEntry(file));
-                logger.info("Added entry " + file);
             }
         }
     }
