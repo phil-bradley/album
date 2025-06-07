@@ -131,16 +131,22 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
     private void initMenu() {
         menuBar = new JMenuBar();
+        menuBar.add(fileMenu = new JMenu("File"));
 
-        fileMenu = new JMenu();
-        fileMenu.setText("File");
-        menuBar.add(fileMenu);
+        addMenuItem(fileMenu, "New", new NewAlbumCommand());
+        addMenuItem(fileMenu, "Open", new OpenAlbumCommand());
+        addMenuItem(fileMenu, "Save", new SaveAlbumCommand());
+        addMenuItem(fileMenu, "Export to PDF", new CreatePdfCommand());
+        addMenuItem(fileMenu, "Exit", new ExitCommand());
+    }
 
-        JMenuItem itemExit = new JMenuItem("Exit");
-        itemExit.addActionListener((ActionEvent ae) -> {
-            new ExitCommand().execute();
+    private void addMenuItem(JMenu menu, String title, AbstractCommand command) {
+        JMenuItem menuItem = new JMenuItem(title);
+        menuItem.addActionListener((ActionEvent ae) -> {
+            command.execute();
         });
-        fileMenu.add(itemExit);
+
+        menu.add(menuItem);
     }
 
     private void initToolBar() {
@@ -148,7 +154,6 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-//        initToolbarButton(btnExit, Icons.EXIT, "Exit", new ExitCommand());
         initToolbarButton(btnHome, Icons.HOME, "Home", new HomeCommand());
         initToolbarButton(btnNew, Icons.NEW, "New Album", new NewAlbumCommand());
         initToolbarButton(btnOpen, Icons.OPEN, "Open existing album", new OpenAlbumCommand());

@@ -30,7 +30,7 @@ public class ImageLibraryEntry {
         this.title = title;
 
         if (file.isDirectory()) {
-            this.icon = Icons.FOLDER_32;
+            this.icon = Icons.FOLDER;
         } else {
             if (FileUtils.isImage(file)) {
                 this.icon = new ImageIcon(file.getAbsolutePath());

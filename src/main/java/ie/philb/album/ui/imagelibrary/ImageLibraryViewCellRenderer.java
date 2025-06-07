@@ -30,7 +30,7 @@ public class ImageLibraryViewCellRenderer extends AppPanel implements ListCellRe
     public ImageLibraryViewCellRenderer() {
 
         gridbag();
-        opaque();
+        background(Color.WHITE);
 
         GridBagCellConstraints gbc = new GridBagCellConstraints().weight(1).fillBoth().inset(8);
         add(imagePanel, gbc);
