@@ -8,9 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -25,7 +23,6 @@ public class PageModel {
     private PageGeometry geometry;
     private final List<PageEntryModel> pageEntries = new ArrayList<>();
     private final PageSize pageSize;
-    private final Map<Integer, ImageIcon> imagesByIndex = new HashMap<>();
 
     public PageModel(PageGeometry geometry, PageSize pageSize) {
         this.pageSize = pageSize;
@@ -56,8 +53,6 @@ public class PageModel {
             }
 
             ImageIcon image = new ImageIcon(file.getCanonicalPath());
-            imagesByIndex.put(index, image);
-
             PageEntryModel pem = pageEntries.get(index);
             pem.setImageIcon(image);
         } catch (IOException ex) {
@@ -66,6 +61,10 @@ public class PageModel {
     }
 
     public final void setGeometry(PageGeometry geometry) {
+
+        List<PageEntryModel> oldEntries = new ArrayList<>();
+        oldEntries.addAll(getPageEntries());
+
         this.geometry = geometry;
         this.pageEntries.clear();
 
@@ -73,7 +72,13 @@ public class PageModel {
 
         for (PageCell cell : geometry.getCells()) {
             PageEntryModel pem = new PageEntryModel(cell);
-            pem.setImageIcon(imagesByIndex.get(i));
+
+            if (i < oldEntries.size()) {
+                PageEntryModel oldEntry = oldEntries.get(i);
+                pem.setImageIcon(oldEntry.getImageIcon());
+                pem.setZoomFactor(oldEntry.getZoomFactor());
+            }
+
             pageEntries.add(pem);
             i++;
         }
