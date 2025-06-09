@@ -5,6 +5,7 @@
 package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.model.PageGeometryOption;
 import ie.philb.album.ui.actionlistener.ZoomInActionListener;
 import ie.philb.album.ui.actionlistener.ZoomOutActionListener;
 import ie.philb.album.ui.actionlistener.ZoomResetActionListener;
@@ -14,10 +15,13 @@ import ie.philb.album.ui.command.SetGeometryCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
@@ -35,6 +39,7 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnZoomCover;
     private JButton btnNewPage;
     private JButton btnTest;
+    private JComboBox<PageGeometryOption> cmbGeometry = new JComboBox<>();
 
     private final AlbumView albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
 
@@ -93,11 +98,20 @@ public class AlbumViewContainer extends AppPanel {
         });
         toolBar.add(btnNewPage);
 
-        btnTest = new JButton("Test");
-        btnTest.addActionListener((ActionEvent ae) -> {
-            new SetGeometryCommand().execute();
+        DefaultComboBoxModel<PageGeometryOption> lm = new DefaultComboBoxModel<>();
+        for (PageGeometryOption pgo : PageGeometryOption.values()) {
+            lm.addElement(pgo);
+        }
+
+        cmbGeometry.setModel(lm);
+        cmbGeometry.setPreferredSize(new Dimension(100, 10));
+        cmbGeometry.setMaximumSize(new Dimension(100, 100));
+        cmbGeometry.addActionListener((ActionEvent ae) -> {
+            PageGeometryOption selected = (PageGeometryOption) cmbGeometry.getSelectedItem();
+            new SetGeometryCommand(selected.geometry()).execute();
         });
-        toolBar.add(btnTest);
+
+        toolBar.add(cmbGeometry);
 
         setZoomButtonsEnabled(false);
     }

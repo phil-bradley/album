@@ -14,6 +14,12 @@ import ie.philb.album.view.PageView;
  */
 public class SetGeometryCommand extends AbstractCommand {
 
+    private final PageGeometry pageGeometry;
+
+    public SetGeometryCommand(PageGeometry pageGeometry) {
+        this.pageGeometry = pageGeometry;
+    }
+
     @Override
     public void execute() {
 
@@ -22,7 +28,8 @@ public class SetGeometryCommand extends AbstractCommand {
         if (pageView == null) {
             return;
         }
-        pageView.getPageModel().setGeometry(PageGeometry.rectangle(4, 4));
+
+        pageView.getPageModel().setGeometry(pageGeometry);
         AppContext.INSTANCE.albumUpdated();
     }
 
