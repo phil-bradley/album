@@ -70,6 +70,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         offset.y += pageEntryModel.getOffset().y;
 
         g.drawImage(viewImage, offset.x, offset.y, null);
+
     }
 
     private void updateBorder() {

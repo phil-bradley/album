@@ -65,8 +65,8 @@ public class PageGeometry {
 
         Dimension pageSize = new Dimension(1, 1);
 
-        for (int w = 0; w < width; w++) {
-            for (int h = 0; h < height; h++) {
+        for (int h = 0; h < height; h++) {
+            for (int w = 0; w < width; w++) {
                 Point location = new Point(w, h);
                 pageGeometry.cells.add(new PageCell(pageSize, location));
             }
