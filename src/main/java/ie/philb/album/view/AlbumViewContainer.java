@@ -10,6 +10,7 @@ import ie.philb.album.ui.actionlistener.ZoomOutActionListener;
 import ie.philb.album.ui.actionlistener.ZoomResetActionListener;
 import ie.philb.album.ui.actionlistener.ZoomToCoverFitActionListener;
 import ie.philb.album.ui.command.NewPageCommand;
+import ie.philb.album.ui.command.SetGeometryCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
@@ -33,6 +34,7 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnZoomReset;
     private JButton btnZoomCover;
     private JButton btnNewPage;
+    private JButton btnTest;
 
     private final AlbumView albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
 
@@ -89,10 +91,15 @@ public class AlbumViewContainer extends AppPanel {
         btnNewPage.addActionListener((ActionEvent ae) -> {
             new NewPageCommand().execute();
         });
-
         toolBar.add(btnNewPage);
 
-        setButtonsEnabled(false);
+        btnTest = new JButton("Test");
+        btnTest.addActionListener((ActionEvent ae) -> {
+            new SetGeometryCommand().execute();
+        });
+        toolBar.add(btnTest);
+
+        setZoomButtonsEnabled(false);
     }
 
     class ResizeListener extends ComponentAdapter {
@@ -103,7 +110,7 @@ public class AlbumViewContainer extends AppPanel {
         }
     }
 
-    private void setButtonsEnabled(boolean isEnabled) {
+    private void setZoomButtonsEnabled(boolean isEnabled) {
         btnZoomIn.setEnabled(isEnabled);
         btnZoomOut.setEnabled(isEnabled);
         btnZoomReset.setEnabled(isEnabled);
@@ -112,14 +119,14 @@ public class AlbumViewContainer extends AppPanel {
     }
 
     @Override
-    public void imageEntrySelected(PageEntryView view) {
-        setButtonsEnabled(view != null && view.getPageEntryModel().getImageIcon() != null);
+    public void pageEntrySelected(PageEntryView view) {
+        setZoomButtonsEnabled(view != null && view.getPageEntryModel().getImageIcon() != null);
     }
 
     @Override
     public void albumUpdated() {
         albumView.setModel(AppContext.INSTANCE.getAlbumModel());
-        albumView.positionPages();
-        scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() + 100);
+//        albumView.positionPages();
+//        scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() + 100);
     }
 }

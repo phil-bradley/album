@@ -20,6 +20,7 @@ import ie.philb.album.ui.imagelibrary.ImageLibraryView;
 import ie.philb.album.view.AlbumOverviewPanel;
 import ie.philb.album.view.AlbumViewContainer;
 import ie.philb.album.view.PageEntryView;
+import ie.philb.album.view.PageView;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -196,7 +197,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     }
 
     @Override
-    public void imageEntrySelected(PageEntryView view) {
+    public void pageEntrySelected(PageEntryView view) {
         this.selectedPageEntryView = view;
     }
 
@@ -210,5 +211,9 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
     @Override
     public void albumUpdated() {
+    }
+
+    @Override
+    public void pageSelected(PageView view) {
     }
 }

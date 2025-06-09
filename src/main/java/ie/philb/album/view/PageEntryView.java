@@ -37,13 +37,16 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     private final PageEntryModel pageEntryModel;
     private boolean isSelected = false;
     private boolean isPreviewMode = false;
+    private PageView pageView;
 
-    public PageEntryView(PageEntryModel entryModel) {
+    public PageEntryView(PageView pageView, PageEntryModel entryModel) {
 
         super();
         background(Color.white);
         setFocusable(true);
+        this.pageView = pageView;
         this.pageEntryModel = entryModel;
+
         this.pageEntryModel.addListener(this);
 
         setTransferHandler(new PageEntryViewTransferHandler());
@@ -88,7 +91,8 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         updateBorder();
 
         if (isSelected) {
-            AppContext.INSTANCE.imageEntrySelected(this);
+            AppContext.INSTANCE.pageEntrySelected(this);
+            AppContext.INSTANCE.pageSelected(pageView);
         }
     }
 

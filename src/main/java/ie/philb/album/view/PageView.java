@@ -4,16 +4,20 @@
  */
 package ie.philb.album.view;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BorderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +32,7 @@ public class PageView extends AppPanel {
     private static final Logger LOG = LoggerFactory.getLogger(PageView.class);
 
     private List<PageEntryView> pageEntriesViews;
-    private boolean isPageSelected = false;
+    private boolean isSelected = false;
     private PageEntryView selectedEntryView = null;
     private PageModel model;
     private boolean isPreviewMode = false;
@@ -40,12 +44,16 @@ public class PageView extends AppPanel {
         setLayout(null);
     }
 
-    @Override
-    public void imageEntrySelected(PageEntryView view) {
-        clearDeselectedViews(view);
+    public PageModel getPageModel() {
+        return model;
     }
 
-    private void clearDeselectedViews(PageEntryView selectedView) {
+    @Override
+    public void pageEntrySelected(PageEntryView view) {
+        updateSelectedEntryView(view);
+    }
+
+    private void updateSelectedEntryView(PageEntryView selectedView) {
 
         this.selectedEntryView = null;
 
@@ -75,6 +83,7 @@ public class PageView extends AppPanel {
 
     @Override
     public void libraryImageSelected(ImageLibraryEntry imageLibraryEntry) {
+
         int selectedIdx = getSelectedIndex();
 
         if (selectedIdx == -1) {
@@ -120,7 +129,7 @@ public class PageView extends AppPanel {
 
         for (int i = 0; i < entryCount; i++) {
             PageEntryModel pem = model.getPageEntries().get(i);
-            PageEntryView pageEntryView = new PageEntryView(pem);
+            PageEntryView pageEntryView = new PageEntryView(this, pem);
             pageEntriesViews.add(pageEntryView);
             add(pageEntryView);
 
@@ -156,5 +165,39 @@ public class PageView extends AppPanel {
         for (PageEntryView view : pageEntriesViews) {
             view.setPreviewMode(isPreviewMode);
         }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent me) {
+
+        if (isPreviewMode) {
+            return;
+        }
+
+        AppContext.INSTANCE.pageSelected(this);
+    }
+
+    private void setSelected(boolean b) {
+
+        if (isPreviewMode) {
+            return;
+        }
+
+        this.isSelected = b;
+        updateBorder();
+    }
+
+    private void updateBorder() {
+        setBorder(BorderFactory.createLineBorder(getBorderColor()));
+        repaint();
+    }
+
+    private Color getBorderColor() {
+        return isSelected ? Resources.COLOR_PHOTO_BORDER_SELECTED : Resources.COLOR_PHOTO_BORDER;
+    }
+
+    @Override
+    public void pageSelected(PageView selectedView) {
+        setSelected(this.equals(selectedView));
     }
 }

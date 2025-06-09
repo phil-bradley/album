@@ -10,6 +10,7 @@ import ie.philb.album.ui.config.UiConfig;
 import ie.philb.album.ui.config.UiConfigListener;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.view.PageEntryView;
+import ie.philb.album.view.PageView;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -197,7 +198,11 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
     }
 
     @Override
-    public void imageEntrySelected(PageEntryView view) {
+    public void pageEntrySelected(PageEntryView view) {
+    }
+
+    @Override
+    public void pageSelected(PageView view) {
     }
 
     @Override

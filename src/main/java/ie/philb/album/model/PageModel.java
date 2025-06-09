@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -23,6 +25,7 @@ public class PageModel {
     private PageGeometry geometry;
     private final List<PageEntryModel> pageEntries = new ArrayList<>();
     private final PageSize pageSize;
+    private final Map<Integer, ImageIcon> imagesByIndex = new HashMap<>();
 
     public PageModel(PageGeometry geometry, PageSize pageSize) {
         this.pageSize = pageSize;
@@ -52,8 +55,11 @@ public class PageModel {
                 throw new IllegalArgumentException("Cannot add image at position " + index + " with page entry count = " + getCellCount());
             }
 
+            ImageIcon image = new ImageIcon(file.getCanonicalPath());
+            imagesByIndex.put(index, image);
+
             PageEntryModel pem = pageEntries.get(index);
-            pem.setImageIcon(new ImageIcon(file.getCanonicalPath()));
+            pem.setImageIcon(image);
         } catch (IOException ex) {
             Logger.getLogger(PageModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -63,8 +69,13 @@ public class PageModel {
         this.geometry = geometry;
         this.pageEntries.clear();
 
+        int i = 0;
+
         for (PageCell cell : geometry.getCells()) {
-            pageEntries.add(new PageEntryModel(cell));
+            PageEntryModel pem = new PageEntryModel(cell);
+            pem.setImageIcon(imagesByIndex.get(i));
+            pageEntries.add(pem);
+            i++;
         }
     }
 
