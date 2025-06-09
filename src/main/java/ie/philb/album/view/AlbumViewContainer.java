@@ -5,7 +5,6 @@
 package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
-import ie.philb.album.model.PageGeometryOption;
 import ie.philb.album.ui.actionlistener.ZoomInActionListener;
 import ie.philb.album.ui.actionlistener.ZoomOutActionListener;
 import ie.philb.album.ui.actionlistener.ZoomResetActionListener;
@@ -19,9 +18,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
@@ -38,8 +35,7 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnZoomReset;
     private JButton btnZoomCover;
     private JButton btnNewPage;
-    private JButton btnTest;
-    private JComboBox<PageGeometryOption> cmbGeometry = new JComboBox<>();
+    private PageGeometrySelector slctGeometry;
 
     private final AlbumView albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
 
@@ -98,20 +94,14 @@ public class AlbumViewContainer extends AppPanel {
         });
         toolBar.add(btnNewPage);
 
-        DefaultComboBoxModel<PageGeometryOption> lm = new DefaultComboBoxModel<>();
-        for (PageGeometryOption pgo : PageGeometryOption.values()) {
-            lm.addElement(pgo);
-        }
-
-        cmbGeometry.setModel(lm);
-        cmbGeometry.setPreferredSize(new Dimension(100, 10));
-        cmbGeometry.setMaximumSize(new Dimension(100, 100));
-        cmbGeometry.addActionListener((ActionEvent ae) -> {
-            PageGeometryOption selected = (PageGeometryOption) cmbGeometry.getSelectedItem();
-            new SetGeometryCommand(selected.geometry()).execute();
+        slctGeometry = new PageGeometrySelector();
+        slctGeometry.addActionListener((ActionEvent ae) -> {
+            new SetGeometryCommand(slctGeometry.getSelectedGeometryOption().geometry()).execute();
         });
 
-        toolBar.add(cmbGeometry);
+        slctGeometry.setMaximumSize(new Dimension(100, 100));
+
+        toolBar.add(slctGeometry);
 
         setZoomButtonsEnabled(false);
     }
