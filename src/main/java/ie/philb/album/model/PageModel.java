@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
  */
 public class PageModel {
 
+    private int pageId;
     private int marginMillis = 10;
     private PageGeometry geometry;
     private final List<PageEntryModel> pageEntries = new ArrayList<>();
@@ -27,6 +28,14 @@ public class PageModel {
     public PageModel(PageGeometry geometry, PageSize pageSize) {
         this.pageSize = pageSize;
         setGeometry(geometry);
+    }
+
+    public int getPageId() {
+        return pageId;
+    }
+
+    public void setPageId(int pageId) {
+        this.pageId = pageId;
     }
 
     public PageGeometry getGeometry() {

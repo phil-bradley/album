@@ -5,6 +5,7 @@
 package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
@@ -38,7 +39,6 @@ public class PageView extends AppPanel {
     private boolean isPreviewMode = false;
 
     public PageView(PageModel model) {
-        LOG.info("Got page model " + model);
         setModel(model);
         background(Resources.COLOUR_ALBUM_PAGE_BACKGROUND);
         setLayout(null);
@@ -49,22 +49,43 @@ public class PageView extends AppPanel {
     }
 
     @Override
-    public void pageEntrySelected(PageEntryView view) {
-        updateSelectedEntryView(view);
+    public void pageEntrySelected(PageView pageView, PageEntryView view) {
+        updateSelectedEntryView(pageView, view);
     }
 
-    private void updateSelectedEntryView(PageEntryView selectedView) {
+    private void updateSelectedEntryView(PageView selectedPageView, PageEntryView selectedPageEntryView) {
 
-        this.selectedEntryView = null;
+        if (model.getPageId() == 1) {
+            LOG.info("zz");
+        }
+
+        pageSelected(selectedPageView);
+
+        if (selectedPageEntryView == null) {
+            return;
+        }
+
+        boolean pageMatches = (selectedPageView.getPageModel().getPageId() == this.getPageModel().getPageId());
+        setSelected(pageMatches);
 
         for (PageEntryView pageEntryView : pageEntriesViews) {
-            if (pageEntryView.equals(selectedView)) {
-                this.selectedEntryView = pageEntryView;
-            } else {
-                pageEntryView.setSelected(false);
+            PageCell selectedCell = selectedPageEntryView.getPageCell();
+            boolean cellMatches = pageEntryView.getPageCell().equals(selectedCell);
 
+            if (pageMatches && cellMatches) {
+                LOG.info("Selecting " + pageEntryView);
+                pageEntryView.setSelected(true);
+                this.selectedEntryView = pageEntryView;
             }
         }
+
+        repaint();
+    }
+
+    private void clearSelection() {
+        this.selectedEntryView = null;
+        setSelected(false);
+        pageEntriesViews.forEach(pev -> setSelected(false));
     }
 
     private int getSelectedIndex() {
@@ -95,7 +116,7 @@ public class PageView extends AppPanel {
         }
 
         model.setImage(imageLibraryEntry.getFile(), selectedIdx);
-        selectedEntryView.setSelected(true);
+//        selectedEntryView.setSelected(true);
     }
 
     public final void setModel(PageModel model) {
@@ -117,7 +138,7 @@ public class PageView extends AppPanel {
 
     @Override
     public void setSize(int width, int height) {
-        LOG.info("Setting size to {}x{}", width, height);
+        //LOG.info("Setting size to {}x{}", width, height);
         super.setSize(width, height);
     }
 
@@ -125,11 +146,12 @@ public class PageView extends AppPanel {
 
         int entryCount = model.getGeometry().getCells().size();
 
-        LOG.info("Creating {} entries", entryCount);
+        pageEntriesViews.clear();
 
         for (int i = 0; i < entryCount; i++) {
             PageEntryModel pem = model.getPageEntries().get(i);
             PageEntryView pageEntryView = new PageEntryView(this, pem);
+
             pageEntriesViews.add(pageEntryView);
             add(pageEntryView);
 
@@ -198,6 +220,12 @@ public class PageView extends AppPanel {
 
     @Override
     public void pageSelected(PageView selectedView) {
-        setSelected(this.equals(selectedView));
+        clearSelection();
+
+        if (selectedView != null) {
+            boolean pageSelected = (this.model.getPageId() == selectedView.getPageModel().getPageId());
+            setSelected(pageSelected);
+            LOG.info("Page view {} selected: ", this.model.getPageId(), pageSelected);
+        }
     }
 }

@@ -42,6 +42,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     public PageEntryView(PageView pageView, PageEntryModel entryModel) {
 
         super();
+
         background(Color.white);
         setFocusable(true);
         this.pageView = pageView;
@@ -51,6 +52,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         setTransferHandler(new PageEntryViewTransferHandler());
         updateBorder();
+        LOG.info("Created new page entry view");
     }
 
     public PageEntryModel getPageEntryModel() {
@@ -90,11 +92,6 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         this.isSelected = b;
         updateBorder();
-
-        if (isSelected) {
-            AppContext.INSTANCE.pageEntrySelected(this);
-            AppContext.INSTANCE.pageSelected(pageView);
-        }
     }
 
     public PageCell getPageCell() {
@@ -113,7 +110,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
             return;
         }
 
-        setSelected(true);
+        AppContext.INSTANCE.pageEntrySelected(pageView, this);
 
         if (pageEntryModel.getImageIcon() == null) {
             return;
@@ -151,5 +148,10 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     public void setPreviewMode(boolean previewMode) {
         this.isPreviewMode = previewMode;
         setFocusable(!isPreviewMode);
+    }
+
+    @Override
+    public void pageEntrySelected(PageView pageView, PageEntryView pageEntryView) {
+        setSelected(this.equals(pageEntryView));
     }
 }

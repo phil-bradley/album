@@ -54,8 +54,8 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private ImageLibraryView imageLibraryView;
     private AlbumViewContainer albumViewContainer;
     private AlbumOverviewPanel albumOverviewPanel;
+    private PageView selectedPageView;
     private PageEntryView selectedPageEntryView;
-
     private JSplitPane hSplit;
     private JSplitPane vSplit;
     private JToolBar toolBar;
@@ -197,8 +197,9 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     }
 
     @Override
-    public void pageEntrySelected(PageEntryView view) {
-        this.selectedPageEntryView = view;
+    public void pageEntrySelected(PageView pageView, PageEntryView pageEntryView) {
+        this.selectedPageView = pageView;
+        this.selectedPageEntryView = pageEntryView;
     }
 
     @Override
@@ -214,6 +215,6 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     }
 
     @Override
-    public void pageSelected(PageView view) {
+    public void pageSelected(PageView pageView) {
     }
 }

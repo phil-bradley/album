@@ -16,7 +16,7 @@ import java.io.File;
 public class ApplicationAdapter implements ApplicationListener {
 
     @Override
-    public void pageEntrySelected(PageEntryView view) {
+    public void pageEntrySelected(PageView pageView, PageEntryView view) {
     }
 
     @Override

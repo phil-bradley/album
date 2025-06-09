@@ -7,8 +7,10 @@ package ie.philb.album.ui.command;
 import ie.philb.album.AppContext;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageGeometry;
+import ie.philb.album.model.PageGeometryOption;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
+import java.util.List;
 
 /**
  *
@@ -22,7 +24,15 @@ public class NewPageCommand extends AbstractCommand {
         AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
         PageSize pageSize = albumModel.getPageSize();
 
-        PageModel page = new PageModel(PageGeometry.rectangle(3, 2), pageSize);
+        PageGeometry lastPageGeometry = PageGeometryOption.Columns_2_1.geometry();
+        List<PageModel> pages = albumModel.getPages();
+
+        if (!pages.isEmpty()) {
+            PageModel lastPage = pages.get(pages.size() - 1);
+            lastPageGeometry = lastPage.getGeometry();
+        }
+
+        PageModel page = new PageModel(lastPageGeometry, pageSize).withMarginMillis(3);
         albumModel.addPage(page);
 
         AppContext.INSTANCE.albumUpdated();

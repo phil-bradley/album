@@ -30,6 +30,7 @@ public class AlbumModel {
     }
 
     public void addPage(PageModel page) {
+        page.setPageId(pages.size() + 1);
         this.pages.add(page);
     }
 }

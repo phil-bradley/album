@@ -30,6 +30,7 @@ public enum AppContext implements ApplicationListener {
     private AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
     private File browseLocation = FileUtils.getHomeDirectory();
     private PageView selectedPageView = null;
+    private PageEntryView selectedPageEntryView = null;
 
     public void addListener(ApplicationListener l) {
         this.applicationListeners.add(l);
@@ -56,10 +57,18 @@ public enum AppContext implements ApplicationListener {
         return selectedPageView;
     }
 
+    public PageEntryView getSelectedPageEntryView() {
+        return selectedPageEntryView;
+    }
+
     @Override
-    public void pageEntrySelected(PageEntryView view) {
+    public void pageEntrySelected(PageView pageView, PageEntryView view) {
+        LOG.info("Page entry selected: " + view.getPageCell());
+        this.selectedPageEntryView = view;
+        pageSelected(pageView);
+
         getApplicationListenersCopy().forEach(appListener -> {
-            appListener.pageEntrySelected(view);
+            appListener.pageEntrySelected(pageView, view);
         });
     }
 

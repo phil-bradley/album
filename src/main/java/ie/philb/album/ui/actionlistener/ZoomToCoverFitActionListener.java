@@ -16,6 +16,7 @@ public class ZoomToCoverFitActionListener extends AbstractCellActionListener {
 
     @Override
     protected void doAction() {
+
         new ZoomToCoverFitAction(selectedPageEntryView).execute(new Callback<Void>() {
             @Override
             public void onSuccess(Void result) {

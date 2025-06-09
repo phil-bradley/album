@@ -61,7 +61,7 @@ public class AlbumViewContainer extends AppPanel {
 
         this.scrollPane = new JScrollPane(albumView);
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
         initToolBar();
     }
@@ -124,7 +124,7 @@ public class AlbumViewContainer extends AppPanel {
     }
 
     @Override
-    public void pageEntrySelected(PageEntryView view) {
+    public void pageEntrySelected(PageView pageView, PageEntryView view) {
         setZoomButtonsEnabled(view != null && view.getPageEntryModel().getImageIcon() != null);
     }
 
@@ -137,7 +137,6 @@ public class AlbumViewContainer extends AppPanel {
     @Override
     public void albumUpdated() {
         albumView.setModel(AppContext.INSTANCE.getAlbumModel());
-//        albumView.positionPages();
-//        scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() + 100);
+        LOG.info("Updated album");
     }
 }

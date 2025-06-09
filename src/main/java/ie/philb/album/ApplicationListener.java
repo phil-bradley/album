@@ -15,7 +15,7 @@ import java.io.File;
  */
 public interface ApplicationListener {
 
-    void pageEntrySelected(PageEntryView view);
+    void pageEntrySelected(PageView pageView, PageEntryView view);
 
     void pageSelected(PageView view);
 

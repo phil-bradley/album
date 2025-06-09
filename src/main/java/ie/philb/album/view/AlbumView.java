@@ -4,6 +4,7 @@
  */
 package ie.philb.album.view;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
@@ -38,6 +39,11 @@ public class AlbumView extends AppPanel {
         clearPages();
         addPages();
         positionPages();
+
+        PageView selectedPageView = AppContext.INSTANCE.getSelectedPageView();
+        PageEntryView selectedPageEntryView = AppContext.INSTANCE.getSelectedPageEntryView();
+
+        updateSelectedEntry(selectedPageView, selectedPageEntryView);
 
         repaint();
         revalidate();
@@ -86,7 +92,7 @@ public class AlbumView extends AppPanel {
         }
 
         setPreferredSize(new Dimension(horizontalInset, parentHeight));
-        LOG.info("Resized: Page container has size {}x{}, Page has size {}x{}", horizontalInset, parentHeight, pageWidth, pageHeight);
+        //LOG.info("Resized: Page container has size {}x{}, Page has size {}x{}", horizontalInset, parentHeight, pageWidth, pageHeight);
 
     }
 
@@ -113,5 +119,14 @@ public class AlbumView extends AppPanel {
         for (PageView pageView : pageViews) {
             pageView.setPreviewMode(isPreviewMode);
         }
+    }
+
+    private void updateSelectedEntry(PageView selectedPageView, PageEntryView selectedPageEntryView) {
+
+        if (selectedPageView == null || selectedPageEntryView == null) {
+            return;
+        }
+
+        selectedPageView.pageEntrySelected(selectedPageView, selectedPageEntryView);
     }
 }

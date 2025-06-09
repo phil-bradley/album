@@ -29,8 +29,10 @@ public class SetGeometryCommand extends AbstractCommand {
             return;
         }
 
-        pageView.getPageModel().setGeometry(pageGeometry);
-        AppContext.INSTANCE.albumUpdated();
+        if (!pageGeometry.equals(pageView.getPageModel().getGeometry())) {
+            pageView.getPageModel().setGeometry(pageGeometry);
+            AppContext.INSTANCE.albumUpdated();
+        }
     }
 
 }
