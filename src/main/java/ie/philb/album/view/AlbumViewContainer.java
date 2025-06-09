@@ -103,6 +103,7 @@ public class AlbumViewContainer extends AppPanel {
 
         toolBar.add(slctGeometry);
 
+        slctGeometry.setEnabled(false);
         setZoomButtonsEnabled(false);
     }
 
@@ -125,6 +126,11 @@ public class AlbumViewContainer extends AppPanel {
     @Override
     public void pageEntrySelected(PageEntryView view) {
         setZoomButtonsEnabled(view != null && view.getPageEntryModel().getImageIcon() != null);
+    }
+
+    @Override
+    public void pageSelected(PageView view) {
+        slctGeometry.setEnabled(view != null);
     }
 
     @Override
