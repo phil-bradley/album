@@ -58,7 +58,7 @@ public class AlbumOverviewPanel extends AppPanel {
 
         this.scrollPane = new JScrollPane(albumView);
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
         add(scrollPane, new GridBagCellConstraints().fillBoth().weight(1));
         addComponentListener(new ResizeListener());
@@ -74,6 +74,7 @@ public class AlbumOverviewPanel extends AppPanel {
     @Override
     public void albumUpdated() {
         albumView.setModel(AppContext.INSTANCE.getAlbumModel());
+        scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
     }
 
     class ResizeListener extends ComponentAdapter {
@@ -83,4 +84,5 @@ public class AlbumOverviewPanel extends AppPanel {
             albumView.positionPages();
         }
     }
+
 }

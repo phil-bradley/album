@@ -18,7 +18,7 @@ public class Dialogs {
     }
 
     public static boolean confirm(String title, String msg) {
-        int ret = JOptionPane.showConfirmDialog(ApplicationUi.getInstance(), msg, title, JOptionPane.YES_OPTION);
+        int ret = JOptionPane.showConfirmDialog(ApplicationUi.getInstance(), msg, title, JOptionPane.YES_NO_OPTION);
         return (ret == JOptionPane.YES_OPTION);
     }
 

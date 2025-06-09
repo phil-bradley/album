@@ -11,16 +11,12 @@ import static ie.philb.album.ui.common.Resources.COLOUR_ALBUM_BACKGROUND;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author philb
  */
 public class AlbumView extends AppPanel {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AlbumView.class);
 
     private AlbumModel albumModel;
     private final List<PageView> pageViews = new ArrayList<>();

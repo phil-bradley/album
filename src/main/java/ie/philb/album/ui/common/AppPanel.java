@@ -130,7 +130,7 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
         logger.info("Set preferred size {}", dimension);
         Dimension preferredSize = getPreferredSize();
 
-        if (preferredSize.getWidth() != dimension.getWidth() && preferredSize.getHeight() != dimension.getHeight()) {
+        if (preferredSize.getWidth() != dimension.getWidth() || preferredSize.getHeight() != dimension.getHeight()) {
             super.setPreferredSize(dimension);
         }
     }

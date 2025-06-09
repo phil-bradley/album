@@ -119,9 +119,7 @@ public class AlbumViewContainer extends AppPanel {
     @Override
     public void albumUpdated() {
         albumView.setModel(AppContext.INSTANCE.getAlbumModel());
-
-        repaint();
-        revalidate();
-        repaint();
+        albumView.positionPages();
+        scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum() + 100);
     }
 }
