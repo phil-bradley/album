@@ -10,6 +10,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -162,6 +163,47 @@ public class PageGeometry {
         if (height > MAX_CELL_HEIGHT) {
             throw new RuntimeException("Cannot create page of height " + height + " cells");
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + Objects.hashCode(this.cells);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final PageGeometry other = (PageGeometry) obj;
+
+        if (this.cells.size() != other.cells.size()) {
+            return false;
+        }
+
+        int i = 0;
+        for (PageCell cell : cells) {
+            PageCell otherCell = other.cells.get(i);
+
+            if (!cell.equals(otherCell)) {
+                return false;
+            }
+            i++;
+        }
+
+        return true;
     }
 
 }

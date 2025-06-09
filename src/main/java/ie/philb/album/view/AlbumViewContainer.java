@@ -131,6 +131,7 @@ public class AlbumViewContainer extends AppPanel {
     @Override
     public void pageSelected(PageView view) {
         slctGeometry.setEnabled(view != null);
+        slctGeometry.setSelectedGeometry(view.getPageModel().getGeometry());
     }
 
     @Override

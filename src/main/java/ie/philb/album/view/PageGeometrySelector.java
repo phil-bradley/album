@@ -4,6 +4,7 @@
  */
 package ie.philb.album.view;
 
+import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageGeometryOption;
 import java.awt.Component;
 import javax.swing.ComboBoxModel;
@@ -37,6 +38,18 @@ public class PageGeometrySelector extends JComboBox<PageGeometryOption> {
     public PageGeometryOption getSelectedGeometryOption() {
         PageGeometryOption selected = (PageGeometryOption) getSelectedItem();
         return selected;
+    }
+
+    public void setSelectedGeometry(PageGeometry geometry) {
+        ComboBoxModel<PageGeometryOption> model = getModel();
+
+        for (int i = 0; i < model.getSize(); i++) {
+            PageGeometryOption option = model.getElementAt(i);
+
+            if (option.geometry().equals(geometry)) {
+                setSelectedIndex(i);
+            }
+        }
     }
 
     class PageGeometrySelectorCellRenderer extends JLabel implements ListCellRenderer<PageGeometryOption> {
