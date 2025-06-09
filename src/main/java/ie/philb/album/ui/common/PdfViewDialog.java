@@ -33,10 +33,10 @@ public class PdfViewDialog extends JDialog {
     private static final int MARGIN = 0;
 
     private PdfViewPanel displayPanel;
-    private JToolBar toolbar;
-    private JButton btnNext;
-    private JButton btnPrevious;
-    private JButton btnPrint;
+    private final JToolBar toolbar;
+    private final JButton btnNext;
+    private final JButton btnPrevious;
+    private final JButton btnPrint;
 
     public PdfViewDialog() {
 

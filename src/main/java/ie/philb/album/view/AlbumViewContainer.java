@@ -9,9 +9,11 @@ import ie.philb.album.ui.actionlistener.ZoomInActionListener;
 import ie.philb.album.ui.actionlistener.ZoomOutActionListener;
 import ie.philb.album.ui.actionlistener.ZoomResetActionListener;
 import ie.philb.album.ui.actionlistener.ZoomToCoverFitActionListener;
+import ie.philb.album.ui.command.NewPageCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JButton;
@@ -30,6 +32,7 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnZoomOut;
     private JButton btnZoomReset;
     private JButton btnZoomCover;
+    private JButton btnNewPage;
 
     private final AlbumView albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
 
@@ -66,21 +69,28 @@ public class AlbumViewContainer extends AppPanel {
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        btnZoomIn = new JButton(Icons.Regular.ZOOM_IN);
+        btnZoomIn = new JButton(Icons.Small.ZOOM_IN);
         btnZoomIn.addActionListener(new ZoomInActionListener());
         toolBar.add(btnZoomIn);
 
-        btnZoomOut = new JButton(Icons.Regular.ZOOM_OUT);
+        btnZoomOut = new JButton(Icons.Small.ZOOM_OUT);
         btnZoomOut.addActionListener(new ZoomOutActionListener());
         toolBar.add(btnZoomOut);
 
-        btnZoomReset = new JButton(Icons.Regular.ZOOM_RESET);
+        btnZoomReset = new JButton(Icons.Small.ZOOM_RESET);
         btnZoomReset.addActionListener(new ZoomResetActionListener());
         toolBar.add(btnZoomReset);
 
-        btnZoomCover = new JButton(Icons.Regular.ZOOM_COVER);
+        btnZoomCover = new JButton(Icons.Small.ZOOM_COVER);
         btnZoomCover.addActionListener(new ZoomToCoverFitActionListener());
         toolBar.add(btnZoomCover);
+
+        btnNewPage = new JButton(Icons.Small.NEW);
+        btnNewPage.addActionListener((ActionEvent ae) -> {
+            new NewPageCommand().execute();
+        });
+
+        toolBar.add(btnNewPage);
 
         setButtonsEnabled(false);
     }
@@ -109,5 +119,9 @@ public class AlbumViewContainer extends AppPanel {
     @Override
     public void albumUpdated() {
         albumView.setModel(AppContext.INSTANCE.getAlbumModel());
+
+        repaint();
+        revalidate();
+        repaint();
     }
 }

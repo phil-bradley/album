@@ -20,15 +20,10 @@ public class Icons {
         public static final ImageIcon PDF = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/pdf.png"));
         public static final ImageIcon PRINT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/print.png"));
         public static final ImageIcon SAVE = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/save.png"));
-        public static final ImageIcon ZOOM_IN = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/zoom-in.png"));
-        public static final ImageIcon ZOOM_OUT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/zoom-out.png"));
-        public static final ImageIcon ZOOM_RESET = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/zoom-reset.png"));
-        public static final ImageIcon ZOOM_COVER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/zoom-cover.png"));
         public static final ImageIcon ARROW_LEFT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/arrow-left.png"));
         public static final ImageIcon ARROW_RIGHT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/arrow-right.png"));
         public static final ImageIcon FOLDER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/folder.png"));
         public static final ImageIcon FILE_HOME = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/file-home.png"));
-        public static final ImageIcon FILE_PARENT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/file-parent.png"));
 
     };
 
@@ -40,6 +35,12 @@ public class Icons {
         public static final ImageIcon PDF = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/pdf.png"));
         public static final ImageIcon PRINT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/print.png"));
         public static final ImageIcon SAVE = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/save.png"));
+        public static final ImageIcon FILE_PARENT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/file-parent.png"));
+        public static final ImageIcon ZOOM_IN = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/zoom-in.png"));
+        public static final ImageIcon ZOOM_OUT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/zoom-out.png"));
+        public static final ImageIcon ZOOM_RESET = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/zoom-reset.png"));
+        public static final ImageIcon ZOOM_COVER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/zoom-cover.png"));
+
     }
 
 }

@@ -115,7 +115,7 @@ public class ImageLibraryView extends AppPanel {
 
         toolBar.add(btnHome);
 
-        btnUp = new JButton(Icons.Regular.FILE_PARENT);
+        btnUp = new JButton(Icons.Small.FILE_PARENT);
         btnUp.setToolTipText("Up");
         btnUp.addActionListener((ActionEvent ae) -> {
             new BrowseToParentCommand().execute();
