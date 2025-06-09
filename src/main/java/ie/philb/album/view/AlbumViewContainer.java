@@ -66,19 +66,19 @@ public class AlbumViewContainer extends AppPanel {
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        btnZoomIn = new JButton(Icons.ZOOM_IN);
+        btnZoomIn = new JButton(Icons.Regular.ZOOM_IN);
         btnZoomIn.addActionListener(new ZoomInActionListener());
         toolBar.add(btnZoomIn);
 
-        btnZoomOut = new JButton(Icons.ZOOM_OUT);
+        btnZoomOut = new JButton(Icons.Regular.ZOOM_OUT);
         btnZoomOut.addActionListener(new ZoomOutActionListener());
         toolBar.add(btnZoomOut);
 
-        btnZoomReset = new JButton(Icons.ZOOM_RESET);
+        btnZoomReset = new JButton(Icons.Regular.ZOOM_RESET);
         btnZoomReset.addActionListener(new ZoomResetActionListener());
         toolBar.add(btnZoomReset);
 
-        btnZoomCover = new JButton(Icons.ZOOM_COVER);
+        btnZoomCover = new JButton(Icons.Regular.ZOOM_COVER);
         btnZoomCover.addActionListener(new ZoomToCoverFitActionListener());
         toolBar.add(btnZoomCover);
 

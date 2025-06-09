@@ -11,6 +11,7 @@ import ie.philb.album.ui.command.CreatePdfCommand;
 import ie.philb.album.ui.command.ExitCommand;
 import ie.philb.album.ui.command.NewAlbumCommand;
 import ie.philb.album.ui.command.OpenAlbumCommand;
+import ie.philb.album.ui.command.PrintAlbumCommand;
 import ie.philb.album.ui.command.SaveAlbumCommand;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
@@ -131,15 +132,17 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         menuBar = new JMenuBar();
         menuBar.add(fileMenu = new JMenu("File"));
 
-        addMenuItem(fileMenu, "New", new NewAlbumCommand());
-        addMenuItem(fileMenu, "Open", new OpenAlbumCommand());
-        addMenuItem(fileMenu, "Save", new SaveAlbumCommand());
-        addMenuItem(fileMenu, "Export to PDF", new CreatePdfCommand());
-        addMenuItem(fileMenu, "Exit", new ExitCommand());
+        addMenuItem(fileMenu, Icons.Small.NEW, "New", new NewAlbumCommand());
+        addMenuItem(fileMenu, Icons.Small.OPEN, "Open", new OpenAlbumCommand());
+        addMenuItem(fileMenu, Icons.Small.SAVE, "Save", new SaveAlbumCommand());
+        addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand());
+        addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand());
+        addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand());
     }
 
-    private void addMenuItem(JMenu menu, String title, AbstractCommand command) {
+    private void addMenuItem(JMenu menu, ImageIcon icon, String title, AbstractCommand command) {
         JMenuItem menuItem = new JMenuItem(title);
+        menuItem.setIcon(icon);
         menuItem.addActionListener((ActionEvent ae) -> {
             command.execute();
         });
@@ -152,10 +155,10 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        initToolbarButton(btnNew, Icons.NEW, "New Album", new NewAlbumCommand());
-        initToolbarButton(btnOpen, Icons.OPEN, "Open existing album", new OpenAlbumCommand());
-        initToolbarButton(btnSave, Icons.SAVE, "Save album", new SaveAlbumCommand());
-        initToolbarButton(btnPdf, Icons.PDF, "Export to PDF", new CreatePdfCommand());
+        initToolbarButton(btnNew, Icons.Regular.NEW, "New Album", new NewAlbumCommand());
+        initToolbarButton(btnOpen, Icons.Regular.OPEN, "Open existing album", new OpenAlbumCommand());
+        initToolbarButton(btnSave, Icons.Regular.SAVE, "Save album", new SaveAlbumCommand());
+        initToolbarButton(btnPdf, Icons.Regular.PDF, "Export to PDF", new CreatePdfCommand());
     }
 
     private void initToolbarButton(JButton button, ImageIcon icon, String title, AbstractCommand command) {

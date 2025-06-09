@@ -44,13 +44,13 @@ public class PdfViewDialog extends JDialog {
         setModal(true);
 
         this.btnPrevious = new JButton();
-        btnPrevious.setIcon(Icons.ARROW_LEFT);
+        btnPrevious.setIcon(Icons.Regular.ARROW_LEFT);
 
         this.btnNext = new JButton();
-        btnNext.setIcon(Icons.ARROW_RIGHT);
+        btnNext.setIcon(Icons.Regular.ARROW_RIGHT);
 
         this.btnPrint = new JButton();
-        btnPrint.setIcon(Icons.PRINT);
+        btnPrint.setIcon(Icons.Regular.PRINT);
 
         this.toolbar = new JToolBar();
         this.toolbar.setFloatable(false);
