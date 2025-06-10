@@ -34,18 +34,19 @@ public class CreatePdfAction extends AbstractAction<File> {
     private static final Logger LOG = LoggerFactory.getLogger(CreatePdfAction.class);
 
     private final AlbumModel albumModel;
+    private final File file;
 
     private static final double MILLIS_TO_INCH = 0.0393701d;
 
-    public CreatePdfAction(AlbumModel albumModel) {
+    public CreatePdfAction(File file, AlbumModel albumModel) {
         this.albumModel = albumModel;
+        this.file = file;
     }
 
     @Override
     protected File execute() throws Exception {
 
         logger.info("Creating doc...");
-        File outFile = null;
 
         // Model page is measured in mm
         // PDF page size is measured in  inch/72
@@ -53,12 +54,11 @@ public class CreatePdfAction extends AbstractAction<File> {
         Dimension pageSize = new Dimension(millisToUnits(modelPageSize.width), millisToUnits(modelPageSize.height));
 
         try (Document doc = new Document(getPageSize(albumModel))) {
-            outFile = File.createTempFile("album-", ".pdf");
 
-            logger.info("Creating doc {} with page size {}", outFile.getAbsolutePath(), doc.getPageSize());
+            logger.info("Creating doc {} with page size {}", file.getAbsolutePath(), doc.getPageSize());
 
             // Creating the writer implicitly causes the doc to be written to the file
-            PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(outFile));
+            PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(file));
             doc.open();
 
             for (PageModel pageModel : albumModel.getPages()) {
@@ -108,7 +108,7 @@ public class CreatePdfAction extends AbstractAction<File> {
 
         }
 
-        return outFile;
+        return file;
     }
 
     private int millisToUnits(int millis) {

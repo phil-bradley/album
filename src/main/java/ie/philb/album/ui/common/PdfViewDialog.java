@@ -5,12 +5,12 @@
 package ie.philb.album.ui.common;
 
 import ie.philb.album.ui.ApplicationUi;
+import ie.philb.album.ui.command.PrintAlbumCommand;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JButton;
@@ -77,12 +77,7 @@ public class PdfViewDialog extends JDialog {
         });
 
         btnPrint.addActionListener((ActionEvent e) -> {
-            try {
-                displayPanel.printDocument();
-            } catch (PrinterException ex) {
-                String msg = "Print error: " + ex.getMessage();
-                Dialogs.showErrorMessage(msg);
-            }
+            new PrintAlbumCommand().execute();
         });
 
         addKeyListener(new KeyAdapter() {

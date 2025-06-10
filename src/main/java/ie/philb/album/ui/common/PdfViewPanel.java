@@ -6,14 +6,11 @@ package ie.philb.album.ui.common;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.printing.PDFPageable;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,9 +87,4 @@ public class PdfViewPanel extends AppPanel {
         }
     }
 
-    public void printDocument() throws PrinterException {
-        PrinterJob job = PrinterJob.getPrinterJob();
-        job.setPageable(new PDFPageable(document));
-        job.print();
-    }
 }

@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 public class Dialogs {
 
     public static boolean confirm(String msg) {
-        return confirm(msg, "Confirm");
+        return confirm("Confirm", msg);
     }
 
     public static boolean confirm(String title, String msg) {
