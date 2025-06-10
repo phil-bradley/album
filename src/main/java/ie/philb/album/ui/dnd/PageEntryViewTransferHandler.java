@@ -8,8 +8,8 @@ import ie.philb.album.view.PageEntryView;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.File;
 import java.io.IOException;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
@@ -32,11 +32,12 @@ public class PageEntryViewTransferHandler extends TransferHandler {
 
         try {
             Transferable t = support.getTransferable();
-            String data = (String) t.getTransferData(DataFlavor.stringFlavor);
+            String imageFileName = (String) t.getTransferData(DataFlavor.stringFlavor);
             JComponent comp = (JComponent) support.getComponent();
 
             if (comp instanceof PageEntryView view) {
-                view.getPageEntryModel().setImageIcon(new ImageIcon(data));
+                File imageFile = new File(imageFileName);
+                view.getPageEntryModel().setImageFile(imageFile);
 //                AppContext.INSTANCE.pageEntrySelected(view.getp, view);
             }
 

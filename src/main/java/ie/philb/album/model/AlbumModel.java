@@ -4,6 +4,7 @@
  */
 package ie.philb.album.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class AlbumModel {
 
+    private File file = null;
     private final PageSize pageSize;
     private final List<PageModel> pages = new ArrayList();
 
@@ -32,5 +34,13 @@ public class AlbumModel {
     public void addPage(PageModel page) {
         page.setPageId(pages.size() + 1);
         this.pages.add(page);
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }

@@ -5,13 +5,9 @@
 package ie.philb.album.model;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 
 /**
  *
@@ -56,17 +52,13 @@ public class PageModel {
 
     public void setImage(File file, int index) {
 
-        try {
-            if (index >= getCellCount()) {
-                throw new IllegalArgumentException("Cannot add image at position " + index + " with page entry count = " + getCellCount());
-            }
-
-            ImageIcon image = new ImageIcon(file.getCanonicalPath());
-            PageEntryModel pem = pageEntries.get(index);
-            pem.setImageIcon(image);
-        } catch (IOException ex) {
-            Logger.getLogger(PageModel.class.getName()).log(Level.SEVERE, null, ex);
+        if (index >= getCellCount()) {
+            throw new IllegalArgumentException("Cannot add image at position " + index + " with page entry count = " + getCellCount());
         }
+
+        PageEntryModel pem = pageEntries.get(index);
+        pem.setImageFile(file);
+
     }
 
     public final void setGeometry(PageGeometry geometry) {
@@ -84,7 +76,7 @@ public class PageModel {
 
             if (i < oldEntries.size()) {
                 PageEntryModel oldEntry = oldEntries.get(i);
-                pem.setImageIcon(oldEntry.getImageIcon());
+                pem.setImageFile(oldEntry.getImageFile());
                 pem.setZoomFactor(oldEntry.getZoomFactor());
             }
 

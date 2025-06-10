@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -26,6 +28,7 @@ public class PageEntryModel {
     private final List<PageEntryModelListener> listeners = new ArrayList<>();
     private final PageCell cell;
     private ImageIcon imageIcon;
+    private File imageFile;
     private double zoomFactor = 1;
     private Point offset = new Point(0, 0);
 
@@ -37,10 +40,21 @@ public class PageEntryModel {
         return imageIcon;
     }
 
-    public void setImageIcon(ImageIcon imageIcon) {
-        this.imageIcon = imageIcon;
+    public void setImageFile(File imageFile) {
+        this.imageFile = imageFile;
+        try {
+            if (imageFile != null) {
+                this.imageIcon = new ImageIcon(imageFile.getCanonicalPath());
+            }
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to set image", ex);
+        }
         setZoomFactor(1);
         fireImageUpdated();
+    }
+
+    public File getImageFile() {
+        return imageFile;
     }
 
     public PageCell getCell() {
