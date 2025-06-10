@@ -8,7 +8,6 @@ import ie.philb.album.metadata.ImageMetaData;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.ImagePanel;
-import ie.philb.album.ui.common.ImagePanelFill;
 import ie.philb.album.ui.common.Resources;
 import java.awt.Color;
 import java.awt.Component;
@@ -46,7 +45,6 @@ public class ImageLibraryViewCellRenderer extends AppPanel implements ListCellRe
     @Override
     public Component getListCellRendererComponent(JList<? extends ImageLibraryEntry> list, ImageLibraryEntry value, int index, boolean isSelected, boolean cellHasFocus) {
         imagePanel.setIcon(value.getIcon());
-        imagePanel.setFill(ImagePanelFill.BestFit);
         lblName.setText(value.getTitle());
         imagePanel.setToolTipText(getToolTip(value));
 

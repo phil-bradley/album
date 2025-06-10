@@ -10,18 +10,9 @@ package ie.philb.album.ui.common;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.ImageIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,63 +21,20 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philip.Bradley
  */
-public class ImagePanel extends AppPanel implements MouseWheelListener, MouseListener, MouseMotionListener {
+public class ImagePanel extends AppPanel {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImagePanel.class);
 
-    private final List<ZoomablePanelListener> listeners = new ArrayList<>();
-
     private ImageIcon imageIcon;
     private BufferedImage zoomedImage;
-    private ImagePanelFill fill = ImagePanelFill.BestFit;
     private double zoomFactor = 1;
-    private double prevZoomFactor = 1;
-    private boolean zoomer;
-    private boolean isDragging;
-    private boolean released;
-    private int xOffset = 0;
-    private int yOffset = 0;
-    private int xDiff;
-    private int yDiff;
-    private Point startPoint;
-    private Point currPoint;
-    private boolean isPlaceholderImage = true;
-    private boolean hasManualZoom = false;
-
-    public ImagePanel() {
-        this(null);
-        setPlaceholderImage();
-    }
 
     public ImagePanel(ImageIcon icon) {
         setIcon(icon);
-        initComponent();
-
         addComponentListener(new ResizeListener());
     }
 
-    private void initComponent() {
-        addMouseWheelListener(this);
-        addMouseMotionListener(this);
-        addMouseListener(this);
-    }
-
-    private void setPlaceholderImage() {
-
-        this.zoomFactor = 1;
-        this.imageIcon = new ImageIcon(this.getClass().getResource("/ie/philb/album/placeholder.png"));
-        this.zoomedImage = createZoomedImage();
-        this.isPlaceholderImage = true;
-
-    }
-
     private void setZoomFactor(double zoomFactor) {
-
-        if (hasManualZoom) {
-            return;
-        }
-
-//        LOG.info("Zoom factor is {}, setting to {}", this.zoomFactor, zoomFactor);
         this.zoomFactor = zoomFactor;
 
         if (zoomFactor != 0) {
@@ -100,7 +48,6 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
 
         if (icon != null) {
             setZoomFactor(getBestFitZoomFactor());
-            isPlaceholderImage = false;
         }
 
         repaint();
@@ -121,14 +68,6 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
 
     public ImageIcon getIcon() {
         return imageIcon;
-    }
-
-    public ImagePanelFill getFill() {
-        return fill;
-    }
-
-    public void setFill(ImagePanelFill fill) {
-        this.fill = fill;
     }
 
     private int getAvailableWidth() {
@@ -161,11 +100,6 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         }
 
         double bestFitZoom = Math.min(availableWidth / iconWidth, availableHeight / iconHeight);
-
-        int targetWidth = (int) (iconWidth * bestFitZoom);
-        int targetHeight = (int) (iconHeight * bestFitZoom);
-
-        //LOG.info("Got best fit zoom factor {}, size {}x{}, target {}x{}, Available {}x{}", bestFitZoom, iconWidth, iconHeight, targetWidth, targetHeight, (int) availableWidth, (int) availableHeight);
         return bestFitZoom;
 
     }
@@ -185,9 +119,6 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
 
         int cropWidth = getCropWidth();
         int cropHeight = getCropHeight();
-
-        int w = xOffset + xDiff;
-        int h = yOffset + yDiff;
 
         BufferedImage cropped = zoomedImage.getSubimage(0, 0, cropWidth, cropHeight);
         return cropped;
@@ -225,131 +156,10 @@ public class ImagePanel extends AppPanel implements MouseWheelListener, MouseLis
         drawCropped(g);
     }
 
-    private void resetImage() {
-        xOffset = 0;
-        xDiff = 0;
-        yOffset = 0;
-        yDiff = 0;
-        repaint();
-    }
-
-    public void zoomIn() {
-        hasManualZoom = false;
-        setZoomFactor(zoomFactor * 1.1);
-        hasManualZoom = true;
-        repaint();
-    }
-
-    public void zoomOut() {
-        hasManualZoom = false;
-        setZoomFactor(zoomFactor / 1.1);
-        hasManualZoom = true;
-        repaint();
-    }
-
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-
-        zoomer = true;
-
-        if (e.getWheelRotation() < 0) {
-            zoomIn();
-        }
-
-        if (e.getWheelRotation() > 0) {
-            zoomOut();
-        }
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-
-//        currPoint = e.getLocationOnScreen();
-//
-//        int xDragDiff = startPoint.x - currPoint.x;
-//        int yDragDiff = startPoint.y - currPoint.y;
-//
-//        int cropWidth = getCropWidth();
-//        int cropHeight = getCropHeight();
-//
-//        int w = xOffset + xDragDiff;
-//        int h = yOffset + yDragDiff;
-//
-//        if ((w > 0) && ((2 * w) + cropWidth < getScaledImage().getWidth())) {
-//            xDiff = xDragDiff;
-//        }
-//
-//        if ((h > 0) && ((2 * h) + cropHeight < getScaledImage().getHeight())) {
-//            yDiff = yDragDiff;
-//        }
-//
-//        isDragging = true;
-//        repaint();
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-        if (e.getClickCount() == 2) {
-            resetImage();
-            return;
-        }
-
-        for (ZoomablePanelListener l : listeners) {
-            l.zoomPanelClicked(e);
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        released = false;
-        startPoint = MouseInfo.getPointerInfo().getLocation();
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        released = true;
-        isDragging = false;
-
-        xOffset += xDiff;
-        yOffset += yDiff;
-
-        xDiff = 0;
-        yDiff = 0;
-
-        repaint();
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    public void addListener(ZoomablePanelListener l) {
-        listeners.add(l);
-    }
-
-    public void removeListener(ZoomablePanelListener l) {
-        listeners.remove(l);
-    }
-
     class ResizeListener extends ComponentAdapter {
 
+        @Override
         public void componentResized(ComponentEvent e) {
-
-            if (isPlaceholderImage) {
-                return;
-            }
-
             setZoomFactor(getBestFitZoomFactor());
         }
     }

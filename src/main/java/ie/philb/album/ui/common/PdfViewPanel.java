@@ -38,7 +38,7 @@ public class PdfViewPanel extends AppPanel {
         setBackground(Color.darkGray);
         setOpaque(true);
 
-        this.imagePanel = new ImagePanel();
+        this.imagePanel = new ImagePanel(null);
 
         GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).weight(1).anchorNorth().fillBoth().inset(0);
         add(imagePanel, gbc);
