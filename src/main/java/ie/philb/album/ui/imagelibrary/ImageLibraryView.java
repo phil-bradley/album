@@ -73,6 +73,9 @@ public class ImageLibraryView extends AppPanel {
                 }
 
                 if (evt.getClickCount() == 2) {
+
+                    LOG.info("Metadata: " + selected.getImageMetaData());
+
                     if (selected.isDirectory()) {
                         AppContext.INSTANCE.browseLocationUpdated(selected.getFile());
                     } else {

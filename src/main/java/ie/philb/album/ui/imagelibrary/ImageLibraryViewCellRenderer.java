@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.imagelibrary;
 
+import ie.philb.album.metadata.ImageMetaData;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.ImagePanel;
@@ -47,6 +48,7 @@ public class ImageLibraryViewCellRenderer extends AppPanel implements ListCellRe
         imagePanel.setIcon(value.getIcon());
         imagePanel.setFill(ImagePanelFill.BestFit);
         lblName.setText(value.getTitle());
+        imagePanel.setToolTipText(getToolTip(value));
 
         if (isSelected) {
             setBackground(Resources.COLOR_SELECTED);
@@ -56,7 +58,24 @@ public class ImageLibraryViewCellRenderer extends AppPanel implements ListCellRe
             lblName.setForeground(Color.black);
         }
 
+        setToolTipText(getToolTip(value));
+
         return this;
+    }
+
+    private String getToolTip(ImageLibraryEntry entry) {
+
+        if (entry == null) {
+            return "";
+        }
+
+        ImageMetaData imageMetaData = entry.getImageMetaData();
+
+        if (imageMetaData == null) {
+            return "";
+        }
+
+        return imageMetaData.toString();
     }
 
 }
