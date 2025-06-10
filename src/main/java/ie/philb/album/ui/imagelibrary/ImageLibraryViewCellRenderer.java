@@ -75,7 +75,20 @@ public class ImageLibraryViewCellRenderer extends AppPanel implements ListCellRe
             return "";
         }
 
-        return imageMetaData.toString();
+        Dimension size = imageMetaData.getSize();
+        Dimension resolution = imageMetaData.getResolution();
+
+        if (size.width == 0) {
+            return "Not available";
+        }
+
+        String tip = "Size " + size.width + "x" + size.height;
+
+        if (resolution.width != 0) {
+            tip += ", Resolution " + resolution.width + "x" + resolution.height;
+        }
+
+        return tip;
     }
 
 }
