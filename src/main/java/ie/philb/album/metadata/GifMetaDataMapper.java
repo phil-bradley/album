@@ -6,7 +6,7 @@ package ie.philb.album.metadata;
 
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
-import com.drew.metadata.jpeg.JpegDirectory;
+import com.drew.metadata.gif.GifHeaderDirectory;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,25 +14,25 @@ import java.io.IOException;
  *
  * @author philb
  */
-public class JpegMetaDataMapper extends AbstractMetaDataMapper {
+public class GifMetaDataMapper extends AbstractMetaDataMapper {
 
-    public JpegMetaDataMapper(File file) throws ImageProcessingException, IOException {
+    public GifMetaDataMapper(File file) throws ImageProcessingException, IOException {
         super(file);
     }
 
     @Override
     protected Class<? extends Directory> getDirectoryType() {
-        return JpegDirectory.class;
+        return GifHeaderDirectory.class;
     }
 
     @Override
     protected int getImageWidthTag() {
-        return JpegDirectory.TAG_IMAGE_WIDTH;
+        return GifHeaderDirectory.TAG_IMAGE_WIDTH;
     }
 
     @Override
     protected int getImageHeightTag() {
-        return JpegDirectory.TAG_IMAGE_HEIGHT;
+        return GifHeaderDirectory.TAG_IMAGE_HEIGHT;
     }
 
     @Override
@@ -44,4 +44,5 @@ public class JpegMetaDataMapper extends AbstractMetaDataMapper {
     protected int getYResolutionTag() {
         return -1; // No such tag
     }
+
 }
