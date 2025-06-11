@@ -12,12 +12,16 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Philip.Bradley
  */
 public class ImageUtils {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ImageUtils.class);
 
     private static BufferedImage PLACEHOLDER_IMAGE = null;
 
@@ -48,13 +52,34 @@ public class ImageUtils {
     public static Point getCenteredCoordinates(BufferedImage image, Dimension cellSize) {
 
         // Centre image if it's less tall or less wide than the available space
-        int x = 0;
-        int y = 0;
-
-        if (image != null) {
-            x = (cellSize.width - image.getWidth()) / 2;
-            y = (cellSize.height - image.getHeight()) / 2;
+        if (image == null) {
+            return new Point(0, 0);
         }
+
+        int imageHeight = image.getHeight();
+        int imageWidth = image.getWidth();
+
+        int boxWidth = 0;
+        int boxHeight = 0;
+        double cellAspectRatio = getAspectRatio(cellSize);
+        double imageAspectRatio = getAspectRatio(new Dimension(imageWidth, imageHeight));
+
+        if (imageWidth < cellSize.width && imageHeight < cellSize.height) {
+            boxWidth = imageWidth;
+            boxHeight = imageHeight;
+        } else {
+
+            if (imageAspectRatio > 1) {
+                boxWidth = cellSize.width;
+                boxHeight = getHeightFromWidth(boxWidth, imageAspectRatio);
+            } else {
+                boxHeight = cellSize.height;
+                boxWidth = getWidthFromHeight(boxHeight, imageAspectRatio);
+            }
+        }
+
+        int x = (cellSize.width - boxWidth) / 2;
+        int y = (cellSize.height - boxHeight) / 2;
 
         return new Point(x, y);
     }
@@ -69,5 +94,48 @@ public class ImageUtils {
         }
 
         return PLACEHOLDER_IMAGE;
+    }
+
+    /*  width/height = aspect
+     *  width = aspect * height
+     */
+    public static int getWidthFromHeight(int height, double aspectRatio) {
+        return (int) (height * aspectRatio);
+    }
+
+    /*  width/height = aspect
+     *  height = width / aspect
+     */
+    public static int getHeightFromWidth(int width, double aspectRatio) {
+        return (int) (width / aspectRatio);
+    }
+
+    public static double getAspectRatio(Dimension d) {
+        double width = d.getWidth();
+        double height = d.getHeight();
+        return width / height;
+    }
+
+    public static Dimension getBoundingBoxWithAspectRatio(ImageIcon image, double aspectRatio) {
+
+        if (image == null) {
+            return new Dimension(0, 0);
+        }
+
+        int imageWidth = image.getIconWidth();
+        int imageHeight = image.getIconHeight();
+
+        int boxWidth = 0;
+        int boxHeight = 0;
+
+        if (imageWidth > imageHeight) {
+            boxWidth = imageWidth;
+            boxHeight = getHeightFromWidth(boxWidth, aspectRatio);
+        } else {
+            boxHeight = imageHeight;
+            boxWidth = getWidthFromHeight(boxHeight, aspectRatio);
+        }
+
+        return new Dimension(boxWidth, boxHeight);
     }
 }

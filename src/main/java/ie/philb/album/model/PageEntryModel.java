@@ -173,10 +173,6 @@ public class PageEntryModel {
         double iconHeight = imageIcon.getIconHeight();
 
         double bestFitZoom = Math.min(viewSize.width / iconWidth, viewSize.height / iconHeight);
-        int scaledWidth = (int) (iconWidth * bestFitZoom);
-        int scaledHeight = (int) (iconHeight * bestFitZoom);
-
-        LOG.info("Got best fit zoom factor {}, size {}x{}, Available {}x{}, Scaled {}x{}", bestFitZoom, iconWidth, iconHeight, viewSize.width, viewSize.height, scaledWidth, scaledHeight);
         return bestFitZoom;
 
     }

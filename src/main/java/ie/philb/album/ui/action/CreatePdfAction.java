@@ -21,7 +21,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,33 +67,25 @@ public class CreatePdfAction extends AbstractAction<File> {
 
                 for (PageEntryModel pageEntryModel : pageModel.getPageEntries()) {
                     Dimension cellSize = geometryMapper.getCellSizeOnView(pageEntryModel);
-                    BufferedImage viewImage = pageEntryModel.getViewImage(cellSize);
+                    double cellAspectRatio = ImageUtils.getAspectRatio(cellSize);
+                    Dimension boundingBoxSize = ImageUtils.getBoundingBoxWithAspectRatio(pageEntryModel.getImageIcon(), cellAspectRatio);
+                    BufferedImage viewImage = pageEntryModel.getViewImage(boundingBoxSize);
+
+                    Image img;
+
+                    if (viewImage == null) {
+                        img = Image.getInstance(ImageUtils.getPlaceholderImage(), null);
+                    } else {
+                        img = Image.getInstance(viewImage, null);
+                        img.scaleToFit(cellSize.width, cellSize.height);
+                    }
 
                     Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
                     Point imageOffset = ImageUtils.getCenteredCoordinates(viewImage, cellSize);
                     Point imageLocation = new Point(cellLocation.x + imageOffset.x, cellLocation.y + imageOffset.y);
 
-                    if (viewImage == null) {
-                        viewImage = ImageIO.read(this.getClass().getResourceAsStream("/ie/philb/album/placeholder.png"));
-                    }
-
-                    Image img = Image.getInstance(viewImage, null);
-
-                    // Centre image if it's less tall or less wide than the available space
-//                    int xOffset = (imageSize.width - albumImage.getWidth()) / 2;
-//                    int yOffset = (imageSize.height - albumImage.getHeight()) / 2;
+                    //LOG.info("Adding image with size {}x{} at {}x{}", cellSize.width, cellSize.height, imageLocation.x, imageLocation.y);
                     img.setAbsolutePosition(imageLocation.x, imageLocation.y);
-
-//                    Rectangle rect = new Rectangle(cell.location().x, cell.location().y, cell.location().x + cell.size().width, cell.location().y + cell.size().height);
-//                    rect.setBorder(Rectangle.BOX);
-//                    rect.setBorderWidth(2);
-//                    rect.setBorderColor(Color.MAGENTA);
-//
-//                    doc.add(rect);
-//                    img.setBorder(Rectangle.BOX);
-//                    img.setBorderColor(Resources.COLOR_PHOTO_BORDER);
-//                    img.setBorderWidth(0.01f);
-//                    LOG.info("Setting image pos {} with size {}", imageLocation, imageSize);
                     doc.add(img);
                 }
 

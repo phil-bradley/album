@@ -63,7 +63,6 @@ public enum AppContext implements ApplicationListener {
 
     @Override
     public void pageEntrySelected(PageView pageView, PageEntryView view) {
-        LOG.info("Page entry selected: " + view.getPageCell());
         this.selectedPageEntryView = view;
         pageSelected(pageView);
 

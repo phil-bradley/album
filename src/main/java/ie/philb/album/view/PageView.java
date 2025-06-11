@@ -55,10 +55,6 @@ public class PageView extends AppPanel {
 
     private void updateSelectedEntryView(PageView selectedPageView, PageEntryView selectedPageEntryView) {
 
-        if (model.getPageId() == 1) {
-            LOG.info("zz");
-        }
-
         pageSelected(selectedPageView);
 
         if (selectedPageEntryView == null) {
@@ -73,7 +69,6 @@ public class PageView extends AppPanel {
             boolean cellMatches = pageEntryView.getPageCell().equals(selectedCell);
 
             if (pageMatches && cellMatches) {
-                LOG.info("Selecting " + pageEntryView);
                 pageEntryView.setSelected(true);
                 this.selectedEntryView = pageEntryView;
             }
@@ -225,7 +220,6 @@ public class PageView extends AppPanel {
         if (selectedView != null) {
             boolean pageSelected = (this.model.getPageId() == selectedView.getPageModel().getPageId());
             setSelected(pageSelected);
-            LOG.info("Page view {} selected: ", this.model.getPageId(), pageSelected);
         }
     }
 }
