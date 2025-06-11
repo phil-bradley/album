@@ -11,3 +11,5 @@ Todo:
  - Overlapping placeholders
  - Frame effects
  - Mouse controls for zoom/pan
+
+![Screenshot of main UI](docs/screenshot-001.jpg)
