@@ -32,7 +32,7 @@ public class ImageLibraryListModel implements ListModel<ImageLibraryEntry> {
         }
 
         for (File file : baseFolder.listFiles()) {
-            if (file.isDirectory() && !file.isHidden()) {
+            if (file.isDirectory() && !FileUtils.isHidden(file)) {
                 entries.add(new ImageLibraryEntry(file));
             }
         }

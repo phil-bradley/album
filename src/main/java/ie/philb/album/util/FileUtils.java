@@ -43,4 +43,21 @@ public class FileUtils {
         }
 
     }
+
+    public static boolean isHidden(File file) {
+
+        if (file == null) {
+            return false;
+        }
+
+        if (file.isHidden()) {
+            return true;
+        }
+
+        if (file.getName().startsWith(".")) {
+            return true;
+        }
+
+        return false;
+    }
 }
