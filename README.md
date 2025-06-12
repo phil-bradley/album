@@ -3,13 +3,5 @@ The album is created by adding pages which contain placeholders for folders. Ima
 dropped into the placeholders where they can zoomed/resized. The album can then be exported
 as a PDF.
 
-Todo:
- - Text boxes
- - Title page
- - B&W convert
- - Image rotation
- - Overlapping placeholders
- - Frame effects
- - Mouse controls for zoom/pan
 
 ![Screenshot of main UI](docs/screenshot-001.jpg)
