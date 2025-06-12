@@ -122,6 +122,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
         hSplit.setLeftComponent(albumViewContainer);
         hSplit.setRightComponent(albumOverviewPanel);
+        hSplit.setResizeWeight(1);
 
         vSplit.setLeftComponent(imageLibraryView);
         vSplit.setRightComponent(hSplit);
