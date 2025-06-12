@@ -11,7 +11,6 @@ import ie.philb.album.model.PageEntryModelListener;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
-import ie.philb.album.util.ImageUtils;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -68,11 +67,14 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         Dimension viewSize = new Dimension(getBounds().width, getBounds().height);
         BufferedImage viewImage = pageEntryModel.getViewImage(viewSize);
 
-        Point offset = ImageUtils.getCenteredCoordinates(viewImage, viewSize);
+        Point offset = new Point(0, 0);//  ImageUtils.getCenteredCoordinates(viewImage, viewSize);
         offset.x += pageEntryModel.getOffset().x;
         offset.y += pageEntryModel.getOffset().y;
 
-        g.drawImage(viewImage, offset.x, offset.y, null);
+        int x = Math.max(0, pageEntryModel.getOffset().x);
+        int y = Math.max(0, pageEntryModel.getOffset().y);
+
+        g.drawImage(viewImage, x, y, null);
 
     }
 
@@ -147,6 +149,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         int yOffset = mouseDragCurrentPoint.y - mouseDragPreviousPoint.y;
 
         Point dragOffset = new Point(xOffset, yOffset);
+        LOG.info("Adding offset {}", dragOffset + ", total offset is now " + pageEntryModel.getOffset());
         pageEntryModel.addImageViewOffset(dragOffset);
 
         mouseDragPreviousPoint = mouseDragCurrentPoint;

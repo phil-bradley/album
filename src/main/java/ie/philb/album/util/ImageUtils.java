@@ -24,6 +24,17 @@ public class ImageUtils {
     private static final Logger LOG = LoggerFactory.getLogger(ImageUtils.class);
 
     private static BufferedImage PLACEHOLDER_IMAGE = null;
+    private static BufferedImage EMPTY_IMAGE = null;
+
+    public static BufferedImage getEmptyImage() {
+
+        if (EMPTY_IMAGE == null) {
+            EMPTY_IMAGE = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+
+        }
+
+        return EMPTY_IMAGE;
+    }
 
     public static BufferedImage getBufferedImage(ImageIcon icon) {
 
@@ -137,5 +148,32 @@ public class ImageUtils {
         }
 
         return new Dimension(boxWidth, boxHeight);
+    }
+
+    public static BufferedImage getSubimage(BufferedImage image, Point offset, Dimension cropSize) {
+
+        Point subImageOffset = new Point(-offset.x, -offset.y);
+
+        int x = Math.max(0, subImageOffset.x);
+        int y = Math.max(0, subImageOffset.y);
+
+        int width = cropSize.width - offset.x;
+
+        if (width > image.getWidth() - x) {
+            width = image.getWidth() - x;
+        }
+
+        int height = cropSize.height - offset.y;
+
+        if (height > image.getHeight() - y) {
+            height = image.getHeight() - y;
+        }
+
+        if (width <= 0 || height <= 0) {
+            return getEmptyImage();
+        }
+
+        LOG.info("Getting subimage at {}x{} with size {}x{}", x, y, width, height);
+        return image.getSubimage(x, y, width, height);
     }
 }

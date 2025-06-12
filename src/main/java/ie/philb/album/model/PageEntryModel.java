@@ -140,19 +140,21 @@ public class PageEntryModel {
 
         int cropWidth = Math.min(viewSize.width, scaled.getWidth());
         int cropHeight = Math.min(viewSize.height, scaled.getHeight());
+        Dimension cropSize = new Dimension(cropWidth, cropHeight);
 
-        int xOffset = 0;
-        int yOffset = 0;
-
-        if (viewSize.width < scaled.getWidth()) {
-            xOffset = (scaled.getWidth() - viewSize.width) / 2;
-        }
-
-        if (viewSize.height < scaled.getHeight()) {
-            yOffset = (scaled.getHeight() - viewSize.height) / 2;
-        }
-
-        BufferedImage cropped = scaled.getSubimage(xOffset, yOffset, cropWidth, cropHeight);
+//        int xOffset = 0;
+//        int yOffset = 0;
+//
+//        if (viewSize.width < scaled.getWidth()) {
+//            xOffset = (scaled.getWidth() - viewSize.width) / 2;
+//        }
+//
+//        if (viewSize.height < scaled.getHeight()) {
+//            yOffset = (scaled.getHeight() - viewSize.height) / 2;
+//        }
+        LOG.info("Image has size {}x{} offset is {}", scaled.getWidth(), scaled.getHeight(), offset);
+        BufferedImage cropped = ImageUtils.getSubimage(scaled, offset, cropSize);
+        //scaled.getSubimage(offset.x, offset.y, cropWidth - offset.x, cropHeight - offset.y);
         return cropped;
     }
 
