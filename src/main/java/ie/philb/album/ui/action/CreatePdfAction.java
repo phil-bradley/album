@@ -71,14 +71,12 @@ public class CreatePdfAction extends AbstractAction<File> {
                     Dimension boundingBoxSize = ImageUtils.getBoundingBoxWithAspectRatio(pageEntryModel.getImageIcon(), cellAspectRatio);
                     BufferedImage viewImage = pageEntryModel.getViewImage(boundingBoxSize);
 
-                    Image img;
-
                     if (viewImage == null) {
-                        img = Image.getInstance(ImageUtils.getPlaceholderImage(), null);
-                    } else {
-                        img = Image.getInstance(viewImage, null);
-                        img.scaleToFit(cellSize.width, cellSize.height);
+                        continue;
                     }
+
+                    Image img = Image.getInstance(viewImage, null);
+                    img.scaleToFit(cellSize.width, cellSize.height);
 
                     Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
                     Point imageOffset = ImageUtils.getCenteredCoordinates(viewImage, cellSize);
