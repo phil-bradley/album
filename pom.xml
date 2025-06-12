@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ie.philb</groupId>
     <artifactId>album</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>jar</packaging>
     <distributionManagement>
         <repository>
@@ -17,19 +17,31 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <exec.mainClass>ie.philb.album.Main</exec.mainClass>
+	<scm.ssh>git@github.com:phil-bradley/album.git</scm.ssh>
+	<scm.https>https://github.com/phil-bradley/album.git</scm.https>
     </properties>
     <name>album</name>
+    <scm>
+        <connection>scm:git:${scm.ssh}</connection>
+        <url>${scm.https}</url>
+        <developerConnection>scm:git:${scm.ssh}</developerConnection>
+      <tag>v-0.0.1</tag>
+  </scm>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
-                    <useModulePath>false</useModulePath>
+                    <serverId>github-ssh</serverId>
+                    <tagNameFormat>v-@{project.version}</tagNameFormat>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>pom.xml</checkModificationExclude>          
+                    </checkModificationExcludes>
                 </configuration>
-            </plugin>
-            <plugin>
+            </plugin>                
+            <plugin>                
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.13</version>
