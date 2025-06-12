@@ -13,6 +13,7 @@ import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
 import ie.philb.album.util.ImageUtils;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.MouseInfo;
@@ -118,7 +119,14 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         mouseDragStartPoint = MouseInfo.getPointerInfo().getLocation();
         mouseDragPreviousPoint = mouseDragStartPoint;
+
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
         LOG.info("Start drag at " + mouseDragStartPoint);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent me) {
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     @Override
