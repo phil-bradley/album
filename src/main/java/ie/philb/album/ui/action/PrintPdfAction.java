@@ -25,7 +25,7 @@ public class PrintPdfAction extends AbstractAction<Void> {
     }
 
     @Override
-    protected Void execute() throws Exception {
+    protected Void doAction() throws Exception {
 
         PDDocument document = Loader.loadPDF(file);
 
@@ -37,7 +37,7 @@ public class PrintPdfAction extends AbstractAction<Void> {
         }
 
         if (printService == null) {
-            Dialogs.showErrorMessage("Could not find printer, cannot print");
+            Dialogs.showErrorMessage("Could not find printer, cannot print", new Exception("Printer not found"));
             return null;
         }
 

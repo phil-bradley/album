@@ -58,8 +58,7 @@ public class SaveAlbumCommand extends AbstractCommand {
 
             @Override
             public void onFailure(Exception ex) {
-                String msg = "Could not save album:" + ex.getMessage();
-                Dialogs.showErrorMessage(msg);
+                Dialogs.showErrorMessage("Could not save album", ex);
             }
         }
         );

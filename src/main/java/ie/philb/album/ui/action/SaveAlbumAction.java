@@ -23,7 +23,7 @@ public class SaveAlbumAction extends AbstractAction<Void> {
     }
 
     @Override
-    protected Void execute() throws Exception {
+    protected Void doAction() throws Exception {
         AlbumWriter writer = new AlbumWriter(saveFile, albumModel);
         writer.write();
         return null;

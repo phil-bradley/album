@@ -19,7 +19,7 @@ public class ZoomOutAction extends AbstractAction<Void> {
     }
 
     @Override
-    protected Void execute() throws Exception {
+    protected Void doAction() throws Exception {
         pageEntryModel.zoomOut();
         return null;
     }

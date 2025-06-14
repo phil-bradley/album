@@ -68,14 +68,14 @@ public class CreatePdfCommand extends AbstractCommand {
                         dlg.setFile(result);
                         dlg.setVisible(true);
                     } catch (IOException ex) {
-                        Dialogs.showErrorMessage("Failed to load PDF: " + ex.getMessage());
+                        Dialogs.showErrorMessage("Failed to load PDF", ex);
                     }
                 }
             }
 
             @Override
             public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage("Error", "Failed to save PDF: " + ex.getMessage());
+                Dialogs.showErrorMessage("Failed to save PDF", ex);
             }
         }
         );

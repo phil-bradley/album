@@ -32,12 +32,16 @@ public abstract class AbstractAction<T> {
         }
     }
 
-    protected abstract T execute() throws Exception;
+    protected abstract T doAction() throws Exception;
+
+    public void execute() {
+        this.execute(new DefaultNoResultCallback());
+    }
 
     public void execute(Callback<T> callback) {
         this.callback = callback;
         try {
-            success(execute());
+            success(doAction());
         } catch (Exception e) {
             logger.error("Action exception", e);
             failure(e);

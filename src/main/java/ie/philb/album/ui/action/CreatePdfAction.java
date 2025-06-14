@@ -43,7 +43,7 @@ public class CreatePdfAction extends AbstractAction<File> {
     }
 
     @Override
-    protected File execute() throws Exception {
+    protected File doAction() throws Exception {
 
         logger.info("Creating doc...");
 

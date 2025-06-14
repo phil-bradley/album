@@ -9,6 +9,8 @@ import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryModelListener;
 import ie.philb.album.model.PageGeometryMapper;
+import ie.philb.album.ui.action.ZoomInAction;
+import ie.philb.album.ui.action.ZoomOutAction;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
@@ -20,6 +22,7 @@ import java.awt.Graphics;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
 import org.slf4j.Logger;
@@ -41,6 +44,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     private boolean isSelected = false;
     private boolean isPreviewMode = false;
     private final PageView pageView;
+    private boolean canResize = false;
 
     public PageEntryView(PageView pageView, PageEntryModel entryModel) {
 
@@ -146,6 +150,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
             return;
         }
 
+        canResize = true;
         mouseDragStartPoint = MouseInfo.getPointerInfo().getLocation();
         mouseDragPreviousPoint = mouseDragStartPoint;
 
@@ -155,6 +160,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     @Override
     public void mouseReleased(MouseEvent me) {
+        canResize = false;
         this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
@@ -180,6 +186,33 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         mouseDragPreviousPoint = mouseDragCurrentPoint;
         repaint();
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+
+        if (!canResize) {
+            return;
+        }
+
+        if (isPreviewMode) {
+            return;
+        }
+
+        if (pageEntryModel.getImage() == null) {
+            return;
+        }
+
+        //Zoom in
+        if (e.getWheelRotation() < 0) {
+            new ZoomInAction(pageEntryModel).execute();
+            repaint();
+        }
+        //Zoom out
+        if (e.getWheelRotation() > 0) {
+            new ZoomOutAction(pageEntryModel).execute();
+            repaint();
+        }
     }
 
     public void setPreviewMode(boolean previewMode) {

@@ -19,7 +19,7 @@ public class ZoomToCoverFitAction extends AbstractAction<Void> {
     }
 
     @Override
-    protected Void execute() throws Exception {
+    protected Void doAction() throws Exception {
         pageEntryView.zoomToCoverFit();
         return null;
     }

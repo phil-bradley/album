@@ -18,6 +18,8 @@ import java.awt.LayoutManager;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.util.UUID;
 import javax.swing.JPanel;
@@ -30,7 +32,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philip.Bradley
  */
-public class AppPanel extends JPanel implements UiConfigListener, MouseListener, MouseMotionListener, ApplicationListener {
+public class AppPanel extends JPanel implements UiConfigListener, MouseListener, MouseMotionListener, ApplicationListener, MouseWheelListener {
 
     private static final long serialVersionUID = 1L;
     protected static final Logger LOG = LoggerFactory.getLogger(AppPanel.class);
@@ -47,11 +49,13 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
         AppContext.INSTANCE.addListener(this);
         addMouseListener(this);
         addMouseMotionListener(this);
+        addMouseWheelListener(this);
     }
 
     @Override
     public void removeNotify() {
         super.removeNotify();
+        removeMouseWheelListener(this);
         removeMouseMotionListener(this);
         removeMouseListener(this);
         AppContext.INSTANCE.removeListener(this);
@@ -223,5 +227,9 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
 
     @Override
     public void albumUpdated() {
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent mwe) {
     }
 }

@@ -30,11 +30,7 @@ public class Dialogs {
         JOptionPane.showMessageDialog(ApplicationUi.getInstance(), msg, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static void showErrorMessage(String msg) {
+    public static void showErrorMessage(String msg, Exception ex) {
         JOptionPane.showMessageDialog(ApplicationUi.getInstance(), msg, msg, JOptionPane.ERROR_MESSAGE);
-    }
-
-    public static void showErrorMessage(String title, String msg) {
-        JOptionPane.showMessageDialog(ApplicationUi.getInstance(), msg, title, JOptionPane.ERROR_MESSAGE);
     }
 }

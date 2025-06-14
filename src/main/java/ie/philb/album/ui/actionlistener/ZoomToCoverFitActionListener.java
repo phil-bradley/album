@@ -4,9 +4,7 @@
  */
 package ie.philb.album.ui.actionlistener;
 
-import ie.philb.album.ui.action.Callback;
 import ie.philb.album.ui.action.ZoomToCoverFitAction;
-import ie.philb.album.ui.common.Dialogs;
 
 /**
  *
@@ -17,16 +15,6 @@ public class ZoomToCoverFitActionListener extends AbstractCellActionListener {
     @Override
     protected void doAction() {
 
-        new ZoomToCoverFitAction(selectedPageEntryView).execute(new Callback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-            }
-
-            @Override
-            public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage("Zoom failed: " + ex.getMessage());
-            }
-
-        });
+        new ZoomToCoverFitAction(selectedPageEntryView).execute();
     }
 }

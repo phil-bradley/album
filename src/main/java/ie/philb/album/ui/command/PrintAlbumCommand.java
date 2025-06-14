@@ -30,7 +30,7 @@ public class PrintAlbumCommand extends AbstractCommand {
         try {
             tempFile = File.createTempFile("album-", ".pdf");
         } catch (IOException ex) {
-            Dialogs.showErrorMessage("Cannot create PDF export: " + ex.getMessage());
+            Dialogs.showErrorMessage("Cannot create PDF export", ex);
             return;
         }
 
@@ -42,7 +42,7 @@ public class PrintAlbumCommand extends AbstractCommand {
 
             @Override
             public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage("Failed to create PDF: " + ex.getMessage());
+                Dialogs.showErrorMessage("Failed to create PDF", ex);
             }
         });
 
@@ -54,7 +54,7 @@ public class PrintAlbumCommand extends AbstractCommand {
 
                 @Override
                 public void onFailure(Exception ex) {
-                    Dialogs.showErrorMessage("Failed to print: " + ex.getMessage());
+                    Dialogs.showErrorMessage("Failed to print", ex);
                 }
             });
         }

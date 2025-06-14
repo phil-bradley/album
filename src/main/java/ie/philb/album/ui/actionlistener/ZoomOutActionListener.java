@@ -23,7 +23,7 @@ public class ZoomOutActionListener extends AbstractCellActionListener {
 
             @Override
             public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage("Zoom failed: " + ex.getMessage());
+                Dialogs.showErrorMessage("Zoom failed", ex);
             }
 
         });

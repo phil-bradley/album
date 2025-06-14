@@ -4,9 +4,7 @@
  */
 package ie.philb.album.ui.actionlistener;
 
-import ie.philb.album.ui.action.Callback;
 import ie.philb.album.ui.action.ZoomInAction;
-import ie.philb.album.ui.common.Dialogs;
 
 /**
  *
@@ -17,17 +15,7 @@ public class ZoomInActionListener extends AbstractCellActionListener {
     @Override
     protected void doAction() {
 
-        new ZoomInAction(selectedPageEntryView.getPageEntryModel()).execute(new Callback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-            }
-
-            @Override
-            public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage("Zoom failed: " + ex.getMessage());
-            }
-
-        });
+        new ZoomInAction(selectedPageEntryView.getPageEntryModel()).execute();
     }
 
 }
