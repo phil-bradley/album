@@ -4,17 +4,14 @@
  */
 package ie.philb.album.ui.actionlistener;
 
-import ie.philb.album.ui.action.ZoomInAction;
-
 /**
  *
  * @author philb
  */
-public class ZoomInActionListener extends AbstractCellActionListener {
+public class ImageCenterActionListener extends AbstractCellActionListener {
 
     @Override
     protected void doAction() {
-        new ZoomInAction(selectedPageEntryView.getPageEntryModel()).execute();
+        selectedPageEntryView.centerImage();
     }
-
 }

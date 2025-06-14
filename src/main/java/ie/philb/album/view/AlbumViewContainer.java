@@ -5,6 +5,7 @@
 package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.ui.actionlistener.ImageCenterActionListener;
 import ie.philb.album.ui.actionlistener.ZoomInActionListener;
 import ie.philb.album.ui.actionlistener.ZoomOutActionListener;
 import ie.philb.album.ui.actionlistener.ZoomResetActionListener;
@@ -34,6 +35,7 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnZoomOut;
     private JButton btnZoomReset;
     private JButton btnZoomCover;
+    private JButton btnCenter;
     private JButton btnNewPage;
     private PageGeometrySelector slctGeometry;
 
@@ -92,6 +94,11 @@ public class AlbumViewContainer extends AppPanel {
         btnZoomCover.setText("Reset to cover");
         toolBar.add(btnZoomCover);
 
+        btnCenter = new JButton(Icons.Small.ALIGN_CENTER);
+        btnCenter.addActionListener(new ImageCenterActionListener());
+        btnCenter.setText("Center");
+        toolBar.add(btnCenter);
+
         btnNewPage = new JButton(Icons.Small.NEW);
         btnNewPage.addActionListener((ActionEvent ae) -> {
             new NewPageCommand().execute();
@@ -109,7 +116,7 @@ public class AlbumViewContainer extends AppPanel {
         toolBar.add(slctGeometry);
 
         slctGeometry.setEnabled(false);
-        setZoomButtonsEnabled(false);
+        setCellButtonsEnabled(false);
     }
 
     class ResizeListener extends ComponentAdapter {
@@ -120,17 +127,17 @@ public class AlbumViewContainer extends AppPanel {
         }
     }
 
-    private void setZoomButtonsEnabled(boolean isEnabled) {
+    private void setCellButtonsEnabled(boolean isEnabled) {
         btnZoomIn.setEnabled(isEnabled);
         btnZoomOut.setEnabled(isEnabled);
         btnZoomReset.setEnabled(isEnabled);
         btnZoomCover.setEnabled(isEnabled);
-
+        btnCenter.setEnabled(isEnabled);
     }
 
     @Override
     public void pageEntrySelected(PageView pageView, PageEntryView view) {
-        setZoomButtonsEnabled(view != null && view.getPageEntryModel().getImage() != null);
+        setCellButtonsEnabled(view != null && view.getPageEntryModel().getImage() != null);
     }
 
     @Override

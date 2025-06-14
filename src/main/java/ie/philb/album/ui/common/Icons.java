@@ -40,7 +40,7 @@ public class Icons {
         public static final ImageIcon ZOOM_OUT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/zoom-out.png"));
         public static final ImageIcon ZOOM_RESET = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/zoom-reset.png"));
         public static final ImageIcon ZOOM_COVER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/zoom-cover.png"));
-
+        public static final ImageIcon ALIGN_CENTER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/align-center.png"));
     }
 
 }
