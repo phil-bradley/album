@@ -6,6 +6,7 @@ package ie.philb.album.util;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -113,5 +114,109 @@ class ImageUtilsTest {
         Dimension size = new Dimension(100, 20);
         double aspectRatio = ImageUtils.getAspectRatio(size);
         assertEquals(5, aspectRatio);
+    }
+
+    @Test
+    void givenImageWidth_expectHeightScaledByAspectRatio() {
+        Dimension imageSize = new Dimension(100, 100);
+        Dimension boundingBox = ImageUtils.getBoundingBoxWithAspectRatio(imageSize, 2);
+        assertEquals(200, boundingBox.width);
+        assertEquals(100, boundingBox.height);
+    }
+
+    @Test
+    void givenImageHeight_expectWidthScaledByAspectRatio() {
+        Dimension imageSize = new Dimension(100, 100);
+        Dimension boundingBox = ImageUtils.getBoundingBoxWithAspectRatio(imageSize, 0.5);
+        assertEquals(100, boundingBox.width);
+        assertEquals(200, boundingBox.height);
+    }
+
+    @Test
+    void givenImageAspectLandscape_expectWidthScaledByAspectRatio() {
+        Dimension imageSize = new Dimension(200, 100);
+        Dimension boundingBox = ImageUtils.getBoundingBoxWithAspectRatio(imageSize, 3);
+        assertEquals(300, boundingBox.width);
+        assertEquals(100, boundingBox.height);
+    }
+
+    @Test
+    void givenImageAspectPortrait_expectHeightScaledByAspectRatio() {
+        Dimension imageSize = new Dimension(100, 200);
+        Dimension boundingBox = ImageUtils.getBoundingBoxWithAspectRatio(imageSize, 3);
+        assertEquals(600, boundingBox.width);
+        assertEquals(200, boundingBox.height);
+    }
+
+    @Test
+
+    void givenImageSizeEqualsCellSize_expectOffsetZero() {
+        Dimension imageSize = new Dimension(100, 100);
+        Dimension cellSize = new Dimension(100, 100);
+        Point coords = ImageUtils.getCenteredCoordinates(imageSize, cellSize);
+        assertEquals(0, coords.x);
+        assertEquals(0, coords.y);
+    }
+
+    @Test
+    void givenImageLandscapeSizeLessThanCellSize_expectOffset() {
+        Dimension imageSize = new Dimension(100, 80);
+        Dimension cellSize = new Dimension(150, 120);
+        Point coords = ImageUtils.getCenteredCoordinates(imageSize, cellSize);
+        assertEquals(25, coords.x);
+        assertEquals(20, coords.y);
+    }
+
+    @Test
+    void givenImagePortraitSizeLessThanCellSize_expectOffset() {
+        Dimension imageSize = new Dimension(80, 100);
+        Dimension cellSize = new Dimension(150, 120);
+        Point coords = ImageUtils.getCenteredCoordinates(imageSize, cellSize);
+        assertEquals(35, coords.x);
+        assertEquals(10, coords.y);
+    }
+
+    @Test
+    void givenLandscapeImageLargerThanCellSize_expectNegativeOffset() {
+        Dimension imageSize = new Dimension(200, 100);
+        Dimension cellSize = new Dimension(80, 50);
+        Point coords = ImageUtils.getCenteredCoordinates(imageSize, cellSize);
+        assertEquals(-60, coords.x);
+        assertEquals(-25, coords.y);
+    }
+
+    @Test
+    void givenPortraitImageLargerThanCellSize_expectNegativeOffset() {
+        Dimension imageSize = new Dimension(100, 200);
+        Dimension cellSize = new Dimension(80, 50);
+        Point coords = ImageUtils.getCenteredCoordinates(imageSize, cellSize);
+        assertEquals(-10, coords.x);
+        assertEquals(-75, coords.y);
+    }
+
+    @Test
+    void givenCropSizeLessThanImageSize_expectEqualsCropSize() throws Exception {
+        String resourcePath = getClass().getResource("/test_275x183.jpg").getPath();
+        File file = new File(resourcePath);
+
+        BufferedImage image = ImageUtils.readBufferedImage(file);
+        Point offset = new Point(0, 0);
+        Dimension cropSize = new Dimension(120, 80);
+        BufferedImage subImage = ImageUtils.getSubimage(image, offset, cropSize);
+        assertEquals(120, subImage.getWidth());
+        assertEquals(80, subImage.getHeight());
+    }
+
+    @Test
+    void givenCropSizeLessThanImageSize_andOffset_expectImageSizeReduced() throws Exception {
+        String resourcePath = getClass().getResource("/test_275x183.jpg").getPath();
+        File file = new File(resourcePath);
+
+        BufferedImage image = ImageUtils.readBufferedImage(file);
+        Point offset = new Point(100, 0);
+        Dimension cropSize = new Dimension(200, 80);
+        BufferedImage subImage = ImageUtils.getSubimage(image, offset, cropSize);
+        assertEquals(100, subImage.getWidth());
+        assertEquals(80, subImage.getHeight());
     }
 }

@@ -86,27 +86,8 @@ public class ImageUtils {
         int imageHeight = imageSize.height;
         int imageWidth = imageSize.width;
 
-        int boxWidth = 0;
-        int boxHeight = 0;
-        double cellAspectRatio = getAspectRatio(cellSize);
-        double imageAspectRatio = getAspectRatio(new Dimension(imageWidth, imageHeight));
-
-        if (imageWidth < cellSize.width && imageHeight < cellSize.height) {
-            boxWidth = imageWidth;
-            boxHeight = imageHeight;
-        } else {
-
-            if (imageAspectRatio > 1) {
-                boxWidth = cellSize.width;
-                boxHeight = getHeightFromWidth(boxWidth, imageAspectRatio);
-            } else {
-                boxHeight = cellSize.height;
-                boxWidth = getWidthFromHeight(boxHeight, imageAspectRatio);
-            }
-        }
-
-        int x = (cellSize.width - boxWidth) / 2;
-        int y = (cellSize.height - boxHeight) / 2;
+        int x = (cellSize.width - imageWidth) / 2;
+        int y = (cellSize.height - imageHeight) / 2;
 
         return new Point(x, y);
     }
@@ -148,16 +129,8 @@ public class ImageUtils {
         int imageWidth = imageSize.width;
         int imageHeight = imageSize.height;
 
-        int boxWidth = 0;
-        int boxHeight = 0;
-
-        if (imageWidth > imageHeight) {
-            boxWidth = imageWidth;
-            boxHeight = getHeightFromWidth(boxWidth, aspectRatio);
-        } else {
-            boxHeight = imageHeight;
-            boxWidth = getWidthFromHeight(boxHeight, aspectRatio);
-        }
+        int boxWidth = Math.max(imageWidth, getWidthFromHeight(imageHeight, aspectRatio));
+        int boxHeight = Math.max(imageHeight, getHeightFromWidth(imageWidth, aspectRatio));
 
         return new Dimension(boxWidth, boxHeight);
     }
@@ -168,17 +141,21 @@ public class ImageUtils {
         int availableHeight = cropSize.height;
         int imageWidth = image.getWidth();
         int imageHeight = image.getHeight();
+        int x = 0;
+        int y = 0;
 
         if (offset.x > 0) {
             availableWidth -= offset.x;
         } else {
-            imageWidth -= Math.abs(offset.x);
+            x = -offset.x;
+            imageWidth -= x;
         }
 
         if (offset.y > 0) {
             availableHeight -= offset.y;
         } else {
-            imageHeight -= Math.abs(offset.y);
+            y = -offset.y;
+            imageHeight -= y;
         }
 
         int width = Math.min(availableWidth, imageWidth);
@@ -188,12 +165,7 @@ public class ImageUtils {
             return getEmptyImage();
         }
 
-        Point subImageOffset = new Point(-offset.x, -offset.y);
-
-        int x = Math.max(0, subImageOffset.x);
-        int y = Math.max(0, subImageOffset.y);
-        LOG.info("Getting subimage at {}x{} with size {}x{}", x, y, width, height);
-
+        LOG.info("Getting subimage at {}x{} with size {}x{}, image size: {}x{}", x, y, width, height, image.getWidth(), image.getHeight());
         return image.getSubimage(x, y, width, height);
     }
 }
