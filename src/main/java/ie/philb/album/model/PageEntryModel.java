@@ -30,6 +30,7 @@ public class PageEntryModel {
     private File imageFile;
     private double zoomFactor = 1;
     private Point offset = new Point(0, 0);
+    private boolean isCentered = false;
 
     public PageEntryModel(PageCell cell) {
         this.cell = cell;
@@ -93,16 +94,20 @@ public class PageEntryModel {
     private BufferedImage getImageWithViewZoomScale(double viewZoomScale) {
 
         if (image == null) {
-            return null;
+            return ImageUtils.getEmptyImage();
         }
 
         if (zoomFactor <= 0) {
-            return null;
+            return ImageUtils.getEmptyImage();
         }
 
         double combinedZoomFactor = zoomFactor * viewZoomScale;
         int zoomedWidth = (int) (image.getWidth() * combinedZoomFactor);
         int zoomedHeight = (int) (image.getHeight() * combinedZoomFactor);
+
+        if (zoomedWidth == 0 || zoomedHeight == 0) {
+            return ImageUtils.getEmptyImage();
+        }
 
         BufferedImage zoomed = new BufferedImage(zoomedWidth, zoomedHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = zoomed.createGraphics();
@@ -209,6 +214,7 @@ public class PageEntryModel {
 
     public void setImageViewOffset(Point offset) {
         this.offset = offset;
+        this.isCentered = false;
         fireImageUpdated();
     }
 
@@ -232,5 +238,13 @@ public class PageEntryModel {
         }
 
         return viewImage.getHeight() <= availableHeight;
+    }
+
+    public boolean isCentered() {
+        return isCentered;
+    }
+
+    public void setCentered(boolean b) {
+        this.isCentered = b;
     }
 }

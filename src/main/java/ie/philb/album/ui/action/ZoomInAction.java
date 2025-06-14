@@ -4,7 +4,7 @@
  */
 package ie.philb.album.ui.action;
 
-import ie.philb.album.model.PageEntryModel;
+import ie.philb.album.view.PageEntryView;
 
 /**
  *
@@ -12,15 +12,15 @@ import ie.philb.album.model.PageEntryModel;
  */
 public class ZoomInAction extends AbstractAction<Void> {
 
-    private final PageEntryModel pageEntryModel;
+    private final PageEntryView pageEntryView;
 
-    public ZoomInAction(PageEntryModel pageEntryModel) {
-        this.pageEntryModel = pageEntryModel;
+    public ZoomInAction(PageEntryView pageEntryView) {
+        this.pageEntryView = pageEntryView;
     }
 
     @Override
     protected Void doAction() throws Exception {
-        pageEntryModel.zoomIn();
+        pageEntryView.zoomIn();
         return null;
     }
 

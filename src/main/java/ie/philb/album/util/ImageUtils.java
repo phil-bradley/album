@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -38,6 +39,11 @@ public class ImageUtils {
     }
 
     public static BufferedImage readBufferedImage(File file) throws IOException {
+
+        if (!file.exists()) {
+            throw new FileNotFoundException(file.getAbsolutePath());
+        }
+
         ImageIcon icon = new ImageIcon(file.getCanonicalPath());
         return getBufferedImage(icon);
     }
@@ -66,15 +72,19 @@ public class ImageUtils {
         return image;
     }
 
-    public static Point getCenteredCoordinates(BufferedImage image, Dimension cellSize) {
-
-        // Centre image if it's less tall or less wide than the available space
+    public static Dimension getImageSize(BufferedImage image) {
         if (image == null) {
-            return new Point(0, 0);
+            return new Dimension(0, 0);
         }
 
-        int imageHeight = image.getHeight();
-        int imageWidth = image.getWidth();
+        return new Dimension(image.getWidth(), image.getHeight());
+    }
+
+    public static Point getCenteredCoordinates(Dimension imageSize, Dimension cellSize) {
+
+        // Centre image if it's less tall or less wide than the available space
+        int imageHeight = imageSize.height;
+        int imageWidth = imageSize.width;
 
         int boxWidth = 0;
         int boxHeight = 0;
@@ -133,14 +143,10 @@ public class ImageUtils {
         return width / height;
     }
 
-    public static Dimension getBoundingBoxWithAspectRatio(BufferedImage image, double aspectRatio) {
+    public static Dimension getBoundingBoxWithAspectRatio(Dimension imageSize, double aspectRatio) {
 
-        if (image == null) {
-            return new Dimension(0, 0);
-        }
-
-        int imageWidth = image.getWidth();
-        int imageHeight = image.getHeight();
+        int imageWidth = imageSize.width;
+        int imageHeight = imageSize.height;
 
         int boxWidth = 0;
         int boxHeight = 0;

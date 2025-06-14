@@ -9,12 +9,11 @@ import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryModelListener;
 import ie.philb.album.model.PageGeometryMapper;
-import ie.philb.album.ui.action.ZoomInAction;
-import ie.philb.album.ui.action.ZoomOutAction;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
 import ie.philb.album.util.ImageUtils;
+import static ie.philb.album.util.ImageUtils.getImageSize;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -73,7 +72,8 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         setViewOffset(new Point(0, 0));
         PageGeometryMapper geometryMapper = getPageGeometryMapper();
         BufferedImage image = pageEntryModel.getViewImage(getSize(), geometryMapper);
-        setViewOffset(ImageUtils.getCenteredCoordinates(image, getSize()));
+        setViewOffset(ImageUtils.getCenteredCoordinates(getImageSize(image), getSize()));
+        pageEntryModel.setCentered(true);
     }
 
     public void resetImagePosition() {
@@ -208,12 +208,12 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         //Zoom in
         if (e.getWheelRotation() < 0) {
-            new ZoomInAction(pageEntryModel).execute();
+            zoomIn();
             repaint();
         }
         //Zoom out
         if (e.getWheelRotation() > 0) {
-            new ZoomOutAction(pageEntryModel).execute();
+            zoomOut();
             repaint();
         }
     }
@@ -246,5 +246,19 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     public PageView getPageView() {
         return pageView;
+    }
+
+    public void zoomIn() {
+        pageEntryModel.zoomIn();
+        if (pageEntryModel.isCentered()) {
+            centerImage();
+        }
+    }
+
+    public void zoomOut() {
+        pageEntryModel.zoomOut();
+        if (pageEntryModel.isCentered()) {
+            centerImage();
+        }
     }
 }

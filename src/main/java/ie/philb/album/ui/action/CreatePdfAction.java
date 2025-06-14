@@ -15,6 +15,7 @@ import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.util.ImageUtils;
+import static ie.philb.album.util.ImageUtils.getImageSize;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -68,7 +69,9 @@ public class CreatePdfAction extends AbstractAction<File> {
                 for (PageEntryModel pageEntryModel : pageModel.getPageEntries()) {
                     Dimension cellSize = geometryMapper.getCellSizeOnView(pageEntryModel);
                     double cellAspectRatio = ImageUtils.getAspectRatio(cellSize);
-                    Dimension boundingBoxSize = ImageUtils.getBoundingBoxWithAspectRatio(pageEntryModel.getImage(), cellAspectRatio);
+
+                    Dimension imageSize = getImageSize(pageEntryModel.getImage());
+                    Dimension boundingBoxSize = ImageUtils.getBoundingBoxWithAspectRatio(imageSize, cellAspectRatio);
                     BufferedImage viewImage = pageEntryModel.getViewImage(boundingBoxSize, geometryMapper);
 
                     if (viewImage == null) {
@@ -79,7 +82,7 @@ public class CreatePdfAction extends AbstractAction<File> {
                     img.scaleToFit(cellSize.width, cellSize.height);
 
                     Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
-                    Point imageOffset = ImageUtils.getCenteredCoordinates(viewImage, cellSize);
+                    Point imageOffset = ImageUtils.getCenteredCoordinates(getImageSize(viewImage), cellSize);
                     Point imageLocation = new Point(cellLocation.x + imageOffset.x, cellLocation.y + imageOffset.y);
 
                     //LOG.info("Adding image with size {}x{} at {}x{}", cellSize.width, cellSize.height, imageLocation.x, imageLocation.y);
