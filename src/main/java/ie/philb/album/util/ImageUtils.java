@@ -152,28 +152,36 @@ public class ImageUtils {
 
     public static BufferedImage getSubimage(BufferedImage image, Point offset, Dimension cropSize) {
 
-        Point subImageOffset = new Point(-offset.x, -offset.y);
+        int availableWidth = cropSize.width;
+        int availableHeight = cropSize.height;
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
 
-        int x = Math.max(0, subImageOffset.x);
-        int y = Math.max(0, subImageOffset.y);
-
-        int width = cropSize.width - offset.x;
-
-        if (width > image.getWidth() - x) {
-            width = image.getWidth() - x;
+        if (offset.x > 0) {
+            availableWidth -= offset.x;
+        } else {
+            imageWidth -= Math.abs(offset.x);
         }
 
-        int height = cropSize.height - offset.y;
-
-        if (height > image.getHeight() - y) {
-            height = image.getHeight() - y;
+        if (offset.y > 0) {
+            availableHeight -= offset.y;
+        } else {
+            imageHeight -= Math.abs(offset.y);
         }
+
+        int width = Math.min(availableWidth, imageWidth);
+        int height = Math.min(availableHeight, imageHeight);
 
         if (width <= 0 || height <= 0) {
             return getEmptyImage();
         }
 
+        Point subImageOffset = new Point(-offset.x, -offset.y);
+
+        int x = Math.max(0, subImageOffset.x);
+        int y = Math.max(0, subImageOffset.y);
         LOG.info("Getting subimage at {}x{} with size {}x{}", x, y, width, height);
+
         return image.getSubimage(x, y, width, height);
     }
 }
