@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -36,6 +37,11 @@ public class ImageUtils {
         return EMPTY_IMAGE;
     }
 
+    public static BufferedImage readBufferedImage(File file) throws IOException {
+        ImageIcon icon = new ImageIcon(file.getCanonicalPath());
+        return getBufferedImage(icon);
+    }
+
     public static BufferedImage getBufferedImage(ImageIcon icon) {
 
         if (icon == null) {
@@ -49,7 +55,7 @@ public class ImageUtils {
     }
 
     public static BufferedImage createImage(Dimension size, Color color) {
-        BufferedImage image = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 
         for (int x = 0; x < size.width; x++) {
             for (int y = 0; y < size.height; y++) {
@@ -127,14 +133,14 @@ public class ImageUtils {
         return width / height;
     }
 
-    public static Dimension getBoundingBoxWithAspectRatio(ImageIcon image, double aspectRatio) {
+    public static Dimension getBoundingBoxWithAspectRatio(BufferedImage image, double aspectRatio) {
 
         if (image == null) {
             return new Dimension(0, 0);
         }
 
-        int imageWidth = image.getIconWidth();
-        int imageHeight = image.getIconHeight();
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
 
         int boxWidth = 0;
         int boxHeight = 0;

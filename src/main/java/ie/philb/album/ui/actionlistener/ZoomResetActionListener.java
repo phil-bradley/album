@@ -16,7 +16,7 @@ public class ZoomResetActionListener extends AbstractCellActionListener {
 
     @Override
     protected void doAction() {
-        new ZoomResetAction(selectedPageEntryView.getPageEntryModel()).execute(new Callback<Void>() {
+        new ZoomResetAction(selectedPageEntryView).execute(new Callback<Void>() {
             @Override
             public void onSuccess(Void result) {
             }

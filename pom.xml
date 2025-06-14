@@ -17,16 +17,16 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <exec.mainClass>ie.philb.album.Main</exec.mainClass>
-	<scm.ssh>git@github.com:phil-bradley/album.git</scm.ssh>
-	<scm.https>https://github.com/phil-bradley/album.git</scm.https>
+        <scm.ssh>git@github.com:phil-bradley/album.git</scm.ssh>
+        <scm.https>https://github.com/phil-bradley/album.git</scm.https>
     </properties>
     <name>album</name>
     <scm>
         <connection>scm:git:${scm.ssh}</connection>
         <url>${scm.https}</url>
         <developerConnection>scm:git:${scm.ssh}</developerConnection>
-      <tag>v-0.0.1</tag>
-  </scm>
+        <tag>v-0.0.1</tag>
+    </scm>
     <build>
         <plugins>
             <plugin>
@@ -37,11 +37,11 @@
                     <serverId>github-ssh</serverId>
                     <tagNameFormat>v-@{project.version}</tagNameFormat>
                     <checkModificationExcludes>
-                        <checkModificationExclude>pom.xml</checkModificationExclude>          
+                        <checkModificationExclude>pom.xml</checkModificationExclude>
                     </checkModificationExcludes>
                 </configuration>
-            </plugin>                
-            <plugin>                
+            </plugin>
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.13</version>

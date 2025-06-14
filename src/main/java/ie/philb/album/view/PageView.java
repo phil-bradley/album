@@ -111,7 +111,10 @@ public class PageView extends AppPanel {
         }
 
         model.setImage(imageLibraryEntry.getFile(), selectedIdx);
-//        selectedEntryView.setSelected(true);
+        selectedEntryView.setSelected(true);
+        selectedEntryView.centerImage();
+
+        AppContext.INSTANCE.pageEntrySelected(selectedEntryView.getPageView(), selectedEntryView);
     }
 
     public final void setModel(PageModel model) {

@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ImageIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +26,7 @@ public class PageEntryModel {
 
     private final List<PageEntryModelListener> listeners = new ArrayList<>();
     private final PageCell cell;
-    private ImageIcon imageIcon;
+    private BufferedImage image = null;
     private File imageFile;
     private double zoomFactor = 1;
     private Point offset = new Point(0, 0);
@@ -36,15 +35,15 @@ public class PageEntryModel {
         this.cell = cell;
     }
 
-    public ImageIcon getImageIcon() {
-        return imageIcon;
+    public BufferedImage getImage() {
+        return image;
     }
 
     public void setImageFile(File imageFile) {
         this.imageFile = imageFile;
         try {
             if (imageFile != null) {
-                this.imageIcon = new ImageIcon(imageFile.getCanonicalPath());
+                image = ImageUtils.readBufferedImage(imageFile);
             }
         } catch (IOException ex) {
             throw new RuntimeException("Failed to set image", ex);
@@ -75,8 +74,8 @@ public class PageEntryModel {
     }
 
     public void zoomToCoverFit(Dimension viewSize) {
-        setZoomFactor(getCoverFitZoomFactor(viewSize));
         resetOffset();
+        setZoomFactor(getCoverFitZoomFactor(viewSize));
     }
 
     public void setZoomFactor(double zoomFactor) {
@@ -93,7 +92,7 @@ public class PageEntryModel {
 
     private BufferedImage getImageWithViewZoomScale(double viewZoomScale) {
 
-        if (imageIcon == null) {
+        if (image == null) {
             return null;
         }
 
@@ -102,12 +101,12 @@ public class PageEntryModel {
         }
 
         double combinedZoomFactor = zoomFactor * viewZoomScale;
-        int zoomedWidth = (int) (imageIcon.getIconWidth() * combinedZoomFactor);
-        int zoomedHeight = (int) (imageIcon.getIconHeight() * combinedZoomFactor);
+        int zoomedWidth = (int) (image.getWidth() * combinedZoomFactor);
+        int zoomedHeight = (int) (image.getHeight() * combinedZoomFactor);
 
         BufferedImage zoomed = new BufferedImage(zoomedWidth, zoomedHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = zoomed.createGraphics();
-        g.drawImage(imageIcon.getImage(), 0, 0, zoomedWidth, zoomedHeight, null);
+        g.drawImage(image, 0, 0, zoomedWidth, zoomedHeight, null);
         g.dispose();
 
         return zoomed;
@@ -132,7 +131,7 @@ public class PageEntryModel {
 
     public BufferedImage getViewImage(Dimension viewSize, PageGeometryMapper geometryMapper) {
 
-        if (imageIcon == null) {
+        if (image == null) {
             return getPlacholderImage(viewSize);
         }
 
@@ -151,7 +150,7 @@ public class PageEntryModel {
     // without any cropping
     private double getBestFitZoomFactor(Dimension viewSize) {
 
-        if (imageIcon == null) {
+        if (image == null) {
             return 1;
         }
 
@@ -160,10 +159,10 @@ public class PageEntryModel {
             return 0;
         }
 
-        double iconWidth = imageIcon.getIconWidth();
-        double iconHeight = imageIcon.getIconHeight();
+        double width = image.getWidth();
+        double height = image.getHeight();
 
-        double bestFitZoom = Math.min(viewSize.width / iconWidth, viewSize.height / iconHeight);
+        double bestFitZoom = Math.min(viewSize.width / width, viewSize.height / height);
         return bestFitZoom;
 
     }
@@ -172,12 +171,12 @@ public class PageEntryModel {
     // cropped if necessary (cover fit)
     private double getCoverFitZoomFactor(Dimension viewSize) {
 
-        if (imageIcon == null) {
+        if (image == null) {
             return 1;
         }
 
-        double imageWidth = (double) imageIcon.getIconWidth();
-        double imageHeight = (double) imageIcon.getIconHeight();
+        double imageWidth = (double) image.getWidth();
+        double imageHeight = (double) image.getHeight();
         double viewWidth = (double) viewSize.getWidth();
         double viewHeight = (double) viewSize.getHeight();
 
@@ -232,10 +231,6 @@ public class PageEntryModel {
             return false;
         }
 
-        if (viewImage.getHeight() > availableHeight) {
-            return false;
-        }
-
-        return true;
+        return viewImage.getHeight() <= availableHeight;
     }
 }

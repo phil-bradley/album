@@ -4,7 +4,7 @@
  */
 package ie.philb.album.ui.action;
 
-import ie.philb.album.model.PageEntryModel;
+import ie.philb.album.view.PageEntryView;
 
 /**
  *
@@ -12,15 +12,15 @@ import ie.philb.album.model.PageEntryModel;
  */
 public class ZoomResetAction extends AbstractAction<Void> {
 
-    private final PageEntryModel pageEntryModel;
+    private final PageEntryView pageEntryView;
 
-    public ZoomResetAction(PageEntryModel pageEntryModel) {
-        this.pageEntryModel = pageEntryModel;
+    public ZoomResetAction(PageEntryView view) {
+        this.pageEntryView = view;
     }
 
     @Override
     protected Void execute() throws Exception {
-        pageEntryModel.resetZoom();
+        pageEntryView.zoomToFit();
         return null;
     }
 }

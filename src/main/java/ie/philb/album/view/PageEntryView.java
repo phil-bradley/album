@@ -12,6 +12,7 @@ import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
+import ie.philb.album.util.ImageUtils;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -34,12 +35,12 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     private Point mouseDragStartPoint = new Point(0, 0);
     private Point mouseDragPreviousPoint;
-    private final Point viewOffset = new Point(0, 0);
+    private Point viewOffset = new Point(0, 0);
 
     private final PageEntryModel pageEntryModel;
     private boolean isSelected = false;
     private boolean isPreviewMode = false;
-    private PageView pageView;
+    private final PageView pageView;
 
     public PageEntryView(PageView pageView, PageEntryModel entryModel) {
 
@@ -57,6 +58,29 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     public PageEntryModel getPageEntryModel() {
         return pageEntryModel;
+    }
+
+    public void centerImage() {
+
+        if (pageEntryModel.getImage() == null) {
+            return;
+        }
+
+        setViewOffset(ImageUtils.getCenteredCoordinates(pageEntryModel.getImage(), getSize()));
+    }
+
+    public void resetImagePosition() {
+        setViewOffset(new Point(0, 0));
+    }
+
+    private void setViewOffset(Point offset) {
+        this.viewOffset = offset;
+
+        PageGeometryMapper geometryMapper = getPageGeometryMapper();
+        Point modelOffset = new Point(geometryMapper.viewUnitsToMillis(viewOffset.x), geometryMapper.viewUnitsToMillis(viewOffset.y));
+        pageEntryModel.setImageViewOffset(modelOffset);
+
+        repaint();
     }
 
     @Override
@@ -118,7 +142,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         AppContext.INSTANCE.pageEntrySelected(pageView, this);
 
-        if (pageEntryModel.getImageIcon() == null) {
+        if (pageEntryModel.getImage() == null) {
             return;
         }
 
@@ -141,7 +165,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
             return;
         }
 
-        if (pageEntryModel.getImageIcon() == null) {
+        if (pageEntryModel.getImage() == null) {
             return;
         }
 
@@ -151,13 +175,8 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         int xDragOffset = mouseDragCurrentPoint.x - mouseDragPreviousPoint.x;
         int yDragOffset = mouseDragCurrentPoint.y - mouseDragPreviousPoint.y;
 
-        viewOffset.x += xDragOffset;
-        viewOffset.y += yDragOffset;
-
-        PageGeometryMapper geometryMapper = getPageGeometryMapper();
-        Point modelOffset = new Point(geometryMapper.viewUnitsToMillis(viewOffset.x), geometryMapper.viewUnitsToMillis(viewOffset.y));
-        LOG.info("Drag offset {}x{}, View offset {}, model offset {}", xDragOffset, yDragOffset, viewOffset, modelOffset);
-        pageEntryModel.setImageViewOffset(modelOffset);
+        Point offset = new Point(viewOffset.x + xDragOffset, viewOffset.y + yDragOffset);
+        setViewOffset(offset);
 
         mouseDragPreviousPoint = mouseDragCurrentPoint;
         repaint();
@@ -177,5 +196,19 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         Dimension viewSize = new Dimension(getBounds().width, getBounds().height);
         PageGeometryMapper geometryMapper = new PageGeometryMapper(pageView.getPageModel(), viewSize);
         return geometryMapper;
+    }
+
+    public void zoomToCoverFit() {
+        resetImagePosition();
+        pageEntryModel.zoomToCoverFit(getSize());
+    }
+
+    public void zoomToFit() {
+        pageEntryModel.resetZoom();
+        centerImage();
+    }
+
+    public PageView getPageView() {
+        return pageView;
     }
 }

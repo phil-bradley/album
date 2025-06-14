@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.dnd;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.view.PageEntryView;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -38,7 +39,9 @@ public class PageEntryViewTransferHandler extends TransferHandler {
             if (comp instanceof PageEntryView view) {
                 File imageFile = new File(imageFileName);
                 view.getPageEntryModel().setImageFile(imageFile);
-//                AppContext.INSTANCE.pageEntrySelected(view.getp, view);
+                view.centerImage();
+
+                AppContext.INSTANCE.pageEntrySelected(view.getPageView(), view);
             }
 
         } catch (UnsupportedFlavorException | IOException ex) {

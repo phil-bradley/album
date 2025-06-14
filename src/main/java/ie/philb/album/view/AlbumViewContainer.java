@@ -74,24 +74,29 @@ public class AlbumViewContainer extends AppPanel {
 
         btnZoomIn = new JButton(Icons.Small.ZOOM_IN);
         btnZoomIn.addActionListener(new ZoomInActionListener());
+        btnZoomIn.setText("Zoom In");
         toolBar.add(btnZoomIn);
 
         btnZoomOut = new JButton(Icons.Small.ZOOM_OUT);
         btnZoomOut.addActionListener(new ZoomOutActionListener());
+        btnZoomOut.setText("Zoom Out");
         toolBar.add(btnZoomOut);
 
         btnZoomReset = new JButton(Icons.Small.ZOOM_RESET);
         btnZoomReset.addActionListener(new ZoomResetActionListener());
+        btnZoomReset.setText("Reset to fit");
         toolBar.add(btnZoomReset);
 
         btnZoomCover = new JButton(Icons.Small.ZOOM_COVER);
         btnZoomCover.addActionListener(new ZoomToCoverFitActionListener());
+        btnZoomCover.setText("Reset to cover");
         toolBar.add(btnZoomCover);
 
         btnNewPage = new JButton(Icons.Small.NEW);
         btnNewPage.addActionListener((ActionEvent ae) -> {
             new NewPageCommand().execute();
         });
+        btnNewPage.setToolTipText("New Page");
         toolBar.add(btnNewPage);
 
         slctGeometry = new PageGeometrySelector();
@@ -125,7 +130,7 @@ public class AlbumViewContainer extends AppPanel {
 
     @Override
     public void pageEntrySelected(PageView pageView, PageEntryView view) {
-        setZoomButtonsEnabled(view != null && view.getPageEntryModel().getImageIcon() != null);
+        setZoomButtonsEnabled(view != null && view.getPageEntryModel().getImage() != null);
     }
 
     @Override

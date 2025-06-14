@@ -4,9 +4,7 @@
  */
 package ie.philb.album.ui.action;
 
-import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.view.PageEntryView;
-import java.awt.Dimension;
 
 /**
  *
@@ -22,8 +20,7 @@ public class ZoomToCoverFitAction extends AbstractAction<Void> {
 
     @Override
     protected Void execute() throws Exception {
-        Dimension viewSize = pageEntryView.getSize();
-        pageEntryView.getPageEntryModel().zoomToCoverFit(viewSize);
+        pageEntryView.zoomToCoverFit();
         return null;
     }
 }

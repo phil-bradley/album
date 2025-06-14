@@ -68,7 +68,7 @@ public class CreatePdfAction extends AbstractAction<File> {
                 for (PageEntryModel pageEntryModel : pageModel.getPageEntries()) {
                     Dimension cellSize = geometryMapper.getCellSizeOnView(pageEntryModel);
                     double cellAspectRatio = ImageUtils.getAspectRatio(cellSize);
-                    Dimension boundingBoxSize = ImageUtils.getBoundingBoxWithAspectRatio(pageEntryModel.getImageIcon(), cellAspectRatio);
+                    Dimension boundingBoxSize = ImageUtils.getBoundingBoxWithAspectRatio(pageEntryModel.getImage(), cellAspectRatio);
                     BufferedImage viewImage = pageEntryModel.getViewImage(boundingBoxSize, geometryMapper);
 
                     if (viewImage == null) {
