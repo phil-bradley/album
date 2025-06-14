@@ -80,6 +80,13 @@ class ImageUtilsTest {
     }
 
     @Test
+    void givenNullImage_expectGetSizeReturnsZero() throws Exception {
+        Dimension size = ImageUtils.getImageSize(null);
+        assertEquals(0, size.width);
+        assertEquals(0, size.height);
+    }
+
+    @Test
     void givenPlaceholderImage_expectNotNull() {
         BufferedImage image = ImageUtils.getPlaceholderImage();
         assertNotNull(image);
