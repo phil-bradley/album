@@ -70,6 +70,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
             return;
         }
 
+        setViewOffset(new Point(0, 0));
         PageGeometryMapper geometryMapper = getPageGeometryMapper();
         BufferedImage image = pageEntryModel.getViewImage(getSize(), geometryMapper);
         setViewOffset(ImageUtils.getCenteredCoordinates(image, getSize()));
