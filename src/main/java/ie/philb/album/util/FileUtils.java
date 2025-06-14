@@ -15,8 +15,20 @@ import java.nio.file.Path;
  */
 public class FileUtils {
 
+    public static final String HOME_LOCATION_PROPERTY = "user.home";
+
     public static File getHomeDirectory() {
-        return new File(System.getProperty("user.home"));
+
+        String albumHomePropertyValue = System.getProperty("album.home", "");
+
+        if (!albumHomePropertyValue.trim().isBlank()) {
+            File albumHome = new File(albumHomePropertyValue);
+            if (albumHome.exists()) {
+                return albumHome;
+            }
+        }
+
+        return new File(System.getProperty(HOME_LOCATION_PROPERTY));
     }
 
     public static boolean isImage(File file) {

@@ -130,7 +130,7 @@ public class PageEntryModel {
         }
     }
 
-    public BufferedImage getViewImage(Dimension viewSize) {
+    public BufferedImage getViewImage(Dimension viewSize, PageGeometryMapper geometryMapper) {
 
         if (imageIcon == null) {
             return getPlacholderImage(viewSize);
@@ -138,8 +138,12 @@ public class PageEntryModel {
 
         BufferedImage scaled = getImageWithViewZoomScale(getBestFitZoomFactor(viewSize));
 
-        LOG.info("Image has size {}x{} offset is {}, cropping to {}x{}", scaled.getWidth(), scaled.getHeight(), offset, viewSize.width, viewSize.height);
-        BufferedImage cropped = ImageUtils.getSubimage(scaled, offset, viewSize);
+        Point viewOffset = new Point();
+        viewOffset.x += geometryMapper.millisToViewUnits(offset.x);
+        viewOffset.y += geometryMapper.millisToViewUnits(offset.y);
+
+        LOG.info("Image has size {}x{} offset is {}, cropping to {}x{}", scaled.getWidth(), scaled.getHeight(), viewOffset, viewSize.width, viewSize.height);
+        BufferedImage cropped = ImageUtils.getSubimage(scaled, viewOffset, viewSize);
         return cropped;
     }
 
@@ -204,9 +208,9 @@ public class PageEntryModel {
         }
     }
 
-    public void addImageViewOffset(Point dragOffset) {
-        this.offset.x += dragOffset.x;
-        this.offset.y += dragOffset.y;
+    public void setImageViewOffset(Point offset) {
+        this.offset = offset;
+        fireImageUpdated();
     }
 
     public void resetOffset() {

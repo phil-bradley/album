@@ -130,11 +130,27 @@ public class PageGeometryMapper {
         return new Point(posX, posY);
     }
 
+    public int viewUnitsToMillis(int v) {
+        BigDecimal scale = getMillisToViewUnitsScale();
+
+        if (BigDecimal.ONE.equals(scale)) {
+            return v;
+        }
+
+        BigDecimal viewUnits = new BigDecimal(v, MATH_CONTEXT);
+        BigDecimal millis = viewUnits.multiply(scale, MATH_CONTEXT);
+        return millis.setScale(0, RoundingMode.HALF_EVEN).intValue();
+    }
+
     public int millisToViewUnits(int v) {
         BigDecimal scale = getMillisToViewUnitsScale();
 
         if (BigDecimal.ONE.equals(scale)) {
             return v;
+        }
+
+        if (BigDecimal.ZERO.equals(scale)) {
+            return 0;
         }
 
         BigDecimal millis = new BigDecimal(v, MATH_CONTEXT);
@@ -146,6 +162,10 @@ public class PageGeometryMapper {
 
         if (pageModel.getPageSize().height() == viewSize.height) {
             return BigDecimal.ONE;
+        }
+
+        if (viewSize.height == 0) {
+            return BigDecimal.ZERO;
         }
 
         BigDecimal pageHeightMillis = new BigDecimal(pageModel.getPageSize().height(), MATH_CONTEXT);
