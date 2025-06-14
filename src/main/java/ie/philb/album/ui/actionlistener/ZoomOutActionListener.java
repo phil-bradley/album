@@ -4,7 +4,7 @@
  */
 package ie.philb.album.ui.actionlistener;
 
-import ie.philb.album.ui.action.Callback;
+import ie.philb.album.ui.action.callback.Callback;
 import ie.philb.album.ui.action.ZoomOutAction;
 import ie.philb.album.ui.common.Dialogs;
 

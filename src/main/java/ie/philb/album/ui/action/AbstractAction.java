@@ -4,6 +4,8 @@
  */
 package ie.philb.album.ui.action;
 
+import ie.philb.album.ui.action.callback.DefaultNoResultCallback;
+import ie.philb.album.ui.action.callback.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

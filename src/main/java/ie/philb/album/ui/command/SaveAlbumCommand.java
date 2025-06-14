@@ -7,7 +7,7 @@ package ie.philb.album.ui.command;
 import ie.philb.album.AppContext;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.ui.ApplicationUi;
-import ie.philb.album.ui.action.Callback;
+import ie.philb.album.ui.action.callback.Callback;
 import ie.philb.album.ui.action.SaveAlbumAction;
 import ie.philb.album.ui.common.Dialogs;
 import java.io.File;

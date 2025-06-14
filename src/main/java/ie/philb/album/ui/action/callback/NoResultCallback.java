@@ -2,16 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ie.philb.album.ui.action;
+package ie.philb.album.ui.action.callback;
 
 /**
  *
- * @author Philip.Bradley
+ * @author philb
  * @param <T>
  */
-public interface Callback<T> {
+public interface NoResultCallback<T> extends Callback<T> {
 
-    void onSuccess(T result);
+    @Override
+    default void onSuccess(T result) {
+        // No result, don't care
+    }
 
-    void onFailure(Exception exception);
 }
