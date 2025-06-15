@@ -36,8 +36,6 @@ public class CreatePdfAction extends AbstractAction<File> {
     private final AlbumModel albumModel;
     private final File file;
 
-    private static final double MILLIS_TO_INCH = 0.0393701d;
-
     public CreatePdfAction(File file, AlbumModel albumModel) {
         this.albumModel = albumModel;
         this.file = file;
@@ -51,7 +49,7 @@ public class CreatePdfAction extends AbstractAction<File> {
         // Model page is measured in mm
         // PDF page size is measured in  inch/72
         Dimension modelPageSize = albumModel.getPageSize().size();
-        Dimension pageSize = new Dimension(millisToUnits(modelPageSize.width), millisToUnits(modelPageSize.height));
+        Dimension pageSize = new Dimension(modelUnitsToPageUnits(modelPageSize.width), modelUnitsToPageUnits(modelPageSize.height));
 
         try (Document doc = new Document(getPageSize(albumModel))) {
 
@@ -103,12 +101,9 @@ public class CreatePdfAction extends AbstractAction<File> {
         return file;
     }
 
-    private int millisToUnits(int millis) {
-        // Unit = inch/72
-        // mm to inch = 0.0393701
-        // X mm to units = X * 72 * 0.0393701
-
-        return (int) (millis * 72d * MILLIS_TO_INCH);
+    private int modelUnitsToPageUnits(int units) {
+        // Model and page both use points, no conversion required
+        return units;
     }
 
     private Rectangle getPageSize(AlbumModel am) {

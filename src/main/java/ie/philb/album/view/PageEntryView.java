@@ -83,7 +83,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         this.viewOffset = offset;
 
         PageGeometryMapper geometryMapper = getPageGeometryMapper();
-        Point modelOffset = new Point(geometryMapper.viewUnitsToMillis(viewOffset.x), geometryMapper.viewUnitsToMillis(viewOffset.y));
+        Point modelOffset = new Point(geometryMapper.viewUnitsToPoints(viewOffset.x), geometryMapper.viewUnitsToPoints(viewOffset.y));
         pageEntryModel.setImageViewOffset(modelOffset);
 
         repaint();
@@ -100,8 +100,8 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         PageGeometryMapper geometryMapper = getPageGeometryMapper();
 
         Point offset = new Point(0, 0);//  ImageUtils.getCenteredCoordinates(viewImage, viewSize);
-        offset.x += geometryMapper.millisToViewUnits(pageEntryModel.getOffset().x);
-        offset.y += geometryMapper.millisToViewUnits(pageEntryModel.getOffset().y);
+        offset.x += geometryMapper.pointsToViewUnits(pageEntryModel.getOffset().x);
+        offset.y += geometryMapper.pointsToViewUnits(pageEntryModel.getOffset().y);
 
         LOG.info("ViewSize: {}x{}, Model offset is {},{} scaling to {},{}", viewSize.width, viewSize.height, pageEntryModel.getOffset().x, pageEntryModel.getOffset().y, offset.x, offset.y);
         int x = Math.max(0, offset.x);

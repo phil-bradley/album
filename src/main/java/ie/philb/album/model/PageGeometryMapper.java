@@ -59,91 +59,91 @@ public class PageGeometryMapper {
 
     public Dimension getCellSizeOnView(PageEntryModel pageEntryModel) {
         PageCell cell = pageEntryModel.getCell();
-        Dimension cellSizeMillis = getCellSizeMillis(cell);
+        Dimension cellSizePoints = getCellSizePoints(cell);
 
-        int width = millisToViewUnits(cellSizeMillis.width);
-        int height = millisToViewUnits(cellSizeMillis.height);
+        int width = pointsToViewUnits(cellSizePoints.width);
+        int height = pointsToViewUnits(cellSizePoints.height);
 
         return new Dimension(width, height);
     }
 
     public Point getCellLocationOnView(PageCell cell) {
 
-        Point locationMillis = getCellPositionMillis(cell);
-        Dimension sizeMillis = getCellSizeMillis(cell);
+        Point locationPoints = getCellPositionPoints(cell);
+        Dimension sizePoints = getCellSizePoints(cell);
 
-        int xMillis = locationMillis.x;
-        int yMillis = locationMillis.y;
+        int xPoints = locationPoints.x;
+        int yPoints = locationPoints.y;
 
         if (originLocation.isEast()) {
-            xMillis = (pageModel.getPageSize().width() - locationMillis.x) - sizeMillis.width;
+            xPoints = (pageModel.getPageSize().width() - locationPoints.x) - sizePoints.width;
         }
 
         if (originLocation.isSouth()) {
-            yMillis = (pageModel.getPageSize().height() - locationMillis.y) - sizeMillis.height;
+            yPoints = (pageModel.getPageSize().height() - locationPoints.y) - sizePoints.height;
         }
 
-        int xView = millisToViewUnits(xMillis);
-        int yView = millisToViewUnits(yMillis);
+        int xView = pointsToViewUnits(xPoints);
+        int yView = pointsToViewUnits(yPoints);
 
         return new Point(xView, yView);
     }
 
-    public int getUnitCellHeightMillis() {
+    public int getUnitCellHeightPoints() {
         int verticalCellCount = pageModel.getGeometry().verticalCellCount();
-        int totalMarginMillis = pageModel.getMarginMillis() * (verticalCellCount + 1);
-        int availableHeight = pageModel.getPageSize().height() - totalMarginMillis;
+        int totalMarginPoints = pageModel.getMargin() * (verticalCellCount + 1);
+        int availableHeight = pageModel.getPageSize().height() - totalMarginPoints;
         int cellHeight = availableHeight / pageModel.getGeometry().verticalCellCount();
         return cellHeight;
     }
 
-    public int getUnitCellWidthMillis() {
+    public int getUnitCellWidthPoints() {
         int horizontalCellCount = pageModel.getGeometry().horizontalCellCount();
-        int totalMarginMillis = pageModel.getMarginMillis() * (horizontalCellCount + 1);
-        int availableWidth = pageModel.getPageSize().width() - totalMarginMillis;
+        int totalMarginPoints = pageModel.getMargin() * (horizontalCellCount + 1);
+        int availableWidth = pageModel.getPageSize().width() - totalMarginPoints;
         int cellWidth = availableWidth / pageModel.getGeometry().horizontalCellCount();
         return cellWidth;
     }
 
-    public Dimension getCellSizeMillis(PageCell cell) {
+    public Dimension getCellSizePoints(PageCell cell) {
         // An entry might span multiple cells. We need to take the margin between
         // cells into account when computing the size
         // For example, if the entry spans three cells horizontally, then the
         // cell width = 3*unitWidth + 2*margin
 
-        int unitHeight = getUnitCellHeightMillis();
-        int unitWidth = getUnitCellWidthMillis();
+        int unitHeight = getUnitCellHeightPoints();
+        int unitWidth = getUnitCellWidthPoints();
         int horizontalMarginCount = cell.size().width - 1;
         int verticalMarginCount = cell.size().height - 1;
-        int margin = pageModel.getMarginMillis();
+        int margin = pageModel.getMargin();
 
-        int cellHeightMillis = (cell.size().height * unitHeight) + (verticalMarginCount * margin);
-        int cellWidthMillis = (cell.size().width * unitWidth) + (horizontalMarginCount * margin);
+        int cellHeightPoints = (cell.size().height * unitHeight) + (verticalMarginCount * margin);
+        int cellWidthPoints = (cell.size().width * unitWidth) + (horizontalMarginCount * margin);
 
-        return new Dimension(cellWidthMillis, cellHeightMillis);
+        return new Dimension(cellWidthPoints, cellHeightPoints);
     }
 
-    private Point getCellPositionMillis(PageCell cell) {
-        int posX = (getUnitCellWidthMillis() * cell.location().x) + (pageModel.getMarginMillis() * (cell.location().x + 1));
-        int posY = (getUnitCellHeightMillis() * cell.location().y) + (pageModel.getMarginMillis() * (cell.location().y + 1));
+    private Point getCellPositionPoints(PageCell cell) {
+        int posX = (getUnitCellWidthPoints() * cell.location().x) + (pageModel.getMargin() * (cell.location().x + 1));
+        int posY = (getUnitCellHeightPoints() * cell.location().y) + (pageModel.getMargin() * (cell.location().y + 1));
 
         return new Point(posX, posY);
     }
 
-    public int viewUnitsToMillis(int v) {
-        BigDecimal scale = getMillisToViewUnitsScale();
+    public int viewUnitsToPoints(int v) {
+        BigDecimal scale = getPointsToViewUnitsScale();
 
         if (BigDecimal.ONE.equals(scale)) {
             return v;
         }
 
         BigDecimal viewUnits = new BigDecimal(v, MATH_CONTEXT);
-        BigDecimal millis = viewUnits.multiply(scale, MATH_CONTEXT);
-        return millis.setScale(0, RoundingMode.HALF_EVEN).intValue();
+        BigDecimal points = viewUnits.multiply(scale, MATH_CONTEXT);
+        return points.setScale(0, RoundingMode.HALF_EVEN).intValue();
     }
 
-    public int millisToViewUnits(int v) {
-        BigDecimal scale = getMillisToViewUnitsScale();
+    public int pointsToViewUnits(int v) {
+        BigDecimal scale = getPointsToViewUnitsScale();
 
         if (BigDecimal.ONE.equals(scale)) {
             return v;
@@ -153,12 +153,12 @@ public class PageGeometryMapper {
             return 0;
         }
 
-        BigDecimal millis = new BigDecimal(v, MATH_CONTEXT);
-        BigDecimal px = millis.divide(scale, MATH_CONTEXT);
+        BigDecimal points = new BigDecimal(v, MATH_CONTEXT);
+        BigDecimal px = points.divide(scale, MATH_CONTEXT);
         return px.setScale(0, RoundingMode.HALF_EVEN).intValue();
     }
 
-    private BigDecimal getMillisToViewUnitsScale() {
+    private BigDecimal getPointsToViewUnitsScale() {
 
         if (pageModel.getPageSize().height() == viewSize.height) {
             return BigDecimal.ONE;
@@ -168,9 +168,9 @@ public class PageGeometryMapper {
             return BigDecimal.ZERO;
         }
 
-        BigDecimal pageHeightMillis = new BigDecimal(pageModel.getPageSize().height(), MATH_CONTEXT);
+        BigDecimal pageHeightPoints = new BigDecimal(pageModel.getPageSize().height(), MATH_CONTEXT);
         BigDecimal panelHeight = new BigDecimal(viewSize.height, MATH_CONTEXT);
-        BigDecimal millisToViewUnits = pageHeightMillis.divide(panelHeight, MATH_CONTEXT);
-        return millisToViewUnits;
+        BigDecimal pointsToViewUnits = pageHeightPoints.divide(panelHeight, MATH_CONTEXT);
+        return pointsToViewUnits;
     }
 }

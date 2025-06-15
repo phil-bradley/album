@@ -16,7 +16,7 @@ import java.util.List;
 public class PageModel {
 
     private int pageId;
-    private int marginMillis = 10;
+    private int marginPoints = 10;
     private PageGeometry geometry;
     private final List<PageEntryModel> pageEntries = new ArrayList<>();
     private final PageSize pageSize;
@@ -85,16 +85,16 @@ public class PageModel {
         }
     }
 
-    public int getMarginMillis() {
-        return marginMillis;
+    public int getMargin() {
+        return marginPoints;
     }
 
-    public void setMarginMillis(int marginMillis) {
-        this.marginMillis = marginMillis;
+    public void setMargin(int margin) {
+        this.marginPoints = margin;
     }
 
-    public PageModel withMarginMillis(int margin) {
-        setMarginMillis(margin);
+    public PageModel withMargin(int margin) {
+        setMargin(margin);
         return this;
     }
 }

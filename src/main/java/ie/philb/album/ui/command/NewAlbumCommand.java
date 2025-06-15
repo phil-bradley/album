@@ -21,7 +21,7 @@ public class NewAlbumCommand extends AbstractCommand {
 
         AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
 
-        PageModel page1 = new PageModel(PageGeometry.square(2), albumModel.getPageSize()).withMarginMillis(2);
+        PageModel page1 = new PageModel(PageGeometry.square(2), albumModel.getPageSize()).withMargin(2);
         albumModel.addPage(page1);
 
 //        PageModel page2 = new PageModel(PageGeometry.square(2), albumModel.getPageSize()).withMarginMillis(3);

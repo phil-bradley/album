@@ -148,8 +148,8 @@ public class PageEntryModel {
         BufferedImage scaled = getScaledImage(viewSize, geometryMapper);
 
         Point viewOffset = new Point();
-        viewOffset.x = geometryMapper.millisToViewUnits(offset.x);
-        viewOffset.y = geometryMapper.millisToViewUnits(offset.y);
+        viewOffset.x = geometryMapper.pointsToViewUnits(offset.x);
+        viewOffset.y = geometryMapper.pointsToViewUnits(offset.y);
 
         LOG.info("Image has size {}x{} offset is {}, cropping to {}x{}", scaled.getWidth(), scaled.getHeight(), viewOffset, viewSize.width, viewSize.height);
         BufferedImage cropped = ImageUtils.getSubimage(scaled, viewOffset, viewSize);

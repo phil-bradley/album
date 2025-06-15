@@ -12,10 +12,10 @@ import java.awt.Dimension;
  */
 public enum PageSize {
 
-    A4_Portrait(210, 297),
-    A4_Landscape(297, 210),
-    US_Letter_Portrait(216, 279),
-    US_Letter_Landscape(279, 216);
+    A4_Portrait(595, 842),
+    A4_Landscape(842, 595),
+    US_Letter_Portrait(612, 792),
+    US_Letter_Landscape(792, 612);
 
     private final int width;
     private final int height;

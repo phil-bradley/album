@@ -32,7 +32,7 @@ public class NewPageCommand extends AbstractCommand {
             lastPageGeometry = lastPage.getGeometry();
         }
 
-        PageModel page = new PageModel(lastPageGeometry, pageSize).withMarginMillis(3);
+        PageModel page = new PageModel(lastPageGeometry, pageSize).withMargin(3);
         albumModel.addPage(page);
 
         AppContext.INSTANCE.albumUpdated();

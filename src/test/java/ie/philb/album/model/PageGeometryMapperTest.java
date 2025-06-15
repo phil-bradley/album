@@ -24,7 +24,7 @@ public class PageGeometryMapperTest {
 
         PageGeometry pg = PageGeometry.square(1);
 
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(0);
         assertEquals(1, pageModel.getCellCount());
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
@@ -38,14 +38,14 @@ public class PageGeometryMapperTest {
 
         PageGeometry pg = PageGeometry.square(1);
 
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(0);
         assertEquals(1, pageModel.getCellCount());
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
 
         PageCell cell = pg.getCells().get(0);
-        Dimension cellSizeMillis = mapper.getCellSizeMillis(cell);
-        assertEquals(PageSize.A4_Landscape.size(), cellSizeMillis);
+        Dimension cellSize = mapper.getCellSizePoints(cell);
+        assertEquals(PageSize.A4_Landscape.size(), cellSize);
     }
 
     @Test
@@ -54,19 +54,19 @@ public class PageGeometryMapperTest {
         PageGeometry pg = PageGeometry.square(1);
         int margin = 10;
 
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(margin);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(margin);
         assertEquals(1, pageModel.getCellCount());
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
 
         PageCell cell = pg.getCells().get(0);
-        Dimension cellSizeMillis = mapper.getCellSizeMillis(cell);
+        Dimension cellSize = mapper.getCellSizePoints(cell);
 
         double expectedWidth = pageModel.getPageSize().width() - (2 * margin);
         double expectedHeight = pageModel.getPageSize().height() - (2 * margin);
 
-        assertEquals(expectedWidth, cellSizeMillis.width, "Validate width");
-        assertEquals(expectedHeight, cellSizeMillis.height, "Validate height");
+        assertEquals(expectedWidth, cellSize.width, "Validate width");
+        assertEquals(expectedHeight, cellSize.height, "Validate height");
     }
 
     @Test
@@ -74,7 +74,7 @@ public class PageGeometryMapperTest {
 
         PageGeometry pg = PageGeometry.square(1);
 
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(0);
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
         Dimension size = mapper.getCellSizeOnView(pageModel.getPageEntries().get(0));
@@ -92,13 +92,13 @@ public class PageGeometryMapperTest {
         PageGeometry pg = PageGeometry.square(1);
         int margin = 10;
 
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(margin);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(margin);
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
         Dimension size = mapper.getCellSizeOnView(pageModel.getPageEntries().get(0));
 
-        double expectedWidth = PANEL_SIZE.width - mapper.millisToViewUnits(margin) * 2;
-        double expectedHeight = PANEL_SIZE.height - mapper.millisToViewUnits(margin) * 2;
+        double expectedWidth = PANEL_SIZE.width - mapper.pointsToViewUnits(margin) * 2;
+        double expectedHeight = PANEL_SIZE.height - mapper.pointsToViewUnits(margin) * 2;
 
         double computedWidth = (double) (size.width);
         double computedHeight = (double) (size.height);
@@ -112,19 +112,19 @@ public class PageGeometryMapperTest {
 
         PageGeometry pg = PageGeometry.rectangle(1, 2);
 
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(0);
         assertEquals(2, pageModel.getCellCount());
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
 
         PageCell cell = pg.getCells().get(0);
-        Dimension cellSizeMillis = mapper.getCellSizeMillis(cell);
+        Dimension cellSize = mapper.getCellSizePoints(cell);
 
         double expectedWidth = pageModel.getPageSize().width();
         double expectedHeight = pageModel.getPageSize().height() / 2;
 
-        assertEquals(expectedWidth, cellSizeMillis.width, "Validate width");
-        assertEquals(expectedHeight, cellSizeMillis.height, "Validate height");
+        assertEquals(expectedWidth, cellSize.width, "Validate width");
+        assertEquals(expectedHeight, cellSize.height, "Validate height");
     }
 
     @Test
@@ -132,25 +132,25 @@ public class PageGeometryMapperTest {
 
         PageGeometry pg = PageGeometry.rectangle(2, 1);
 
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(0);
         assertEquals(2, pageModel.getCellCount());
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
 
         PageCell cell = pg.getCells().get(0);
-        Dimension cellSizeMillis = mapper.getCellSizeMillis(cell);
+        Dimension cellSize = mapper.getCellSizePoints(cell);
 
         double expectedWidth = pageModel.getPageSize().width() / 2;
         double expectedHeight = pageModel.getPageSize().height();
 
-        assertEquals(expectedWidth, cellSizeMillis.width, "Validate width");
-        assertEquals(expectedHeight, cellSizeMillis.height, "Validate height");
+        assertEquals(expectedWidth, cellSize.width, "Validate width");
+        assertEquals(expectedHeight, cellSize.height, "Validate height");
     }
 
     @Test
     void given_1x2_Cells_andNoMargin_expectCellSizeScaledToPanel() {
         PageGeometry pg = PageGeometry.rectangle(1, 2);
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(0);
 
         int panelHeight = 1000;
         int panelWidth = PageSize.A4_Landscape.widthFromHeight(panelHeight);
@@ -176,7 +176,7 @@ public class PageGeometryMapperTest {
     @Test
     void given_2x1_Cells_andNoMargin_expectCellSizeScaledToPanel() {
         PageGeometry pg = PageGeometry.rectangle(2, 1);
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(0);
 
         int panelHeight = 1000;
         int panelWidth = PageSize.A4_Landscape.widthFromHeight(panelHeight);
@@ -202,7 +202,7 @@ public class PageGeometryMapperTest {
     @Test
     void given_2x1_Cells_andMargin_expectCellSizeScaledToPanel() {
         PageGeometry pg = PageGeometry.rectangle(2, 1);
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(10);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(10);
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
         double scalingFactor = ((double) (pageModel.getPageSize().height())) / ((double) PANEL_SIZE.height);
@@ -235,7 +235,7 @@ public class PageGeometryMapperTest {
         assertEquals(new Dimension(1, 1), cell00.size());
         assertEquals(new Point(0, 0), cell00.location());
 
-        Dimension unscaledSize = mapper.getCellSizeMillis(cell00);
+        Dimension unscaledSize = mapper.getCellSizePoints(cell00);
         Dimension scaledSize = mapper.getCellSizeOnView(pageModel.getPageEntries().get(0));
         System.out.println("Got size " + unscaledSize + ", scaled size " + scaledSize);
 
@@ -251,7 +251,7 @@ public class PageGeometryMapperTest {
     @Test
     void givenSingleCell_andAnchorNorthWest_expectPositionZeroZero() {
         PageGeometry pg = PageGeometry.square(1);
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(0);
 
         // Use default location for origin, as per swing panels 0,0 = top left corner
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PageSize.A4_Landscape.size());
@@ -274,7 +274,7 @@ public class PageGeometryMapperTest {
     void given_1x2_Cells_andNoMargin_andAnchorSouthWest_expectVerticalPositionMapped() {
 
         PageGeometry pg = PageGeometry.rectangle(1, 2);
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(0);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(0);
 
         Dimension mappedSize = new Dimension(1414, 1000);
 
@@ -298,7 +298,7 @@ public class PageGeometryMapperTest {
 
         PageGeometry pg = PageGeometry.rectangle(1, 2);
         int unscaledMargin = 10;
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(unscaledMargin);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(unscaledMargin);
 
         Dimension mappedSize = new Dimension(1414, 1000);
 
@@ -349,7 +349,7 @@ public class PageGeometryMapperTest {
          */
         PageGeometry pg = PageGeometry.withColumns(1, 2);
         int unscaledMargin = 10;
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMarginMillis(unscaledMargin);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(unscaledMargin);
 
         Dimension mappedSize = new Dimension(1414, 1000);
 
