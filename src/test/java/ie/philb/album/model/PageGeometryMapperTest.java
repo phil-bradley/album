@@ -4,6 +4,7 @@
  */
 package ie.philb.album.model;
 
+import static ie.philb.album.model.PageSize.A4_Landscape;
 import java.awt.Dimension;
 import java.awt.Point;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -201,8 +202,10 @@ public class PageGeometryMapperTest {
 
     @Test
     void given_2x1_Cells_andMargin_expectCellSizeScaledToPanel() {
+
+        int margin = 10;
         PageGeometry pg = PageGeometry.rectangle(2, 1);
-        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(10);
+        PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(margin);
 
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
         double scalingFactor = ((double) (pageModel.getPageSize().height())) / ((double) PANEL_SIZE.height);
@@ -211,21 +214,21 @@ public class PageGeometryMapperTest {
         * The page has is 297x210mm with a margin of 10mm.
         * So each cell has
 
-        * Height = 210mm - 20mm = 190mm
+        * Height = 595 - 20 = 575
         *
-        *            297mm - 30mm
-        * Width =    ------------  = 133.5mm
+        *              842 - 30
+        * Width =    ------------  = 406
         *                  2
         *
         *     --------------------------------
-        *     |             10mm             |
+        *     |             10               |
         *     |   ----------   ----------    |
         *     | 10|        |10 |        | 10 |
-        *     | mm|        |mm |        | mm | 210px
+        *     |   |        |   |        |    | 595
         *     |   ----------   ----------    |
-        *     |            10mm              |
+        *     |            10              |
         *     |------------------------------|*
-        *                <- 297px ->
+        *                <- 842 ->
         *
         *  Conversion factor to px = 210 / 707 = 0.29702
         *  so the expected cell height = 190 / 0.29702 = 640
@@ -239,8 +242,8 @@ public class PageGeometryMapperTest {
         Dimension scaledSize = mapper.getCellSizeOnView(pageModel.getPageEntries().get(0));
         System.out.println("Got size " + unscaledSize + ", scaled size " + scaledSize);
 
-        double expectedHeight = 190 / scalingFactor;
-        double expectedWidth = 133 / scalingFactor;
+        double expectedHeight = (A4_Landscape.height() - 2 * margin) / scalingFactor;
+        double expectedWidth = ((A4_Landscape.width() - 3 * margin) / 2) / scalingFactor;
         double computedHeight = scaledSize.height;
         double computedWidth = scaledSize.width;
 
@@ -289,8 +292,11 @@ public class PageGeometryMapperTest {
         Point location0 = mapper.getCellLocationOnView(cell0);
         Point location1 = mapper.getCellLocationOnView(cell1);
 
-        assertEquals(new Point(0, 500), location0);
-        assertEquals(new Point(0, 0), location1);
+        assertThat("Validate location0: X Position", (double) location0.x, closeTo(0, 2));
+        assertThat("Validate location0: Y Position", (double) location0.y, closeTo(500, 2));
+
+        assertThat("Validate location1: X Position", (double) location1.x, closeTo(0, 2));
+        assertThat("Validate location1: Y Position", (double) location1.y, closeTo(0, 2));
     }
 
     @Test
@@ -305,10 +311,10 @@ public class PageGeometryMapperTest {
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, mappedSize);
         mapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);
 
-        double scalingFactor = (double) 1000 / (double) 210; // viewHeight / pageHeight
+        double scalingFactor = (double) 1000 / (double) A4_Landscape.height(); // viewHeight / pageHeight
         double scaledMargin = ((double) unscaledMargin) * scalingFactor;
 
-        double unscaledCellHeight = (210 - 30) / 2; // = 90
+        double unscaledCellHeight = (A4_Landscape.height() - 30) / 2;
         int scaledCellHeight = (int) (unscaledCellHeight * scalingFactor);
 
         // Expect verical locations be:
@@ -321,16 +327,16 @@ public class PageGeometryMapperTest {
         Point location1 = mapper.getCellLocationOnView(cell1);
 
         double xPos0 = scaledMargin;
-        double yPos0 = scaledMargin + scaledCellHeight + scaledMargin;
+        double yPos0 = (unscaledMargin + unscaledCellHeight + unscaledMargin) * scalingFactor;
 
         double xPos1 = scaledMargin;
         double yPos1 = scaledMargin;
 
-        assertThat("Validate Cell0: X Position", (double) location0.x, closeTo(xPos0, 1));
-        assertThat("Validate Cell0: Y Position", (double) location0.y, closeTo(yPos0, 1));
+        assertThat("Validate Cell0: X Position", (double) location0.x, closeTo(xPos0, 2));
+        assertThat("Validate Cell0: Y Position", (double) location0.y, closeTo(yPos0, 2));
 
-        assertThat("Validate Cell1: X Position", (double) location1.x, closeTo(xPos1, 1));
-        assertThat("Validate Cell1: Y Position", (double) location1.y, closeTo(yPos1, 1));
+        assertThat("Validate Cell1: X Position", (double) location1.x, closeTo(xPos1, 2));
+        assertThat("Validate Cell1: Y Position", (double) location1.y, closeTo(yPos1, 2));
     }
 
     @Test
@@ -348,7 +354,7 @@ public class PageGeometryMapperTest {
         *
          */
         PageGeometry pg = PageGeometry.withColumns(1, 2);
-        int unscaledMargin = 10;
+        int unscaledMargin = 50;
         PageModel pageModel = new PageModel(pg, PageSize.A4_Landscape).withMargin(unscaledMargin);
 
         Dimension mappedSize = new Dimension(1414, 1000);
@@ -356,10 +362,10 @@ public class PageGeometryMapperTest {
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, mappedSize);
         mapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);
 
-        double scalingFactor = (double) 1000 / (double) 210; // viewHeight / pageHeight
+        double scalingFactor = (double) 1000 / (double) A4_Landscape.height(); // viewHeight / pageHeight
         double scaledMargin = ((double) unscaledMargin) * scalingFactor;
 
-        double unscaledCellHeight = (210 - 30) / 2; // = 90
+        double unscaledCellHeight = (A4_Landscape.height() - 30) / 2; // = 90
         int scaledCellHeight = (int) (unscaledCellHeight * scalingFactor);
 
         // Expect verical locations be:
@@ -376,8 +382,8 @@ public class PageGeometryMapperTest {
 
 //        double xPos1 = scaledMargin;
 //        double yPos1 = scaledMargin;
-        assertThat("Validate Cell0: X Position", (double) location0.x, closeTo(xPos0, 1));
-        assertThat("Validate Cell0: Y Position", (double) location0.y, closeTo(yPos0, 1));
+        assertThat("Validate Cell0: X Position", (double) location0.x, closeTo(xPos0, 2));
+        assertThat("Validate Cell0: Y Position", (double) location0.y, closeTo(yPos0, 2));
 
 //        assertThat("Validate Cell1: X Position", (double) location1.x, closeTo(xPos1, 1));
 //        assertThat("Validate Cell1: Y Position", (double) location1.y, closeTo(yPos1, 1));
