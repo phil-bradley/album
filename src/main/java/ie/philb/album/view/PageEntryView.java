@@ -69,9 +69,8 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
             return;
         }
 
-        setViewOffset(new Point(0, 0));
         PageGeometryMapper geometryMapper = getPageGeometryMapper();
-        BufferedImage image = pageEntryModel.getViewImage(getSize(), geometryMapper);
+        BufferedImage image = pageEntryModel.getScaledImage(getSize(), geometryMapper);
         setViewOffset(ImageUtils.getCenteredCoordinates(getImageSize(image), getSize()));
         pageEntryModel.setCentered(true);
     }
@@ -237,6 +236,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     public void zoomToCoverFit() {
         resetImagePosition();
         pageEntryModel.zoomToCoverFit(getSize());
+        centerImage();
     }
 
     public void zoomToFit() {
