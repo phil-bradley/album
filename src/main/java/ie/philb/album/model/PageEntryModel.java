@@ -229,7 +229,7 @@ public class PageEntryModel {
         fireImageUpdated();
     }
 
-    public Point getOffset() {
+    public Point getImageViewOffset() {
         return offset;
     }
 
