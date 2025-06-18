@@ -388,4 +388,15 @@ public class PageGeometryMapperTest {
 //        assertThat("Validate Cell1: X Position", (double) location1.x, closeTo(xPos1, 1));
 //        assertThat("Validate Cell1: Y Position", (double) location1.y, closeTo(yPos1, 1));
     }
+
+    @Test
+    void givenViewUnits_expectedTranslateToPoints() {
+
+        Dimension viewSize = new Dimension(8420, 5950); // 10x A4 point size
+        PageModel pageModel = new PageModel(PageGeometry.square(1), PageSize.A4_Landscape).withMargin(0);
+
+        PageGeometryMapper mapper = new PageGeometryMapper(pageModel, viewSize);
+        int points = mapper.viewUnitsToPoints(200);
+        assertEquals(20, points); // Expect 200 view units to map to 20 points since view = 10x page size
+    }
 }
