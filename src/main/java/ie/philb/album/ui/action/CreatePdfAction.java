@@ -65,23 +65,43 @@ public class CreatePdfAction extends AbstractAction<File> {
                 geometryMapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);
 
                 for (PageEntryModel pageEntryModel : pageModel.getPageEntries()) {
+
+                    if (pageEntryModel.getImage() == null) {
+                        continue;
+                    }
                     Dimension cellSize = geometryMapper.getCellSizeOnView(pageEntryModel);
                     double cellAspectRatio = ImageUtils.getAspectRatio(cellSize);
 
                     Dimension imageSize = getImageSize(pageEntryModel.getImage());
+
+                    // Create a bounding box with size >= original image size so that no
+                    // scaling down is done. Scaling is done by the PDF using scaleToFit
                     Dimension boundingBoxSize = ImageUtils.getBoundingBoxWithAspectRatio(imageSize, cellAspectRatio);
-                    BufferedImage viewImage = pageEntryModel.getViewImage(boundingBoxSize, geometryMapper);
+                    BufferedImage scaledImage = pageEntryModel.getScaledImage(boundingBoxSize, geometryMapper);
 
-                    if (viewImage == null) {
-                        continue;
-                    }
+                    // Now we have a scaled image, we need to crop it using scaled offsets
+                    double cellToBoundingBoxScale = (double) boundingBoxSize.height / (double) cellSize.height;
+                    Point scaledOffset = new Point(pageEntryModel.getImageViewOffset());
+                    scaledOffset.x = (int) (scaledOffset.x * cellToBoundingBoxScale);
+                    scaledOffset.y = (int) (scaledOffset.y * cellToBoundingBoxScale);
 
-                    Image img = Image.getInstance(viewImage, null);
+                    BufferedImage cropped = ImageUtils.getSubimage(scaledImage, scaledOffset, boundingBoxSize);
+
+                    Image img = Image.getInstance(cropped, null);
                     img.scaleToFit(cellSize.width, cellSize.height);
 
                     Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
                     Point imageOffset = geometryMapper.locationAsPointsToViewUnits(pageEntryModel.getImageViewOffset());
-                    Point imageLocation = new Point(cellLocation.x + imageOffset.x, cellLocation.y + imageOffset.y);
+
+                    if (imageOffset.x < 0) {
+                        imageOffset.x = 0;
+                    }
+
+                    if (imageOffset.y < 0) {
+                        imageOffset.y = 0;
+                    }
+
+                    Point imageLocation = new Point(cellLocation.x + imageOffset.x, cellLocation.y - imageOffset.y);
 
                     LOG.info("PDF view size: {}x{}, Image size {}x{}, Model offset is {},{} scaling to {},{}", cellSize.width, cellSize.height, img.getWidth(), img.getHeight(), pageEntryModel.getImageViewOffset().x, pageEntryModel.getImageViewOffset().y, imageOffset.x, imageOffset.y);
 

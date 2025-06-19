@@ -34,7 +34,7 @@ public class ImageMetaData {
         int xResolution = getXResolution();
         int yResolution = getYResolution();
 
-        return new Dimension(yResolution, yResolution);
+        return new Dimension(xResolution, yResolution);
     }
 
     public int getXResolution() {
@@ -83,8 +83,8 @@ public class ImageMetaData {
 
         for (AbstractMetaDataMapper mapper : mappers) {
             try {
-                if (mapper.getImageWidth() != 0) {
-                    return mapper.getImageWidth();
+                if (mapper.getImageHeight() != 0) {
+                    return mapper.getImageHeight();
                 }
             } catch (MetadataException ex) {
             }
