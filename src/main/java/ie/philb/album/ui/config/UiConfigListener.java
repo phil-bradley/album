@@ -10,6 +10,7 @@ package ie.philb.album.ui.config;
  */
 public interface UiConfigListener {
 
-    void uiConfigUpdated(UiConfig config);
+    default void uiConfigUpdated(UiConfig config) {
+    }
 
 }

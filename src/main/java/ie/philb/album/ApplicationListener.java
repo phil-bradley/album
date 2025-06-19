@@ -15,13 +15,18 @@ import java.io.File;
  */
 public interface ApplicationListener {
 
-    void pageEntrySelected(PageView pageView, PageEntryView view);
+    default void pageEntrySelected(PageView pageView, PageEntryView view) {
+    }
 
-    void pageSelected(PageView view);
+    default void pageSelected(PageView view) {
+    }
 
-    void libraryImageSelected(ImageLibraryEntry entry);
+    default void libraryImageSelected(ImageLibraryEntry entry) {
+    }
 
-    void browseLocationUpdated(File file);
+    default void browseLocationUpdated(File file) {
+    }
 
-    void albumUpdated();
+    default void albumUpdated() {
+    }
 }

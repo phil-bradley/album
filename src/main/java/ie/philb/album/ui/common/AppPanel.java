@@ -8,19 +8,10 @@ import ie.philb.album.AppContext;
 import ie.philb.album.ApplicationListener;
 import ie.philb.album.ui.config.UiConfig;
 import ie.philb.album.ui.config.UiConfigListener;
-import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
-import ie.philb.album.view.PageEntryView;
-import ie.philb.album.view.PageView;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.io.File;
 import java.util.UUID;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -32,7 +23,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philip.Bradley
  */
-public class AppPanel extends JPanel implements UiConfigListener, MouseListener, MouseMotionListener, ApplicationListener, MouseWheelListener {
+public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseListener, DefaultMouseMotionListener, ApplicationListener, DefaultMouseWheelListener {
 
     private static final long serialVersionUID = 1L;
     protected static final Logger LOG = LoggerFactory.getLogger(AppPanel.class);
@@ -181,55 +172,4 @@ public class AppPanel extends JPanel implements UiConfigListener, MouseListener,
         repaint();
     }
 
-    @Override
-    public void mouseClicked(MouseEvent me) {
-    }
-
-    @Override
-    public void mousePressed(MouseEvent me) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent me) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent me) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent me) {
-    }
-
-    @Override
-    public void pageEntrySelected(PageView pageView, PageEntryView view) {
-    }
-
-    @Override
-    public void pageSelected(PageView view) {
-    }
-
-    @Override
-    public void libraryImageSelected(ImageLibraryEntry entry) {
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent me) {
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent me) {
-    }
-
-    @Override
-    public void browseLocationUpdated(File file) {
-    }
-
-    @Override
-    public void albumUpdated() {
-    }
-
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent mwe) {
-    }
 }
