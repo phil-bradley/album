@@ -101,14 +101,14 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         Dimension viewSize = new Dimension(getBounds().width, getBounds().height);
         BufferedImage viewImage = pageEntryModel.getViewImage(viewSize, getPageGeometryMapper());
+        Dimension imageSize = ImageUtils.getImageSize(viewImage);
 
         PageGeometryMapper geometryMapper = getPageGeometryMapper();
+        Dimension cellSizePoints = geometryMapper.getCellSizePoints(pageEntryModel.getCell());
 
-        Point offset = new Point(0, 0);//  ImageUtils.getCenteredCoordinates(viewImage, viewSize);
-        offset.x += geometryMapper.pointsToViewUnits(pageEntryModel.getImageViewOffset().x);
-        offset.y += geometryMapper.pointsToViewUnits(pageEntryModel.getImageViewOffset().y);
+        Point offset = geometryMapper.locationAsPointsToViewUnits(pageEntryModel.getImageViewOffset());
 
-        LOG.info("ViewSize: {}x{}, Model offset is {},{} scaling to {},{}", viewSize.width, viewSize.height, pageEntryModel.getImageViewOffset().x, pageEntryModel.getImageViewOffset().y, offset.x, offset.y);
+        LOG.info("ViewSize: {}x{}, Model size: {}x{}, Image size{}x{}, Model offset is {},{} scaling to {},{}", viewSize.width, viewSize.height, cellSizePoints.width, cellSizePoints.height, imageSize.width, imageSize.height, pageEntryModel.getImageViewOffset().x, pageEntryModel.getImageViewOffset().y, offset.x, offset.y);
         int x = Math.max(0, offset.x);
         int y = Math.max(0, offset.y);
 
@@ -233,8 +233,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     }
 
     private PageGeometryMapper getPageGeometryMapper() {
-        Dimension viewSize = new Dimension(getBounds().width, getBounds().height);
-        PageGeometryMapper geometryMapper = new PageGeometryMapper(pageView.getPageModel(), viewSize);
+        PageGeometryMapper geometryMapper = new PageGeometryMapper(pageView.getPageModel(), pageView.getSize());
         return geometryMapper;
     }
 

@@ -80,10 +80,12 @@ public class CreatePdfAction extends AbstractAction<File> {
                     img.scaleToFit(cellSize.width, cellSize.height);
 
                     Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
-                    Point imageOffset = ImageUtils.getCenteredCoordinates(getImageSize(viewImage), cellSize);
+                    Point imageOffset = geometryMapper.locationAsPointsToViewUnits(pageEntryModel.getImageViewOffset());
                     Point imageLocation = new Point(cellLocation.x + imageOffset.x, cellLocation.y + imageOffset.y);
 
-                    //LOG.info("Adding image with size {}x{} at {}x{}", cellSize.width, cellSize.height, imageLocation.x, imageLocation.y);
+                    LOG.info("PDF view size: {}x{}, Image size {}x{}, Model offset is {},{} scaling to {},{}", cellSize.width, cellSize.height, img.getWidth(), img.getHeight(), pageEntryModel.getImageViewOffset().x, pageEntryModel.getImageViewOffset().y, imageOffset.x, imageOffset.y);
+
+                    LOG.info("Adding image with size {}x{} at [{},{}]", cellSize.width, cellSize.height, imageLocation.x, imageLocation.y);
                     img.setAbsolutePosition(imageLocation.x, imageLocation.y);
                     doc.add(img);
                 }

@@ -9,12 +9,16 @@ import java.awt.Point;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author philb
  */
 public class PageGeometryMapper {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PageGeometryMapper.class);
 
     public enum OriginLocation {
         NorthEast,
@@ -142,6 +146,12 @@ public class PageGeometryMapper {
         return points.setScale(0, RoundingMode.HALF_EVEN).intValue();
     }
 
+    public Point locationAsPointsToViewUnits(Point location) {
+        int x = pointsToViewUnits(location.x);
+        int y = pointsToViewUnits(location.y);
+        return new Point(x, y);
+    }
+
     public int pointsToViewUnits(int v) {
         BigDecimal scale = getPointsToViewUnitsScale();
 
@@ -155,10 +165,11 @@ public class PageGeometryMapper {
 
         BigDecimal points = new BigDecimal(v, MATH_CONTEXT);
         BigDecimal px = points.divide(scale, MATH_CONTEXT);
+
         return px.setScale(0, RoundingMode.HALF_EVEN).intValue();
     }
 
-    private BigDecimal getPointsToViewUnitsScale() {
+    public BigDecimal getPointsToViewUnitsScale() {
 
         if (pageModel.getPageSize().height() == viewSize.height) {
             return BigDecimal.ONE;
@@ -169,8 +180,8 @@ public class PageGeometryMapper {
         }
 
         BigDecimal pageHeightPoints = new BigDecimal(pageModel.getPageSize().height(), MATH_CONTEXT);
-        BigDecimal panelHeight = new BigDecimal(viewSize.height, MATH_CONTEXT);
-        BigDecimal pointsToViewUnits = pageHeightPoints.divide(panelHeight, MATH_CONTEXT);
+        BigDecimal viewHeight = new BigDecimal(viewSize.height, MATH_CONTEXT);
+        BigDecimal pointsToViewUnits = pageHeightPoints.divide(viewHeight, MATH_CONTEXT);
         return pointsToViewUnits;
     }
 }
