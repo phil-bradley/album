@@ -65,12 +65,17 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     public void centerImage() {
 
+        PageGeometryMapper geometryMapper = getPageGeometryMapper();
+
+        BufferedImage image;
+
         if (pageEntryModel.getImage() == null) {
-            return;
+            image = ImageUtils.getPlaceholderImage();
+        } else {
+            image = pageEntryModel.getScaledImage(getSize(), geometryMapper);
+
         }
 
-        PageGeometryMapper geometryMapper = getPageGeometryMapper();
-        BufferedImage image = pageEntryModel.getScaledImage(getSize(), geometryMapper);
         setViewOffset(ImageUtils.getCenteredCoordinates(getImageSize(image), getSize()));
         pageEntryModel.setCentered(true);
     }
