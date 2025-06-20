@@ -23,7 +23,7 @@ public class FileUtils {
 
         if (!albumHomePropertyValue.trim().isBlank()) {
             File albumHome = new File(albumHomePropertyValue);
-            if (albumHome.exists()) {
+            if (albumHome.exists() && albumHome.isDirectory()) {
                 return albumHome;
             }
         }
@@ -33,11 +33,11 @@ public class FileUtils {
 
     public static boolean isImage(File file) {
 
-        if (!file.isFile()) {
+        if (!file.exists()) {
             return false;
         }
 
-        if (!file.exists()) {
+        if (!file.isFile()) {
             return false;
         }
 
@@ -62,14 +62,6 @@ public class FileUtils {
             return false;
         }
 
-        if (file.isHidden()) {
-            return true;
-        }
-
-        if (file.getName().startsWith(".")) {
-            return true;
-        }
-
-        return false;
+        return (file.getName().startsWith(".") || file.isHidden());
     }
 }
