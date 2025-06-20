@@ -43,8 +43,6 @@ public class AlbumViewContainer extends AppPanel {
 
     public AlbumViewContainer() {
 
-        gridbag();
-
         initComponents();
         layoutComponents();
 

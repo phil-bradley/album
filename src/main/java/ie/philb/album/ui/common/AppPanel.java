@@ -6,15 +6,12 @@ package ie.philb.album.ui.common;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.ApplicationListener;
-import ie.philb.album.ui.config.UiConfig;
 import ie.philb.album.ui.config.UiConfigListener;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
-import java.awt.LayoutManager;
 import java.util.UUID;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +30,7 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
     public AppPanel() {
         super();
 
-        gridbag();
+        setLayout(new GridBagLayout());
         opaque(false);
         setName(getClass().getSimpleName());
 
@@ -50,15 +47,6 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
         removeMouseMotionListener(this);
         removeMouseListener(this);
         AppContext.INSTANCE.removeListener(this);
-    }
-
-    public AppPanel layoutGridBag() {
-        setLayout(new GridBagLayout());
-        return this;
-    }
-
-    public AppPanel(LayoutManager lm) {
-        super(lm);
     }
 
     public AppPanel foreground(Color fg) {
@@ -82,11 +70,6 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
         return this;
     }
 
-    public final AppPanel gridbag() {
-        this.setLayout(new GridBagLayout());
-        return this;
-    }
-
     public final AppPanel opaque(boolean b) {
         this.setOpaque(b);
         return this;
@@ -101,11 +84,6 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
         return border(c, 1);
     }
 
-    public AppPanel border(Border border) {
-        setBorder(border);
-        return this;
-    }
-
     public AppPanel lockSize(Dimension d) {
         setPreferredSize(d);
         setMinimumSize(d);
@@ -118,26 +96,6 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
         this.setSize(d);
         this.setPreferredSize(d);
         return this;
-    }
-
-    @Override
-    public void setPreferredSize(Dimension dimension) {
-
-        //logger.info("Set preferred size {}", dimension);
-        Dimension preferredSize = getPreferredSize();
-
-        if (preferredSize.getWidth() != dimension.getWidth() || preferredSize.getHeight() != dimension.getHeight()) {
-            super.setPreferredSize(dimension);
-        }
-    }
-
-    public AppPanel preferredSize(Dimension d) {
-        this.setPreferredSize(d);
-        return this;
-    }
-
-    public AppPanel preferredSize(int width, int height) {
-        return preferredSize(new Dimension(width, height));
     }
 
     public AppPanel filler(Color background) {
@@ -158,6 +116,7 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
         ap.setOpaque(false);
         ap.setPreferredSize(size);
         ap.setMinimumSize(size);
+        ap.setSize(size);
         return ap;
     }
 
@@ -165,11 +124,6 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
         AppPanel filler = filler(size);
         filler.background(color);
         return filler;
-    }
-
-    @Override
-    public void uiConfigUpdated(UiConfig config) {
-        repaint();
     }
 
 }

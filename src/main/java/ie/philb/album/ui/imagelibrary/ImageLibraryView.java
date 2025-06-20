@@ -48,8 +48,6 @@ public class ImageLibraryView extends AppPanel {
 
         initToolBar();
 
-        gridbag();
-
         GridBagCellConstraints gbc = new GridBagCellConstraints().fillHorizontal().weight(1, 0).anchorNorth();
         add(toolBar, gbc);
 

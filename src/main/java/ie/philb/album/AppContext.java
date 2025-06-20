@@ -12,6 +12,7 @@ import ie.philb.album.view.PageEntryView;
 import ie.philb.album.view.PageView;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,10 @@ public enum AppContext implements ApplicationListener {
 
     public void removeListener(ApplicationListener l) {
         this.applicationListeners.remove(l);
+    }
+
+    public List<ApplicationListener> listeners() {
+        return Collections.unmodifiableList(applicationListeners);
     }
 
     public void setAlbumModel(AlbumModel model) {
