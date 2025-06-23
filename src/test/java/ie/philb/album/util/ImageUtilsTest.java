@@ -33,8 +33,7 @@ class ImageUtilsTest {
 
     @Test
     void givenImageFile_expectReadToBufferedImage() throws Exception {
-        String resourcePath = getClass().getResource("/test_275x183.jpg").getPath();
-        File file = new File(resourcePath);
+        File file = TestUtils.getTestImageFile();
 
         BufferedImage image = ImageUtils.readBufferedImage(file);
         assertNotNull(image);
@@ -71,8 +70,7 @@ class ImageUtilsTest {
 
     @Test
     void givenImage_expectGetSizeReturnsSize() throws Exception {
-        String resourcePath = getClass().getResource("/test_275x183.jpg").getPath();
-        File file = new File(resourcePath);
+        File file = TestUtils.getTestImageFile();
 
         BufferedImage image = ImageUtils.readBufferedImage(file);
         Dimension size = ImageUtils.getImageSize(image);
@@ -196,8 +194,7 @@ class ImageUtilsTest {
 
     @Test
     void givenCropSizeLessThanImageSize_expectEqualsCropSize() throws Exception {
-        String resourcePath = getClass().getResource("/test_275x183.jpg").getPath();
-        File file = new File(resourcePath);
+        File file = TestUtils.getTestImageFile();
 
         BufferedImage image = ImageUtils.readBufferedImage(file);
         Point offset = new Point(0, 0);
@@ -209,8 +206,7 @@ class ImageUtilsTest {
 
     @Test
     void givenCropSizeLessThanImageSize_andOffset_expectImageSizeReduced() throws Exception {
-        String resourcePath = getClass().getResource("/test_275x183.jpg").getPath();
-        File file = new File(resourcePath);
+        File file = TestUtils.getTestImageFile();
 
         BufferedImage image = ImageUtils.readBufferedImage(file);
         Point offset = new Point(100, 0);

@@ -4,6 +4,7 @@
  */
 package ie.philb.album.metadata;
 
+import ie.philb.album.util.TestUtils;
 import java.awt.Dimension;
 import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,9 +20,7 @@ public class ImageMetaDataTest {
     @Test
     void validateReadImageMetaData() throws Exception {
 
-        String resourcePath = getClass().getResource("/test_275x183.jpg").getPath();
-        File file = new File(resourcePath);
-
+        File file = TestUtils.getTestImageFile();
         ImageMetaDataReader imageMetaDataReader = new ImageMetaDataReader(file);
         ImageMetaData imageMetaData = imageMetaDataReader.getMetaData();
 

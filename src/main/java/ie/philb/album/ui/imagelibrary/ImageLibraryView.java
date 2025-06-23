@@ -5,7 +5,6 @@
 package ie.philb.album.ui.imagelibrary;
 
 import ie.philb.album.AppContext;
-import ie.philb.album.metadata.ImageMetaDataReader;
 import ie.philb.album.ui.command.BrowseToParentCommand;
 import ie.philb.album.ui.command.HomeCommand;
 import ie.philb.album.ui.common.AppPanel;
@@ -72,8 +71,6 @@ public class ImageLibraryView extends AppPanel {
                 }
 
                 if (evt.getClickCount() == 2) {
-
-                    new ImageMetaDataReader(selected.getFile()).dumpMetaData();
 
                     if (selected.isDirectory()) {
                         AppContext.INSTANCE.browseLocationUpdated(selected.getFile());

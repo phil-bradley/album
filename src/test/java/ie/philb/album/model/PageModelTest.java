@@ -4,6 +4,7 @@
  */
 package ie.philb.album.model;
 
+import ie.philb.album.util.TestUtils;
 import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -51,13 +52,10 @@ public class PageModelTest {
     @Test
     void givenPageModel_whenImageSet_expectedPageEntryUpdated() {
 
-        String imageFileName = "test_275x183.jpg";
-
         PageGeometry geometry = PageGeometry.square(2);
         PageModel pageModel = new PageModel(geometry, PageSize.A4_Landscape);
 
-        String resourcePath = getClass().getResource("/" + imageFileName).getPath();
-        File file = new File(resourcePath);
+        File file = TestUtils.getTestImageFile();
 
         pageModel.setImage(file, 1);
 
@@ -68,20 +66,16 @@ public class PageModelTest {
         assertNotNull(pemFile);
 
         String pemFileName = pemFile.getName();
-        assertTrue(pemFileName.endsWith(imageFileName));
+        assertTrue(pemFileName.endsWith(file.getName()));
     }
 
     @Test
     void givenPageModel_whenIndexInvalid_expectException() {
 
-        String imageFileName = "test_275x183.jpg";
-
         PageGeometry geometry = PageGeometry.square(2);
         PageModel pageModel = new PageModel(geometry, PageSize.A4_Landscape);
 
-        String resourcePath = getClass().getResource("/" + imageFileName).getPath();
-        File file = new File(resourcePath);
-
+        File file = TestUtils.getTestImageFile();
         Exception thrown = assertThrows(
                 RuntimeException.class,
                 () -> {

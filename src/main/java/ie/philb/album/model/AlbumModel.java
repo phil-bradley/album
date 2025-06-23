@@ -32,6 +32,11 @@ public class AlbumModel {
     }
 
     public void addPage(PageModel page) {
+
+        if (page.getPageSize() != pageSize) {
+            throw new IllegalArgumentException("Cannot create page of size " + page.getPageSize() + " in album of size " + pageSize);
+        }
+
         page.setPageId(pages.size() + 1);
         this.pages.add(page);
     }

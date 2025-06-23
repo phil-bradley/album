@@ -6,7 +6,6 @@ package ie.philb.album.metadata;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifImageDirectory;
@@ -69,30 +68,5 @@ public class ImageMetaDataReader {
         }
 
         return imageMappers;
-    }
-
-    public void dumpMetaData() {
-
-        try {
-            Metadata imageMetadata = ImageMetadataReader.readMetadata(file);
-
-            for (Directory d : imageMetadata.getDirectories()) {
-                System.out.println("Got directory: " + d.getName() + ", " + d.getTagCount() + " tags");
-            }
-
-//            for (Directory d : imageMetadata.getDirectories()) {
-//
-//                Collection<Tag> tags = d.getTags();
-//                for (Tag tag : tags) {
-//                    String value = d.getString(tag.getTagType());
-//                    if (value == null) {
-//                        continue;
-//                    }
-//                    System.out.println(tag.getTagName() + ":    " + value);
-//                }
-//            }
-        } catch (ImageProcessingException | IOException ex) {
-
-        }
     }
 }

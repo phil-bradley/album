@@ -66,10 +66,7 @@ public class FileUtilsTest {
 
     @Test
     void givenImageFile_expectIsImageIsTrue() throws Exception {
-
-        String resourcePath = getClass().getResource("/test_275x183.jpg").getPath();
-        File file = new File(resourcePath);
-
+        File file = TestUtils.getTestImageFile();
         assertTrue(FileUtils.isImage(file));
     }
 
