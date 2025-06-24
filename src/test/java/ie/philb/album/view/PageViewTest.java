@@ -126,11 +126,11 @@ public class PageViewTest {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
         PageView pageView = new PageView(pageModel);
-        pageView.pageEntrySelected(pageView, pageView.pageEntryViews.get(0));
+        pageView.pageEntrySelected(pageView, pageView.pageEntryViews.get(2));
 
         ImageLibraryEntry imageLibraryEntry = new ImageLibraryEntry(TestUtils.getTestImageFile());
         pageView.libraryImageSelected(imageLibraryEntry);
 
-        assertEquals(TestUtils.getTestImageFile().getAbsolutePath(), pageModel.getPageEntries().get(0).getImageFile().getAbsolutePath());
+        assertEquals(TestUtils.getTestImageFile().getAbsolutePath(), pageModel.getPageEntries().get(2).getImageFile().getAbsolutePath());
     }
 }
