@@ -32,7 +32,7 @@ public class PageView extends AppPanel {
 
     private static final Logger LOG = LoggerFactory.getLogger(PageView.class);
 
-    private List<PageEntryView> pageEntriesViews;
+    protected List<PageEntryView> pageEntryViews;
     private boolean isSelected = false;
     private PageEntryView selectedEntryView = null;
     private PageModel model;
@@ -64,7 +64,7 @@ public class PageView extends AppPanel {
         boolean pageMatches = (selectedPageView.getPageModel().getPageId() == this.getPageModel().getPageId());
         setSelected(pageMatches);
 
-        for (PageEntryView pageEntryView : pageEntriesViews) {
+        for (PageEntryView pageEntryView : pageEntryViews) {
             PageCell selectedCell = selectedPageEntryView.getPageCell();
             boolean cellMatches = pageEntryView.getPageCell().equals(selectedCell);
 
@@ -80,13 +80,13 @@ public class PageView extends AppPanel {
     private void clearSelection() {
         this.selectedEntryView = null;
         setSelected(false);
-        pageEntriesViews.forEach(pev -> setSelected(false));
+        pageEntryViews.forEach(pev -> setSelected(false));
     }
 
     private int getSelectedIndex() {
 
         int selectedIndex = 0;
-        for (PageEntryView view : pageEntriesViews) {
+        for (PageEntryView view : pageEntryViews) {
             if (view.equals(selectedEntryView)) {
                 return selectedIndex;
             }
@@ -119,7 +119,7 @@ public class PageView extends AppPanel {
 
     public final void setModel(PageModel model) {
         this.model = model;
-        this.pageEntriesViews = new ArrayList<>(model.getCellCount());
+        this.pageEntryViews = new ArrayList<>(model.getCellCount());
 
         createEntries();
     }
@@ -144,13 +144,13 @@ public class PageView extends AppPanel {
 
         int entryCount = model.getGeometry().getCells().size();
 
-        pageEntriesViews.clear();
+        pageEntryViews.clear();
 
         for (int i = 0; i < entryCount; i++) {
             PageEntryModel pem = model.getPageEntries().get(i);
             PageEntryView pageEntryView = new PageEntryView(this, pem);
 
-            pageEntriesViews.add(pageEntryView);
+            pageEntryViews.add(pageEntryView);
             add(pageEntryView);
 
         }
@@ -166,7 +166,7 @@ public class PageView extends AppPanel {
 
         PageGeometryMapper geometryMapper = new PageGeometryMapper(model, getSize());
 
-        for (PageEntryView pageEntryView : pageEntriesViews) {
+        for (PageEntryView pageEntryView : pageEntryViews) {
 
             PageEntryModel pageEntryModel = pageEntryView.getPageEntryModel();
             Dimension size = geometryMapper.getCellSizeOnView(pageEntryModel);
@@ -182,7 +182,7 @@ public class PageView extends AppPanel {
     public void setPreviewMode(boolean previewMode) {
         this.isPreviewMode = previewMode;
 
-        for (PageEntryView view : pageEntriesViews) {
+        for (PageEntryView view : pageEntryViews) {
             view.setPreviewMode(isPreviewMode);
         }
     }
