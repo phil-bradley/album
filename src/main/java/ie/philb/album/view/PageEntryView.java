@@ -135,6 +135,10 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         updateBorder();
     }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
     public PageCell getPageCell() {
         return pageEntryModel.getCell();
     }

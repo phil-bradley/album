@@ -33,8 +33,8 @@ public class PageView extends AppPanel {
     private static final Logger LOG = LoggerFactory.getLogger(PageView.class);
 
     protected List<PageEntryView> pageEntryViews;
-    private boolean isSelected = false;
-    private PageEntryView selectedEntryView = null;
+    protected boolean isSelected = false;
+    protected PageEntryView selectedPageEntryView = null;
     private PageModel model;
     private boolean isPreviewMode = false;
 
@@ -55,6 +55,7 @@ public class PageView extends AppPanel {
 
     private void updateSelectedEntryView(PageView selectedPageView, PageEntryView selectedPageEntryView) {
 
+        clearSelection();
         pageSelected(selectedPageView);
 
         if (selectedPageEntryView == null) {
@@ -70,7 +71,7 @@ public class PageView extends AppPanel {
 
             if (pageMatches && cellMatches) {
                 pageEntryView.setSelected(true);
-                this.selectedEntryView = pageEntryView;
+                this.selectedPageEntryView = pageEntryView;
             }
         }
 
@@ -78,7 +79,7 @@ public class PageView extends AppPanel {
     }
 
     private void clearSelection() {
-        this.selectedEntryView = null;
+        this.selectedPageEntryView = null;
         setSelected(false);
         pageEntryViews.forEach(pev -> setSelected(false));
     }
@@ -87,7 +88,7 @@ public class PageView extends AppPanel {
 
         int selectedIndex = 0;
         for (PageEntryView view : pageEntryViews) {
-            if (view.equals(selectedEntryView)) {
+            if (view.equals(selectedPageEntryView)) {
                 return selectedIndex;
             }
 
@@ -111,10 +112,10 @@ public class PageView extends AppPanel {
         }
 
         model.setImage(imageLibraryEntry.getFile(), selectedIdx);
-        selectedEntryView.setSelected(true);
-        selectedEntryView.centerImage();
+        selectedPageEntryView.setSelected(true);
+        selectedPageEntryView.centerImage();
 
-        AppContext.INSTANCE.pageEntrySelected(selectedEntryView.getPageView(), selectedEntryView);
+        AppContext.INSTANCE.pageEntrySelected(selectedPageEntryView.getPageView(), selectedPageEntryView);
     }
 
     public final void setModel(PageModel model) {
@@ -132,12 +133,6 @@ public class PageView extends AppPanel {
     public void setWidth(int width) {
         int height = model.getPageSize().heigthFromWidth(width);
         setSize(width, height);
-    }
-
-    @Override
-    public void setSize(int width, int height) {
-        //LOG.info("Setting size to {}x{}", width, height);
-        super.setSize(width, height);
     }
 
     private void createEntries() {
