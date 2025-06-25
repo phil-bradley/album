@@ -10,7 +10,13 @@ import ie.philb.album.model.PageSize;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.util.TestUtils;
+import static ie.philb.album.util.TestUtils.assertClose;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import javax.swing.border.LineBorder;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -132,5 +138,62 @@ public class PageViewTest {
         pageView.libraryImageSelected(imageLibraryEntry);
 
         assertEquals(TestUtils.getTestImageFile().getAbsolutePath(), pageModel.getPageEntries().get(2).getImageFile().getAbsolutePath());
+    }
+
+    @Test
+    void givenPageHasNoSize_andPositionEntriesInvoked_expectEntriesHaveNoSize() {
+
+        PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
+        PageView pageView = new PageView(pageModel);
+        pageView.positionEntries();
+
+        Dimension zeroDimension = new Dimension(0, 0);
+        Rectangle zeroBounds = new Rectangle(0, 0, 0, 0);
+
+        for (PageEntryView pageEntryView : pageView.pageEntryViews) {
+            assertEquals(zeroDimension, pageEntryView.getSize());
+            assertEquals(zeroBounds, pageEntryView.getBounds());
+        }
+
+    }
+
+    @Test
+    void givenPageHasCell_andSizeSet_andPositionEntriesInvoked_expectEntrySizeIsPageSize() {
+
+        PageModel pageModel = new PageModel(PageGeometry.square(1), PageSize.A4_Landscape).withMargin(0);
+        PageView pageView = new PageView(pageModel);
+        pageView.setWidth(1200);
+        pageView.positionEntries();
+
+        PageEntryView pageEntryView = pageView.pageEntryViews.get(0);
+        Dimension viewSize = pageView.getSize();
+        Rectangle bounds = new Rectangle(0, 0, viewSize.width, viewSize.height);
+
+        assertClose(viewSize, pageEntryView.getSize(), 2);
+        assertClose(bounds, pageEntryView.getBounds(), 2);
+    }
+
+    @Test
+    void givenPage2x2_andSizeSet_andPositionEntriesInvoked_expectEntrySizesSet() {
+
+        int margin = 12;
+
+        PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape).withMargin(margin);
+        PageView pageView = new PageView(pageModel);
+        pageView.setWidth(842);  // 1 - 1 mapping from viewsize to point size of page
+        pageView.positionEntries();
+
+        PageEntryView pageEntryView = pageView.pageEntryViews.get(3);
+
+        int expectedWidth = (PageSize.A4_Landscape.width() - 3 * margin) / 2;
+        int expectedHeight = (PageSize.A4_Landscape.height() - 3 * margin) / 2;
+        int expectedX = (margin * 2) + expectedWidth;
+        int expectedY = (margin * 2) + expectedHeight;
+
+        Dimension entrySize = new Dimension(expectedWidth, expectedHeight);
+        Rectangle entryPosition = new Rectangle(expectedX, expectedY, expectedWidth, expectedHeight);
+
+        assertClose(entrySize, pageEntryView.getSize(), 2);
+        assertClose(entryPosition, pageEntryView.getBounds(), 2);
     }
 }
