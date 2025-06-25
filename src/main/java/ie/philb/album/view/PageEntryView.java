@@ -80,7 +80,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         pageEntryModel.setCentered(true);
     }
 
-    public void resetImagePosition() {
+    public void resetViewOffset() {
         setViewOffset(new Point(0, 0));
     }
 
@@ -94,25 +94,32 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         repaint();
     }
 
+    protected BufferedImage getViewImage() {
+        Dimension viewSize = new Dimension(getBounds().width, getBounds().height);
+        BufferedImage viewImage = pageEntryModel.getViewImage(viewSize, getPageGeometryMapper());
+        return viewImage;
+    }
+
+    protected Point getViewImageOffset() {
+        PageGeometryMapper geometryMapper = getPageGeometryMapper();
+
+        Point offset = geometryMapper.locationAsPointsToViewUnits(pageEntryModel.getImageViewOffset());
+
+        int x = Math.max(0, offset.x);
+        int y = Math.max(0, offset.y);
+
+        return new Point(x, y);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
 
         super.paintComponent(g);
 
-        Dimension viewSize = new Dimension(getBounds().width, getBounds().height);
-        BufferedImage viewImage = pageEntryModel.getViewImage(viewSize, getPageGeometryMapper());
-        Dimension imageSize = ImageUtils.getImageSize(viewImage);
+        BufferedImage viewImage = getViewImage();
+        Point viewImageOffset = getViewImageOffset();
 
-        PageGeometryMapper geometryMapper = getPageGeometryMapper();
-        Dimension cellSizePoints = geometryMapper.getCellSizePoints(pageEntryModel.getCell());
-
-        Point offset = geometryMapper.locationAsPointsToViewUnits(pageEntryModel.getImageViewOffset());
-
-        LOG.info("ViewSize: {}x{}, Model size: {}x{}, Image size{}x{}, Model offset is {},{} scaling to {},{}", viewSize.width, viewSize.height, cellSizePoints.width, cellSizePoints.height, imageSize.width, imageSize.height, pageEntryModel.getImageViewOffset().x, pageEntryModel.getImageViewOffset().y, offset.x, offset.y);
-        int x = Math.max(0, offset.x);
-        int y = Math.max(0, offset.y);
-
-        g.drawImage(viewImage, x, y, null);
+        g.drawImage(viewImage, viewImageOffset.x, viewImageOffset.y, null);
 
     }
 
@@ -242,7 +249,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     }
 
     public void zoomToCoverFit() {
-        resetImagePosition();
+        resetViewOffset();
         pageEntryModel.zoomToCoverFit(getSize());
         centerImage();
     }

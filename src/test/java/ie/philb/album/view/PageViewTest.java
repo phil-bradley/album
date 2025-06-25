@@ -4,6 +4,7 @@
  */
 package ie.philb.album.view;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
@@ -12,16 +13,15 @@ import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.util.TestUtils;
 import static ie.philb.album.util.TestUtils.assertClose;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import javax.swing.border.LineBorder;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -29,6 +29,11 @@ import org.junit.jupiter.api.Test;
  * @author philb
  */
 public class PageViewTest {
+
+    @BeforeEach
+    void setUp() {
+        AppContext.INSTANCE.pageSelected(null);
+    }
 
     @Test
     void givenPageView_expectEntryViewForEachModelView() {
@@ -195,5 +200,51 @@ public class PageViewTest {
 
         assertClose(entrySize, pageEntryView.getSize(), 2);
         assertClose(entryPosition, pageEntryView.getBounds(), 2);
+    }
+
+    @Test
+    void givenPageView_whenClicked_expectedPageSelected() {
+
+        PageModel pageModel = new PageModel(PageGeometry.square(1), PageSize.A4_Landscape);
+        PageView pageView = new PageView(pageModel);
+
+        assertNull(AppContext.INSTANCE.getSelectedPageView());
+
+        MouseEvent mouseEvent = new MouseEvent(
+                pageView,
+                MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(),
+                0, // Modifiers
+                1, 1, // Coordinates
+                1, // Click count
+                true,
+                MouseEvent.BUTTON1);
+
+        pageView.mousePressed(mouseEvent);
+        assertNotNull(AppContext.INSTANCE.getSelectedPageView());
+        assertEquals(AppContext.INSTANCE.getSelectedPageView(), pageView);
+    }
+
+    @Test
+    void givenPageViewIsPreview_whenClicked_expectedPageNotSelected() {
+
+        PageModel pageModel = new PageModel(PageGeometry.square(1), PageSize.A4_Landscape);
+        PageView pageView = new PageView(pageModel);
+        pageView.setPreviewMode(true);
+
+        assertNull(AppContext.INSTANCE.getSelectedPageView());
+
+        MouseEvent mouseEvent = new MouseEvent(
+                pageView,
+                MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(),
+                0, // Modifiers
+                1, 1, // Coordinates
+                1, // Click count
+                true,
+                MouseEvent.BUTTON1);
+
+        pageView.mousePressed(mouseEvent);
+        assertNull(AppContext.INSTANCE.getSelectedPageView());
     }
 }
