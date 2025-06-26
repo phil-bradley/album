@@ -30,9 +30,9 @@ public class ImageMetaDataTest {
         assertEquals(183, imageMetaData.getSize().height);
         assertEquals(new Dimension(275, 183), imageMetaData.getSize());
 
-        assertEquals(300, imageMetaData.getXResolution());
+        assertEquals(400, imageMetaData.getXResolution());
         assertEquals(300, imageMetaData.getYResolution());
-        assertEquals(new Dimension(300, 300), imageMetaData.getResolution());
+        assertEquals(new Dimension(400, 300), imageMetaData.getResolution());
 
     }
 }
