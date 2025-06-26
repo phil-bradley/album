@@ -21,6 +21,10 @@ public class NewAlbumCommand extends AbstractCommand {
 
         AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
 
+        PageModel titlePage = new PageModel(PageGeometry.square(1), PageSize.A4_Landscape);
+        titlePage.getPageEntries().get(0).setText("The Title here!");
+        albumModel.addPage(titlePage);
+        
         PageModel page1 = new PageModel(PageGeometry.square(2), albumModel.getPageSize()).withMargin(2);
         albumModel.addPage(page1);
 

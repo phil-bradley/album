@@ -5,6 +5,7 @@
 package ie.philb.album.model;
 
 import ie.philb.album.util.ImageUtils;
+import ie.philb.album.util.StringUtils;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -31,6 +32,7 @@ public class PageEntryModel {
     private double zoomFactor = 1;
     private Point offset = new Point(0, 0);
     private boolean isCentered = false;
+    private String text = "";
 
     public PageEntryModel(PageCell cell) {
         this.cell = cell;
@@ -141,7 +143,7 @@ public class PageEntryModel {
 
     public BufferedImage getViewImage(Dimension viewSize, PageGeometryMapper geometryMapper) {
 
-        if (image == null) {
+        if (image == null && StringUtils.isBlank(text)) {
             return getPlacholderImage(viewSize);
         }
 
@@ -252,4 +254,13 @@ public class PageEntryModel {
     public void setCentered(boolean b) {
         this.isCentered = b;
     }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+    
 }

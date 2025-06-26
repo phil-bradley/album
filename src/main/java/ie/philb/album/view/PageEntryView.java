@@ -14,9 +14,11 @@ import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
 import ie.philb.album.util.ImageUtils;
 import static ie.philb.album.util.ImageUtils.getImageSize;
+import ie.philb.album.util.StringUtils;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -118,7 +120,15 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         BufferedImage viewImage = getViewImage();
         Point viewImageOffset = getViewImageOffset();
 
-        g.drawImage(viewImage, viewImageOffset.x, viewImageOffset.y, null);
+        if (viewImage != null) {
+            g.drawImage(viewImage, viewImageOffset.x, viewImageOffset.y, null);
+        }
+
+        if (StringUtils.hasValue(pageEntryModel.getText())) {
+            g.setColor(Color.BLUE);
+            g.setFont(new Font("Verdana", Font.BOLD, 12));
+            g.drawString(pageEntryModel.getText(), 20, 20);
+        }
 
     }
 
@@ -169,7 +179,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
         canResize = true;
         mouseDragStartPoint = me.getPoint();
-        
+
         System.out.println("Location on screen: " + me.getPoint());
         mouseDragPreviousPoint = mouseDragStartPoint;
 
