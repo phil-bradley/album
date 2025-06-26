@@ -210,17 +210,7 @@ public class PageViewTest {
 
         assertNull(AppContext.INSTANCE.getSelectedPageView());
 
-        MouseEvent mouseEvent = new MouseEvent(
-                pageView,
-                MouseEvent.MOUSE_CLICKED,
-                System.currentTimeMillis(),
-                0, // Modifiers
-                1, 1, // Coordinates
-                1, // Click count
-                true,
-                MouseEvent.BUTTON1);
-
-        pageView.mousePressed(mouseEvent);
+        pageView.mousePressed(TestUtils.createMouseClickEvent(pageView));
         assertNotNull(AppContext.INSTANCE.getSelectedPageView());
         assertEquals(AppContext.INSTANCE.getSelectedPageView(), pageView);
     }
@@ -234,17 +224,7 @@ public class PageViewTest {
 
         assertNull(AppContext.INSTANCE.getSelectedPageView());
 
-        MouseEvent mouseEvent = new MouseEvent(
-                pageView,
-                MouseEvent.MOUSE_CLICKED,
-                System.currentTimeMillis(),
-                0, // Modifiers
-                1, 1, // Coordinates
-                1, // Click count
-                true,
-                MouseEvent.BUTTON1);
-
-        pageView.mousePressed(mouseEvent);
+        pageView.mousePressed(TestUtils.createMouseClickEvent(pageView));
         assertNull(AppContext.INSTANCE.getSelectedPageView());
     }
 }

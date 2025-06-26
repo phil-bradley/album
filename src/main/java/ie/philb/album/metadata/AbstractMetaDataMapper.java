@@ -27,10 +27,6 @@ public abstract class AbstractMetaDataMapper {
         this.directory = getDirectory();
     }
 
-    public Dimension getSize() throws MetadataException {
-        return new Dimension(getImageWidth(), getImageHeight());
-    }
-
     public int getXResolution() throws MetadataException {
         return directory.getInt(getXResolutionTag());
     }

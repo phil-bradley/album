@@ -26,8 +26,8 @@ public class ImageMetaDataTest {
 
         assertNotNull(imageMetaData);
 
-        assertEquals(275, imageMetaData.getWidth());
-        assertEquals(183, imageMetaData.getHeight());
+        assertEquals(275, imageMetaData.getSize().width);
+        assertEquals(183, imageMetaData.getSize().height);
         assertEquals(new Dimension(275, 183), imageMetaData.getSize());
 
         assertEquals(300, imageMetaData.getXResolution());

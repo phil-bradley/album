@@ -67,12 +67,12 @@ public enum AppContext implements ApplicationListener {
     }
 
     @Override
-    public void pageEntrySelected(PageView pageView, PageEntryView view) {
-        this.selectedPageEntryView = view;
+    public void pageEntrySelected(PageView pageView, PageEntryView pageEntryView) {
+        this.selectedPageEntryView = pageEntryView;
         pageSelected(pageView);
 
         getApplicationListenersCopy().forEach(appListener -> {
-            appListener.pageEntrySelected(pageView, view);
+            appListener.pageEntrySelected(pageView, pageEntryView);
         });
     }
 

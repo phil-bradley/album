@@ -6,7 +6,9 @@ package ie.philb.album.util;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import javax.swing.JComponent;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -18,6 +20,21 @@ public class TestUtils {
     public static File getTestImageFile() {
         String resourcePath = TestUtils.class.getResource("/test_275x183.jpg").getPath();
         return new File(resourcePath);
+    }
+
+    public static MouseEvent createMouseClickEvent(JComponent component) {
+
+        MouseEvent mouseEvent = new MouseEvent(
+                component,
+                MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(),
+                0, // Modifiers
+                1, 1, // Coordinates
+                1, // Click count
+                true,
+                MouseEvent.BUTTON1);
+
+        return mouseEvent;
     }
 
     public static void assertClose(Rectangle expected, Rectangle value, int tolerance) {
