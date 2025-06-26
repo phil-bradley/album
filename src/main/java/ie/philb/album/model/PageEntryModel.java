@@ -219,6 +219,12 @@ public class PageEntryModel {
         }
     }
 
+    private void fireTextUpdated() {
+        for (var l : listeners) {
+            l.textUpdated();
+        }
+    }
+
     public void setImageViewOffset(Point offset) {
         this.offset = offset;
         this.isCentered = false;
@@ -261,6 +267,8 @@ public class PageEntryModel {
 
     public void setText(String text) {
         this.text = text;
+
+        fireTextUpdated();
     }
-    
+
 }

@@ -10,7 +10,9 @@ import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryModelListener;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.ui.common.AppPanel;
+import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Resources;
+import ie.philb.album.ui.common.TextControl;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
 import ie.philb.album.util.ImageUtils;
 import static ie.philb.album.util.ImageUtils.getImageSize;
@@ -45,10 +47,13 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     private boolean isPreviewMode = false;
     private final PageView pageView;
     private boolean canResize = false;
+    private TextControl textControl = new TextControl();
 
     public PageEntryView(PageView pageView, PageEntryModel entryModel) {
 
         super();
+
+        add(textControl, new GridBagCellConstraints().weight(1).fillBoth());
 
         background(Color.white);
         setFocusable(true);
@@ -123,13 +128,6 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         if (viewImage != null) {
             g.drawImage(viewImage, viewImageOffset.x, viewImageOffset.y, null);
         }
-
-        if (StringUtils.hasValue(pageEntryModel.getText())) {
-            g.setColor(Color.BLUE);
-            g.setFont(new Font("Verdana", Font.BOLD, 12));
-            g.drawString(pageEntryModel.getText(), 20, 20);
-        }
-
     }
 
     private void updateBorder() {
@@ -162,6 +160,11 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     @Override
     public void imageUpdated() {
         repaint();
+    }
+
+    @Override
+    public void textUpdated() {
+        textControl.setVisible(StringUtils.hasValue(pageEntryModel.getText()));
     }
 
     @Override

@@ -10,5 +10,9 @@ package ie.philb.album.model;
  */
 public interface PageEntryModelListener {
 
-    void imageUpdated();
+    default void imageUpdated() {        
+    }
+    
+    default void textUpdated() {
+    }
 }
