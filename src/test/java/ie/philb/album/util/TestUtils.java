@@ -5,6 +5,7 @@
 package ie.philb.album.util;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -23,13 +24,17 @@ public class TestUtils {
     }
 
     public static MouseEvent createMouseClickEvent(JComponent component) {
+        return createMouseClickEvent(component, new Point(1, 1));
+    }
+
+    public static MouseEvent createMouseClickEvent(JComponent component, Point location) {
 
         MouseEvent mouseEvent = new MouseEvent(
                 component,
                 MouseEvent.MOUSE_CLICKED,
                 System.currentTimeMillis(),
                 0, // Modifiers
-                1, 1, // Coordinates
+                location.x, location.y, // Coordinates
                 1, // Click count
                 true,
                 MouseEvent.BUTTON1);

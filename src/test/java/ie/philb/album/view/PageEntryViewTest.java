@@ -14,6 +14,7 @@ import ie.philb.album.util.ImageUtils;
 import ie.philb.album.util.TestUtils;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -135,7 +136,7 @@ public class PageEntryViewTest {
 
         PageEntryView pageEntryView = new PageEntryView(pageView, pageModel.getPageEntries().get(0));
         pageModel.setImage(TestUtils.getTestImageFile(), 0);
-             
+
         assertNull(AppContext.INSTANCE.getSelectedPageView());
         assertNull(AppContext.INSTANCE.getSelectedPageEntryView());
 
@@ -149,12 +150,7 @@ public class PageEntryViewTest {
     void givenPageEntryViewIsPreviewMode_whenClick_expectedSelected() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
-
-        PageCell pageCell = new PageCell(new Dimension(1, 1), new Point(0, 0));
-        PageEntryModel pageEntryModel = new PageEntryModel(pageCell);
-
-        PageEntryView pageEntryView = new PageEntryView(pageView, pageEntryModel);
+        PageEntryView pageEntryView = new PageEntryView(new PageView(pageModel), pageModel.getPageEntries().get(0));
         pageEntryView.setPreviewMode(true);
 
         assertNull(AppContext.INSTANCE.getSelectedPageView());
@@ -164,5 +160,79 @@ public class PageEntryViewTest {
 
         assertNull(AppContext.INSTANCE.getSelectedPageView());
         assertNull(AppContext.INSTANCE.getSelectedPageEntryView());
+    }
+
+    @Test
+    void givenPageEntryView_whenMouseDragged_expectViewOffset() {
+        PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
+        PageEntryView pageEntryView = new PageEntryView(new PageView(pageModel), pageModel.getPageEntries().get(0));
+        pageEntryView.getPageEntryModel().setImageFile(TestUtils.getTestImageFile());
+
+        MouseEvent startEvent = TestUtils.createMouseClickEvent(pageEntryView, new Point(10, 20));
+        pageEntryView.mousePressed(startEvent);
+
+        assertEquals(new Point(0, 0), pageEntryView.viewOffset);
+        assertEquals(new Point(10, 20), pageEntryView.mouseDragStartPoint);
+
+        MouseEvent dragEvent = TestUtils.createMouseClickEvent(pageEntryView, new Point(60, 80));
+        pageEntryView.mouseDragged(dragEvent);
+
+        assertEquals(new Point(50, 60), pageEntryView.viewOffset);
+    }
+
+    @Test
+    void givenPageEntryViewNoImage_whenMouseDragged_expectNoViewOffset() {
+
+        PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
+        PageEntryView pageEntryView = new PageEntryView(new PageView(pageModel), pageModel.getPageEntries().get(0));
+
+        MouseEvent startEvent = TestUtils.createMouseClickEvent(pageEntryView, new Point(10, 20));
+        pageEntryView.mousePressed(startEvent);
+
+        assertEquals(new Point(0, 0), pageEntryView.viewOffset);
+        assertEquals(new Point(0, 0), pageEntryView.mouseDragStartPoint);
+
+        MouseEvent dragEvent = TestUtils.createMouseClickEvent(pageEntryView, new Point(60, 80));
+        pageEntryView.mouseDragged(dragEvent);
+
+        assertEquals(new Point(0, 0), pageEntryView.viewOffset);
+    }
+
+    @Test
+    void givenPageEntryViewPreviewMode_whenMouseDragged_expectNoViewOffset() {
+
+        PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
+        PageEntryView pageEntryView = new PageEntryView(new PageView(pageModel), pageModel.getPageEntries().get(0));
+        pageEntryView.getPageEntryModel().setImageFile(TestUtils.getTestImageFile());
+        pageEntryView.setPreviewMode(true);
+
+        MouseEvent startEvent = TestUtils.createMouseClickEvent(pageEntryView, new Point(10, 20));
+        pageEntryView.mousePressed(startEvent);
+
+        assertEquals(new Point(0, 0), pageEntryView.viewOffset);
+        assertEquals(new Point(0, 0), pageEntryView.mouseDragStartPoint);
+
+        MouseEvent dragEvent = TestUtils.createMouseClickEvent(pageEntryView, new Point(60, 80));
+        pageEntryView.mouseDragged(dragEvent);
+
+        assertEquals(new Point(0, 0), pageEntryView.viewOffset);
+    }
+
+    @Test
+    @Disabled
+    void givenPageEntryView_whenMousePressedAndScrolledUp_expectedZoomIn() {
+
+    }
+
+    @Test
+    @Disabled
+    void givenPageEntryView_whenMousePressedAndScrolledDown_expectedZoomOut() {
+
+    }
+
+    @Test
+    @Disabled
+    void givenPageEntryView_whenMouseNotPressed_expectNoScrollEffect() {
+
     }
 }

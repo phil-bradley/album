@@ -18,7 +18,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -35,9 +34,9 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(PageEntryView.class);
 
-    private Point mouseDragStartPoint = new Point(0, 0);
-    private Point mouseDragPreviousPoint;
-    private Point viewOffset = new Point(0, 0);
+    protected Point mouseDragStartPoint = new Point(0, 0);
+    protected Point mouseDragPreviousPoint;
+    protected Point viewOffset = new Point(0, 0);
 
     private final PageEntryModel pageEntryModel;
     private boolean isSelected = false;
@@ -169,7 +168,9 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         }
 
         canResize = true;
-        mouseDragStartPoint = MouseInfo.getPointerInfo().getLocation();
+        mouseDragStartPoint = me.getPoint();
+        
+        System.out.println("Location on screen: " + me.getPoint());
         mouseDragPreviousPoint = mouseDragStartPoint;
 
         this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
@@ -193,7 +194,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
             return;
         }
 
-        Point mouseDragCurrentPoint = MouseInfo.getPointerInfo().getLocation();
+        Point mouseDragCurrentPoint = me.getPoint();
         LOG.info("Dragged from " + mouseDragStartPoint + " to " + mouseDragCurrentPoint);
 
         int xDragOffset = mouseDragCurrentPoint.x - mouseDragPreviousPoint.x;
