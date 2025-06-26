@@ -20,7 +20,6 @@ import ie.philb.album.util.StringUtils;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -49,17 +48,20 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     private boolean canResize = false;
     private TextControl textControl = new TextControl();
 
-    public PageEntryView(PageView pageView, PageEntryModel entryModel) {
+    public PageEntryView(PageView pageView, PageEntryModel pageEntryModel) {
 
         super();
 
+        textControl.setPhysicalSize(pageEntryModel.getPhysicalSize());
         add(textControl, new GridBagCellConstraints().weight(1).fillBoth());
 
         background(Color.white);
         setFocusable(true);
         this.pageView = pageView;
-        this.pageEntryModel = entryModel;
+        this.pageEntryModel = pageEntryModel;
         this.pageEntryModel.addListener(this);
+
+        textControl.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
 
         setTransferHandler(new PageEntryViewTransferHandler());
         updateBorder();
@@ -121,6 +123,10 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     protected void paintComponent(Graphics g) {
 
         super.paintComponent(g);
+
+        if (pageEntryModel.getText() != null) {
+            return;
+        }
 
         BufferedImage viewImage = getViewImage();
         Point viewImageOffset = getViewImageOffset();

@@ -10,6 +10,8 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -40,6 +42,7 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
  */
 public class TextControl extends AppPanel {
 
+    private Dimension physicalSize = new Dimension(0, 0);
     private boolean isBold = false;
     private boolean isItalic = false;
     private boolean isUnderline = false;
@@ -70,6 +73,7 @@ public class TextControl extends AppPanel {
                 Dimension size = layeredPane.getSize();
                 viewEditPanel.setBounds(0, 0, size.width, size.height);
                 toolBar.setBounds(0, 0, size.width, 30);
+                updateFont();
             }
         });
 
@@ -97,6 +101,32 @@ public class TextControl extends AppPanel {
         setFontSize(24);
 
         toolBar.setVisible(false);
+    }
+
+    public Dimension getPhysicalSize() {
+        return physicalSize;
+    }
+
+    public void setPhysicalSize(Dimension physicalSize) {
+        this.physicalSize = physicalSize;
+    }
+
+    private double getPhysicalToViewScalingFactor() {
+
+        double viewWidth = getSize().width;
+
+        if (viewWidth == 0) {
+            return 0;
+        }
+
+        double physicalWidth = physicalSize.width;
+
+        // No scaling set, assume 1:1
+        if (physicalWidth == 0) {
+            return 1;
+        }
+
+        return viewWidth / physicalWidth;
     }
 
     private ComboBoxModel<Integer> getFontSizeSelectorModel() {
@@ -202,7 +232,7 @@ public class TextControl extends AppPanel {
 
     class EditView extends JPanel {
 
-        private JTextField field;
+        private PromptTextField field;
 
         public EditView() {
             setLayout(new GridBagLayout());
@@ -213,7 +243,7 @@ public class TextControl extends AppPanel {
 
         private void initComponents() {
 
-            field = new JTextField();
+            field = new PromptTextField("Enter Text...");
             field.setHorizontalAlignment(JTextField.CENTER);
             field.setBorder(null);
             field.setOpaque(false);
@@ -267,13 +297,18 @@ public class TextControl extends AppPanel {
 
     }
 
+    private void setViewFont(Font font) {
+        viewEditPanel.displayView.label.setFont(font);
+        viewEditPanel.editView.field.setFont(font);
+    }
+
     private void updateFont() {
-        viewEditPanel.displayView.label.setFont(getDisplayFont());
-        viewEditPanel.editView.field.setFont(getDisplayFont());
+        setViewFont(getDisplayFont());
     }
 
     private Font getDisplayFont() {
-        return fontProvider.getDerivedFont(baseFont, isBold, isItalic, isUnderline, fontSize);
+        int scaledFontSize = (int) (fontSize * getPhysicalToViewScalingFactor());
+        return fontProvider.getDerivedFont(baseFont, isBold, isItalic, isUnderline, scaledFontSize);
     }
 
     public boolean isBold() {
@@ -320,6 +355,29 @@ public class TextControl extends AppPanel {
 
     public String getText() {
         return viewEditPanel.getText();
+    }
+
+    private class PromptTextField extends JTextField {
+
+        private String prompt;
+
+        public PromptTextField(String prompt) {
+            super();
+            this.prompt = prompt;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            try {
+                g.setFont(new Font("Arial", Font.PLAIN, 12));
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setColor(Color.lightGray);
+                g2d.drawString(prompt, 5, 5);
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     public static void main(String[] args) {

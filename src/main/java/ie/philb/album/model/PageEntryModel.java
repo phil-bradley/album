@@ -32,10 +32,19 @@ public class PageEntryModel {
     private double zoomFactor = 1;
     private Point offset = new Point(0, 0);
     private boolean isCentered = false;
-    private String text = "";
+    private String text = null;
+    private Dimension physicalSize = new Dimension(0, 0);
 
     public PageEntryModel(PageCell cell) {
         this.cell = cell;
+    }
+
+    public Dimension getPhysicalSize() {
+        return physicalSize;
+    }
+
+    public void setPhysicalSize(Dimension physicalSize) {
+        this.physicalSize = physicalSize;
     }
 
     public BufferedImage getImage() {

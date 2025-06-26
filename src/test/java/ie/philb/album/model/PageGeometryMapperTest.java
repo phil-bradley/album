@@ -45,7 +45,7 @@ public class PageGeometryMapperTest {
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
 
         PageCell cell = pg.getCells().get(0);
-        Dimension cellSize = mapper.getCellSizePoints(cell);
+        Dimension cellSize = pageModel.getCellSizePoints(cell);
         assertEquals(PageSize.A4_Landscape.size(), cellSize);
     }
 
@@ -61,7 +61,7 @@ public class PageGeometryMapperTest {
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
 
         PageCell cell = pg.getCells().get(0);
-        Dimension cellSize = mapper.getCellSizePoints(cell);
+        Dimension cellSize = pageModel.getCellSizePoints(cell);
 
         double expectedWidth = pageModel.getPageSize().width() - (2 * margin);
         double expectedHeight = pageModel.getPageSize().height() - (2 * margin);
@@ -119,7 +119,7 @@ public class PageGeometryMapperTest {
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
 
         PageCell cell = pg.getCells().get(0);
-        Dimension cellSize = mapper.getCellSizePoints(cell);
+        Dimension cellSize = pageModel.getCellSizePoints(cell);
 
         double expectedWidth = pageModel.getPageSize().width();
         double expectedHeight = pageModel.getPageSize().height() / 2;
@@ -139,7 +139,7 @@ public class PageGeometryMapperTest {
         PageGeometryMapper mapper = new PageGeometryMapper(pageModel, PANEL_SIZE);
 
         PageCell cell = pg.getCells().get(0);
-        Dimension cellSize = mapper.getCellSizePoints(cell);
+        Dimension cellSize = pageModel.getCellSizePoints(cell);
 
         double expectedWidth = pageModel.getPageSize().width() / 2;
         double expectedHeight = pageModel.getPageSize().height();
@@ -238,7 +238,7 @@ public class PageGeometryMapperTest {
         assertEquals(new Dimension(1, 1), cell00.size());
         assertEquals(new Point(0, 0), cell00.location());
 
-        Dimension unscaledSize = mapper.getCellSizePoints(cell00);
+        Dimension unscaledSize = pageModel.getCellSizePoints(cell00);
         Dimension scaledSize = mapper.getCellSizeOnView(pageModel.getPageEntries().get(0));
         System.out.println("Got size " + unscaledSize + ", scaled size " + scaledSize);
 
