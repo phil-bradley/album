@@ -6,7 +6,6 @@ package ie.philb.album.ui.common.textcontrol;
 
 import com.bric.colorpicker.ColorPickerDialog;
 import ie.philb.album.ui.common.font.ApplicationFont;
-import ie.philb.album.ui.font.FontProvider;
 import ie.philb.album.ui.font.FontSelector;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -30,13 +29,12 @@ class TextControlEditorToolBar extends JToolBar implements TextControlEventListe
     private List<Integer> fontSizes = List.of(6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 40, 44, 48, 54, 60, 66, 72, 80, 88, 104, 120, 140, 160, 180);
 
     private TextContent content = new TextContent();
-    private FontProvider fontProvider = new FontProvider();
     private JComboBox<Integer> fontSizeSelector;
-    private JButton btnColor;
+    private final JButton btnColor;
     private FontSelector fontSelector;
-    private JToggleButton btnBold;
-    private JToggleButton btnItalic;
-    private JToggleButton btnUnderline;
+    private final JToggleButton btnBold;
+    private final JToggleButton btnItalic;
+    private final JToggleButton btnUnderline;
 
     public TextControlEditorToolBar() {
 

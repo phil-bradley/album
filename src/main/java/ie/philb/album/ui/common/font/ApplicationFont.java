@@ -30,10 +30,20 @@ public enum ApplicationFont {
 
     private static final float DEFAULT_SIZE = 16;
 
+    private static final Map<String, ApplicationFont> map = new HashMap<>();
+
+    private static final Map<String, Font> fontCache = new HashMap<>();
+
     public Font getFont() {
+        return fontCache.get(name());
+    }
+
+    private static Font loadFont(String name) {
+
         try {
-            String path = "/ie/philb/album/fonts/" + name() + ".ttf";
-            return Font.createFont(Font.TRUETYPE_FONT, ApplicationFont.class.getResourceAsStream(path)).deriveFont(DEFAULT_SIZE);
+            String path = "/ie/philb/album/fonts/" + name + ".ttf";
+            Font font = Font.createFont(Font.TRUETYPE_FONT, ApplicationFont.class.getResourceAsStream(path)).deriveFont(DEFAULT_SIZE);
+            return font;
         } catch (FontFormatException | IOException ex) {
             throw new RuntimeException("Font creation failed", ex);
         }
@@ -62,11 +72,15 @@ public enum ApplicationFont {
         }
     }
 
-    static final Map<String, ApplicationFont> map = new HashMap<>();
-
     static {
         for (ApplicationFont fonts : values()) {
             map.put(fonts.name(), fonts);
+        }
+    }
+
+    static {
+        for (ApplicationFont fonts : values()) {
+            fontCache.put(fonts.name(), loadFont(fonts.name()));
         }
     }
 

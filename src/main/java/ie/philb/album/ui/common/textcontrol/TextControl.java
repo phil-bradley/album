@@ -6,7 +6,6 @@ package ie.philb.album.ui.common.textcontrol;
 
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.font.ApplicationFont;
-import ie.philb.album.ui.font.FontProvider;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -14,8 +13,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -27,10 +24,6 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
  */
 public class TextControl extends JPanel implements TextControlEventListener {
 
-    private final List<TextControlEventListener> listeners = new ArrayList<>();
-    private TextContent content = new TextContent();
-
-    private FontProvider fontProvider = new FontProvider();
     private Dimension physicalSize = new Dimension(0, 0);
 
     private TextControlEditorToolBar toolBar = new TextControlEditorToolBar();
@@ -107,6 +100,20 @@ public class TextControl extends JPanel implements TextControlEventListener {
         return viewWidth / physicalWidth;
     }
 
+    @Override
+    public void contentUpdated(TextContent content) {
+        setEditEnabled(false);
+    }
+
+    @Override
+    public void formatUpdated(TextContent content) {
+    }
+
+    private void setEditEnabled(boolean isEnabled) {
+        viewEditPanel.setEditor(isEnabled);
+        toolBar.setVisible(isEnabled);
+    }
+
     public static void main(String[] args) {
 
         JFrame frame = new JFrame();
@@ -125,17 +132,4 @@ public class TextControl extends JPanel implements TextControlEventListener {
         frame.setVisible(true);
     }
 
-    @Override
-    public void contentUpdated(TextContent content) {
-        setEditEnabled(false);
-    }
-
-    @Override
-    public void formatUpdated(TextContent content) {
-    }
-
-    private void setEditEnabled(boolean isEnabled) {
-        viewEditPanel.setEditor(isEnabled);
-        toolBar.setVisible(isEnabled);
-    }
 }
