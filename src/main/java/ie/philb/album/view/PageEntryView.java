@@ -273,6 +273,9 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     public void setPreviewMode(boolean previewMode) {
         this.isPreviewMode = previewMode;
+        if (textControl != null) {
+            textControl.setPreviewMode(previewMode);
+        }
         setFocusable(!isPreviewMode);
     }
 

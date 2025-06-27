@@ -25,7 +25,7 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 public class TextControl extends JPanel implements TextControlEventListener {
 
     private Dimension physicalSize = new Dimension(0, 0);
-
+    private boolean previewMode = false;
     private TextControlEditorToolBar toolBar = new TextControlEditorToolBar();
     private ViewEditPanel viewEditPanel = new ViewEditPanel();
     private JLayeredPane layeredPane = new JLayeredPane();
@@ -56,7 +56,7 @@ public class TextControl extends JPanel implements TextControlEventListener {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                if (getWidth() < 100) {
+                if (previewMode) {
                     return;
                 }
 
@@ -67,6 +67,14 @@ public class TextControl extends JPanel implements TextControlEventListener {
         });
 
         toolBar.setVisible(false);
+    }
+
+    public boolean isPreviewMode() {
+        return previewMode;
+    }
+
+    public void setPreviewMode(boolean previewMode) {
+        this.previewMode = previewMode;
     }
 
     public void setTextContent(TextContent content) {
