@@ -5,18 +5,23 @@
 package ie.philb.album.ui.common.textcontrol;
 
 import java.awt.Color;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
  * @author philb
  */
-public record TextContent(
-        String content,
-        boolean isBold,
-        boolean isItalic,
-        boolean isUnderline,
-        String fontName,
-        int fontSize,
-        Color fontColor) {
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class TextContent {
+    private String content;
+    private boolean isBold;
+    private boolean isItalic;
+    private boolean isUnderline;
+    private String fontFamily;
+    private int fontSize;
+    private Color fontColor;
 }

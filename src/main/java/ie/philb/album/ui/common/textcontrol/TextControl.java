@@ -4,14 +4,12 @@
  */
 package ie.philb.album.ui.common.textcontrol;
 
-import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
+import ie.philb.album.ui.common.font.Fonts;
 import ie.philb.album.ui.font.FontProvider;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -20,33 +18,29 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 /**
  *
  * @author philb
  */
-public class TextControl extends AppPanel {
+public class TextControl extends JPanel {
 
-    private List<TextControlListener> listeners = new ArrayList<>();
+    private final List<TextControlEventListener> listeners = new ArrayList<>();
+    private TextContent content = new TextContent();
 
-    private Dimension physicalSize = new Dimension(0, 0);
-    private boolean isBold = false;
-    private boolean isItalic = false;
-    private boolean isUnderline = false;
-    private int fontSize = 10;
-    private Font baseFont = new Font("Serif", Font.PLAIN, (int) fontSize);
-    private Color fontColor = Color.BLACK;
-    private TextControlEditorToolBar toolBar = new TextControlEditorToolBar();
-
-    private ViewEditPanel viewEditPanel;
     private FontProvider fontProvider = new FontProvider();
+    private Dimension physicalSize = new Dimension(0, 0);
+
+    private TextControlEditorToolBar toolBar = new TextControlEditorToolBar();
+    private ViewEditPanel viewEditPanel = new ViewEditPanel();
     private JLayeredPane layeredPane = new JLayeredPane();
 
     public TextControl() {
 
-        transparent();
-        viewEditPanel = new ViewEditPanel();
+        setLayout(new GridBagLayout());
+        setOpaque(false);
 
         layeredPane.add(viewEditPanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(toolBar, JLayeredPane.POPUP_LAYER);
@@ -61,11 +55,11 @@ public class TextControl extends AppPanel {
                 Dimension size = layeredPane.getSize();
                 viewEditPanel.setBounds(0, 0, size.width, size.height);
                 toolBar.setBounds(0, 0, size.width, 30);
-                updateFont();
+//                updateFont();
             }
         });
 
-        addMouseListener(new MouseAdapter() {
+        viewEditPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Mouse clicked");
@@ -77,28 +71,40 @@ public class TextControl extends AppPanel {
             }
         });
 
-        viewEditPanel.addActionListener((ActionEvent e) -> {
-            toolBar.setVisible(false);
-        });
+//        viewEditPanel.addActionListener((ActionEvent e) -> {
+//            toolBar.setVisible(false);
+//        });
 
-        setBold(true);
-        setItalic(true);
-        setFontSize(24);
-
+//        setBold(true);
+//        setItalic(true);
+//        setFontSize(24);
         toolBar.setVisible(false);
     }
 
-    public void addListener(TextControlListener listener) {
-        this.listeners.add(listener);
+    public void setTextContent(TextContent content) {
+        TextControlEventBus.INSTANCE.updated(content);
     }
-
-    public void removeListener(TextControlListener listener) {
-        this.listeners.remove(listener);
-    }
-
-    public TextContent getTextContent() {
-        return new TextContent(getText(), isBold, isItalic, isUnderline, getDisplayFont().getName(), fontSize, fontColor);
-    }
+//    @Override
+//    public void updateContent(TextContent content) {
+//        this.toolBar.setTextContent(content);
+//        this.viewEditPanel.setTextContent(content);
+//    }
+//
+//    @Override
+//    public void updateContent(TextContent content) {
+//        this.content = content;
+//        updateFontControls();
+//    }
+//
+//    @Override
+//    public Collection<TextControlEventListener> getTextContentListeners() {
+//        return listeners;
+//    }
+//
+//    @Override
+//    public TextContent getTextContent() {
+//        return content;
+//    }
 
     public Dimension getPhysicalSize() {
         return physicalSize;
@@ -126,64 +132,63 @@ public class TextControl extends AppPanel {
         return viewWidth / physicalWidth;
     }
 
-    private void setViewFont(Font font, Color fontColor) {
-        viewEditPanel.setViewFont(font, fontColor);
-    }
-
-    private void updateFont() {
-        setViewFont(getDisplayFont(), fontColor);
-    }
-
-    private Font getDisplayFont() {
-        int scaledFontSize = (int) (fontSize * getPhysicalToViewScalingFactor());
-        return fontProvider.getDerivedFont(baseFont, isBold, isItalic, isUnderline, scaledFontSize);
-    }
-
-    public boolean isBold() {
-        return isBold;
-    }
-
-    public final void setBold(boolean isBold) {
-        this.isBold = isBold;
-        toolBar.updateFontControls(getTextContent());
-    }
-
-    public boolean isItalic() {
-        return isItalic;
-    }
-
-    public final void setItalic(boolean isItalic) {
-        this.isItalic = isItalic;
-        toolBar.updateFontControls(getTextContent());
-    }
-
-    public boolean isUnderline() {
-        return isUnderline;
-    }
-
-    public void setUnderline(boolean isUnderline) {
-        this.isUnderline = isUnderline;
-        toolBar.updateFontControls(getTextContent());
-    }
-
-    public int getFontSize() {
-        return fontSize;
-    }
-
-    public final void setFontSize(int fontSize) {
-        this.fontSize = fontSize;
-        toolBar.updateFontControls(getTextContent());
-        updateFont();
-    }
-
-    public void setText(String text) {
-        this.viewEditPanel.setText(text);
-    }
-
-    public String getText() {
-        return viewEditPanel.getText();
-    }
-
+//    private void setViewFont(Font font, Color fontColor) {
+//        viewEditPanel.setViewFont(font, fontColor);
+//    }
+//
+//    private void updateFont() {
+//        setViewFont(getDisplayFont(), fontColor);
+//    }
+//
+//    private Font getDisplayFont() {
+//        int scaledFontSize = (int) (fontSize * getPhysicalToViewScalingFactor());
+//        return fontProvider.getDerivedFont(baseFont, isBold, isItalic, isUnderline, scaledFontSize);
+//    }
+//
+//    public boolean isBold() {
+//        return isBold;
+//    }
+//
+//    public final void setBold(boolean isBold) {
+//        this.isBold = isBold;
+//        toolBar.updateFontControls(getTextContent());
+//    }
+//
+//    public boolean isItalic() {
+//        return isItalic;
+//    }
+//
+//    public final void setItalic(boolean isItalic) {
+//        this.isItalic = isItalic;
+//        toolBar.updateFontControls(getTextContent());
+//    }
+//
+//    public boolean isUnderline() {
+//        return isUnderline;
+//    }
+//
+//    public void setUnderline(boolean isUnderline) {
+//        this.isUnderline = isUnderline;
+//        toolBar.updateFontControls(getTextContent());
+//    }
+//
+//    public int getFontSize() {
+//        return fontSize;
+//    }
+//
+//    public final void setFontSize(int fontSize) {
+//        this.fontSize = fontSize;
+//        toolBar.updateFontControls(getTextContent());
+//        updateFont();
+//    }
+//
+//    public void setText(String text) {
+//        this.viewEditPanel.setText(text);
+//    }
+//
+//    public String getText() {
+//        return viewEditPanel.getText();
+//    }
     public static void main(String[] args) {
 
         JFrame frame = new JFrame();
@@ -194,6 +199,7 @@ public class TextControl extends AppPanel {
         frame.setSize(frame.getPreferredSize());
 
         TextControl ctrl = new TextControl();
+        ctrl.setTextContent(new TextContent("Hello there", true, true, true, Fonts.Caveat.name(), 12, Color.PINK));
         ctrl.setPreferredSize(new Dimension(300, 200));
         ctrl.setSize(ctrl.getPreferredSize());
 

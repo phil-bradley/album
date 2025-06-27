@@ -5,6 +5,8 @@
 package ie.philb.album.ui.common.textcontrol;
 
 import ie.philb.album.ui.common.GridBagCellConstraints;
+import ie.philb.album.ui.common.font.Fonts;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -15,8 +17,9 @@ import javax.swing.SwingConstants;
  *
  * @author philb
  */
-class TextControlDisplayView extends JPanel {
+class TextControlDisplayView extends JPanel implements TextControlEventListener {
 
+    private TextContent content = new TextContent();
     private JLabel label;
 
     public TextControlDisplayView() {
@@ -25,6 +28,7 @@ class TextControlDisplayView extends JPanel {
         layoutComponents();
         setOpaque(false);
 
+        TextControlEventBus.INSTANCE.addListener(this);
     }
 
     private void initComponents() {
@@ -32,7 +36,7 @@ class TextControlDisplayView extends JPanel {
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
         label.setOpaque(false);
-        label.setFont(getDisplayFont());
+//        label.setFont(getDisplayFont());
         label.setBorder(null);
     }
 
@@ -41,12 +45,23 @@ class TextControlDisplayView extends JPanel {
         add(label, gbc);
     }
 
-    protected void setText(String text) {
-        label.setText(text);
+    @Override
+    public void updated(TextContent content) {
+        this.content = content;
+        updateDisplayText();
     }
 
-    protected String getText() {
-        return label.getText();
-    }
+    private void updateDisplayText() {
+        System.out.println("Content updated: " + content);
+        this.label.setText(content.getContent());
 
+        System.out.println("Looking for font " + content.getFontFamily());
+        Fonts fonts = Fonts.byFamilyName(content.getFontFamily());
+
+        System.out.println("Got fonts " + fonts + ", deriving font");
+        Font font = fonts.getDerivedFont(content);
+
+        System.out.println("Got derived " + font);
+        label.setFont(font);
+    }
 }

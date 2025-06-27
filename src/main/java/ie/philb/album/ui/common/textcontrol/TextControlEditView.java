@@ -8,7 +8,7 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -16,8 +16,9 @@ import javax.swing.JTextField;
  *
  * @author philb
  */
-class TextControlEditView extends JPanel {
+class TextControlEditView extends JPanel implements TextControlEventListener {
 
+    private TextContent content = new TextContent();
     private PromptTextField field;
 
     public TextControlEditView() {
@@ -25,6 +26,8 @@ class TextControlEditView extends JPanel {
         initComponents();
         layoutComponents();
         setOpaque(false);
+
+        TextControlEventBus.INSTANCE.addListener(this);
     }
 
     private void initComponents() {
@@ -33,8 +36,13 @@ class TextControlEditView extends JPanel {
         field.setHorizontalAlignment(JTextField.CENTER);
         field.setBorder(null);
         field.setOpaque(false);
-        field.setFont(getDisplayFont());
+//        field.setFont(getDisplayFont());
         field.setMargin(new Insets(0, 0, 0, 0));
+
+        field.addActionListener((ActionEvent e) -> {
+            content.setContent(field.getText());
+            TextControlEventBus.INSTANCE.updated(content);
+        });
     }
 
     private void layoutComponents() {
@@ -42,21 +50,18 @@ class TextControlEditView extends JPanel {
         add(field, gbc);
     }
 
-    public void addActionListener(ActionListener l) {
-        this.field.addActionListener(l);
-
-    }
-
-    protected void setText(String text) {
-        field.setText(text);
-    }
-
-    protected String getText() {
-        return field.getText();
-    }
-
     @Override
     public void requestFocus() {
         field.requestFocus();
+    }
+
+    @Override
+    public void updated(TextContent content) {
+        this.content = content;
+        updateEditor();
+    }
+
+    private void updateEditor() {
+        this.field.setText(content.getContent());
     }
 }
