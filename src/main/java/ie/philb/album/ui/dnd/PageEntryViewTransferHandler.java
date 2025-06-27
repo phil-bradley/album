@@ -22,11 +22,20 @@ public class PageEntryViewTransferHandler extends TransferHandler {
 
     @Override
     public boolean canImport(TransferSupport support) {
+        JComponent comp = (JComponent) support.getComponent();
+
+        if (comp instanceof PageEntryView view) {
+            if (view.isTextView()) {
+                return false;
+            }
+        }
+
         return support.isDataFlavorSupported(DataFlavor.stringFlavor);
     }
 
     @Override
     public boolean importData(TransferSupport support) {
+
         if (!canImport(support)) {
             return false;
         }

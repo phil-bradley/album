@@ -6,6 +6,7 @@ package ie.philb.album.model;
 
 import ie.philb.album.util.ImageUtils;
 import ie.philb.album.util.StringUtils;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -34,6 +35,12 @@ public class PageEntryModel {
     private boolean isCentered = false;
     private String text = null;
     private Dimension physicalSize = new Dimension(0, 0);
+    private int fontSize;
+    private Color fontColor;
+    private String fontName;
+    private boolean isBold;
+    private boolean isUnderline;
+    private boolean isItalic;
 
     public PageEntryModel(PageCell cell) {
         this.cell = cell;
@@ -276,7 +283,60 @@ public class PageEntryModel {
 
     public void setText(String text) {
         this.text = text;
+        fireTextUpdated();
+    }
 
+    public int getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
+        fireTextUpdated();
+    }
+
+    public Color getFontColor() {
+        return fontColor;
+    }
+
+    public void setFontColor(Color fontColor) {
+        this.fontColor = fontColor;
+        fireTextUpdated();
+    }
+
+    public String getFontName() {
+        return fontName;
+    }
+
+    public void setFontName(String fontName) {
+        this.fontName = fontName;
+        fireTextUpdated();
+    }
+
+    public boolean isBold() {
+        return isBold;
+    }
+
+    public void setBold(boolean isBold) {
+        this.isBold = isBold;
+        fireTextUpdated();
+    }
+
+    public boolean isUnderline() {
+        return isUnderline;
+    }
+
+    public void setUnderline(boolean isUnderline) {
+        this.isUnderline = isUnderline;
+        fireTextUpdated();
+    }
+
+    public boolean isItalic() {
+        return isItalic;
+    }
+
+    public void setItalic(boolean isItalic) {
+        this.isItalic = isItalic;
         fireTextUpdated();
     }
 

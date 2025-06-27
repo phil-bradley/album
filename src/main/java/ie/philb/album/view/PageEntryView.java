@@ -12,11 +12,10 @@ import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Resources;
-import ie.philb.album.ui.common.TextControl;
+import ie.philb.album.ui.common.textcontrol.TextControl;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
 import ie.philb.album.util.ImageUtils;
 import static ie.philb.album.util.ImageUtils.getImageSize;
-import ie.philb.album.util.StringUtils;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -46,25 +45,42 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
     private boolean isPreviewMode = false;
     private final PageView pageView;
     private boolean canResize = false;
-    private TextControl textControl = new TextControl();
+    private TextControl textControl;
 
     public PageEntryView(PageView pageView, PageEntryModel pageEntryModel) {
 
         super();
 
-        textControl.setPhysicalSize(pageEntryModel.getPhysicalSize());
-        add(textControl, new GridBagCellConstraints().weight(1).fillBoth());
+        this.pageView = pageView;
+        this.pageEntryModel = pageEntryModel;
+        updateTextControl();
 
         background(Color.white);
         setFocusable(true);
-        this.pageView = pageView;
-        this.pageEntryModel = pageEntryModel;
-        this.pageEntryModel.addListener(this);
 
-        textControl.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        this.pageEntryModel.addListener(this);
 
         setTransferHandler(new PageEntryViewTransferHandler());
         updateBorder();
+    }
+
+    private void updateTextControl() {
+
+        if (pageEntryModel == null) {
+            return;
+        }
+
+        if (pageEntryModel.getText() == null) {
+            return;
+        }
+
+        if (textControl == null) {
+            textControl = new TextControl();
+            textControl.setPhysicalSize(pageEntryModel.getPhysicalSize());
+            add(textControl, new GridBagCellConstraints().weight(1).fillBoth());
+        }
+
+        textControl.setText(pageEntryModel.getText());
     }
 
     public PageEntryModel getPageEntryModel() {
@@ -170,7 +186,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
 
     @Override
     public void textUpdated() {
-        textControl.setVisible(StringUtils.hasValue(pageEntryModel.getText()));
+        updateTextControl();
     }
 
     @Override
@@ -295,5 +311,9 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
         if (pageEntryModel.isCentered()) {
             centerImage();
         }
+    }
+
+    public boolean isTextView() {
+        return (textControl != null);
     }
 }
