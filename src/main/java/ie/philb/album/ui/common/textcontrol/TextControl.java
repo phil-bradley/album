@@ -67,6 +67,8 @@ public class TextControl extends JPanel implements TextControlEventListener {
         });
 
         toolBar.setVisible(false);
+        
+        TextControlEventBus.INSTANCE.addListener(this);
     }
 
     public boolean isPreviewMode() {

@@ -31,9 +31,13 @@ class ViewEditPanel extends JPanel {
         cardLayout.show(this, "display");
     }
 
-    void setEditor(boolean b) {
-        cardLayout.show(this, "edit");
-        editView.requestFocus();
+    void setEditor(boolean isEditor) {
+        if (isEditor) {
+            cardLayout.show(this, "edit");
+            editView.requestFocus();
+        } else {
+            cardLayout.show(this, "display");
+        }
     }
 
     void setFontScalingFactor(double fontScalingFactor) {
