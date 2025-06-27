@@ -5,7 +5,7 @@
 package ie.philb.album.ui.common.textcontrol;
 
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.common.font.Fonts;
+import ie.philb.album.ui.common.font.ApplicationFont;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -19,6 +19,7 @@ import javax.swing.SwingConstants;
  */
 class TextControlDisplayView extends JPanel implements TextControlEventListener {
 
+    private double fontScalingFactor = 1;
     private TextContent content = new TextContent();
     private JLabel label;
 
@@ -36,7 +37,6 @@ class TextControlDisplayView extends JPanel implements TextControlEventListener 
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
         label.setOpaque(false);
-//        label.setFont(getDisplayFont());
         label.setBorder(null);
     }
 
@@ -46,22 +46,30 @@ class TextControlDisplayView extends JPanel implements TextControlEventListener 
     }
 
     @Override
-    public void updated(TextContent content) {
+    public void contentUpdated(TextContent content) {
         this.content = content;
-        updateDisplayText();
+        this.label.setText(content.getContent());
     }
 
-    private void updateDisplayText() {
-        System.out.println("Content updated: " + content);
-        this.label.setText(content.getContent());
+    @Override
+    public void formatUpdated(TextContent content) {
+        this.content = content;
+        this.label.setFont(getDisplayFont());
+        this.label.setForeground(content.getFontColor());
+    }
 
-        System.out.println("Looking for font " + content.getFontFamily());
-        Fonts fonts = Fonts.byFamilyName(content.getFontFamily());
+    void setFontScalingFactor(double fontScalingFactor) {
+        this.fontScalingFactor = fontScalingFactor;
+        this.label.setFont(getDisplayFont());
+    }
 
-        System.out.println("Got fonts " + fonts + ", deriving font");
-        Font font = fonts.getDerivedFont(content);
+    private Font getDisplayFont() {
+        boolean bold = content.isBold();
+        boolean italic = content.isItalic();
+        boolean underline = content.isUnderline();
+        int scaledSize = (int) (fontScalingFactor * content.getFontSize());
 
-        System.out.println("Got derived " + font);
-        label.setFont(font);
+        Font font = ApplicationFont.byFamilyName(content.getFontFamily()).getDerivedFont(bold, italic, underline, scaledSize);
+        return font;
     }
 }

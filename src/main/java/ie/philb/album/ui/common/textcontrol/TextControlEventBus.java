@@ -30,8 +30,13 @@ public enum TextControlEventBus implements TextControlEventListener {
     }
 
     @Override
-    public void updated(TextContent content) {
-        listeners().forEach(l -> l.updated(content));
+    public void formatUpdated(TextContent content) {
+        listeners().forEach(l -> l.formatUpdated(content));
+    }
+
+    @Override
+    public void contentUpdated(TextContent content) {
+        listeners().forEach(l -> l.contentUpdated(content));
     }
 
     // Creates a copy of the collection so it can be safely iterated over

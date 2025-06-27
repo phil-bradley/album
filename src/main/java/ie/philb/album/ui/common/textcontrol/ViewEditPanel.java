@@ -35,4 +35,9 @@ class ViewEditPanel extends JPanel {
         cardLayout.show(this, "edit");
         editView.requestFocus();
     }
+
+    void setFontScalingFactor(double fontScalingFactor) {
+        displayView.setFontScalingFactor(fontScalingFactor);
+        editView.setFontScalingFactor(fontScalingFactor);
+    }
 }

@@ -4,7 +4,6 @@
  */
 package ie.philb.album.ui.common.font;
 
-import ie.philb.album.ui.common.textcontrol.TextContent;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.font.TextAttribute;
@@ -17,7 +16,7 @@ import java.util.Map;
  *
  * @author philb
  */
-public enum Fonts {
+public enum ApplicationFont {
 
     GreatVibes(),
     Caveat(),
@@ -34,15 +33,10 @@ public enum Fonts {
     public Font getFont() {
         try {
             String path = "/ie/philb/album/fonts/" + name() + ".ttf";
-            return Font.createFont(Font.TRUETYPE_FONT, Fonts.class.getResourceAsStream(path)).deriveFont(DEFAULT_SIZE);
+            return Font.createFont(Font.TRUETYPE_FONT, ApplicationFont.class.getResourceAsStream(path)).deriveFont(DEFAULT_SIZE);
         } catch (FontFormatException | IOException ex) {
             throw new RuntimeException("Font creation failed", ex);
         }
-    }
-
-    public Font getDerivedFont(TextContent content) {
-        return getDerivedFont(content.isBold(), content.isItalic(), content.isUnderline(), content.getFontSize());
-
     }
 
     public Font getDerivedFont(boolean bold, boolean italic, boolean underline, int size) {
@@ -68,15 +62,15 @@ public enum Fonts {
         }
     }
 
-    static final Map<String, Fonts> map = new HashMap<>();
+    static final Map<String, ApplicationFont> map = new HashMap<>();
 
     static {
-        for (Fonts fonts : values()) {
+        for (ApplicationFont fonts : values()) {
             map.put(fonts.name(), fonts);
         }
     }
 
-    public static Fonts byFamilyName(String familyName) {
+    public static ApplicationFont byFamilyName(String familyName) {
         return map.get(familyName);
     }
 }

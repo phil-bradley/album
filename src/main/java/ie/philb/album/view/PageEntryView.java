@@ -12,6 +12,7 @@ import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Resources;
+import ie.philb.album.ui.common.font.ApplicationFont;
 import ie.philb.album.ui.common.textcontrol.TextContent;
 import ie.philb.album.ui.common.textcontrol.TextControl;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
@@ -81,7 +82,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener {
             add(textControl, new GridBagCellConstraints().weight(1).fillBoth());
         }
 
-        textControl.setTextContent(new TextContent(pageEntryModel.getText(), false, false, false, "Arial", 20, Color.CYAN));
+        textControl.setTextContent(new TextContent(pageEntryModel.getText(), false, false, false, ApplicationFont.Parisienne.name(), 36, Color.MAGENTA));
     }
 
     public PageEntryModel getPageEntryModel() {

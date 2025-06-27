@@ -9,6 +9,8 @@ package ie.philb.album.ui.common.textcontrol;
  * @author philb
  */
 public interface TextControlEventListener {
-    
-    void updated(TextContent content);
+
+    void contentUpdated(TextContent content);
+
+    void formatUpdated(TextContent content);
 }

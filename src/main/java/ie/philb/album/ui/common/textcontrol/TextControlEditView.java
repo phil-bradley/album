@@ -5,6 +5,8 @@
 package ie.philb.album.ui.common.textcontrol;
 
 import ie.philb.album.ui.common.GridBagCellConstraints;
+import ie.philb.album.ui.common.font.ApplicationFont;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -18,7 +20,8 @@ import javax.swing.JTextField;
  */
 class TextControlEditView extends JPanel implements TextControlEventListener {
 
-    private TextContent content = new TextContent();
+    private double fontScalingFactor = 1;
+    private TextContent content = null;
     private PromptTextField field;
 
     public TextControlEditView() {
@@ -36,12 +39,11 @@ class TextControlEditView extends JPanel implements TextControlEventListener {
         field.setHorizontalAlignment(JTextField.CENTER);
         field.setBorder(null);
         field.setOpaque(false);
-//        field.setFont(getDisplayFont());
         field.setMargin(new Insets(0, 0, 0, 0));
 
         field.addActionListener((ActionEvent e) -> {
             content.setContent(field.getText());
-            TextControlEventBus.INSTANCE.updated(content);
+            TextControlEventBus.INSTANCE.contentUpdated(content);
         });
     }
 
@@ -56,12 +58,49 @@ class TextControlEditView extends JPanel implements TextControlEventListener {
     }
 
     @Override
-    public void updated(TextContent content) {
+    public void contentUpdated(TextContent content) {
+        String savedText = null;
+
+        if (this.content != null) {
+            savedText = this.content.getContent();
+        }
+
         this.content = content;
+
+        if (savedText != null) {
+            this.content.setContent(savedText);
+        }
+
         updateEditor();
     }
 
+    @Override
+    public void formatUpdated(TextContent content) {
+        this.content = content;
+
+        field.setText(content.getContent());
+        field.setFont(getDisplayFont());
+        field.setForeground(content.getFontColor());
+    }
+
     private void updateEditor() {
-        this.field.setText(content.getContent());
+        field.setText(content.getContent());
+        field.setFont(getDisplayFont());
+        field.setForeground(content.getFontColor());
+    }
+
+    private Font getDisplayFont() {
+        boolean bold = content.isBold();
+        boolean italic = content.isItalic();
+        boolean underline = content.isUnderline();
+        int scaledSize = (int) (fontScalingFactor * content.getFontSize());
+
+        Font font = ApplicationFont.byFamilyName(content.getFontFamily()).getDerivedFont(bold, italic, underline, scaledSize);
+        return font;
+    }
+
+    void setFontScalingFactor(double fontScalingFactor) {
+        this.fontScalingFactor = fontScalingFactor;
+        field.setFont(getDisplayFont());
     }
 }

@@ -4,10 +4,10 @@
  */
 package ie.philb.album.ui.font;
 
+import ie.philb.album.ui.common.font.ApplicationFont;
 import java.awt.Component;
-import java.awt.Font;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -19,40 +19,40 @@ import javax.swing.ListCellRenderer;
  *
  * @author philb
  */
-public class FontSelector extends JComboBox<Font> {
+public class FontSelector extends JComboBox<ApplicationFont> {
 
-    private List<Font> fonts = new ArrayList<>();
+    private Collection<ApplicationFont> fonts = new ArrayList<>();
 
-    public FontSelector(List<Font> fonts) {
+    public FontSelector(Collection<ApplicationFont> fonts) {
         super();
         this.fonts.addAll(fonts);
         setModel(createModel());
         setRenderer(new FontSelectorCellRenderer());
     }
 
-    private ComboBoxModel<Font> createModel() {
-        DefaultComboBoxModel<Font> model = new DefaultComboBoxModel<>();
+    private ComboBoxModel<ApplicationFont> createModel() {
+        DefaultComboBoxModel<ApplicationFont> model = new DefaultComboBoxModel<>();
 
-        for (Font font : fonts) {
+        for (ApplicationFont font : fonts) {
             model.addElement(font);
         }
 
         return model;
     }
 
-    public Font getSelectedFont() {
-        Font selected = (Font) getSelectedItem();
+    public ApplicationFont getSelectedFont() {
+        ApplicationFont selected = (ApplicationFont) getSelectedItem();
         return selected;
     }
 
-    class FontSelectorCellRenderer extends JLabel implements ListCellRenderer<Font> {
+    class FontSelectorCellRenderer extends JLabel implements ListCellRenderer<ApplicationFont> {
 
         // private final PageView pageView = new PageView(new PageModel(PageGeometry.square(1), PageSize.A4_Landscape));
         @Override
-        public Component getListCellRendererComponent(JList<? extends Font> list, Font value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<? extends ApplicationFont> list, ApplicationFont value, int index, boolean isSelected, boolean cellHasFocus) {
 
-            setText(value.getFamily());
-            setFont(value);
+            setText(value.name());
+            setFont(value.getFont());
 
             if (isSelected) {
                 setBackground(list.getSelectionBackground());

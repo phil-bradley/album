@@ -5,12 +5,14 @@
 package ie.philb.album.ui.common.textcontrol;
 
 import com.bric.colorpicker.ColorPickerDialog;
+import ie.philb.album.ui.common.font.ApplicationFont;
 import ie.philb.album.ui.font.FontProvider;
 import ie.philb.album.ui.font.FontSelector;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -24,6 +26,8 @@ import javax.swing.JToolBar;
  * @author philb
  */
 class TextControlEditorToolBar extends JToolBar implements TextControlEventListener {
+
+    private List<Integer> fontSizes = List.of(6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 40, 44, 48, 54, 60, 66, 72, 80, 88, 104, 120, 140, 160, 180);
 
     private TextContent content = new TextContent();
     private FontProvider fontProvider = new FontProvider();
@@ -41,10 +45,12 @@ class TextControlEditorToolBar extends JToolBar implements TextControlEventListe
         btnUnderline = new JToggleButton("U");
         btnColor = new JButton("C");
 
-        fontSelector = new FontSelector(fontProvider.getFonts());
+        List<ApplicationFont> fonts = Arrays.asList(ApplicationFont.values());
+        fontSelector = new FontSelector(fonts);
+        fontSelector.setFont(fonts.get(0).getFont());
+
         fontSizeSelector = new JComboBox<>();
         fontSizeSelector.setModel(getFontSizeSelectorModel());
-
         fontSizeSelector.setPreferredSize(new Dimension(20, 20));
         fontSizeSelector.setSize(fontSizeSelector.getPreferredSize());
 
@@ -76,7 +82,8 @@ class TextControlEditorToolBar extends JToolBar implements TextControlEventListe
         });
 
         fontSelector.addActionListener((ActionEvent ae) -> {
-            content.setFontFamily(fontSelector.getSelectedFont().getFamily());
+            content.setFontFamily(fontSelector.getSelectedFont().name());
+            fontSelector.setFont(fontSelector.getSelectedFont().getFont());
             fireContentUpdated();
         });
 
@@ -90,29 +97,42 @@ class TextControlEditorToolBar extends JToolBar implements TextControlEventListe
                 fireContentUpdated();
             }
         });
+
+        TextControlEventBus.INSTANCE.addListener(this);
     }
 
     private void updateFontControls() {
         btnBold.setSelected(content.isBold());
         btnItalic.setSelected(content.isItalic());
         btnUnderline.setSelected(content.isUnderline());
+
+//        int idx = fontSizes.indexOf(content.getFontSize());
         fontSizeSelector.setSelectedItem(content.getFontSize());
+
+        ApplicationFont applicationFont = ApplicationFont.byFamilyName(content.getFontFamily());
+        fontSelector.setSelectedItem(applicationFont);
+        fontSelector.setFont(applicationFont.getFont());
     }
 
     private ComboBoxModel<Integer> getFontSizeSelectorModel() {
-        List<Integer> sizes = List.of(6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 36, 40, 44, 48, 54, 60, 66, 72, 80, 88, 104, 120, 140, 160, 180, 200);
         DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<>();
-        model.addAll(sizes);
+        model.addAll(fontSizes);
         return model;
     }
 
     @Override
-    public void updated(TextContent content) {
+    public void formatUpdated(TextContent content) {
         this.content = content;
+        this.fontSelector.setFont(ApplicationFont.byFamilyName(content.getFontFamily()).getFont());
+        this.btnColor.setForeground(content.getFontColor());
         updateFontControls();
     }
 
+    @Override
+    public void contentUpdated(TextContent content) {
+    }
+
     private void fireContentUpdated() {
-        TextControlEventBus.INSTANCE.updated(content);
+        TextControlEventBus.INSTANCE.formatUpdated(content);
     }
 }
