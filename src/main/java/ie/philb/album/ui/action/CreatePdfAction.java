@@ -6,22 +6,31 @@ package ie.philb.album.ui.action;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
 import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
+import ie.philb.album.ui.common.font.ApplicationFont;
+import ie.philb.album.ui.common.textcontrol.TextContent;
 import ie.philb.album.util.ImageUtils;
 import static ie.philb.album.util.ImageUtils.getImageSize;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,9 +75,31 @@ public class CreatePdfAction extends AbstractAction<File> {
 
                 for (PageEntryModel pageEntryModel : pageModel.getPageEntries()) {
 
+                    Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
+
+                    LOG.info("Text content: " + pageEntryModel.getTextContent());
+
+                    if (pageEntryModel.getTextContent() != null) {
+                        TextContent content = pageEntryModel.getTextContent();
+
+                        int centerX = cellLocation.x + (pageEntryModel.getPhysicalSize().width / 2);
+                        int centerY = cellLocation.y + (pageEntryModel.getPhysicalSize().height / 2);
+
+                        ApplicationFont appFont = ApplicationFont.byFamilyName(content.getFontFamily());
+                        BaseFont baseFont = loadFont(appFont);
+
+                        PdfContentByte canvas = writer.getDirectContent();
+                        canvas.setColorFill(Color.black);
+                        canvas.beginText();
+                        canvas.setFontAndSize(baseFont, content.getFontSize());
+                        canvas.showTextAligned(Element.ALIGN_CENTER, content.getContent(), centerX, centerY, 0);
+                        canvas.endText();
+                    }
+
                     if (pageEntryModel.getImage() == null) {
                         continue;
                     }
+
                     Dimension cellSize = geometryMapper.getCellSizeOnView(pageEntryModel);
                     double cellAspectRatio = ImageUtils.getAspectRatio(cellSize);
 
@@ -90,7 +121,6 @@ public class CreatePdfAction extends AbstractAction<File> {
                     Image img = Image.getInstance(cropped, null);
                     img.scaleToFit(cellSize.width, cellSize.height);
 
-                    Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
                     Point imageOffset = geometryMapper.locationAsPointsToViewUnits(pageEntryModel.getImageViewOffset());
 
                     if (imageOffset.x < 0) {
@@ -117,7 +147,7 @@ public class CreatePdfAction extends AbstractAction<File> {
             writer.close();
 
         } catch (DocumentException | IOException ex) {
-
+            LOG.info("Error creating pdf", ex);
         }
 
         return file;
@@ -132,4 +162,17 @@ public class CreatePdfAction extends AbstractAction<File> {
         return PageSize.A4.rotate();
     }
 
+    private BaseFont loadFont(ApplicationFont applicationFont) throws Exception {
+
+        File tempFontFile = File.createTempFile("tempfont", ".ttf");
+        tempFontFile.deleteOnExit();
+
+        try (InputStream is = getClass().getResourceAsStream(applicationFont.getFontPath())) {
+            Files.copy(is, tempFontFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        BaseFont font = BaseFont.createFont(tempFontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        return font;
+
+    }
 }

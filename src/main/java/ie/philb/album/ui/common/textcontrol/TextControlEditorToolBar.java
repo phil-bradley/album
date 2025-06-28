@@ -7,6 +7,9 @@ package ie.philb.album.ui.common.textcontrol;
 import com.bric.colorpicker.ColorPickerDialog;
 import ie.philb.album.ui.common.font.ApplicationFont;
 import ie.philb.album.ui.font.FontSelector;
+import static ie.philb.album.util.FontUtils.bold;
+import static ie.philb.album.util.FontUtils.italic;
+import static ie.philb.album.util.FontUtils.underline;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -39,9 +42,17 @@ class TextControlEditorToolBar extends JToolBar implements TextControlEventListe
     public TextControlEditorToolBar() {
 
         btnBold = new JToggleButton("B");
+        btnBold.setFont(bold(btnBold.getFont()));
+
         btnItalic = new JToggleButton("I");
+        btnItalic.setFont(italic(btnItalic.getFont()));
+
         btnUnderline = new JToggleButton("U");
-        btnColor = new JButton("C");
+        btnUnderline.setFont(underline(btnUnderline.getFont()));
+
+        btnColor = new JButton("A");
+        btnColor.setFont(bold(btnColor.getFont()));
+        btnColor.setFont(underline(btnColor.getFont()));
 
         List<ApplicationFont> fonts = Arrays.asList(ApplicationFont.values());
         fontSelector = new FontSelector(fonts);
@@ -110,6 +121,7 @@ class TextControlEditorToolBar extends JToolBar implements TextControlEventListe
         ApplicationFont applicationFont = ApplicationFont.byFamilyName(content.getFontFamily());
         fontSelector.setSelectedItem(applicationFont);
         fontSelector.setFont(applicationFont.getFont());
+
     }
 
     private ComboBoxModel<Integer> getFontSizeSelectorModel() {

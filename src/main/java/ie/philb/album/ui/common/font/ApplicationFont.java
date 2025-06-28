@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.font.TextAttribute;
 import static java.awt.font.TextAttribute.UNDERLINE_ON;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,23 +30,32 @@ public enum ApplicationFont {
     Tangerine();
 
     private static final float DEFAULT_SIZE = 16;
-
+    private static final String FONT_PATH = "/ie/philb/album/fonts";
     private static final Map<String, ApplicationFont> map = new HashMap<>();
-
     private static final Map<String, Font> fontCache = new HashMap<>();
 
     public Font getFont() {
         return fontCache.get(name());
     }
 
-    private static Font loadFont(String name) {
+    public String getFontPath() {
+        return FONT_PATH + "/" + name() + ".ttf";
+    }
+
+    public File getFontFile() {
+        String path = getFontPath();
+        String a = getClass().getClassLoader().getResource(path).getFile();
+        return new File(a);
+    }
+
+    private static Font loadFont(ApplicationFont font) {
+
+        String fontPath = font.getFontPath();
 
         try {
-            String path = "/ie/philb/album/fonts/" + name + ".ttf";
-            Font font = Font.createFont(Font.TRUETYPE_FONT, ApplicationFont.class.getResourceAsStream(path)).deriveFont(DEFAULT_SIZE);
-            return font;
+            return Font.createFont(Font.TRUETYPE_FONT, ApplicationFont.class.getResourceAsStream(fontPath)).deriveFont(DEFAULT_SIZE);
         } catch (FontFormatException | IOException ex) {
-            throw new RuntimeException("Font creation failed", ex);
+            throw new RuntimeException("Failed to load font " + font + ", with path " + fontPath, ex);
         }
     }
 
@@ -79,8 +89,8 @@ public enum ApplicationFont {
     }
 
     static {
-        for (ApplicationFont fonts : values()) {
-            fontCache.put(fonts.name(), loadFont(fonts.name()));
+        for (ApplicationFont applicationFont : values()) {
+            fontCache.put(applicationFont.name(), loadFont(applicationFont));
         }
     }
 
