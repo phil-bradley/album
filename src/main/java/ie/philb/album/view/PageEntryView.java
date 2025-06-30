@@ -192,7 +192,6 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         canResize = true;
         mouseDragStartPoint = me.getPoint();
 
-        System.out.println("Location on screen: " + me.getPoint());
         mouseDragPreviousPoint = mouseDragStartPoint;
 
         this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));

@@ -46,7 +46,6 @@ public class AlbumOverviewPanel extends AppPanel {
 
             @Override
             protected void processMouseEvent(MouseEvent e, JLayer<? extends AlbumView> l) {
-                System.out.println("Mouse event intercepted at: " + e.getPoint());
                 e.consume();  //  block event from reaching underlying components
             }
         });

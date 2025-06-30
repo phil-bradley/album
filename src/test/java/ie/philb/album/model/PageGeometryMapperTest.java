@@ -240,7 +240,6 @@ public class PageGeometryMapperTest {
 
         Dimension unscaledSize = pageModel.getCellSizePoints(cell00);
         Dimension scaledSize = mapper.getCellSizeOnView(pageModel.getPageEntries().get(0));
-        System.out.println("Got size " + unscaledSize + ", scaled size " + scaledSize);
 
         double expectedHeight = (A4_Landscape.height() - 2 * margin) / scalingFactor;
         double expectedWidth = ((A4_Landscape.width() - 3 * margin) / 2) / scalingFactor;

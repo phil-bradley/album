@@ -54,11 +54,14 @@ public class PageGeometry {
         return maxHeight;
     }
 
+    public static PageGeometry rectangle(int width, int height) {
+        return rectangle(PageEntryType.Image, width, height);
+    }
 
     /*
      * Creates a rectangular layout, width x height cells
      */
-    public static PageGeometry rectangle(int width, int height) {
+    public static PageGeometry rectangle(PageEntryType pageEntryType, int width, int height) {
 
         validateWidthAndHeight(width, height);
 
@@ -69,15 +72,19 @@ public class PageGeometry {
         for (int h = 0; h < height; h++) {
             for (int w = 0; w < width; w++) {
                 Point location = new Point(w, h);
-                pageGeometry.cells.add(new PageCell(pageSize, location));
+                pageGeometry.cells.add(new PageCell(pageSize, location, pageEntryType));
             }
         }
 
         return pageGeometry;
     }
 
+    public static PageGeometry square(PageEntryType pageEntryType, int size) {
+        return rectangle(pageEntryType, size, size);
+    }
+
     public static PageGeometry square(int size) {
-        return rectangle(size, size);
+        return rectangle(PageEntryType.Image, size, size);
     }
 
     /*
@@ -101,7 +108,7 @@ public class PageGeometry {
      *
      * All cells have height = 1
      */
-    public static PageGeometry withRows(int... cellCounts) {
+    public static PageGeometry withRows(PageEntryType pageEntryType, int... cellCounts) {
 
         PageGeometry pageGeometry = new PageGeometry();
 
@@ -117,14 +124,18 @@ public class PageGeometry {
                 Dimension cellSize = new Dimension(cellWidth, 1);
                 Point cellLocation = new Point(col * cellWidth, row);
 
-                pageGeometry.cells.add(new PageCell(cellSize, cellLocation));
+                pageGeometry.cells.add(new PageCell(cellSize, cellLocation, pageEntryType));
             }
         }
 
         return pageGeometry;
     }
 
-    public static PageGeometry withColumns(int... cellCounts) {
+    public static PageGeometry withRows(int... cellCounts) {
+        return withRows(PageEntryType.Image, cellCounts);
+    }
+
+    public static PageGeometry withColumns(PageEntryType pageEntryType, int... cellCounts) {
 
         PageGeometry pageGeometry = new PageGeometry();
 
@@ -139,11 +150,15 @@ public class PageGeometry {
                 int cellHeight = pageCellHeight / cellCounts[col];
                 Dimension cellSize = new Dimension(1, cellHeight);
 
-                pageGeometry.cells.add(new PageCell(cellSize, new Point(col, row * cellHeight)));
+                pageGeometry.cells.add(new PageCell(cellSize, new Point(col, row * cellHeight), pageEntryType));
             }
         }
 
         return pageGeometry;
+    }
+
+    public static PageGeometry withColumns(int... cellCounts) {
+        return withColumns(PageEntryType.Image, cellCounts);
     }
 
     private static void validateWidthAndHeight(int width, int height) {

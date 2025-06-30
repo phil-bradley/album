@@ -98,12 +98,14 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
             dlg.setVisible(true);
 
             Color selectedColor = dlg.getColor();
+
             if (selectedColor != null) {
                 model.setFontColor(selectedColor);
             }
         });
 
         updateFontControls();
+        model.addChangeListener(this);
     }
 
     private void updateFontControls() {
@@ -129,7 +131,6 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
 
     @Override
     public void formatUpdated(TextControlModel model) {
-        this.model = model;
         updateFontControls();
     }
 }

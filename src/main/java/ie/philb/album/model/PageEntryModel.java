@@ -28,7 +28,6 @@ public class PageEntryModel {
 
     private final List<PageEntryModelListener> listeners = new ArrayList<>();
     private final PageCell cell;
-    private final PageEntryType pageEntryType;
     private BufferedImage image = null;
     private File imageFile;
     private double zoomFactor = 1;
@@ -43,11 +42,10 @@ public class PageEntryModel {
 
     public PageEntryModel(PageCell cell, PageEntryType pageEntryType) {
         this.cell = cell;
-        this.pageEntryType = pageEntryType;
     }
 
     public PageEntryType getPageEntryType() {
-        return pageEntryType;
+        return cell.pageEntryType();
     }
 
     public Dimension getPhysicalSize() {

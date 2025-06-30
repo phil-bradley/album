@@ -6,6 +6,7 @@ package ie.philb.album.ui.command;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.model.AlbumModel;
+import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
@@ -21,7 +22,8 @@ public class NewAlbumCommand extends AbstractCommand {
 
         AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
 
-        PageModel titlePage = new PageModel(PageGeometry.square(1), PageSize.A4_Landscape);
+        PageGeometry geometry = PageGeometry.square(PageEntryType.Text, 1);
+        PageModel titlePage = new PageModel(geometry, PageSize.A4_Landscape);
         titlePage.getPageEntries().get(0).geTextControlModel().setText("The Title!");
         albumModel.addPage(titlePage);
 

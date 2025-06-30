@@ -38,9 +38,15 @@ public class TextControlModel {
         return Collections.unmodifiableList(new ArrayList<>(listeners));
     }
 
-    private void fireUpdated() {
+    private void fireFormatUpdated() {
         for (TextControlChangeListener listener : getListeners()) {
             listener.formatUpdated(this);
+        }
+    }
+
+    private void fireTextUpdated() {
+        for (TextControlChangeListener listener : getListeners()) {
+            listener.textUpdated(this);
         }
     }
 
@@ -51,7 +57,7 @@ public class TextControlModel {
     public void setText(String text) {
         if (!Objects.equals(text, this.text)) {
             this.text = text;
-            fireUpdated();
+            fireTextUpdated();
         }
     }
 
@@ -62,7 +68,7 @@ public class TextControlModel {
     public void setBold(boolean isBold) {
         if (this.isBold != isBold) {
             this.isBold = isBold;
-            fireUpdated();
+            fireFormatUpdated();
         }
     }
 
@@ -73,7 +79,7 @@ public class TextControlModel {
     public void setItalic(boolean isItalic) {
         if (this.isItalic != isItalic) {
             this.isItalic = isItalic;
-            fireUpdated();
+            fireFormatUpdated();
         }
     }
 
@@ -84,7 +90,7 @@ public class TextControlModel {
     public void setUnderline(boolean isUnderline) {
         if (this.isUnderline != isUnderline) {
             this.isUnderline = isUnderline;
-            fireUpdated();
+            fireFormatUpdated();
         }
     }
 
@@ -95,7 +101,7 @@ public class TextControlModel {
     public void setFontFamily(String fontFamily) {
         if (!Objects.equals(fontFamily, this.fontFamily)) {
             this.fontFamily = fontFamily;
-            fireUpdated();
+            fireFormatUpdated();
         }
     }
 
@@ -106,7 +112,7 @@ public class TextControlModel {
     public void setFontSize(int fontSize) {
         if (this.fontSize != fontSize) {
             this.fontSize = fontSize;
-            fireUpdated();
+            fireFormatUpdated();
         }
     }
 
@@ -117,7 +123,7 @@ public class TextControlModel {
     public void setFontColor(Color fontColor) {
         if (!Objects.equals(fontColor, this.fontColor)) {
             this.fontColor = fontColor;
-            fireUpdated();
+            fireFormatUpdated();
         }
     }
 
