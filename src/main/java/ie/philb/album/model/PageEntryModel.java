@@ -4,7 +4,7 @@
  */
 package ie.philb.album.model;
 
-import ie.philb.album.ui.common.textcontrol.TextContent;
+import ie.philb.album.ui.common.textcontrol.TextControlModel;
 import ie.philb.album.util.ImageUtils;
 import ie.philb.album.util.StringUtils;
 import java.awt.Dimension;
@@ -28,23 +28,26 @@ public class PageEntryModel {
 
     private final List<PageEntryModelListener> listeners = new ArrayList<>();
     private final PageCell cell;
+    private final PageEntryType pageEntryType;
     private BufferedImage image = null;
     private File imageFile;
     private double zoomFactor = 1;
     private Point offset = new Point(0, 0);
     private boolean isCentered = false;
-    private String text = null;
     private Dimension physicalSize = new Dimension(0, 0);
-    private TextContent content = null;
-//    private int fontSize;
-//    private Color fontColor;
-//    private String fontName;
-//    private boolean isBold;
-//    private boolean isUnderline;
-//    private boolean isItalic;
+    private final TextControlModel textControlModel = new TextControlModel();
 
     public PageEntryModel(PageCell cell) {
+        this(cell, PageEntryType.Image);
+    }
+
+    public PageEntryModel(PageCell cell, PageEntryType pageEntryType) {
         this.cell = cell;
+        this.pageEntryType = pageEntryType;
+    }
+
+    public PageEntryType getPageEntryType() {
+        return pageEntryType;
     }
 
     public Dimension getPhysicalSize() {
@@ -160,7 +163,7 @@ public class PageEntryModel {
 
     public BufferedImage getViewImage(Dimension viewSize, PageGeometryMapper geometryMapper) {
 
-        if (image == null && StringUtils.isBlank(text)) {
+        if (image == null && StringUtils.isBlank(textControlModel.getText())) {
             return getPlacholderImage(viewSize);
         }
 
@@ -278,74 +281,7 @@ public class PageEntryModel {
         this.isCentered = b;
     }
 
-//    public String getText() {
-//        return text;
-//    }
-//
-//    public void setText(String text) {
-//        this.text = text;
-//        fireTextUpdated();
-//    }
-//
-//    public int getFontSize() {
-//        return fontSize;
-//    }
-//
-//    public void setFontSize(int fontSize) {
-//        this.fontSize = fontSize;
-//        fireTextUpdated();
-//    }
-//
-//    public Color getFontColor() {
-//        return fontColor;
-//    }
-//
-//    public void setFontColor(Color fontColor) {
-//        this.fontColor = fontColor;
-//        fireTextUpdated();
-//    }
-//
-//    public String getFontName() {
-//        return fontName;
-//    }
-//
-//    public void setFontName(String fontName) {
-//        this.fontName = fontName;
-//        fireTextUpdated();
-//    }
-//
-//    public boolean isBold() {
-//        return isBold;
-//    }
-//
-//    public void setBold(boolean isBold) {
-//        this.isBold = isBold;
-//        fireTextUpdated();
-//    }
-//
-//    public boolean isUnderline() {
-//        return isUnderline;
-//    }
-//
-//    public void setUnderline(boolean isUnderline) {
-//        this.isUnderline = isUnderline;
-//        fireTextUpdated();
-//    }
-//
-//    public boolean isItalic() {
-//        return isItalic;
-//    }
-//
-//    public void setItalic(boolean isItalic) {
-//        this.isItalic = isItalic;
-//        fireTextUpdated();
-//    }
-    public TextContent getTextContent() {
-        return content;
+    public TextControlModel geTextControlModel() {
+        return textControlModel;
     }
-
-    public void setTextContent(TextContent content) {
-        this.content = content;
-    }
-
 }

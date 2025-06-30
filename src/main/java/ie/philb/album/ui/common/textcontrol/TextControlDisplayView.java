@@ -17,23 +17,26 @@ import javax.swing.SwingConstants;
  *
  * @author philb
  */
-class TextControlDisplayView extends JPanel implements TextControlEventListener {
+class TextControlDisplayView extends JPanel implements TextControlChangeListener {
 
     private double fontScalingFactor = 1;
-    private TextContent content = new TextContent();
-    private JLabel label;
+    private final TextControlModel model;
+    private final JLabel label = new JLabel();
 
-    public TextControlDisplayView() {
+    public TextControlDisplayView(TextControlModel model) {
+        this.model = model;
         setLayout(new GridBagLayout());
         initComponents();
         layoutComponents();
         setOpaque(false);
 
-        TextControlEventBus.INSTANCE.addListener(this);
+        formatUpdated(model);
+        textUpdated(model);
+
+        model.addChangeListener(this);
     }
 
     private void initComponents() {
-        label = new JLabel();
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
         label.setOpaque(false);
@@ -46,16 +49,14 @@ class TextControlDisplayView extends JPanel implements TextControlEventListener 
     }
 
     @Override
-    public void contentUpdated(TextContent content) {
-        this.content = content;
-        this.label.setText(content.getContent());
+    public final void textUpdated(TextControlModel model) {
+        this.label.setText(model.getText());
     }
 
     @Override
-    public void formatUpdated(TextContent content) {
-        this.content = content;
+    public final void formatUpdated(TextControlModel model) {
         this.label.setFont(getDisplayFont());
-        this.label.setForeground(content.getFontColor());
+        this.label.setForeground(model.getFontColor());
     }
 
     void setFontScalingFactor(double fontScalingFactor) {
@@ -64,12 +65,12 @@ class TextControlDisplayView extends JPanel implements TextControlEventListener 
     }
 
     private Font getDisplayFont() {
-        boolean bold = content.isBold();
-        boolean italic = content.isItalic();
-        boolean underline = content.isUnderline();
-        int scaledSize = (int) (fontScalingFactor * content.getFontSize());
+        boolean bold = model.isBold();
+        boolean italic = model.isItalic();
+        boolean underline = model.isUnderline();
+        int scaledSize = (int) (fontScalingFactor * model.getFontSize());
 
-        Font font = ApplicationFont.byFamilyName(content.getFontFamily()).getDerivedFont(bold, italic, underline, scaledSize);
+        Font font = ApplicationFont.byFamilyName(model.getFontFamily()).getDerivedFont(bold, italic, underline, scaledSize);
         return font;
     }
 }

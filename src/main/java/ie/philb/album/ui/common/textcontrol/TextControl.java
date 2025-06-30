@@ -5,7 +5,6 @@
 package ie.philb.album.ui.common.textcontrol;
 
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.common.font.ApplicationFont;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -22,15 +21,21 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
  *
  * @author philb
  */
-public class TextControl extends JPanel implements TextControlEventListener {
+public class TextControl extends JPanel implements TextControlChangeListener {
 
     private Dimension physicalSize = new Dimension(0, 0);
     private boolean previewMode = false;
-    private TextControlEditorToolBar toolBar = new TextControlEditorToolBar();
-    private ViewEditPanel viewEditPanel = new ViewEditPanel();
+    private TextControlEditorToolBar toolBar;
+    private ViewEditPanel viewEditPanel;
     private JLayeredPane layeredPane = new JLayeredPane();
+    private final TextControlModel model;
 
-    public TextControl() {
+    public TextControl(TextControlModel model) {
+
+        this.model = model;
+
+        viewEditPanel = new ViewEditPanel(model);
+        toolBar = new TextControlEditorToolBar(model);
 
         setLayout(new GridBagLayout());
         setOpaque(false);
@@ -67,8 +72,8 @@ public class TextControl extends JPanel implements TextControlEventListener {
         });
 
         toolBar.setVisible(false);
-        
-        TextControlEventBus.INSTANCE.addListener(this);
+
+        model.addChangeListener(this);
     }
 
     public boolean isPreviewMode() {
@@ -111,12 +116,8 @@ public class TextControl extends JPanel implements TextControlEventListener {
     }
 
     @Override
-    public void contentUpdated(TextContent content) {
+    public void textUpdated(TextControlModel model) {
         setEditEnabled(false);
-    }
-
-    @Override
-    public void formatUpdated(TextContent content) {
     }
 
     private void setEditEnabled(boolean isEnabled) {
@@ -133,8 +134,13 @@ public class TextControl extends JPanel implements TextControlEventListener {
         frame.setPreferredSize(new Dimension(400, 250));
         frame.setSize(frame.getPreferredSize());
 
-        TextControl ctrl = new TextControl();
-        ctrl.setTextContent(new TextContent("Hello there", true, true, true, ApplicationFont.Caveat.name(), 18, Color.PINK));
+        TextControlModel model = new TextControlModel();
+        model.setText("Hello There!");
+        model.setFontColor(Color.MAGENTA);
+        model.setBold(true);
+
+        TextControl ctrl = new TextControl(model);
+
         ctrl.setPreferredSize(new Dimension(300, 200));
         ctrl.setSize(ctrl.getPreferredSize());
 

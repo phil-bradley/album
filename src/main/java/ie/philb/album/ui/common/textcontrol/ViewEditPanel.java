@@ -13,14 +13,19 @@ import javax.swing.JPanel;
  *
  * @author philb
  */
-class ViewEditPanel extends JPanel {
+class ViewEditPanel extends JPanel implements TextControlChangeListener {
 
     private final CardLayout cardLayout = new CardLayout();
+    private final TextControlModel model;
+    private final TextControlDisplayView displayView;
+    private final TextControlEditView editView;
 
-    private final TextControlDisplayView displayView = new TextControlDisplayView();
-    private final TextControlEditView editView = new TextControlEditView();
+    public ViewEditPanel(TextControlModel model) {
 
-    public ViewEditPanel() {
+        this.model = model;
+
+        displayView = new TextControlDisplayView(model);
+        editView = new TextControlEditView(model);
 
         setOpaque(false);
         setBorder(BorderFactory.createDashedBorder(Color.LIGHT_GRAY));
@@ -29,6 +34,7 @@ class ViewEditPanel extends JPanel {
         add(displayView, "display");
 
         cardLayout.show(this, "display");
+        this.model.addChangeListener(this);
     }
 
     void setEditor(boolean isEditor) {

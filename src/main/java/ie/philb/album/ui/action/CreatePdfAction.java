@@ -15,10 +15,10 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageEntryModel;
+import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.font.ApplicationFont;
-import ie.philb.album.ui.common.textcontrol.TextContent;
 import ie.philb.album.util.ImageUtils;
 import static ie.philb.album.util.ImageUtils.getImageSize;
 import java.awt.Color;
@@ -77,22 +77,22 @@ public class CreatePdfAction extends AbstractAction<File> {
 
                     Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
 
-                    LOG.info("Text content: " + pageEntryModel.getTextContent());
-
-                    if (pageEntryModel.getTextContent() != null) {
-                        TextContent content = pageEntryModel.getTextContent();
+                    if (pageEntryModel.getPageEntryType() == PageEntryType.Text) {
+                        String text = pageEntryModel.geTextControlModel().getText();
+                        String fontFamilyName = pageEntryModel.geTextControlModel().getFontFamily();
+                        int fontSize = pageEntryModel.geTextControlModel().getFontSize();
 
                         int centerX = cellLocation.x + (pageEntryModel.getPhysicalSize().width / 2);
                         int centerY = cellLocation.y + (pageEntryModel.getPhysicalSize().height / 2);
 
-                        ApplicationFont appFont = ApplicationFont.byFamilyName(content.getFontFamily());
+                        ApplicationFont appFont = ApplicationFont.byFamilyName(fontFamilyName);
                         BaseFont baseFont = loadFont(appFont);
 
                         PdfContentByte canvas = writer.getDirectContent();
                         canvas.setColorFill(Color.black);
                         canvas.beginText();
-                        canvas.setFontAndSize(baseFont, content.getFontSize());
-                        canvas.showTextAligned(Element.ALIGN_CENTER, content.getContent(), centerX, centerY, 0);
+                        canvas.setFontAndSize(baseFont, fontSize);
+                        canvas.showTextAligned(Element.ALIGN_CENTER, text, centerX, centerY, 0);
                         canvas.endText();
                     }
 

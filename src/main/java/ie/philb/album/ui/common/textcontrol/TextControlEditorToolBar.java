@@ -27,11 +27,11 @@ import javax.swing.JToolBar;
  *
  * @author philb
  */
-class TextControlEditorToolBar extends JToolBar implements TextControlEventListener {
+class TextControlEditorToolBar extends JToolBar implements TextControlChangeListener {
 
-    private List<Integer> fontSizes = List.of(6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 40, 44, 48, 54, 60, 66, 72, 80, 88, 104, 120, 140, 160, 180);
+    private final List<Integer> fontSizes = List.of(6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 40, 44, 48, 54, 60, 66, 72, 80, 88, 104, 120, 140, 160, 180);
 
-    private TextContent content = new TextContent();
+    private TextControlModel model;
     private JComboBox<Integer> fontSizeSelector;
     private final JButton btnColor;
     private FontSelector fontSelector;
@@ -39,7 +39,9 @@ class TextControlEditorToolBar extends JToolBar implements TextControlEventListe
     private final JToggleButton btnItalic;
     private final JToggleButton btnUnderline;
 
-    public TextControlEditorToolBar() {
+    public TextControlEditorToolBar(TextControlModel model) {
+
+        this.model = model;
 
         btnBold = new JToggleButton("B");
         btnBold.setFont(bold(btnBold.getFont()));
@@ -71,29 +73,24 @@ class TextControlEditorToolBar extends JToolBar implements TextControlEventListe
         add(fontSelector);
 
         btnBold.addItemListener((ItemEvent e) -> {
-            content.setBold(e.getStateChange() == ItemEvent.SELECTED);
-            fireContentUpdated();
+            model.setBold(e.getStateChange() == ItemEvent.SELECTED);
         });
 
         btnItalic.addItemListener((ItemEvent e) -> {
-            content.setItalic(e.getStateChange() == ItemEvent.SELECTED);
-            fireContentUpdated();
+            model.setItalic(e.getStateChange() == ItemEvent.SELECTED);
         });
 
         btnUnderline.addItemListener((ItemEvent e) -> {
-            content.setUnderline(e.getStateChange() == ItemEvent.SELECTED);
-            fireContentUpdated();
+            model.setUnderline(e.getStateChange() == ItemEvent.SELECTED);
         });
 
         fontSizeSelector.addActionListener((ActionEvent ae) -> {
-            content.setFontSize((Integer) fontSizeSelector.getSelectedItem());
-            fireContentUpdated();
+            model.setFontSize((Integer) fontSizeSelector.getSelectedItem());
         });
 
         fontSelector.addActionListener((ActionEvent ae) -> {
-            content.setFontFamily(fontSelector.getSelectedFont().name());
+            model.setFontFamily(fontSelector.getSelectedFont().name());
             fontSelector.setFont(fontSelector.getSelectedFont().getFont());
-            fireContentUpdated();
         });
 
         btnColor.addActionListener((ActionEvent ae) -> {
@@ -102,47 +99,37 @@ class TextControlEditorToolBar extends JToolBar implements TextControlEventListe
 
             Color selectedColor = dlg.getColor();
             if (selectedColor != null) {
-                content.setFontColor(selectedColor);
-                fireContentUpdated();
+                model.setFontColor(selectedColor);
             }
         });
 
-        TextControlEventBus.INSTANCE.addListener(this);
-    }
-
-    private void updateFontControls() {
-        btnBold.setSelected(content.isBold());
-        btnItalic.setSelected(content.isItalic());
-        btnUnderline.setSelected(content.isUnderline());
-
-//        int idx = fontSizes.indexOf(content.getFontSize());
-        fontSizeSelector.setSelectedItem(content.getFontSize());
-
-        ApplicationFont applicationFont = ApplicationFont.byFamilyName(content.getFontFamily());
-        fontSelector.setSelectedItem(applicationFont);
-        fontSelector.setFont(applicationFont.getFont());
-
-    }
-
-    private ComboBoxModel<Integer> getFontSizeSelectorModel() {
-        DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<>();
-        model.addAll(fontSizes);
-        return model;
-    }
-
-    @Override
-    public void formatUpdated(TextContent content) {
-        this.content = content;
-        this.fontSelector.setFont(ApplicationFont.byFamilyName(content.getFontFamily()).getFont());
-        this.btnColor.setForeground(content.getFontColor());
         updateFontControls();
     }
 
-    @Override
-    public void contentUpdated(TextContent content) {
+    private void updateFontControls() {
+        btnBold.setSelected(model.isBold());
+        btnItalic.setSelected(model.isItalic());
+        btnUnderline.setSelected(model.isUnderline());
+
+        fontSizeSelector.setSelectedItem(model.getFontSize());
+
+        ApplicationFont applicationFont = ApplicationFont.byFamilyName(model.getFontFamily());
+        fontSelector.setSelectedItem(applicationFont);
+        fontSelector.setFont(applicationFont.getFont());
+
+        this.fontSelector.setFont(ApplicationFont.byFamilyName(model.getFontFamily()).getFont());
+        this.btnColor.setForeground(model.getFontColor());
     }
 
-    private void fireContentUpdated() {
-        TextControlEventBus.INSTANCE.formatUpdated(content);
+    private ComboBoxModel<Integer> getFontSizeSelectorModel() {
+        DefaultComboBoxModel<Integer> fontSizeModel = new DefaultComboBoxModel<>();
+        fontSizeModel.addAll(fontSizes);
+        return fontSizeModel;
+    }
+
+    @Override
+    public void formatUpdated(TextControlModel model) {
+        this.model = model;
+        updateFontControls();
     }
 }

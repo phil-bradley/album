@@ -8,13 +8,13 @@ import ie.philb.album.AppContext;
 import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryModelListener;
+import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Resources;
-import ie.philb.album.ui.common.textcontrol.TextContent;
 import ie.philb.album.ui.common.textcontrol.TextControl;
-import ie.philb.album.ui.common.textcontrol.TextControlEventListener;
+import ie.philb.album.ui.common.textcontrol.TextControlChangeListener;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
 import ie.philb.album.util.ImageUtils;
 import static ie.philb.album.util.ImageUtils.getImageSize;
@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author philb
  */
-public class PageEntryView extends AppPanel implements PageEntryModelListener, TextControlEventListener {
+public class PageEntryView extends AppPanel implements PageEntryModelListener, TextControlChangeListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(PageEntryView.class);
 
@@ -55,7 +55,10 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
         this.pageView = pageView;
         this.pageEntryModel = pageEntryModel;
-        updateTextControl();
+
+        if (pageEntryModel.getPageEntryType() == PageEntryType.Text) {
+            addTextControl();
+        }
 
         background(Color.white);
         setFocusable(true);
@@ -66,23 +69,10 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         updateBorder();
     }
 
-    private void updateTextControl() {
-
-        if (pageEntryModel == null) {
-            return;
-        }
-
-        if (pageEntryModel.getTextContent() == null) {
-            return;
-        }
-
-        if (textControl == null) {
-            textControl = new TextControl();
-            textControl.setPhysicalSize(pageEntryModel.getPhysicalSize());
-            add(textControl, new GridBagCellConstraints().weight(1).fillBoth());
-        }
-
-        textControl.setTextContent(pageEntryModel.getTextContent());
+    private void addTextControl() {
+        textControl = new TextControl(pageEntryModel.geTextControlModel());
+        textControl.setPhysicalSize(pageEntryModel.getPhysicalSize());
+        add(textControl, new GridBagCellConstraints().weight(1).fillBoth());
     }
 
     public PageEntryModel getPageEntryModel() {
@@ -142,7 +132,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
         super.paintComponent(g);
 
-        if (pageEntryModel.getTextContent() != null) {
+        if (pageEntryModel.getPageEntryType() == PageEntryType.Text) {
             return;
         }
 
@@ -184,11 +174,6 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     @Override
     public void imageUpdated() {
         repaint();
-    }
-
-    @Override
-    public void textUpdated() {
-        updateTextControl();
     }
 
     @Override
@@ -321,15 +306,4 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     public boolean isTextView() {
         return (textControl != null);
     }
-
-    @Override
-    public void contentUpdated(TextContent content) {
-        pageEntryModel.setTextContent(content);
-    }
-
-    @Override
-    public void formatUpdated(TextContent content) {
-        pageEntryModel.setTextContent(content);
-    }
-
 }

@@ -18,19 +18,21 @@ import javax.swing.JTextField;
  *
  * @author philb
  */
-class TextControlEditView extends JPanel implements TextControlEventListener {
+class TextControlEditView extends JPanel implements TextControlChangeListener {
 
     private double fontScalingFactor = 1;
-    private TextContent content = null;
+    private final TextControlModel model;
     private PromptTextField field;
 
-    public TextControlEditView() {
+    public TextControlEditView(TextControlModel model) {
+        this.model = model;
+
         setLayout(new GridBagLayout());
         initComponents();
         layoutComponents();
         setOpaque(false);
 
-        TextControlEventBus.INSTANCE.addListener(this);
+        this.model.addChangeListener(this);
     }
 
     private void initComponents() {
@@ -40,10 +42,12 @@ class TextControlEditView extends JPanel implements TextControlEventListener {
         field.setBorder(null);
         field.setOpaque(false);
         field.setMargin(new Insets(0, 0, 0, 0));
+        field.setText(model.getText());
+
+        formatUpdated(model);
 
         field.addActionListener((ActionEvent e) -> {
-            content.setContent(field.getText());
-            TextControlEventBus.INSTANCE.contentUpdated(content);
+            model.setText(field.getText());
         });
     }
 
@@ -58,44 +62,18 @@ class TextControlEditView extends JPanel implements TextControlEventListener {
     }
 
     @Override
-    public void contentUpdated(TextContent content) {
-        String savedText = null;
-
-        if (this.content != null) {
-            savedText = this.content.getContent();
-        }
-
-        this.content = content;
-
-        if (savedText != null) {
-            this.content.setContent(savedText);
-        }
-
-        updateEditor();
-    }
-
-    @Override
-    public void formatUpdated(TextContent content) {
-        this.content = content;
-
-        field.setText(content.getContent());
+    public void formatUpdated(TextControlModel model) {
         field.setFont(getDisplayFont());
-        field.setForeground(content.getFontColor());
-    }
-
-    private void updateEditor() {
-        field.setText(content.getContent());
-        field.setFont(getDisplayFont());
-        field.setForeground(content.getFontColor());
+        field.setForeground(model.getFontColor());
     }
 
     private Font getDisplayFont() {
-        boolean bold = content.isBold();
-        boolean italic = content.isItalic();
-        boolean underline = content.isUnderline();
-        int scaledSize = (int) (fontScalingFactor * content.getFontSize());
+        boolean bold = model.isBold();
+        boolean italic = model.isItalic();
+        boolean underline = model.isUnderline();
+        int scaledSize = (int) (fontScalingFactor * model.getFontSize());
 
-        Font font = ApplicationFont.byFamilyName(content.getFontFamily()).getDerivedFont(bold, italic, underline, scaledSize);
+        Font font = ApplicationFont.byFamilyName(model.getFontFamily()).getDerivedFont(bold, italic, underline, scaledSize);
         return font;
     }
 

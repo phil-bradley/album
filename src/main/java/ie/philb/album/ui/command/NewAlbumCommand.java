@@ -9,9 +9,6 @@ import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
-import ie.philb.album.ui.common.font.ApplicationFont;
-import ie.philb.album.ui.common.textcontrol.TextContent;
-import java.awt.Color;
 
 /**
  *
@@ -24,10 +21,8 @@ public class NewAlbumCommand extends AbstractCommand {
 
         AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
 
-        TextContent titleContent = new TextContent("Album Title", false, false, false, ApplicationFont.Caveat.name(), 36, Color.DARK_GRAY);
-
         PageModel titlePage = new PageModel(PageGeometry.square(1), PageSize.A4_Landscape);
-        titlePage.getPageEntries().get(0).setTextContent(titleContent);
+        titlePage.getPageEntries().get(0).geTextControlModel().setText("The Title!");
         albumModel.addPage(titlePage);
 
         PageModel page1 = new PageModel(PageGeometry.square(2), albumModel.getPageSize()).withMargin(2);
