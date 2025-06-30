@@ -78,9 +78,9 @@ public class CreatePdfAction extends AbstractAction<File> {
                     Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
 
                     if (pageEntryModel.getPageEntryType() == PageEntryType.Text) {
-                        String text = pageEntryModel.geTextControlModel().getText();
-                        String fontFamilyName = pageEntryModel.geTextControlModel().getFontFamily();
-                        int fontSize = pageEntryModel.geTextControlModel().getFontSize();
+                        String text = pageEntryModel.getTextControlModel().getText();
+                        String fontFamilyName = pageEntryModel.getTextControlModel().getFontFamily();
+                        int fontSize = pageEntryModel.getTextControlModel().getFontSize();
 
                         int centerX = cellLocation.x + (pageEntryModel.getPhysicalSize().width / 2);
                         int centerY = cellLocation.y + (pageEntryModel.getPhysicalSize().height / 2);
@@ -89,7 +89,7 @@ public class CreatePdfAction extends AbstractAction<File> {
                         BaseFont baseFont = loadFont(appFont);
 
                         PdfContentByte canvas = writer.getDirectContent();
-                        canvas.setColorFill(Color.black);
+                        canvas.setColorFill(pageEntryModel.getTextControlModel().getFontColor());
                         canvas.beginText();
                         canvas.setFontAndSize(baseFont, fontSize);
                         canvas.showTextAligned(Element.ALIGN_CENTER, text, centerX, centerY, 0);

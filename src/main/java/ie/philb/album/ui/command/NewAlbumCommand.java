@@ -24,7 +24,7 @@ public class NewAlbumCommand extends AbstractCommand {
 
         PageGeometry geometry = PageGeometry.square(PageEntryType.Text, 1);
         PageModel titlePage = new PageModel(geometry, PageSize.A4_Landscape);
-        titlePage.getPageEntries().get(0).geTextControlModel().setText("The Title!");
+        titlePage.getPageEntries().get(0).getTextControlModel().setText("The Title!");
         albumModel.addPage(titlePage);
 
         PageModel page1 = new PageModel(PageGeometry.square(2), albumModel.getPageSize()).withMargin(2);

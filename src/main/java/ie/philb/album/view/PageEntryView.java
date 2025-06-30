@@ -70,7 +70,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     }
 
     private void addTextControl() {
-        textControl = new TextControl(pageEntryModel.geTextControlModel());
+        textControl = new TextControl(pageEntryModel.getTextControlModel());
         textControl.setPhysicalSize(pageEntryModel.getPhysicalSize());
         add(textControl, new GridBagCellConstraints().weight(1).fillBoth());
     }

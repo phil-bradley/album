@@ -279,7 +279,7 @@ public class PageEntryModel {
         this.isCentered = b;
     }
 
-    public TextControlModel geTextControlModel() {
+    public TextControlModel getTextControlModel() {
         return textControlModel;
     }
 }
