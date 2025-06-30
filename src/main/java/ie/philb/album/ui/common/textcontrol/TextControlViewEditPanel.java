@@ -13,14 +13,14 @@ import javax.swing.JPanel;
  *
  * @author philb
  */
-class ViewEditPanel extends JPanel implements TextControlChangeListener {
+class TextControlViewEditPanel extends JPanel implements TextControlChangeListener {
 
     private final CardLayout cardLayout = new CardLayout();
     private final TextControlModel model;
     private final TextControlDisplayView displayView;
     private final TextControlEditView editView;
 
-    public ViewEditPanel(TextControlModel model) {
+    public TextControlViewEditPanel(TextControlModel model) {
 
         this.model = model;
 

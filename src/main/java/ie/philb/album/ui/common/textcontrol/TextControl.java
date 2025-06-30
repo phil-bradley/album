@@ -26,7 +26,7 @@ public class TextControl extends JPanel implements TextControlChangeListener {
     private Dimension physicalSize = new Dimension(0, 0);
     private boolean previewMode = false;
     private TextControlEditorToolBar toolBar;
-    private ViewEditPanel viewEditPanel;
+    private TextControlViewEditPanel viewEditPanel;
     private JLayeredPane layeredPane = new JLayeredPane();
     private final TextControlModel model;
 
@@ -34,7 +34,7 @@ public class TextControl extends JPanel implements TextControlChangeListener {
 
         this.model = model;
 
-        viewEditPanel = new ViewEditPanel(model);
+        viewEditPanel = new TextControlViewEditPanel(model);
         toolBar = new TextControlEditorToolBar(model);
 
         setLayout(new GridBagLayout());
@@ -82,11 +82,6 @@ public class TextControl extends JPanel implements TextControlChangeListener {
 
     public void setPreviewMode(boolean previewMode) {
         this.previewMode = previewMode;
-    }
-
-    public void setTextContent(TextContent content) {
-        TextControlEventBus.INSTANCE.formatUpdated(content);
-        TextControlEventBus.INSTANCE.contentUpdated(content);
     }
 
     public Dimension getPhysicalSize() {
