@@ -6,6 +6,7 @@ package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.ui.actionlistener.ImageCenterActionListener;
+import ie.philb.album.ui.actionlistener.ToggleGrayScaleActionListener;
 import ie.philb.album.ui.actionlistener.ZoomInActionListener;
 import ie.philb.album.ui.actionlistener.ZoomOutActionListener;
 import ie.philb.album.ui.actionlistener.ZoomResetActionListener;
@@ -17,10 +18,12 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 /**
@@ -36,6 +39,7 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnZoomReset;
     private JButton btnZoomCover;
     private JButton btnCenter;
+    private JToggleButton btnGray;
     private JButton btnNewPage;
     private PageGeometrySelector slctGeometry;
 
@@ -97,6 +101,10 @@ public class AlbumViewContainer extends AppPanel {
         btnCenter.setText("Center");
         toolBar.add(btnCenter);
 
+        btnGray = new JToggleButton("Gray");
+        btnGray.addActionListener(new ToggleGrayScaleActionListener());
+        toolBar.add(btnGray);
+
         btnNewPage = new JButton(Icons.Small.NEW);
         btnNewPage.addActionListener((ActionEvent ae) -> {
             new NewPageCommand().execute();
@@ -131,11 +139,19 @@ public class AlbumViewContainer extends AppPanel {
         btnZoomReset.setEnabled(isEnabled);
         btnZoomCover.setEnabled(isEnabled);
         btnCenter.setEnabled(isEnabled);
+        btnGray.setEnabled(isEnabled);
     }
 
     @Override
     public void pageEntrySelected(PageView pageView, PageEntryView view) {
-        setCellButtonsEnabled(view != null && view.getPageEntryModel().getImage() != null);
+
+        if (view == null) {
+            setCellButtonsEnabled(false);
+            return;
+        }
+
+        setCellButtonsEnabled(view.getPageEntryModel().getImage() != null);
+        btnGray.setSelected(view.getPageEntryModel().isGrayScale());
     }
 
     @Override

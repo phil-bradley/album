@@ -10,7 +10,9 @@ import ie.philb.album.util.StringUtils;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class PageEntryModel {
     private boolean isCentered = false;
     private Dimension physicalSize = new Dimension(0, 0);
     private final TextControlModel textControlModel = new TextControlModel();
+    private boolean isGrayScale = false;
 
     public PageEntryModel(PageCell cell) {
         this(cell, PageEntryType.Image);
@@ -134,7 +137,23 @@ public class PageEntryModel {
         g.drawImage(image, 0, 0, zoomedWidth, zoomedHeight, null);
         g.dispose();
 
-        return zoomed;
+        return grayScaleFilter(zoomed);
+    }
+
+    private BufferedImage grayScaleFilter(BufferedImage image) {
+
+        if (isGrayScale()) {
+            return toGrayscale(image);
+        }
+
+        return image;
+    }
+
+    private BufferedImage toGrayscale(BufferedImage image) {
+        BufferedImage grayscale = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+        op.filter(image, grayscale);
+        return grayscale;
     }
 
     private BufferedImage getPlacholderImage(Dimension viewSize) {
@@ -281,5 +300,14 @@ public class PageEntryModel {
 
     public TextControlModel getTextControlModel() {
         return textControlModel;
+    }
+
+    public boolean isGrayScale() {
+        return isGrayScale;
+    }
+
+    public void setGrayScale(boolean isGray) {
+        this.isGrayScale = isGray;
+        fireImageUpdated();
     }
 }
