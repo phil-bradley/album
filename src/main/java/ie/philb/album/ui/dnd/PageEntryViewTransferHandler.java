@@ -5,12 +5,15 @@
 package ie.philb.album.ui.dnd;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.util.FileUtils;
+import ie.philb.album.util.ImageUtils;
 import ie.philb.album.view.PageEntryView;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
@@ -30,7 +33,7 @@ public class PageEntryViewTransferHandler extends TransferHandler {
             }
         }
 
-        return support.isDataFlavorSupported(DataFlavor.stringFlavor);
+        return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
     }
 
     @Override
@@ -40,18 +43,32 @@ public class PageEntryViewTransferHandler extends TransferHandler {
             return false;
         }
 
+        Transferable t = support.getTransferable();
+        JComponent comp = (JComponent) support.getComponent();
+
+        if (!(comp instanceof PageEntryView)) {
+            return false;
+        }
+
+        PageEntryView view = (PageEntryView) comp;
+
         try {
-            Transferable t = support.getTransferable();
-            String imageFileName = (String) t.getTransferData(DataFlavor.stringFlavor);
-            JComponent comp = (JComponent) support.getComponent();
+            List<File> files = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
 
-            if (comp instanceof PageEntryView view) {
-                File imageFile = new File(imageFileName);
-                view.getPageEntryModel().setImageFile(imageFile);
-                view.centerImage();
-
-                AppContext.INSTANCE.pageEntrySelected(view.getPageView(), view);
+            if (files.isEmpty()) {
+                return false;
             }
+            
+            File imageFile = files.get(files.size()-1);
+            
+            if (!FileUtils.isImage(imageFile)) {
+                return false;
+            }
+            
+            view.getPageEntryModel().setImageFile(imageFile);
+            view.centerImage();
+
+            AppContext.INSTANCE.pageEntrySelected(view.getPageView(), view);
 
         } catch (UnsupportedFlavorException | IOException ex) {
 

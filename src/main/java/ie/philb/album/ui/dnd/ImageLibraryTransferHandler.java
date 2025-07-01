@@ -5,7 +5,6 @@
 package ie.philb.album.ui.dnd;
 
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
-import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import javax.swing.JComponent;
 import javax.swing.JList;
@@ -33,6 +32,6 @@ public class ImageLibraryTransferHandler extends TransferHandler {
             return null;
         }
 
-        return new StringSelection(selected.getFile().getAbsolutePath());
+        return new ImageFileTransferable(selected.getFile());
     }
 }
