@@ -51,6 +51,11 @@ public class PageEntryModel {
         return cell.pageEntryType();
     }
 
+    public void setPageEntryType(PageEntryType pageEntryType) {
+        this.cell.pageEntryType(pageEntryType);
+        fireTextUpdated();
+    }
+
     public Dimension getPhysicalSize() {
         return physicalSize;
     }
@@ -310,4 +315,5 @@ public class PageEntryModel {
         this.isGrayScale = isGray;
         fireImageUpdated();
     }
+
 }

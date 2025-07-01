@@ -47,7 +47,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     private boolean isPreviewMode = false;
     private final PageView pageView;
     private boolean canResize = false;
-    private TextControl textControl;
+    private final TextControl textControl;
 
     public PageEntryView(PageView pageView, PageEntryModel pageEntryModel) {
 
@@ -55,6 +55,9 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
         this.pageView = pageView;
         this.pageEntryModel = pageEntryModel;
+
+        textControl = new TextControl(pageEntryModel.getTextControlModel());
+        textControl.setPhysicalSize(pageEntryModel.getPhysicalSize());
 
         if (pageEntryModel.getPageEntryType() == PageEntryType.Text) {
             addTextControl();
@@ -70,9 +73,9 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     }
 
     private void addTextControl() {
-        textControl = new TextControl(pageEntryModel.getTextControlModel());
-        textControl.setPhysicalSize(pageEntryModel.getPhysicalSize());
         add(textControl, new GridBagCellConstraints().weight(1).fillBoth());
+        textControl.setSize(getSize());
+        repaint();
     }
 
     public PageEntryModel getPageEntryModel() {
@@ -173,6 +176,20 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
     @Override
     public void imageUpdated() {
+        repaint();
+    }
+
+    @Override
+    public void textUpdated() {
+        if (pageEntryModel.getPageEntryType() == PageEntryType.Text) {
+            addTextControl();
+            textControl.setEditEnabled(true);
+            textControl.requestFocus();
+        } else {
+            textControl.setEditEnabled(false);
+            remove(textControl);
+        }
+
         repaint();
     }
 
@@ -300,9 +317,5 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         if (pageEntryModel.isCentered()) {
             centerImage();
         }
-    }
-
-    public boolean isTextView() {
-        return (textControl != null);
     }
 }

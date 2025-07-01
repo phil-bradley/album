@@ -50,4 +50,9 @@ class TextControlViewEditPanel extends JPanel implements TextControlChangeListen
         displayView.setFontScalingFactor(fontScalingFactor);
         editView.setFontScalingFactor(fontScalingFactor);
     }
+
+    @Override
+    public void requestFocus() {
+        editView.requestFocus();
+    }
 }

@@ -5,6 +5,7 @@
 package ie.philb.album.ui.dnd;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.model.PageEntryType;
 import ie.philb.album.util.FileUtils;
 import ie.philb.album.util.ImageUtils;
 import ie.philb.album.view.PageEntryView;
@@ -28,7 +29,7 @@ public class PageEntryViewTransferHandler extends TransferHandler {
         JComponent comp = (JComponent) support.getComponent();
 
         if (comp instanceof PageEntryView view) {
-            if (view.isTextView()) {
+            if (view.getPageEntryModel().getPageEntryType() != PageEntryType.Image) {
                 return false;
             }
         }
@@ -58,13 +59,13 @@ public class PageEntryViewTransferHandler extends TransferHandler {
             if (files.isEmpty()) {
                 return false;
             }
-            
-            File imageFile = files.get(files.size()-1);
-            
+
+            File imageFile = files.get(files.size() - 1);
+
             if (!FileUtils.isImage(imageFile)) {
                 return false;
             }
-            
+
             view.getPageEntryModel().setImageFile(imageFile);
             view.centerImage();
 

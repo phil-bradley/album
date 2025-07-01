@@ -115,11 +115,16 @@ public class TextControl extends JPanel implements TextControlChangeListener {
         setEditEnabled(false);
     }
 
-    private void setEditEnabled(boolean isEnabled) {
+    public void setEditEnabled(boolean isEnabled) {
         viewEditPanel.setEditor(isEnabled);
         toolBar.setVisible(isEnabled);
     }
 
+    @Override
+    public void requestFocus() {
+        viewEditPanel.requestFocus();
+    }
+    
     public static void main(String[] args) {
 
         JFrame frame = new JFrame();

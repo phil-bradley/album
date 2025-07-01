@@ -6,6 +6,7 @@ package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.ui.actionlistener.ImageCenterActionListener;
+import ie.philb.album.ui.actionlistener.ToggleCellTypeActionListener;
 import ie.philb.album.ui.actionlistener.ToggleGrayScaleActionListener;
 import ie.philb.album.ui.actionlistener.ZoomInActionListener;
 import ie.philb.album.ui.actionlistener.ZoomOutActionListener;
@@ -18,7 +19,6 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JButton;
@@ -40,6 +40,7 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnZoomCover;
     private JButton btnCenter;
     private JToggleButton btnGray;
+    private JToggleButton btnCellType;
     private JButton btnNewPage;
     private PageGeometrySelector slctGeometry;
 
@@ -105,6 +106,10 @@ public class AlbumViewContainer extends AppPanel {
         btnGray.addActionListener(new ToggleGrayScaleActionListener());
         toolBar.add(btnGray);
 
+        btnCellType = new JToggleButton("Type");
+        btnCellType.addActionListener(new ToggleCellTypeActionListener());
+        toolBar.add(btnCellType);
+        
         btnNewPage = new JButton(Icons.Small.NEW);
         btnNewPage.addActionListener((ActionEvent ae) -> {
             new NewPageCommand().execute();
