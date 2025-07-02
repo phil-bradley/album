@@ -6,6 +6,7 @@ package ie.philb.album.ui.dnd;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.model.PageEntryType;
+import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.util.FileUtils;
 import ie.philb.album.view.PageEntryView;
 import java.awt.datatransfer.DataFlavor;
@@ -32,13 +33,7 @@ public class PageEntryViewTransferHandler extends TransferHandler {
                 }
             }
 
-            if (!support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-                return false;
-            }
-
-            // Throws an exception if this is not a transferrable file
-            getTransferredFile(support);
-            return true;
+            return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
         } catch (Exception ex) {
             return false;
         }
@@ -60,8 +55,8 @@ public class PageEntryViewTransferHandler extends TransferHandler {
             view.centerImage();
 
             AppContext.INSTANCE.pageEntrySelected(view.getPageView(), view);
-
         } catch (Exception ex) {
+            Dialogs.showErrorMessage("Drag & drop failed: " + ex.getMessage(), ex);
         }
 
         return false;
