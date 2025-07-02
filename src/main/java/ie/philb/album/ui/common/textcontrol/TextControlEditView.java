@@ -19,6 +19,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
 
 /**
  *
@@ -37,6 +38,10 @@ class TextControlEditView extends JPanel implements TextControlChangeListener {
         initComponents();
         layoutComponents();
         setOpaque(false);
+
+        ((AbstractDocument) field.getDocument()).setDocumentFilter(
+                new TextWidthDocumentFilter(field)
+        );
 
         this.model.addChangeListener(this);
     }
