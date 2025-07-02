@@ -35,4 +35,9 @@ public class PageCell {
     public PageCell(Dimension size, Point location) {
         this(size, location, PageEntryType.Image);
     }
+    
+    @Override
+    public String toString() {
+        return "PageCell size=" + size.width + "x" + size.height + " at {" + location.x + ", " + location.y + "}";
+    }
 }

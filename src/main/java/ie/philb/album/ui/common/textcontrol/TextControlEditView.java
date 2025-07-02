@@ -11,8 +11,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -63,6 +67,19 @@ class TextControlEditView extends JPanel implements TextControlChangeListener {
             }
         });
 
+        field.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent fe) {
+                model.textEditSelected();
+            }
+        });
+
+        field.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                model.textEditSelected();
+            }
+        });
     }
 
     private void layoutComponents() {

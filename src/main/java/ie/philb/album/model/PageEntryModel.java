@@ -6,7 +6,6 @@ package ie.philb.album.model;
 
 import ie.philb.album.ui.common.textcontrol.TextControlModel;
 import ie.philb.album.util.ImageUtils;
-import ie.philb.album.util.StringUtils;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -185,7 +184,7 @@ public class PageEntryModel {
 
     public BufferedImage getViewImage(Dimension viewSize, PageGeometryMapper geometryMapper) {
 
-        if (image == null && StringUtils.isBlank(textControlModel.getText())) {
+        if ((image == null) && (getPageEntryType() == PageEntryType.Image)) {
             return getPlacholderImage(viewSize);
         }
 

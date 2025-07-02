@@ -15,6 +15,7 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.common.textcontrol.TextControl;
 import ie.philb.album.ui.common.textcontrol.TextControlChangeListener;
+import ie.philb.album.ui.common.textcontrol.TextControlModel;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
 import ie.philb.album.util.ImageUtils;
 import static ie.philb.album.util.ImageUtils.getImageSize;
@@ -67,12 +68,19 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         setFocusable(true);
 
         this.pageEntryModel.addListener(this);
+        this.pageEntryModel.getTextControlModel().addChangeListener(this);
 
         setTransferHandler(new PageEntryViewTransferHandler());
         updateBorder();
     }
 
     private void addTextControl() {
+
+        // Check if control already added
+        if (this.isAncestorOf(textControl)) {
+            return;
+        }
+
         add(textControl, new GridBagCellConstraints().weight(1).fillBoth());
         textControl.setSize(getSize());
         repaint();
@@ -147,6 +155,17 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         }
     }
 
+    private void updateEditor() {
+
+        if (isPreviewMode) {
+            return;
+        }
+
+        if (!isSelected) {
+            textControl.setEditEnabled(false);
+        }
+    }
+
     private void updateBorder() {
         setBorder(BorderFactory.createLineBorder(getBorderColor()));
         repaint();
@@ -164,6 +183,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
         this.isSelected = b;
         updateBorder();
+        updateEditor();
     }
 
     public boolean isSelected() {
@@ -183,8 +203,12 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     public void textUpdated() {
         if (pageEntryModel.getPageEntryType() == PageEntryType.Text) {
             addTextControl();
-            textControl.setEditEnabled(true);
-            textControl.requestFocus();
+
+            if (!isPreviewMode) {
+                textControl.setEditEnabled(true);
+                textControl.requestFocus();
+            }
+
         } else {
             textControl.setEditEnabled(false);
             remove(textControl);
@@ -317,5 +341,17 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         if (pageEntryModel.isCentered()) {
             centerImage();
         }
+    }
+
+    @Override
+    public void textEditSelected(TextControlModel textControlModel) {
+        if (!isPreviewMode) {
+            AppContext.INSTANCE.pageEntrySelected(pageView, this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Page " + pageView.getPageModel().getPageId() + ", Cell: " + pageEntryModel.getCell() + ", isPreview: " + isPreviewMode;
     }
 }

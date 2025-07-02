@@ -118,6 +118,10 @@ public class TextControl extends JPanel implements TextControlChangeListener {
     public void setEditEnabled(boolean isEnabled) {
         viewEditPanel.setEditor(isEnabled);
         toolBar.setVisible(isEnabled);
+        
+        if (isEnabled) {
+            model.textEditSelected();
+        }
     }
 
     @Override

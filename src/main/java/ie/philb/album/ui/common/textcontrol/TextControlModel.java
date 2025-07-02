@@ -56,6 +56,12 @@ public class TextControlModel {
         });
     }
 
+    private void fireEditSelected() {
+        getListeners().forEach(listener -> {
+            listener.textEditSelected(this);
+        });
+    }
+
     public String getText() {
         return text;
     }
@@ -67,6 +73,10 @@ public class TextControlModel {
 
     public void cancelTextEdit() {
         fireEditCancelled();
+    }
+
+    public void textEditSelected() {
+        fireEditSelected();
     }
 
     public boolean isBold() {
