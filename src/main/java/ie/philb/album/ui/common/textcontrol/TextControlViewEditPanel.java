@@ -55,4 +55,5 @@ class TextControlViewEditPanel extends JPanel implements TextControlChangeListen
     public void requestFocus() {
         editView.requestFocus();
     }
+    
 }

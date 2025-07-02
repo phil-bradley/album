@@ -15,4 +15,7 @@ public interface TextControlChangeListener {
 
     default void textUpdated(TextControlModel model) {
     }
+    
+    default void textEditCancelled(TextControlModel model) {
+    }
 }

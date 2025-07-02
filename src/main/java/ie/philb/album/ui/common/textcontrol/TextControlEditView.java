@@ -11,6 +11,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -49,6 +51,18 @@ class TextControlEditView extends JPanel implements TextControlChangeListener {
         field.addActionListener((ActionEvent e) -> {
             model.setText(field.getText());
         });
+
+        field.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    field.setText(model.getText());
+                    model.cancelTextEdit();
+                }
+            }
+        });
+
     }
 
     private void layoutComponents() {

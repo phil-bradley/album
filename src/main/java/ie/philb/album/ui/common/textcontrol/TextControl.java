@@ -124,7 +124,12 @@ public class TextControl extends JPanel implements TextControlChangeListener {
     public void requestFocus() {
         viewEditPanel.requestFocus();
     }
-    
+
+    @Override
+    public void textEditCancelled(TextControlModel model) {
+        setEditEnabled(false);
+    }
+
     public static void main(String[] args) {
 
         JFrame frame = new JFrame();

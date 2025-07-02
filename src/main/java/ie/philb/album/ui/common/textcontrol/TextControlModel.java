@@ -45,9 +45,15 @@ public class TextControlModel {
     }
 
     private void fireTextUpdated() {
-        for (TextControlChangeListener listener : getListeners()) {
+        getListeners().forEach(listener -> {
             listener.textUpdated(this);
-        }
+        });
+    }
+
+    private void fireEditCancelled() {
+        getListeners().forEach(listener -> {
+            listener.textEditCancelled(this);
+        });
     }
 
     public String getText() {
@@ -55,10 +61,12 @@ public class TextControlModel {
     }
 
     public void setText(String text) {
-        if (!Objects.equals(text, this.text)) {
-            this.text = text;
-            fireTextUpdated();
-        }
+        this.text = text;
+        fireTextUpdated();
+    }
+
+    public void cancelTextEdit() {
+        fireEditCancelled();
     }
 
     public boolean isBold() {
