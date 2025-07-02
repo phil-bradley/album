@@ -7,6 +7,7 @@ package ie.philb.album.view;
 import ie.philb.album.AppContext;
 import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
+import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
@@ -108,6 +109,10 @@ public class PageView extends AppPanel {
         }
 
         if (imageLibraryEntry == null) {
+            return;
+        }
+
+        if (selectedPageEntryView.getPageEntryModel().getPageEntryType() != PageEntryType.Image) {
             return;
         }
 
