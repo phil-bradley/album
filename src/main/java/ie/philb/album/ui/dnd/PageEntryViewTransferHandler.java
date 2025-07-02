@@ -7,13 +7,10 @@ package ie.philb.album.ui.dnd;
 import ie.philb.album.AppContext;
 import ie.philb.album.model.PageEntryType;
 import ie.philb.album.util.FileUtils;
-import ie.philb.album.util.ImageUtils;
 import ie.philb.album.view.PageEntryView;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -26,15 +23,25 @@ public class PageEntryViewTransferHandler extends TransferHandler {
 
     @Override
     public boolean canImport(TransferSupport support) {
-        JComponent comp = (JComponent) support.getComponent();
+        try {
+            JComponent comp = (JComponent) support.getComponent();
 
-        if (comp instanceof PageEntryView view) {
-            if (view.getPageEntryModel().getPageEntryType() != PageEntryType.Image) {
+            if (comp instanceof PageEntryView view) {
+                if (view.getPageEntryModel().getPageEntryType() != PageEntryType.Image) {
+                    return false;
+                }
+            }
+
+            if (!support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                 return false;
             }
-        }
 
-        return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
+            // Throws an exception if this is not a transferrable file
+            getTransferredFile(support);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     @Override
@@ -44,37 +51,41 @@ public class PageEntryViewTransferHandler extends TransferHandler {
             return false;
         }
 
-        Transferable t = support.getTransferable();
-        JComponent comp = (JComponent) support.getComponent();
-
-        if (!(comp instanceof PageEntryView)) {
-            return false;
-        }
-
-        PageEntryView view = (PageEntryView) comp;
-
         try {
-            List<File> files = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
+            PageEntryView view = (PageEntryView) support.getComponent();
 
-            if (files.isEmpty()) {
-                return false;
-            }
-
-            File imageFile = files.get(files.size() - 1);
-
-            if (!FileUtils.isImage(imageFile)) {
-                return false;
-            }
+            File imageFile = getTransferredFile(support);
 
             view.getPageEntryModel().setImageFile(imageFile);
             view.centerImage();
 
             AppContext.INSTANCE.pageEntrySelected(view.getPageView(), view);
 
-        } catch (UnsupportedFlavorException | IOException ex) {
-
+        } catch (Exception ex) {
         }
 
         return false;
+    }
+
+    private File getTransferredFile(TransferSupport transferSupport) throws Exception {
+
+        Transferable t = transferSupport.getTransferable();
+        List<File> files = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
+
+        if (files.isEmpty()) {
+            throw new Exception("Cannot transfer empty list of files");
+        }
+
+        if (files.size() > 1) {
+            throw new Exception("Cannot transfer multiple files");
+        }
+
+        File file = files.get(0);
+
+        if (!FileUtils.isImage(file)) {
+            throw new Exception("Cannot transfer non image file " + file.getName());
+        }
+
+        return file;
     }
 }
