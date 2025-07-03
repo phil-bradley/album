@@ -5,7 +5,6 @@
 package ie.philb.album;
 
 import ie.philb.album.model.AlbumModel;
-import ie.philb.album.model.PageSize;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.util.FileUtils;
 import ie.philb.album.view.PageEntryView;
@@ -28,7 +27,7 @@ public enum AppContext implements ApplicationListener {
     private static final Logger LOG = LoggerFactory.getLogger(AppContext.class);
 
     private final List<ApplicationListener> applicationListeners = new ArrayList<>();
-    private AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
+    private AlbumModel albumModel = null;
     private File browseLocation = FileUtils.getHomeDirectory();
     private PageView selectedPageView = null;
     private PageEntryView selectedPageEntryView = null;

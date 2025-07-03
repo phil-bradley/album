@@ -5,6 +5,7 @@
 package ie.philb.album.model;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +19,7 @@ public class AlbumModel {
     private File file = null;
     private final PageSize pageSize;
     private final List<PageModel> pages = new ArrayList();
+    private LocalDateTime lastSaveDate = null;
 
     public AlbumModel(PageSize pageSize) {
         this.pageSize = pageSize;
@@ -47,5 +49,25 @@ public class AlbumModel {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    LocalDateTime getLastChangeDate() {
+        LocalDateTime lastChangeDate = LocalDateTime.MIN;
+
+        for (PageModel pm : pages) {
+            if (pm.getLastChangeDate().isAfter(lastChangeDate)) {
+                lastChangeDate = pm.getLastChangeDate();
+            }
+        }
+
+        return lastChangeDate;
+    }
+    
+    public boolean hasUnSavedChanges() {
+        return lastSaveDate == null || getLastChangeDate().isAfter(lastSaveDate);
+    }
+    
+    public void setLastSaveDate(LocalDateTime saveDate) {
+        this.lastSaveDate = saveDate;
     }
 }

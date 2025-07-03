@@ -7,6 +7,7 @@ package ie.philb.album.ui.action;
 import ie.philb.album.io.AlbumWriter;
 import ie.philb.album.model.AlbumModel;
 import java.io.File;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -26,6 +27,7 @@ public class SaveAlbumAction extends AbstractAction<Void> {
     protected Void doAction() throws Exception {
         AlbumWriter writer = new AlbumWriter(saveFile, albumModel);
         writer.write();
+        albumModel.setLastSaveDate(LocalDateTime.now());
         return null;
     }
 

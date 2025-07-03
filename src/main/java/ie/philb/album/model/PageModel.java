@@ -7,6 +7,7 @@ package ie.philb.album.model;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -140,5 +141,17 @@ public class PageModel {
         int cellWidthPoints = (cell.size().width * unitWidth) + (horizontalMarginCount * marginPoints);
 
         return new Dimension(cellWidthPoints, cellHeightPoints);
+    }
+    
+    LocalDateTime getLastChangeDate() {
+        LocalDateTime lastChangeDate = LocalDateTime.MIN;
+        
+        for (PageEntryModel pem : pageEntries) {
+            if (pem.getLastChangeDate().isAfter(lastChangeDate)) {
+                lastChangeDate = pem.getLastChangeDate();
+            }
+        }
+        
+        return lastChangeDate;
     }
 }

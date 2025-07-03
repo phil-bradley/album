@@ -4,6 +4,8 @@
  */
 package ie.philb.album.ui.command;
 
+import ie.philb.album.AppContext;
+import ie.philb.album.model.AlbumModel;
 import ie.philb.album.ui.common.Dialogs;
 
 /**
@@ -15,9 +17,16 @@ public class ExitCommand extends AbstractCommand {
     @Override
     public void execute() {
 
-        if (Dialogs.confirm("Really exit?")) {
+        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
+
+        String msg = "Quit album application?";
+
+        if (albumModel != null && albumModel.hasUnSavedChanges()) {
+            msg = "You have unsaved changes, quit anyway?";
+        }
+
+        if (Dialogs.confirm(msg)) {
             System.exit(0);
         }
     }
-
 }

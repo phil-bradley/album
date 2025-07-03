@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ public class PageEntryModel {
     private Dimension physicalSize = new Dimension(0, 0);
     private final TextControlModel textControlModel = new TextControlModel();
     private boolean isGrayScale = false;
+    private LocalDateTime lastChanged = LocalDateTime.now();
 
     public PageEntryModel(PageCell cell) {
         this(cell, PageEntryType.Image);
@@ -51,8 +53,10 @@ public class PageEntryModel {
     }
 
     public void setPageEntryType(PageEntryType pageEntryType) {
-        this.cell.pageEntryType(pageEntryType);
-        fireTextUpdated();
+        if (pageEntryType != this.cell.pageEntryType()) {
+            this.cell.pageEntryType(pageEntryType);
+            fireTextUpdated();
+        }
     }
 
     public Dimension getPhysicalSize() {
@@ -255,12 +259,18 @@ public class PageEntryModel {
     }
 
     private void fireImageUpdated() {
+
+        lastChanged = LocalDateTime.now();
+
         for (var l : listeners) {
             l.imageUpdated();
         }
     }
 
     private void fireTextUpdated() {
+
+        lastChanged = LocalDateTime.now();
+
         for (var l : listeners) {
             l.textUpdated();
         }
@@ -315,4 +325,7 @@ public class PageEntryModel {
         fireImageUpdated();
     }
 
+    LocalDateTime getLastChangeDate() {
+        return lastChanged;
+    }
 }

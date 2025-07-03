@@ -123,7 +123,7 @@ public class PageView extends AppPanel {
         AppContext.INSTANCE.pageEntrySelected(selectedPageEntryView.getPageView(), selectedPageEntryView);
     }
 
-    public final void setModel(PageModel model) {
+    private void setModel(PageModel model) {
         this.model = model;
         this.pageEntryViews = new ArrayList<>(model.getCellCount());
 
