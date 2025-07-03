@@ -24,6 +24,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
@@ -226,6 +227,9 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
         AppContext.INSTANCE.pageEntrySelected(pageView, this);
 
+        requestFocusInWindow();
+        requestFocus();
+
         if (pageEntryModel.getImage() == null) {
             return;
         }
@@ -267,6 +271,26 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
         mouseDragPreviousPoint = mouseDragCurrentPoint;
         repaint();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent keyEvent) {
+
+        if (isPreviewMode) {
+            return;
+        }
+
+        System.out.println("Key pressed: " + keyEvent);
+
+        if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
+            Point offset = new Point(viewOffset.x, viewOffset.y + 1);
+            setViewOffset(offset);
+        }
+
+        if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
+            Point offset = new Point(viewOffset.x, viewOffset.y - 1);
+            setViewOffset(offset);
+        }
     }
 
     @Override

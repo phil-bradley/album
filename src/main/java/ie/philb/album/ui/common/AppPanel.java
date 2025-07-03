@@ -6,6 +6,10 @@ package ie.philb.album.ui.common;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.ApplicationListener;
+import ie.philb.album.ui.common.listeners.DefaultKeyListener;
+import ie.philb.album.ui.common.listeners.DefaultMouseListener;
+import ie.philb.album.ui.common.listeners.DefaultMouseMotionListener;
+import ie.philb.album.ui.common.listeners.DefaultMouseWheelListener;
 import ie.philb.album.ui.config.UiConfigListener;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,7 +24,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philip.Bradley
  */
-public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseListener, DefaultMouseMotionListener, ApplicationListener, DefaultMouseWheelListener {
+public class AppPanel extends JPanel implements
+        UiConfigListener,
+        DefaultMouseListener,
+        DefaultMouseMotionListener,
+        ApplicationListener,
+        DefaultMouseWheelListener,
+        DefaultKeyListener {
 
     private static final long serialVersionUID = 1L;
     protected static final Logger LOG = LoggerFactory.getLogger(AppPanel.class);
