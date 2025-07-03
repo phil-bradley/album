@@ -10,6 +10,7 @@ package ie.philb.album.model;
  */
 public enum PageGeometryOption {
 
+    Title("Title", PageGeometry.square(PageEntryType.Text, 1)),
     Square_1("Single", PageGeometry.square(1)),
     Square_2("2x2", PageGeometry.square(2)),
     Square_3("3x3", PageGeometry.square(3)),
