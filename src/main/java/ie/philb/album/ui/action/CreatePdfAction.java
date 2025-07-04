@@ -21,7 +21,6 @@ import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.font.ApplicationFont;
 import ie.philb.album.util.ImageUtils;
 import static ie.philb.album.util.ImageUtils.getImageSize;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -94,6 +93,8 @@ public class CreatePdfAction extends AbstractAction<File> {
                         canvas.setFontAndSize(baseFont, fontSize);
                         canvas.showTextAligned(Element.ALIGN_CENTER, text, centerX, centerY, 0);
                         canvas.endText();
+
+                        continue;
                     }
 
                     if (pageEntryModel.getImage() == null) {
