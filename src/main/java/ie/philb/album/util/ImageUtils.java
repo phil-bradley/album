@@ -168,4 +168,5 @@ public class ImageUtils {
         LOG.info("Getting subimage at {}x{} with size {}x{}, image size: {}x{}", x, y, width, height, image.getWidth(), image.getHeight());
         return image.getSubimage(x, y, width, height);
     }
+
 }

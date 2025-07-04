@@ -72,6 +72,33 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
         setTransferHandler(new PageEntryViewTransferHandler());
         updateBorder();
+
+        addMouseListener(this);
+    }
+
+    public void mouseClicked(MouseEvent me) {
+
+        if (pageEntryModel.getPageEntryType() != PageEntryType.Image) {
+            return;
+        }
+
+        if (pageEntryModel.getImage() == null) {
+            return;
+        }
+
+        if (me.getClickCount() == 2) {
+            toggleZoom();
+        }
+    }
+
+    // If zoomed to fit then zoom to cover and vice versa
+    private void toggleZoom() {
+
+        Dimension imageSize = ImageUtils.getImageSize(getViewImage());
+    }
+
+    private boolean isFitZoom(Dimension imageSize) {
+
     }
 
     private void addTextControl() {
