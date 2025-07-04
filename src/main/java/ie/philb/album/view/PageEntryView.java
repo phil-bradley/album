@@ -128,6 +128,11 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     }
 
     protected Point getViewImageOffset() {
+
+        if (pageEntryModel.getImage() == null) {
+            centerImage();
+        }
+
         PageGeometryMapper geometryMapper = getPageGeometryMapper();
 
         Point offset = geometryMapper.locationAsPointsToViewUnits(pageEntryModel.getImageViewOffset());
