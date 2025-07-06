@@ -169,4 +169,28 @@ public class ImageUtils {
         return image.getSubimage(x, y, width, height);
     }
 
+    // One edge matches boundary, the other edge does not exceed boundary
+    public static boolean isSnappedFitMinimum(Dimension size, Dimension boundary) {
+
+        if (size.width == boundary.width && size.height <= boundary.height) {
+            return true;
+        }
+
+        return size.height == boundary.height && size.width <= boundary.width;
+    }
+
+    // One edge matches boundary, the other edge >= boundary
+    public static boolean isSnappedFitMaximum(Dimension size, Dimension boundary) {
+
+        if (size.width == boundary.width && size.height >= boundary.height) {
+            return true;
+        }
+
+        if (size.height == boundary.height && size.width >= boundary.width) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
