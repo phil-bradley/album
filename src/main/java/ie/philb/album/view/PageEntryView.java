@@ -27,6 +27,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 import javax.swing.BorderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,13 +143,16 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     }
 
     private void setViewOffset(Point offset) {
-        this.viewOffset = offset;
 
-        PageGeometryMapper geometryMapper = getPageGeometryMapper();
-        Point modelOffset = new Point(geometryMapper.viewUnitsToPoints(viewOffset.x), geometryMapper.viewUnitsToPoints(viewOffset.y));
-        pageEntryModel.setImageViewOffset(modelOffset);
+        if (!Objects.equals(offset, this.viewOffset)) {
+            this.viewOffset = offset;
 
-        repaint();
+            PageGeometryMapper geometryMapper = getPageGeometryMapper();
+            Point modelOffset = new Point(geometryMapper.viewUnitsToPoints(viewOffset.x), geometryMapper.viewUnitsToPoints(viewOffset.y));
+            pageEntryModel.setImageViewOffset(modelOffset);
+
+            repaint();
+        }
     }
 
     protected BufferedImage getViewImage() {
@@ -160,7 +164,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     protected Point getViewImageOffset() {
 
         if (pageEntryModel.getImage() == null) {
-            centerImage();
+            return ImageUtils.getCenteredCoordinates(ImageUtils.getImageSize(ImageUtils.getPlaceholderImage()), getSize());
         }
 
         PageGeometryMapper geometryMapper = getPageGeometryMapper();

@@ -4,6 +4,7 @@
  */
 package ie.philb.album.model;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.ui.common.textcontrol.TextControlModel;
 import ie.philb.album.util.ImageUtils;
 import java.awt.Dimension;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,10 +43,6 @@ public class PageEntryModel {
     private LocalDateTime lastChanged = LocalDateTime.now();
 
     public PageEntryModel(PageCell cell) {
-        this(cell, PageEntryType.Image);
-    }
-
-    public PageEntryModel(PageCell cell, PageEntryType pageEntryType) {
         this.cell = cell;
     }
 
@@ -265,6 +263,8 @@ public class PageEntryModel {
         for (var l : listeners) {
             l.imageUpdated();
         }
+
+        AppContext.INSTANCE.pageEntryUpdated(this);
     }
 
     private void fireTextUpdated() {
@@ -274,18 +274,21 @@ public class PageEntryModel {
         for (var l : listeners) {
             l.textUpdated();
         }
+
+        AppContext.INSTANCE.pageEntryUpdated(this);
     }
 
     public void setImageViewOffset(Point offset) {
-        this.offset = offset;
-        this.isCentered = false;
-        fireImageUpdated();
+
+        if (!Objects.equals(offset, this.offset)) {
+            this.offset = offset;
+            this.isCentered = false;
+            fireImageUpdated();
+        }
     }
 
     public void resetOffset() {
-        this.offset.x = 0;
-        this.offset.y = 0;
-        fireImageUpdated();
+        setImageViewOffset(new Point(0, 0));
     }
 
     public Point getImageViewOffset() {
@@ -328,4 +331,10 @@ public class PageEntryModel {
     LocalDateTime getLastChangeDate() {
         return lastChanged;
     }
+
+    @Override
+    public String toString() {
+        return "PageEntryModel{" + "cell=" + cell + '}';
+    }
+
 }

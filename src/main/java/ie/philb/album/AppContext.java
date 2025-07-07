@@ -5,6 +5,7 @@
 package ie.philb.album;
 
 import ie.philb.album.model.AlbumModel;
+import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.util.FileUtils;
 import ie.philb.album.view.PageEntryView;
@@ -106,6 +107,13 @@ public enum AppContext implements ApplicationListener {
 
         getApplicationListenersCopy().forEach(appListener -> {
             appListener.albumUpdated();
+        });
+    }
+
+    @Override
+    public void pageEntryUpdated(PageEntryModel pem) {
+        getApplicationListenersCopy().forEach(appListener -> {
+            appListener.pageEntryUpdated(pem);
         });
     }
 

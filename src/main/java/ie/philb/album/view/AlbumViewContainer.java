@@ -5,6 +5,7 @@
 package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.ui.actionlistener.ImageCenterActionListener;
 import ie.philb.album.ui.actionlistener.ToggleCellTypeActionListener;
 import ie.philb.album.ui.actionlistener.ToggleGrayScaleActionListener;
@@ -157,11 +158,7 @@ public class AlbumViewContainer extends AppPanel {
         }
 
         setCellButtonsEnabled(view.getPageEntryModel().getImage() != null);
-
-        boolean isGrayScale = view.getPageEntryModel().isGrayScale();
-        btnGray.setSelected(isGrayScale);
-        btnGray.setIcon(isGrayScale ? Icons.Small.GRAYSCALE : Icons.Small.COLOR);
-        btnGray.setText(isGrayScale ? "B&W" : "Colour");
+        updateGrayScaleSelector(view.getPageEntryModel());
     }
 
     @Override
@@ -174,5 +171,18 @@ public class AlbumViewContainer extends AppPanel {
     public void albumUpdated() {
         albumView.setModel(AppContext.INSTANCE.getAlbumModel());
         LOG.info("Updated album");
+    }
+
+    @Override
+    public void pageEntryUpdated(PageEntryModel pem) {
+        System.out.println("Updated pem " + pem);
+        updateGrayScaleSelector(pem);
+    }
+
+    private void updateGrayScaleSelector(PageEntryModel pageEntryModel) {
+        boolean isGrayScale = pageEntryModel.isGrayScale();
+        btnGray.setSelected(isGrayScale);
+        btnGray.setIcon(isGrayScale ? Icons.Small.GRAYSCALE : Icons.Small.COLOR);
+        btnGray.setText(isGrayScale ? "B&W" : "Colour");
     }
 }
