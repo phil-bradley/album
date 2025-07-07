@@ -24,7 +24,6 @@ public class Icons {
         public static final ImageIcon ARROW_RIGHT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/arrow-right.png"));
         public static final ImageIcon FOLDER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/folder.png"));
         public static final ImageIcon FILE_HOME = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/file-home.png"));
-
     };
 
     public static final class Small {
@@ -41,6 +40,8 @@ public class Icons {
         public static final ImageIcon ZOOM_RESET = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/zoom-reset.png"));
         public static final ImageIcon ZOOM_COVER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/zoom-cover.png"));
         public static final ImageIcon ALIGN_CENTER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/align-center.png"));
+        public static final ImageIcon COLOR = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/color.png"));
+        public static final ImageIcon GRAYSCALE = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/grayscale.png"));
     }
 
 }

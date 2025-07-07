@@ -4,6 +4,7 @@
  */
 package ie.philb.album;
 
+import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.view.PageEntryView;
 import ie.philb.album.view.PageView;
@@ -28,5 +29,8 @@ public interface ApplicationListener {
     }
 
     default void albumUpdated() {
+    }
+
+    default void pageEntryUpdated(PageEntryModel pageEntryModel) {
     }
 }

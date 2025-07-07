@@ -102,14 +102,15 @@ public class AlbumViewContainer extends AppPanel {
         btnCenter.setText("Center");
         toolBar.add(btnCenter);
 
-        btnGray = new JToggleButton("Gray");
+        btnGray = new JToggleButton(Icons.Small.COLOR);
+        btnGray.setText("Color");
         btnGray.addActionListener(new ToggleGrayScaleActionListener());
         toolBar.add(btnGray);
 
         btnCellType = new JToggleButton("Type");
         btnCellType.addActionListener(new ToggleCellTypeActionListener());
         toolBar.add(btnCellType);
-        
+
         btnNewPage = new JButton(Icons.Small.NEW);
         btnNewPage.addActionListener((ActionEvent ae) -> {
             new NewPageCommand().execute();
@@ -156,7 +157,11 @@ public class AlbumViewContainer extends AppPanel {
         }
 
         setCellButtonsEnabled(view.getPageEntryModel().getImage() != null);
-        btnGray.setSelected(view.getPageEntryModel().isGrayScale());
+
+        boolean isGrayScale = view.getPageEntryModel().isGrayScale();
+        btnGray.setSelected(isGrayScale);
+        btnGray.setIcon(isGrayScale ? Icons.Small.GRAYSCALE : Icons.Small.COLOR);
+        btnGray.setText(isGrayScale ? "B&W" : "Colour");
     }
 
     @Override
