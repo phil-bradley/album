@@ -1,0 +1,4 @@
+for i in "Caveat" "Italianno" "Kapakana" "NotoSerif" "OpenSans" "Parisienne" "PinyonScript" "Tangerine"
+do
+	cp $i.ttf $i-Italic.ttf
+done

@@ -58,7 +58,7 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
 
         List<ApplicationFont> fonts = Arrays.asList(ApplicationFont.values());
         fontSelector = new FontSelector(fonts);
-        fontSelector.setFont(fonts.get(0).getFont());
+        fontSelector.setFont(fonts.get(0).getRegularFont());
 
         fontSizeSelector = new JComboBox<>();
         fontSizeSelector.setModel(getFontSizeSelectorModel());
@@ -90,7 +90,7 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
 
         fontSelector.addActionListener((ActionEvent ae) -> {
             model.setFontFamily(fontSelector.getSelectedFont().name());
-            fontSelector.setFont(fontSelector.getSelectedFont().getFont());
+            fontSelector.setFont(fontSelector.getSelectedFont().getRegularFont());
         });
 
         btnColor.addActionListener((ActionEvent ae) -> {
@@ -117,9 +117,9 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
 
         ApplicationFont applicationFont = ApplicationFont.byFamilyName(model.getFontFamily());
         fontSelector.setSelectedItem(applicationFont);
-        fontSelector.setFont(applicationFont.getFont());
+        fontSelector.setFont(applicationFont.getRegularFont());
 
-        this.fontSelector.setFont(ApplicationFont.byFamilyName(model.getFontFamily()).getFont());
+        this.fontSelector.setFont(ApplicationFont.byFamilyName(model.getFontFamily()).getRegularFont());
         this.btnColor.setForeground(model.getFontColor());
     }
 

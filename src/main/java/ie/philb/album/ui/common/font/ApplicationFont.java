@@ -32,28 +32,43 @@ public enum ApplicationFont {
     private static final float DEFAULT_SIZE = 16;
     private static final String FONT_PATH = "/ie/philb/album/fonts";
     private static final Map<String, ApplicationFont> map = new HashMap<>();
-    private static final Map<String, Font> fontCache = new HashMap<>();
+    private static final Map<FontSpec, Font> fontCache = new HashMap<>();
 
-    public Font getFont() {
-        return fontCache.get(name());
+    public Font getFont(boolean bold, boolean italic) {
+        return fontCache.get(new FontSpec(name(), bold, italic));
     }
 
-    public String getFontPath() {
-        return FONT_PATH + "/" + name() + ".ttf";
+    public Font getRegularFont() {
+        return getFont(false, false);
     }
 
-    public File getFontFile() {
-        String path = getFontPath();
+    public String getFontPath(boolean bold, boolean italic) {
+        String baseName = name();
+
+        if (bold) {
+            baseName += "-Bold";
+        }
+
+        if (italic) {
+            baseName += "-Italic";
+        }
+
+        return FONT_PATH + "/" + baseName + ".ttf";
+    }
+
+    public File getFontFile(boolean bold, boolean italic) {
+        String path = getFontPath(bold, italic);
         String a = getClass().getClassLoader().getResource(path).getFile();
         return new File(a);
     }
 
-    private static Font loadFont(ApplicationFont font) {
+    private static Font loadFont(ApplicationFont font, boolean bold, boolean italic) {
 
-        String fontPath = font.getFontPath();
+        String fontPath = font.getFontPath(bold, italic);
 
         try {
-            return Font.createFont(Font.TRUETYPE_FONT, ApplicationFont.class.getResourceAsStream(fontPath)).deriveFont(DEFAULT_SIZE);
+            Font created = Font.createFont(Font.TRUETYPE_FONT, ApplicationFont.class.getResourceAsStream(fontPath)).deriveFont(DEFAULT_SIZE);
+            return created;
         } catch (FontFormatException | IOException ex) {
             throw new RuntimeException("Failed to load font " + font + ", with path " + fontPath, ex);
         }
@@ -61,17 +76,8 @@ public enum ApplicationFont {
 
     public Font getDerivedFont(boolean bold, boolean italic, boolean underline, int size) {
 
-        int style = Font.PLAIN;
-
-        if (bold) {
-            style = style | Font.BOLD;
-        }
-
-        if (italic) {
-            style = style | Font.ITALIC;
-        }
-
-        Font derived = getFont().deriveFont(style).deriveFont((float) size);
+        Font baseFont = getFont(bold, italic);
+        Font derived = baseFont.deriveFont((float) size);
 
         if (underline) {
             Map<TextAttribute, Integer> attrs = new HashMap<>();
@@ -90,11 +96,19 @@ public enum ApplicationFont {
 
     static {
         for (ApplicationFont applicationFont : values()) {
-            fontCache.put(applicationFont.name(), loadFont(applicationFont));
+            fontCache.put(new FontSpec(applicationFont.name(), false, false), loadFont(applicationFont, false, false));
+            fontCache.put(new FontSpec(applicationFont.name(), true, false), loadFont(applicationFont, true, false));
+            fontCache.put(new FontSpec(applicationFont.name(), false, true), loadFont(applicationFont, false, true));
+            fontCache.put(new FontSpec(applicationFont.name(), true, true), loadFont(applicationFont, true, true));
+
         }
     }
 
     public static ApplicationFont byFamilyName(String familyName) {
         return map.get(familyName);
+    }
+
+    record FontSpec(String familyName, boolean bold, boolean italic) {
+
     }
 }
