@@ -6,6 +6,7 @@ package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.model.PageEntryModel;
+import ie.philb.album.model.PageEntryType;
 import ie.philb.album.ui.actionlistener.ImageCenterActionListener;
 import ie.philb.album.ui.actionlistener.ToggleCellTypeActionListener;
 import ie.philb.album.ui.actionlistener.ToggleGrayScaleActionListener;
@@ -108,7 +109,8 @@ public class AlbumViewContainer extends AppPanel {
         btnGray.addActionListener(new ToggleGrayScaleActionListener());
         toolBar.add(btnGray);
 
-        btnCellType = new JToggleButton("Type");
+        btnCellType = new JToggleButton(Icons.Small.PICTURE);
+        btnCellType.setText("Image");
         btnCellType.addActionListener(new ToggleCellTypeActionListener());
         toolBar.add(btnCellType);
 
@@ -158,7 +160,7 @@ public class AlbumViewContainer extends AppPanel {
         }
 
         setCellButtonsEnabled(view.getPageEntryModel().getImage() != null);
-        updateGrayScaleSelector(view.getPageEntryModel());
+        updateSelectorButtons(view.getPageEntryModel());
     }
 
     @Override
@@ -175,14 +177,22 @@ public class AlbumViewContainer extends AppPanel {
 
     @Override
     public void pageEntryUpdated(PageEntryModel pem) {
-        System.out.println("Updated pem " + pem);
-        updateGrayScaleSelector(pem);
+        updateSelectorButtons(pem);
     }
 
-    private void updateGrayScaleSelector(PageEntryModel pageEntryModel) {
+    private void updateSelectorButtons(PageEntryModel pageEntryModel) {
         boolean isGrayScale = pageEntryModel.isGrayScale();
         btnGray.setSelected(isGrayScale);
         btnGray.setIcon(isGrayScale ? Icons.Small.GRAYSCALE : Icons.Small.COLOR);
         btnGray.setText(isGrayScale ? "B&W" : "Colour");
+
+        btnCellType.setText(pageEntryModel.getCell().pageEntryType().name());
+
+        if (pageEntryModel.getCell().pageEntryType() == PageEntryType.Image) {
+            btnCellType.setIcon(Icons.Small.PICTURE);
+        } else {
+            btnCellType.setIcon(Icons.Small.TEXT);
+        }
+
     }
 }

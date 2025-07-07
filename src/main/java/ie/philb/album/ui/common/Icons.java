@@ -42,6 +42,8 @@ public class Icons {
         public static final ImageIcon ALIGN_CENTER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/align-center.png"));
         public static final ImageIcon COLOR = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/color.png"));
         public static final ImageIcon GRAYSCALE = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/grayscale.png"));
+        public static final ImageIcon PICTURE = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/picture.png"));
+        public static final ImageIcon TEXT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/text.png"));
     }
 
 }
