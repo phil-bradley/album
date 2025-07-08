@@ -54,6 +54,7 @@ public class TextControl extends JPanel implements TextControlChangeListener {
                 viewEditPanel.setBounds(0, 0, size.width, size.height);
                 toolBar.setBounds(0, 0, size.width, 30);
                 viewEditPanel.setFontScalingFactor(getPhysicalToViewScalingFactor());
+                revalidate();
             }
         });
 
@@ -118,7 +119,7 @@ public class TextControl extends JPanel implements TextControlChangeListener {
     public void setEditEnabled(boolean isEnabled) {
         viewEditPanel.setEditor(isEnabled);
         toolBar.setVisible(isEnabled);
-        
+
         if (isEnabled) {
             model.textEditSelected();
         }

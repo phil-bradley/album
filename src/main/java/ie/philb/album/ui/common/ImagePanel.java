@@ -161,6 +161,7 @@ public class ImagePanel extends AppPanel {
         @Override
         public void componentResized(ComponentEvent e) {
             setZoomFactor(getBestFitZoomFactor());
+            revalidate();
         }
     }
 }

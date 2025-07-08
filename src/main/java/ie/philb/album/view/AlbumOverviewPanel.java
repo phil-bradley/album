@@ -81,6 +81,7 @@ public class AlbumOverviewPanel extends AppPanel {
         @Override
         public void componentResized(ComponentEvent e) {
             albumView.positionPages();
+            revalidate();
         }
     }
 
