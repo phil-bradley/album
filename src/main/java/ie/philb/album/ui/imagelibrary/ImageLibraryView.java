@@ -6,10 +6,11 @@ package ie.philb.album.ui.imagelibrary;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.ui.command.BrowseToParentCommand;
-import ie.philb.album.ui.command.HomeCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
+import ie.philb.album.ui.common.foldernavigator.FolderNavigationListener;
+import ie.philb.album.ui.common.foldernavigator.FolderNavigationPanel;
 import ie.philb.album.ui.dnd.ImageLibraryTransferHandler;
 import ie.philb.album.util.FileUtils;
 import java.awt.event.ActionEvent;
@@ -33,6 +34,7 @@ public class ImageLibraryView extends AppPanel {
     private final JToolBar toolBar = new JToolBar();
     private JButton btnHome;
     private JButton btnUp;
+    private FolderNavigationPanel folderNavigationPanel;
 
     public ImageLibraryView() {
 
@@ -47,11 +49,10 @@ public class ImageLibraryView extends AppPanel {
 
         initToolBar();
 
-        GridBagCellConstraints gbc = new GridBagCellConstraints().fillHorizontal().weight(1, 0).anchorNorth();
+        GridBagCellConstraints gbc = new GridBagCellConstraints().fillHorizontal().weight(1, 0).anchorWest();
         add(toolBar, gbc);
 
-        gbc.xy(0, 1).weight(1).fillBoth();
-
+        gbc.xy(0, 1).weight(1).width(1).fillBoth();
         add(scrollPane, gbc);
 
         list.addMouseListener(new MouseAdapter() {
@@ -64,20 +65,12 @@ public class ImageLibraryView extends AppPanel {
                     return;
                 }
 
-                if (evt.getClickCount() == 1) {
-                    if (selected.isDirectory()) {
-                        AppContext.INSTANCE.browseLocationUpdated(selected.getFile());
-                    }
+                if (selected.isDirectory()) {
+                    setBrowseLocation(selected.getFile());
                 }
 
-                if (evt.getClickCount() == 2) {
-
-                    if (selected.isDirectory()) {
-                        AppContext.INSTANCE.browseLocationUpdated(selected.getFile());
-                    } else {
-                        AppContext.INSTANCE.libraryImageSelected(selected);
-
-                    }
+                if (evt.getClickCount() == 2 && FileUtils.isImage(selected.getFile())) {
+                    AppContext.INSTANCE.libraryImageSelected(selected);
                 }
             }
         });
@@ -102,6 +95,7 @@ public class ImageLibraryView extends AppPanel {
     private void setBrowseLocation(File file) {
         ImageLibraryListModel model = new ImageLibraryListModel(file);
         list.setModel(model);
+        folderNavigationPanel.setPath(file);
     }
 
     private void initToolBar() {
@@ -109,7 +103,7 @@ public class ImageLibraryView extends AppPanel {
         btnHome = new JButton(Icons.Regular.FILE_HOME);
         btnHome.setToolTipText("Home");
         btnHome.addActionListener((ActionEvent ae) -> {
-            new HomeCommand().execute();
+            setBrowseLocation(FileUtils.getHomeDirectory());
         });
 
         toolBar.add(btnHome);
@@ -121,5 +115,15 @@ public class ImageLibraryView extends AppPanel {
         });
 
         toolBar.add(btnUp);
+
+        folderNavigationPanel = new FolderNavigationPanel(FileUtils.getHomeDirectory());
+        folderNavigationPanel.addListener(new FolderNavigationListener() {
+            @Override
+            public void locationUpdated(File file) {
+                setBrowseLocation(file);
+            }
+        });
+
+        toolBar.add(folderNavigationPanel);
     }
 }

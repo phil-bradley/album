@@ -85,12 +85,12 @@ public class CreatePdfAction extends AbstractAction<File> {
                         int centerY = cellLocation.y + (pageEntryModel.getPhysicalSize().height / 2);
 
                         ApplicationFont appFont = ApplicationFont.byFamilyName(fontFamilyName);
-                        BaseFont baseFont = loadFont(appFont);
+                        BaseFont font = loadFont(appFont);
 
                         PdfContentByte canvas = writer.getDirectContent();
                         canvas.setColorFill(pageEntryModel.getTextControlModel().getFontColor());
                         canvas.beginText();
-                        canvas.setFontAndSize(baseFont, fontSize);
+                        canvas.setFontAndSize(font, fontSize);
                         canvas.showTextAligned(Element.ALIGN_CENTER, text, centerX, centerY, 0);
                         canvas.endText();
 
@@ -174,6 +174,5 @@ public class CreatePdfAction extends AbstractAction<File> {
 
         BaseFont font = BaseFont.createFont(tempFontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         return font;
-
     }
 }
