@@ -29,6 +29,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -206,7 +208,11 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     }
 
     private void updateBorder() {
-        setBorder(BorderFactory.createLineBorder(getBorderColor()));
+//        setBorder(BorderFactory.createLineBorder(getBorderColor()));
+
+        Border insideBorder = BorderFactory.createLineBorder(Color.white, 12);
+        Border outsideBorder = BorderFactory.createLineBorder(getBorderColor(), 1, true);
+        setBorder(new CompoundBorder(outsideBorder, insideBorder));
         repaint();
     }
 

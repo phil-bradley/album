@@ -8,6 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -63,5 +66,20 @@ public class FileUtils {
         }
 
         return (file.getName().startsWith(".") || file.isHidden());
+    }
+
+    public static List<Path> getPathToRoot(Path file) {
+
+        List<Path> paths = new ArrayList<>();
+
+        Path current = file;
+
+        while (current != null) {
+            paths.add(current);
+            current = current.getParent();
+        }
+
+        Collections.reverse(paths);
+        return paths;
     }
 }
