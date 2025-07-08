@@ -132,6 +132,7 @@ public class AlbumViewContainer extends AppPanel {
 
         slctGeometry.setEnabled(false);
         setCellButtonsEnabled(false);
+        btnCellType.setEnabled(false);
     }
 
     class ResizeListener extends ComponentAdapter {
@@ -160,6 +161,7 @@ public class AlbumViewContainer extends AppPanel {
         }
 
         setCellButtonsEnabled(view.getPageEntryModel().getImage() != null);
+        btnCellType.setEnabled(true);
         updateSelectorButtons(view.getPageEntryModel());
     }
 
