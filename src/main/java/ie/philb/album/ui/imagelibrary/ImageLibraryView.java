@@ -5,7 +5,6 @@
 package ie.philb.album.ui.imagelibrary;
 
 import ie.philb.album.AppContext;
-import ie.philb.album.ui.command.BrowseToParentCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
@@ -111,7 +110,12 @@ public class ImageLibraryView extends AppPanel {
         btnUp = new JButton(Icons.Small.FILE_PARENT);
         btnUp.setToolTipText("Up");
         btnUp.addActionListener((ActionEvent ae) -> {
-            new BrowseToParentCommand().execute();
+            ImageLibraryListModel lm = (ImageLibraryListModel) list.getModel();
+            File currentLocation = lm.getFolder();
+
+            if (currentLocation.getParentFile() != null) {
+                setBrowseLocation(lm.getFolder().getParentFile());
+            }
         });
 
         toolBar.add(btnUp);

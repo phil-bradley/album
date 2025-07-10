@@ -8,7 +8,10 @@ import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.util.FileUtils;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -19,9 +22,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
 /**
@@ -34,10 +42,27 @@ public class FolderNavigationPanel extends AppPanel {
     private final List<FolderNavigationListener> listeners = new ArrayList<>();
     private final List<Path> pathToRoot = new ArrayList<>();
     private static final Color HIGHLIGHT = new Color(240, 240, 240);
+    private JScrollPane scrollPane = new JScrollPane(getNodesPanel());
 
     public FolderNavigationPanel(File file) {
+
         background(Color.WHITE);
+
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        GridBagCellConstraints gbc = new GridBagCellConstraints().weight(1).fillBoth();
+        add(scrollPane, gbc);
+
         setPath(file);
+
+        scrollPane.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent evt) {
+                JScrollBar hBar = scrollPane.getHorizontalScrollBar();
+                hBar.setValue(hBar.getMaximum());
+            }
+        });
     }
 
     public void addListener(FolderNavigationListener l) {
@@ -86,19 +111,45 @@ public class FolderNavigationPanel extends AppPanel {
     }
 
     private void addNodes() {
-        this.removeAll();
+        AppPanel nodesPanel = getNodesPanel();
+        scrollPane.setViewportView(nodesPanel);
 
-        GridBagCellConstraints gbc = new GridBagCellConstraints().anchorWest().fillNone().insetLeft(2).insetRight(5);
+        nodesPanel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent evt) {
+                JScrollBar hBar = scrollPane.getHorizontalScrollBar();
+                hBar.setValue(hBar.getMaximum());
+            }
+        });
+
+        revalidate();
+        repaint();
+
+        JScrollBar hBar = scrollPane.getHorizontalScrollBar();
+        hBar.setValue(hBar.getMaximum());
+    }
+
+    private AppPanel getNodesPanel() {
+
+        AppPanel panel = new AppPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+        // Leading space for visual appeal
+        panel.add(Box.createRigidArea(new Dimension(5, 1)));
 
         for (Path path : pathToRoot) {
             FolderPanelLabel label = new FolderPanelLabel(path);
             label.addMouseListener(new NodeMouseListener());
-            add(label, gbc);
-            gbc.incx();
+            panel.add(label);
 
+            List<Path> children = getChildFolders(path);
+            
+            if (children.isEmpty()) {
+                continue;
+            }
+            
             FolderPanelLabel controlLabel = new FolderPanelLabel(path, ">");
-            add(controlLabel, gbc);
-            gbc.incx();
+            panel.add(controlLabel);
 
             controlLabel.addMouseListener(new MouseAdapter() {
 
@@ -124,11 +175,9 @@ public class FolderNavigationPanel extends AppPanel {
             });
         }
 
-        gbc.fillHorizontal().weightx(1).incx();
-        add(filler(), gbc);
-
-        revalidate();
-        repaint();
+        // Add some trailing empty space for visual appeal
+        panel.add(Box.createRigidArea(new Dimension(20, 1)));
+        return panel;
     }
 
     private void fireLocationUpdated(File folder) {
@@ -149,7 +198,7 @@ public class FolderNavigationPanel extends AppPanel {
             this.text = text;
 
             if (text.isBlank()) {
-                setText(getPathName());
+                setText(" " + getPathName());
             } else {
                 setText(this.text);
             }
@@ -174,6 +223,18 @@ public class FolderNavigationPanel extends AppPanel {
         }
     }
 
+    private List<Path> getChildFolders(Path parent) {
+
+        try (Stream<Path> paths = Files.list(parent)) {
+            return paths
+                    .filter(Files::isDirectory)
+                    .toList();
+        } catch (IOException e) {
+        }
+
+        return Collections.emptyList();
+    }
+
     private class FolderMenu extends JPopupMenu {
 
         public FolderMenu(Path path) {
@@ -187,18 +248,6 @@ public class FolderNavigationPanel extends AppPanel {
                 add(menuItem);
             }
         }
-
-        private List<Path> getChildFolders(Path parent) {
-
-            try (Stream<Path> paths = Files.list(parent)) {
-                return paths
-                        .filter(Files::isDirectory)
-                        .toList();
-            } catch (IOException e) {
-            }
-
-            return Collections.emptyList();
-        }
     }
 
     private class NodeMouseListener extends MouseAdapter {
@@ -206,8 +255,6 @@ public class FolderNavigationPanel extends AppPanel {
         @Override
         public void mouseClicked(MouseEvent e) {
             FolderPanelLabel label = (FolderPanelLabel) e.getSource();
-            System.out.println("Clicked on: " + label.getPath());
-
             setPath(label.getPath().toFile());
         }
 

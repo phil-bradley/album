@@ -121,9 +121,7 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
     }
 
     public AppPanel filler(Dimension size, Color color) {
-        AppPanel filler = filler(size);
-        filler.background(color);
-        return filler;
+        return filler(size).background(color);
     }
 
 }
