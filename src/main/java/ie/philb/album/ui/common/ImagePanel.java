@@ -14,56 +14,54 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Philip.Bradley
+ * 
+ * Draws an image centered at "best fit" zoom, that is, as large as it can 
+ * be while fitting within the boundary of the panel
  */
 public class ImagePanel extends AppPanel {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ImagePanel.class);
-
     private ImageIcon imageIcon;
-    private BufferedImage zoomedImage;
-    private double zoomFactor = 1;
+    private BufferedImage scaledImage;
 
     public ImagePanel(ImageIcon icon) {
         setIcon(icon);
         addComponentListener(new ResizeListener());
     }
 
-    private void setZoomFactor(double zoomFactor) {
-        this.zoomFactor = zoomFactor;
-
-        if (zoomFactor != 0) {
-            this.zoomedImage = createZoomedImage();
-        }
-    }
-
     public final void setIcon(ImageIcon icon) {
 
         this.imageIcon = icon;
+        this.scaledImage = createScaledImage();
 
-        if (icon != null) {
-            setZoomFactor(getBestFitZoomFactor());
-        }
-
+        revalidate();
         repaint();
     }
 
-    private BufferedImage createZoomedImage() {
+    private BufferedImage createScaledImage() {
 
-        int zoomedWidth = (int) (imageIcon.getIconWidth() * zoomFactor);
-        int zoomedHeight = (int) (imageIcon.getIconHeight() * zoomFactor);
+        if (imageIcon == null) {
+            return null;
+        }
 
-        BufferedImage zoomed = new BufferedImage(zoomedWidth, zoomedHeight, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = zoomed.createGraphics();
-        g.drawImage(imageIcon.getImage(), 0, 0, zoomedWidth, zoomedHeight, null);
+        if (getWidth() == 0 || getHeight() == 0) {
+            return null;
+        }
+
+        double scaleFactor = getBestFitScaleFactor();
+
+        int scaledWidth = (int) (imageIcon.getIconWidth() * scaleFactor);
+        int scaledHeight = (int) (imageIcon.getIconHeight() * scaleFactor);
+
+        BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = scaled.createGraphics();
+        g.drawImage(imageIcon.getImage(), 0, 0, scaledWidth, scaledHeight, null);
         g.dispose();
 
-        return zoomed;
+        return scaled;
     }
 
     public ImageIcon getIcon() {
@@ -82,7 +80,7 @@ public class ImagePanel extends AppPanel {
 
     // This is the zoom factor at which the image is as large as possible
     // without any cropping
-    private double getBestFitZoomFactor() {
+    private double getBestFitScaleFactor() {
 
         if (imageIcon == null) {
             return 1;
@@ -104,63 +102,31 @@ public class ImagePanel extends AppPanel {
 
     }
 
-    private void drawCropped(Graphics g) {
-
-        BufferedImage cropped = getCroppedImage();
-
-        // Centre image if it's less tall or less wide than the available space
-        int x = (getAvailableWidth() - cropped.getWidth()) / 2;
-        int y = (getAvailableHeight() - cropped.getHeight()) / 2;
-
-        g.drawImage(cropped, x, y, null);
-    }
-
-    public BufferedImage getCroppedImage() {
-
-        int cropWidth = getCropWidth();
-        int cropHeight = getCropHeight();
-
-        BufferedImage cropped = zoomedImage.getSubimage(0, 0, cropWidth, cropHeight);
-        return cropped;
-    }
-
-    private int getCropWidth() {
-        int boundWidth = getBounds().width;
-        int cropWidth = Math.min(boundWidth, zoomedImage.getWidth());
-        return cropWidth;
-    }
-
-    private int getCropHeight() {
-        int boundHeight = getBounds().height;
-        int cropHeight = Math.min(boundHeight, zoomedImage.getHeight());
-        return cropHeight;
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
 
-        if (zoomFactor == 0) {
-            setZoomFactor(getBestFitZoomFactor());
-        }
-
         super.paintComponent(g);
 
-        if (imageIcon == null) {
+        if (scaledImage == null) {
+            this.scaledImage = createScaledImage();
+        }
+
+        if (scaledImage == null) {
             return;
         }
 
-        if (zoomFactor == 0) {
-            return;
-        }
+        // Centre image if it's less tall or less wide than the available space
+        int x = (getAvailableWidth() - scaledImage.getWidth()) / 2;
+        int y = (getAvailableHeight() - scaledImage.getHeight()) / 2;
 
-        drawCropped(g);
+        g.drawImage(scaledImage, x, y, null);
     }
 
     class ResizeListener extends ComponentAdapter {
 
         @Override
         public void componentResized(ComponentEvent e) {
-            setZoomFactor(getBestFitZoomFactor());
+            scaledImage = createScaledImage();
             revalidate();
         }
     }
