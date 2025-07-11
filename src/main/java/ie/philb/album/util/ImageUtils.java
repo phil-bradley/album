@@ -193,4 +193,24 @@ public class ImageUtils {
         return false;
     }
 
+    public static BufferedImage transparentToWhiteBackground(BufferedImage transparent) {
+        return transparentToOpaque(transparent, Color.WHITE);
+    }
+
+    public static BufferedImage transparentToOpaque(BufferedImage transparent, Color backgroundColor) {
+
+        BufferedImage white = new BufferedImage(
+                transparent.getWidth(),
+                transparent.getHeight(),
+                BufferedImage.TYPE_INT_RGB // No alpha channel, ensures opaque white background
+        );
+
+        Graphics2D g = white.createGraphics();
+        g.setColor(backgroundColor);
+        g.fillRect(0, 0, white.getWidth(), white.getHeight());
+        g.dispose();
+
+        return white;
+    }
+
 }

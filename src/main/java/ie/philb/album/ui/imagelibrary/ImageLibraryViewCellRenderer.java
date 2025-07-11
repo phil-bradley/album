@@ -12,6 +12,7 @@ import ie.philb.album.ui.common.Resources;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -23,22 +24,21 @@ import javax.swing.SwingConstants;
  */
 public class ImageLibraryViewCellRenderer extends AppPanel implements ListCellRenderer<ImageLibraryEntry> {
 
-    private static final Dimension PREFERRED_SIZE = new Dimension(150, 180);
-    private ImagePanel imagePanel = new ImagePanel(null);
-    private JLabel lblName = new JLabel();
+    private static final Dimension PREFERRED_SIZE = new Dimension(120, 120);
+    private final ImagePanel imagePanel = new ImagePanel(null);
+    private final JLabel lblName = new JLabel();
 
     public ImageLibraryViewCellRenderer() {
 
         background(Color.WHITE);
-
-        GridBagCellConstraints gbc = new GridBagCellConstraints().weight(1).fillBoth().inset(8);
+        GridBagCellConstraints gbc = new GridBagCellConstraints().weight(1).fillBoth().insetHorizontal(8).insetVertical(2);
+        imagePanel.setPreferredSize(PREFERRED_SIZE);
+        imagePanel.setBorder(BorderFactory.createLineBorder(new Color(240, 240, 240)));
         add(imagePanel, gbc);
 
-        gbc.y(1).fillHorizontal().anchorSouth().weighty(0);
-        add(lblName, gbc);
-
+        gbc.y(1).fillHorizontal().anchorSouth().weighty(0).inset(1);
         lblName.setHorizontalAlignment(SwingConstants.CENTER);
-        setPreferredSize(PREFERRED_SIZE);
+        add(lblName, gbc);
     }
 
     @Override

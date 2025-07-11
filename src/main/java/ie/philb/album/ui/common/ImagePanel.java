@@ -8,6 +8,7 @@
  */
 package ie.philb.album.ui.common;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
@@ -18,9 +19,9 @@ import javax.swing.ImageIcon;
 /**
  *
  * @author Philip.Bradley
- * 
- * Draws an image centered at "best fit" zoom, that is, as large as it can 
- * be while fitting within the boundary of the panel
+ *
+ * Draws an image centered at "best fit" zoom, that is, as large as it can be
+ * while fitting within the boundary of the panel
  */
 public class ImagePanel extends AppPanel {
 
@@ -53,11 +54,18 @@ public class ImagePanel extends AppPanel {
 
         double scaleFactor = getBestFitScaleFactor();
 
+        // Don't scale up
+        if (scaleFactor > 1) {
+            scaleFactor = 1;
+        }
+
         int scaledWidth = (int) (imageIcon.getIconWidth() * scaleFactor);
         int scaledHeight = (int) (imageIcon.getIconHeight() * scaleFactor);
 
         BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = scaled.createGraphics();
+        g.setColor(Color.white);
+        g.fillRect(0, 0, scaledWidth, scaledHeight);
         g.drawImage(imageIcon.getImage(), 0, 0, scaledWidth, scaledHeight, null);
         g.dispose();
 
