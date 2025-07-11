@@ -7,10 +7,8 @@ package ie.philb.album;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
-import ie.philb.album.util.FileUtils;
 import ie.philb.album.view.PageEntryView;
 import ie.philb.album.view.PageView;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +27,6 @@ public enum AppContext implements ApplicationListener {
 
     private final List<ApplicationListener> applicationListeners = new ArrayList<>();
     private AlbumModel albumModel = null;
-    private File browseLocation = FileUtils.getHomeDirectory();
     private PageView selectedPageView = null;
     private PageEntryView selectedPageEntryView = null;
 
@@ -52,10 +49,6 @@ public enum AppContext implements ApplicationListener {
 
     public AlbumModel getAlbumModel() {
         return albumModel;
-    }
-
-    public File getBrowseLocation() {
-        return browseLocation;
     }
 
     public PageView getSelectedPageView() {
@@ -90,18 +83,7 @@ public enum AppContext implements ApplicationListener {
             appListener.libraryImageSelected(entry);
         });
     }
-
-    @Override
-    public void browseLocationUpdated(File file) {
-
-        LOG.info("Setting browse location to " + file.getAbsolutePath());
-        this.browseLocation = file;
-
-        getApplicationListenersCopy().forEach(appListener -> {
-            appListener.browseLocationUpdated(file);
-        });
-    }
-
+    
     @Override
     public void albumUpdated() {
 
