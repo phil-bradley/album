@@ -46,8 +46,6 @@ public class FolderNavigationPanel extends AppPanel {
 
     public FolderNavigationPanel(File file) {
 
-        background(Color.WHITE);
-
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
@@ -203,8 +201,8 @@ public class FolderNavigationPanel extends AppPanel {
                 setText(this.text);
             }
 
-            setBackground(Color.WHITE);
-            setOpaque(true);
+//            setBackground(Color.WHITE);
+//            setOpaque(true);
 
             addMouseListener(new NodeMouseListener());
         }

@@ -62,30 +62,34 @@ public class ImageLibraryViewCellRenderer extends AppPanel implements ListCellRe
 
     private String getToolTip(ImageLibraryEntry entry) {
 
-        if (entry == null) {
+        if (entry == null || entry.getFile() == null) {
             return "";
         }
+
+        String toolTipText = entry.getFile().getName();
 
         ImageMetaData imageMetaData = entry.getImageMetaData();
 
         if (imageMetaData == null) {
-            return "";
+            return toolTipText;
         }
 
         Dimension size = imageMetaData.getSize();
         Dimension resolution = imageMetaData.getResolution();
 
+        String metaData;
+
         if (size.width == 0) {
-            return "Not available";
+            metaData = "Metadata not available";
+        } else {
+            metaData = "Size " + size.width + "x" + size.height;
+
+            if (resolution.width != 0) {
+                metaData += "\nResolution " + resolution.width + "x" + resolution.height;
+            }
         }
 
-        String tip = "Size " + size.width + "x" + size.height;
-
-        if (resolution.width != 0) {
-            tip += ", Resolution " + resolution.width + "x" + resolution.height;
-        }
-
-        return tip;
+        return toolTipText + "\n\n" + metaData;
     }
 
 }
