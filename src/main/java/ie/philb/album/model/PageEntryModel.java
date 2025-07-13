@@ -5,14 +5,14 @@
 package ie.philb.album.model;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.ui.common.filters.BrightnessFilter;
+import ie.philb.album.ui.common.filters.GrayScaleFilter;
 import ie.philb.album.ui.common.textcontrol.TextControlModel;
 import ie.philb.album.util.ImageUtils;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -41,6 +41,8 @@ public class PageEntryModel {
     private final TextControlModel textControlModel = new TextControlModel();
     private boolean isGrayScale = false;
     private LocalDateTime lastChanged = LocalDateTime.now();
+    private final BrightnessFilter brightnessFilter = new BrightnessFilter();
+    private final GrayScaleFilter grayScaleFilter = new GrayScaleFilter();
 
     public PageEntryModel(PageCell cell) {
         this.cell = cell;
@@ -63,6 +65,15 @@ public class PageEntryModel {
 
     public void setPhysicalSize(Dimension physicalSize) {
         this.physicalSize = physicalSize;
+    }
+
+    public float getBrightnessAdjustment() {
+        return brightnessFilter.getBrightnessAdjustment();
+    }
+
+    public void setBrightnessAdjustment(float brightnessAdjustment) {
+        brightnessFilter.setBrightnessAdjustment(brightnessAdjustment);
+        fireImageUpdated();
     }
 
     public BufferedImage getImage() {
@@ -143,23 +154,20 @@ public class PageEntryModel {
         g.drawImage(image, 0, 0, zoomedWidth, zoomedHeight, null);
         g.dispose();
 
-        return grayScaleFilter(zoomed);
+        return brightnessFilter(grayScaleFilter(zoomed));
     }
 
     private BufferedImage grayScaleFilter(BufferedImage image) {
 
         if (isGrayScale()) {
-            return toGrayscale(image);
+            return grayScaleFilter.filter(image);
         }
 
         return image;
     }
 
-    private BufferedImage toGrayscale(BufferedImage image) {
-        BufferedImage grayscale = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
-        ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
-        op.filter(image, grayscale);
-        return grayscale;
+    private BufferedImage brightnessFilter(BufferedImage image) {
+        return brightnessFilter.filter(image);
     }
 
     private BufferedImage getPlacholderImage(Dimension viewSize) {

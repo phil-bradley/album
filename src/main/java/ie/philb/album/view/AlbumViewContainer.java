@@ -19,14 +19,20 @@ import ie.philb.album.ui.command.SetGeometryCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
+import ie.philb.album.ui.common.filters.BrightnessFilter;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.event.ChangeEvent;
 
 /**
  *
@@ -44,7 +50,11 @@ public class AlbumViewContainer extends AppPanel {
     private JToggleButton btnGray;
     private JToggleButton btnCellType;
     private JButton btnNewPage;
+    private JButton btnBrightness;
     private PageGeometrySelector slctGeometry;
+    private JSlider brightnessSlider;
+    private AppPanel brightnessControlPanel;
+    private JPopupMenu brightnessMenu;
 
     private final AlbumView albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
 
@@ -69,6 +79,33 @@ public class AlbumViewContainer extends AppPanel {
         this.scrollPane = new JScrollPane(albumView);
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        brightnessSlider = new JSlider(BrightnessFilter.MIN_BRIGHTNESS, BrightnessFilter.MAX_BRIGHTNESS, BrightnessFilter.DEFAULT_BRIGHTNESS);
+        brightnessSlider.setExtent(1);
+
+        brightnessSlider.addChangeListener((ChangeEvent ce) -> {
+            JSlider source = (JSlider) ce.getSource();
+
+            if (!source.getValueIsAdjusting()) {
+                PageEntryView selected = AppContext.INSTANCE.getSelectedPageEntryView();
+
+                if (selected == null) {
+                    return;
+                }
+
+                selected.getPageEntryModel().setBrightnessAdjustment(source.getValue());
+                System.out.println("Brightness is " + source.getValue());
+            }
+        });
+
+        brightnessControlPanel = new AppPanel();
+        brightnessControlPanel.setLayout(new BorderLayout());
+        brightnessControlPanel.add(brightnessSlider, BorderLayout.CENTER);
+        brightnessControlPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        brightnessMenu = new JPopupMenu();
+        brightnessMenu.setLayout(new BorderLayout());
+        brightnessMenu.add(brightnessSlider, BorderLayout.CENTER);
 
         initToolBar();
     }
@@ -120,6 +157,12 @@ public class AlbumViewContainer extends AppPanel {
         });
         btnNewPage.setToolTipText("New Page");
         toolBar.add(btnNewPage);
+
+        btnBrightness = new JButton("Bright");
+        btnBrightness.addActionListener(e -> {
+            brightnessMenu.show(btnBrightness, 0, btnBrightness.getHeight());
+        });
+        toolBar.add(btnBrightness);
 
         slctGeometry = new PageGeometrySelector();
         slctGeometry.addActionListener((ActionEvent ae) -> {
@@ -196,6 +239,5 @@ public class AlbumViewContainer extends AppPanel {
         } else {
             btnCellType.setIcon(Icons.Small.TEXT);
         }
-
     }
 }
