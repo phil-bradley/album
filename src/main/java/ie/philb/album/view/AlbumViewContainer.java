@@ -25,8 +25,10 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import javax.swing.BorderFactory;
+import java.util.Hashtable;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -53,6 +55,7 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnBrightness;
     private PageGeometrySelector slctGeometry;
     private JSlider brightnessSlider;
+    private JButton btnBrightnessReset;
     private AppPanel brightnessControlPanel;
     private JPopupMenu brightnessMenu;
 
@@ -82,6 +85,10 @@ public class AlbumViewContainer extends AppPanel {
 
         brightnessSlider = new JSlider(BrightnessFilter.MIN_BRIGHTNESS, BrightnessFilter.MAX_BRIGHTNESS, BrightnessFilter.DEFAULT_BRIGHTNESS);
         brightnessSlider.setExtent(1);
+        brightnessSlider.setPaintLabels(true);
+        Hashtable t = new Hashtable<Integer, JLabel>();
+        t.put(BrightnessFilter.DEFAULT_BRIGHTNESS, new JLabel("Default"));
+        brightnessSlider.setLabelTable(t);
 
         brightnessSlider.addChangeListener((ChangeEvent ce) -> {
             JSlider source = (JSlider) ce.getSource();
@@ -94,18 +101,23 @@ public class AlbumViewContainer extends AppPanel {
                 }
 
                 selected.getPageEntryModel().setBrightnessAdjustment(source.getValue());
-                System.out.println("Brightness is " + source.getValue());
             }
         });
-
+        
+        btnBrightnessReset = new JButton("x");
+        btnBrightnessReset.addActionListener((ActionEvent ae) -> {
+            brightnessSlider.setValue(BrightnessFilter.DEFAULT_BRIGHTNESS);
+        });
+        
         brightnessControlPanel = new AppPanel();
-        brightnessControlPanel.setLayout(new BorderLayout());
-        brightnessControlPanel.add(brightnessSlider, BorderLayout.CENTER);
-        brightnessControlPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        brightnessControlPanel.setLayout(new BoxLayout(brightnessControlPanel, BoxLayout.X_AXIS));
+        brightnessControlPanel.add(brightnessSlider);
+        brightnessControlPanel.add(btnBrightnessReset);
+        
 
         brightnessMenu = new JPopupMenu();
         brightnessMenu.setLayout(new BorderLayout());
-        brightnessMenu.add(brightnessSlider, BorderLayout.CENTER);
+        brightnessMenu.add(brightnessControlPanel, BorderLayout.CENTER);
 
         initToolBar();
     }
