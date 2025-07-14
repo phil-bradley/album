@@ -133,6 +133,18 @@ public class AlbumViewContainer extends AppPanel {
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
+        btnNewPage = new JButton(Icons.Small.NEW);
+        btnNewPage.addActionListener((ActionEvent ae) -> {
+            new NewPageCommand().execute();
+        });
+        btnNewPage.setToolTipText("New Page");
+        toolBar.add(btnNewPage);
+
+        btnCellType = new JToggleButton(Icons.Small.PICTURE);
+        btnCellType.setText("Image");
+        btnCellType.addActionListener(new ToggleCellTypeActionListener());
+        toolBar.add(btnCellType);
+
         btnZoomIn = new JButton(Icons.Small.ZOOM_IN);
         btnZoomIn.addActionListener(new ZoomInActionListener());
         btnZoomIn.setText("Zoom In");
@@ -163,19 +175,7 @@ public class AlbumViewContainer extends AppPanel {
         btnGray.addActionListener(new ToggleGrayScaleActionListener());
         toolBar.add(btnGray);
 
-        btnCellType = new JToggleButton(Icons.Small.PICTURE);
-        btnCellType.setText("Image");
-        btnCellType.addActionListener(new ToggleCellTypeActionListener());
-        toolBar.add(btnCellType);
-
-        btnNewPage = new JButton(Icons.Small.NEW);
-        btnNewPage.addActionListener((ActionEvent ae) -> {
-            new NewPageCommand().execute();
-        });
-        btnNewPage.setToolTipText("New Page");
-        toolBar.add(btnNewPage);
-
-        btnBrightness = new JButton("Bright");
+        btnBrightness = new JButton(Icons.Small.BRIGHTNESS);
         btnBrightness.addActionListener(e -> {
             brightnessMenu.show(btnBrightness, 0, btnBrightness.getHeight());
         });
@@ -187,7 +187,6 @@ public class AlbumViewContainer extends AppPanel {
         });
 
         slctGeometry.setMaximumSize(new Dimension(100, 100));
-
         toolBar.add(slctGeometry);
 
         slctGeometry.setEnabled(false);
@@ -211,6 +210,7 @@ public class AlbumViewContainer extends AppPanel {
         btnZoomCover.setEnabled(isEnabled);
         btnCenter.setEnabled(isEnabled);
         btnGray.setEnabled(isEnabled);
+        btnBrightness.setEnabled(isEnabled);
     }
 
     @Override
