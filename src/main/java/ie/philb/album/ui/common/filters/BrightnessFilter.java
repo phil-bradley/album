@@ -37,11 +37,10 @@ public class BrightnessFilter implements ImageFilter {
     @Override
     public BufferedImage filter(BufferedImage image) {
 
-        float factor = brightnessAdjustment / (float) 100;
+        float factor = brightnessAdjustment / (float) 100; // Factor varies between -1 and +5
+        float offset = brightnessAdjustment / (float) 10; // Offset varies between -10 and +50
 
-        System.out.println("Brightness factor: " + factor);
-
-        RescaleOp rescaleOp = new RescaleOp(factor, 0, null);
+        RescaleOp rescaleOp = new RescaleOp(factor, offset, null);
         BufferedImage brightened = new BufferedImage(
                 image.getWidth(),
                 image.getHeight(),
