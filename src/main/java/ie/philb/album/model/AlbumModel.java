@@ -20,9 +20,13 @@ public class AlbumModel {
     private final PageSize pageSize;
     private final List<PageModel> pages = new ArrayList();
     private LocalDateTime lastSaveDate = null;
+    private final int defaultMargin;
+    private final int defaultGutter;
 
-    public AlbumModel(PageSize pageSize) {
+    public AlbumModel(PageSize pageSize, int margin, int gutter) {
         this.pageSize = pageSize;
+        this.defaultMargin = margin;
+        this.defaultGutter = gutter;
     }
 
     public PageSize getPageSize() {
@@ -33,14 +37,16 @@ public class AlbumModel {
         return Collections.unmodifiableList(pages);
     }
 
-    public void addPage(PageModel page) {
+    public void addPage(PageGeometry geometry) {
+        PageModel pageModel = new PageModel(geometry, getPageSize()).withMargin(defaultMargin).withGutter(defaultGutter);
+        pageModel.setPageId(pages.size() + 1);
+        this.pages.add(pageModel);
+    }
 
-        if (page.getPageSize() != pageSize) {
-            throw new IllegalArgumentException("Cannot create page of size " + page.getPageSize() + " in album of size " + pageSize);
-        }
-
-        page.setPageId(pages.size() + 1);
-        this.pages.add(page);
+    public void addPage(PageGeometry geometry, int margin, int gutter) {
+        PageModel pageModel = new PageModel(geometry, getPageSize()).withMargin(margin).withGutter(gutter);
+        pageModel.setPageId(pages.size() + 1);
+        this.pages.add(pageModel);
     }
 
     public File getFile() {
@@ -62,11 +68,11 @@ public class AlbumModel {
 
         return lastChangeDate;
     }
-    
+
     public boolean hasUnSavedChanges() {
         return lastSaveDate == null || getLastChangeDate().isAfter(lastSaveDate);
     }
-    
+
     public void setLastSaveDate(LocalDateTime saveDate) {
         this.lastSaveDate = saveDate;
     }

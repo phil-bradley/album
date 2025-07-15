@@ -6,6 +6,7 @@ package ie.philb.album.ui.command;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.model.AlbumModel;
+import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
@@ -23,26 +24,27 @@ public class NewAlbumCommand extends AbstractCommand {
     public void execute() {
 
         AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
-        
+
         if (albumModel != null && albumModel.hasUnSavedChanges()) {
-        
+
             boolean ok = Dialogs.confirm("Are you sure?");
-            
+
             if (!ok) {
                 return;
             }
         }
-        
-        albumModel = new AlbumModel(PageSize.A4_Landscape);
+
+        albumModel = new AlbumModel(PageSize.A4_Landscape, 10, 30);
 
         PageGeometry geometry = PageGeometry.square(PageEntryType.Text, 1);
-        PageModel titlePage = new PageModel(geometry, PageSize.A4_Landscape);
-        titlePage.getPageEntries().get(0).getTextControlModel().setText("The Title!");
-        albumModel.addPage(titlePage);
+        albumModel.addPage(geometry, 0, 0);
 
-        PageModel page1 = new PageModel(PageGeometry.square(2), albumModel.getPageSize()).withMargin(2);
-        albumModel.addPage(page1);
-        
+        PageModel titlePage = albumModel.getPages().get(0);
+        PageEntryModel titleEntry = titlePage.getPageEntries().get(0);
+        titleEntry.getTextControlModel().setText("The Title!");
+
+        albumModel.addPage(PageGeometry.square(2));
+
         albumModel.setLastSaveDate(LocalDateTime.now());
 
 //        PageModel page2 = new PageModel(PageGeometry.square(2), albumModel.getPageSize()).withMarginMillis(3);

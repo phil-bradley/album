@@ -5,8 +5,6 @@
 package ie.philb.album.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -15,37 +13,23 @@ import org.junit.jupiter.api.Test;
  */
 public class AlbumModelTest {
 
+    private static final int MARGIN=5;
+    private static final int GUTTER=25;
+    
     @Test
     void givenAlbumModel_expectPageSize() {
-        AlbumModel albumModel = new AlbumModel(PageSize.US_Letter_Portrait);
+        AlbumModel albumModel = new AlbumModel(PageSize.US_Letter_Portrait, MARGIN, GUTTER);
         assertEquals(PageSize.US_Letter_Portrait, albumModel.getPageSize());
     }
 
     @Test
     void givenAlbum_whenPageAdded_expectPageSizeMatches() {
-        AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
+        AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape, MARGIN, GUTTER);
         assertEquals(0, albumModel.getPages().size());
 
         PageGeometry geometry = PageGeometry.square(2);
-        albumModel.addPage(new PageModel(geometry, PageSize.A4_Landscape));
-        albumModel.addPage(new PageModel(geometry, PageSize.A4_Landscape));
+        albumModel.addPage(geometry);
+        albumModel.addPage(geometry);
         assertEquals(2, albumModel.getPages().size());
-    }
-
-    @Test
-    void givenAlbum_whenPageAdded_andPageSizeNotMatched_expectException() {
-
-        AlbumModel albumModel = new AlbumModel(PageSize.A4_Landscape);
-
-        PageGeometry geometry = PageGeometry.square(2);
-
-        Exception thrown = assertThrows(
-                RuntimeException.class,
-                () -> {
-                    albumModel.addPage(new PageModel(geometry, PageSize.A4_Portrait));
-                }
-        );
-
-        assertTrue(thrown.getMessage().contains("Cannot create page of size"));
     }
 }

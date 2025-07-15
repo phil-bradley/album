@@ -32,4 +32,8 @@ public class MathUtils {
         int gcd = gcd(a, b);
         return (a * b) / gcd;
     }
+
+    public static boolean isEven(int x) {
+        return (x % 2) == 0;
+    }
 }
