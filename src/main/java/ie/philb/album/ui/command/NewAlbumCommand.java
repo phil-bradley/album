@@ -20,6 +20,9 @@ import java.time.LocalDateTime;
  */
 public class NewAlbumCommand extends AbstractCommand {
 
+    private final int defaultMargin = 10;
+    private final int defaultGutter = 25;
+
     @Override
     public void execute() {
 
@@ -34,7 +37,7 @@ public class NewAlbumCommand extends AbstractCommand {
             }
         }
 
-        albumModel = new AlbumModel(PageSize.A4_Landscape, 10, 30);
+        albumModel = new AlbumModel(PageSize.A4_Landscape, defaultMargin, defaultGutter);
 
         PageGeometry geometry = PageGeometry.square(PageEntryType.Text, 1);
         albumModel.addPage(geometry, 0, 0);

@@ -19,8 +19,11 @@ import java.util.List;
  */
 public class PageModel {
 
+    private final List<PageModelListener> listeners = new ArrayList<>();
+
     private int pageId;
-    private int margin = 10;
+    private int verticalMargin = 10;
+    private int horizontalMargin = 10;
     private int gutter = 0;
     private PageGeometry geometry;
     private final List<PageEntryModel> pageEntries = new ArrayList<>();
@@ -31,12 +34,29 @@ public class PageModel {
         setGeometry(geometry);
     }
 
+    public void addListener(PageModelListener l) {
+        this.listeners.add(l);
+    }
+
+    public void removeListener(PageModelListener l) {
+        this.listeners.remove(l);
+    }
+
+    private void fireModelUpdated() {
+        for (PageModelListener l : listeners) {
+            l.pageUpdated(this);
+        }
+    }
+
     public int getPageId() {
         return pageId;
     }
 
     public void setPageId(int pageId) {
-        this.pageId = pageId;
+        if (this.pageId != pageId) {
+            this.pageId = pageId;
+            fireModelUpdated();
+        }
     }
 
     public int getGutter() {
@@ -44,7 +64,10 @@ public class PageModel {
     }
 
     public void setGutter(int gutter) {
-        this.gutter = gutter;
+        if (this.gutter != gutter) {
+            this.gutter = gutter;
+            fireModelUpdated();
+        }
     }
 
     public PageGeometry getGeometry() {
@@ -98,16 +121,37 @@ public class PageModel {
             pageEntries.add(pem);
             i++;
         }
+
+        fireModelUpdated();
     }
 
-    public int getMargin() {
-        return margin;
+    public int getVerticalMargin() {
+        return verticalMargin;
+    }
+
+    public int getHorizontalMargin() {
+        return horizontalMargin;
+    }
+
+    public void setVerticalMargin(int margin) {
+        if (this.verticalMargin != margin) {
+            this.verticalMargin = margin;
+            fireModelUpdated();
+        }
+    }
+
+    public void setHorizontalMargin(int margin) {
+        if (this.horizontalMargin != margin) {
+            this.horizontalMargin = margin;
+            fireModelUpdated();
+        }
     }
 
     public void setMargin(int margin) {
-        this.margin = margin;
+        setVerticalMargin(margin);
+        setHorizontalMargin(margin);
     }
-
+    
     public PageModel withMargin(int margin) {
         setMargin(margin);
         return this;
@@ -120,7 +164,7 @@ public class PageModel {
 
     public int getUnitCellHeightPoints() {
         int verticalCellCount = geometry.verticalCellCount();
-        int totalMarginPoints = margin * (verticalCellCount + 1);
+        int totalMarginPoints = verticalMargin * (verticalCellCount + 1);
         int availableHeight = pageSize.height() - totalMarginPoints;
         int cellHeight = availableHeight / geometry.verticalCellCount();
         return cellHeight;
@@ -128,16 +172,16 @@ public class PageModel {
 
     public int getUnitCellWidthPoints() {
         int horizontalCellCount = geometry.horizontalCellCount();
-        int totalMarginPoints = margin * (horizontalCellCount + 1);
+        int totalMarginPoints = horizontalMargin * (horizontalCellCount + 1);
         int availableWidth = getPageSize().width() - (totalMarginPoints + gutter);
         int cellWidth = availableWidth / geometry.horizontalCellCount();
         return cellWidth;
     }
 
     public Point getCellPositionPoints(PageCell cell) {
-        int gutterOffset  = MathUtils.isEven(pageId) ? gutter : 0; // Title page has pageId =1, followed by virtual blank 
-        int posX = (getUnitCellWidthPoints() * cell.location().x) + (margin * (cell.location().x + 1)) + gutterOffset;
-        int posY = (getUnitCellHeightPoints() * cell.location().y) + (margin * (cell.location().y + 1));
+        int gutterOffset = MathUtils.isEven(pageId) ? gutter : 0; // Title page has pageId =1, followed by virtual blank 
+        int posX = (getUnitCellWidthPoints() * cell.location().x) + (horizontalMargin * (cell.location().x + 1)) + gutterOffset;
+        int posY = (getUnitCellHeightPoints() * cell.location().y) + (verticalMargin * (cell.location().y + 1));
 
         return new Point(posX, posY);
     }
@@ -153,8 +197,8 @@ public class PageModel {
         int horizontalMarginCount = cell.size().width - 1;
         int verticalMarginCount = cell.size().height - 1;
 
-        int cellHeightPoints = (cell.size().height * unitHeight) + (verticalMarginCount * margin);
-        int cellWidthPoints = (cell.size().width * unitWidth) + (horizontalMarginCount * margin);
+        int cellHeightPoints = (cell.size().height * unitHeight) + (verticalMarginCount * verticalMargin);
+        int cellWidthPoints = (cell.size().width * unitWidth) + (horizontalMarginCount * horizontalMargin);
 
         return new Dimension(cellWidthPoints, cellHeightPoints);
     }

@@ -32,7 +32,8 @@ public class PageModelTest {
         assertEquals(pageModel.getGeometry(), geometry);
         assertEquals(PageSize.A4_Landscape, pageModel.getPageSize());
         assertEquals(pageId, pageModel.getPageId());
-        assertEquals(margin, pageModel.getMargin());
+        assertEquals(margin, pageModel.getVerticalMargin());
+        assertEquals(margin, pageModel.getHorizontalMargin());
         assertEquals(4, pageModel.getCellCount());
         assertEquals(4, pageModel.getPageEntries().size());
     }

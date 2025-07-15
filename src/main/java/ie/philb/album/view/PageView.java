@@ -10,6 +10,7 @@ import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
+import ie.philb.album.model.PageModelListener;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Resources;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
@@ -29,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philip.Bradley
  */
-public class PageView extends AppPanel {
+public class PageView extends AppPanel implements PageModelListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(PageView.class);
 
@@ -126,7 +127,7 @@ public class PageView extends AppPanel {
     private void setModel(PageModel model) {
         this.model = model;
         this.pageEntryViews = new ArrayList<>(model.getCellCount());
-
+        this.model.addListener(this);
         createEntries();
     }
 
@@ -224,5 +225,14 @@ public class PageView extends AppPanel {
             boolean pageSelected = (this.model.getPageId() == selectedView.getPageModel().getPageId());
             setSelected(pageSelected);
         }
+    }
+
+    @Override
+    public void pageUpdated(PageModel model) {
+        
+        positionEntries();
+        
+        revalidate();
+        repaint();
     }
 }

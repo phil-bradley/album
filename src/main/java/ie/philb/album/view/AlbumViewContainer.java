@@ -53,12 +53,18 @@ public class AlbumViewContainer extends AppPanel {
     private JToggleButton btnGray;
     private JToggleButton btnCellType;
     private JButton btnNewPage;
+    private JButton btnPageSettings;
     private JButton btnBrightness;
     private PageGeometrySelector slctGeometry;
     private JSlider brightnessSlider;
     private JButton btnBrightnessReset;
     private AppPanel brightnessControlPanel;
     private JPopupMenu brightnessMenu;
+    private AppPanel pageSettingsHorizontalMarginPanel;
+    private JSlider pageSettingsHorizontalMarginSlider;
+    private AppPanel pageSettingsVerticalMarginPanel;
+    private JSlider pageSettingsVerticalMarginSlider;
+    private JPopupMenu pageSettingsMenu;
 
     private final AlbumView albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
 
@@ -113,7 +119,68 @@ public class AlbumViewContainer extends AppPanel {
         brightnessMenu.setLayout(new BorderLayout());
         brightnessMenu.add(brightnessControlPanel, BorderLayout.CENTER);
 
+        pageSettingsVerticalMarginSlider = new JSlider(0, 200, 25);
+        pageSettingsVerticalMarginSlider.setExtent(1);
+        pageSettingsVerticalMarginSlider.setMajorTickSpacing(50);
+        pageSettingsVerticalMarginSlider.setPaintTicks(true);
+        pageSettingsVerticalMarginSlider.setPaintTrack(true);
+        pageSettingsVerticalMarginSlider.setPaintLabels(true);
+
+        pageSettingsVerticalMarginSlider.addChangeListener((ChangeEvent ce) -> {
+            adjustVerticalMargin();
+        });
+
+        pageSettingsHorizontalMarginSlider = new JSlider(0, 200, 25);
+        pageSettingsHorizontalMarginSlider.setExtent(1);
+        pageSettingsHorizontalMarginSlider.setMajorTickSpacing(50);
+        pageSettingsHorizontalMarginSlider.setPaintTicks(true);
+        pageSettingsHorizontalMarginSlider.setPaintTrack(true);
+        pageSettingsHorizontalMarginSlider.setPaintLabels(true);
+
+        pageSettingsHorizontalMarginSlider.addChangeListener((ChangeEvent ce) -> {
+            adjustHorizontalMargin();
+        });
+
+        pageSettingsHorizontalMarginPanel = new AppPanel();
+        pageSettingsHorizontalMarginPanel.setLayout(new BoxLayout(pageSettingsHorizontalMarginPanel, BoxLayout.X_AXIS));
+        pageSettingsHorizontalMarginPanel.add(pageSettingsHorizontalMarginSlider);
+        //pageSettingsPanel.add(btnMarginReset);
+        pageSettingsHorizontalMarginPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+        pageSettingsVerticalMarginPanel = new AppPanel();
+        pageSettingsVerticalMarginPanel.setLayout(new BoxLayout(pageSettingsVerticalMarginPanel, BoxLayout.X_AXIS));
+        pageSettingsVerticalMarginPanel.add(pageSettingsVerticalMarginSlider);
+        //pageSettingsPanel.add(btnMarginReset);
+        pageSettingsVerticalMarginPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+        pageSettingsMenu = new JPopupMenu();
+        pageSettingsMenu.setLayout(new BoxLayout(pageSettingsMenu, BoxLayout.Y_AXIS));
+        pageSettingsMenu.add(pageSettingsHorizontalMarginPanel);
+        pageSettingsMenu.add(pageSettingsVerticalMarginPanel);
+
         initToolBar();
+    }
+
+    private void adjustVerticalMargin() {
+        PageView selected = AppContext.INSTANCE.getSelectedPageView();
+
+        if (selected == null) {
+            return;
+        }
+
+        int newMargin = pageSettingsVerticalMarginSlider.getValue();
+        selected.getPageModel().setVerticalMargin(newMargin);
+    }
+
+    private void adjustHorizontalMargin() {
+        PageView selected = AppContext.INSTANCE.getSelectedPageView();
+
+        if (selected == null) {
+            return;
+        }
+
+        int newMargin = pageSettingsHorizontalMarginSlider.getValue();
+        selected.getPageModel().setHorizontalMargin(newMargin);
     }
 
     private void adjustBrightness() {
@@ -139,6 +206,14 @@ public class AlbumViewContainer extends AppPanel {
         });
         btnNewPage.setToolTipText("New Page");
         toolBar.add(btnNewPage);
+
+        btnPageSettings = new JButton("P");
+        btnPageSettings.addActionListener((ActionEvent ae) -> {
+            pageSettingsMenu.show(btnPageSettings, 0, btnPageSettings.getHeight());
+
+        });
+        btnPageSettings.setToolTipText("Page Settings");
+        toolBar.add(btnPageSettings);
 
         btnCellType = new JToggleButton(Icons.Small.PICTURE);
         btnCellType.setText("Image");
