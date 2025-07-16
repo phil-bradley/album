@@ -20,16 +20,16 @@ import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
 import ie.philb.album.ui.common.filters.BrightnessFilter;
+import ie.philb.album.ui.common.numbercontrol.SlidingNumberControl;
+import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.Hashtable;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -56,9 +56,10 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnPageSettings;
     private JButton btnBrightness;
     private PageGeometrySelector slctGeometry;
-    private JSlider brightnessSlider;
-    private JButton btnBrightnessReset;
-    private AppPanel brightnessControlPanel;
+//    private JSlider brightnessSlider;
+//    private JButton btnBrightnessReset;
+//    private AppPanel brightnessControlPanel;
+    private SlidingNumberControl brightnessControl;
     private JPopupMenu brightnessMenu;
     private AppPanel pageSettingsHorizontalMarginPanel;
     private JSlider pageSettingsHorizontalMarginSlider;
@@ -89,7 +90,9 @@ public class AlbumViewContainer extends AppPanel {
         this.scrollPane = new JScrollPane(albumView);
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
+        
+        
+/*
         brightnessSlider = new JSlider(BrightnessFilter.MIN_BRIGHTNESS, BrightnessFilter.MAX_BRIGHTNESS, BrightnessFilter.DEFAULT_BRIGHTNESS);
         brightnessSlider.setExtent(1);
         brightnessSlider.setMajorTickSpacing(100);
@@ -114,10 +117,15 @@ public class AlbumViewContainer extends AppPanel {
         brightnessControlPanel.add(brightnessSlider);
         brightnessControlPanel.add(btnBrightnessReset);
         brightnessControlPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        */
 
+        brightnessControl = new SlidingNumberControl(
+                new SlidingNumberControlModel(BrightnessFilter.MIN_BRIGHTNESS, BrightnessFilter.MAX_BRIGHTNESS, 1, BrightnessFilter.DEFAULT_BRIGHTNESS)
+        );
+        
         brightnessMenu = new JPopupMenu();
         brightnessMenu.setLayout(new BorderLayout());
-        brightnessMenu.add(brightnessControlPanel, BorderLayout.CENTER);
+        brightnessMenu.add(brightnessControl, BorderLayout.CENTER);
 
         pageSettingsVerticalMarginSlider = new JSlider(0, 200, 25);
         pageSettingsVerticalMarginSlider.setExtent(1);
@@ -191,7 +199,7 @@ public class AlbumViewContainer extends AppPanel {
             return;
         }
 
-        selected.getPageEntryModel().setBrightnessAdjustment(brightnessSlider.getValue());
+        selected.getPageEntryModel().setBrightnessAdjustment(brightnessControl.getValue());
     }
 
     private void initToolBar() {
@@ -316,6 +324,7 @@ public class AlbumViewContainer extends AppPanel {
     @Override
     public void pageEntryUpdated(PageEntryModel pem) {
         updateSelectorButtons(pem);
+        brightnessControl.setValue(pem.getBrightnessAdjustment());
     }
 
     private void updateSelectorButtons(PageEntryModel pageEntryModel) {

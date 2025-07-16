@@ -67,11 +67,11 @@ public class PageEntryModel {
         this.physicalSize = physicalSize;
     }
 
-    public float getBrightnessAdjustment() {
+    public int getBrightnessAdjustment() {
         return brightnessFilter.getBrightnessAdjustment();
     }
 
-    public void setBrightnessAdjustment(float brightnessAdjustment) {
+    public void setBrightnessAdjustment(int brightnessAdjustment) {
         brightnessFilter.setBrightnessAdjustment(brightnessAdjustment);
         fireImageUpdated();
     }

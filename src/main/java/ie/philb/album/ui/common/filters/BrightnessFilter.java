@@ -17,13 +17,13 @@ public class BrightnessFilter implements ImageFilter {
     public static final int MAX_BRIGHTNESS = 500;
     public static final int DEFAULT_BRIGHTNESS = 100;
 
-    private float brightnessAdjustment = DEFAULT_BRIGHTNESS;
+    private int brightnessAdjustment = DEFAULT_BRIGHTNESS;
 
-    public float getBrightnessAdjustment() {
+    public int getBrightnessAdjustment() {
         return brightnessAdjustment;
     }
 
-    public void setBrightnessAdjustment(float brightnessAdjustment) {
+    public void setBrightnessAdjustment(int brightnessAdjustment) {
 
         validateBrightness(brightnessAdjustment);
 
