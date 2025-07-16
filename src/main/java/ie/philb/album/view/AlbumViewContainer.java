@@ -7,6 +7,7 @@ package ie.philb.album.view;
 import ie.philb.album.AppContext;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
+import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.actionlistener.ImageCenterActionListener;
 import ie.philb.album.ui.actionlistener.ToggleCellTypeActionListener;
 import ie.philb.album.ui.actionlistener.ToggleGrayScaleActionListener;
@@ -275,7 +276,12 @@ public class AlbumViewContainer extends AppPanel {
     @Override
     public void pageSelected(PageView view) {
         slctGeometry.setEnabled(view != null);
-        slctGeometry.setSelectedGeometry(view.getPageModel().getGeometry());
+        if (view != null) {
+            PageModel model = view.getPageModel();
+            slctGeometry.setSelectedGeometry(model.getGeometry());
+            verticalMarginControl.setValue(model.getVerticalMargin());
+            horizontalMarginControl.setValue(model.getHorizontalMargin());
+        }
     }
 
     @Override
