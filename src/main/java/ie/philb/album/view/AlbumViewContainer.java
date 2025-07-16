@@ -28,15 +28,12 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JSlider;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.event.ChangeEvent;
 
 /**
  *
@@ -59,10 +56,8 @@ public class AlbumViewContainer extends AppPanel {
     private PageGeometrySelector slctGeometry;
     private SlidingNumberControl brightnessControl;
     private JPopupMenu brightnessMenu;
-    private AppPanel pageSettingsHorizontalMarginPanel;
-    private JSlider pageSettingsHorizontalMarginSlider;
-    private AppPanel pageSettingsVerticalMarginPanel;
-    private JSlider pageSettingsVerticalMarginSlider;
+    private SlidingNumberControl horizontalMarginControl;
+    private SlidingNumberControl verticalMarginControl;
     private JPopupMenu pageSettingsMenu;
 
     private final AlbumView albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
@@ -89,7 +84,6 @@ public class AlbumViewContainer extends AppPanel {
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-
         brightnessControl = new SlidingNumberControl(
                 new SlidingNumberControlModel(BrightnessFilter.MIN_BRIGHTNESS, BrightnessFilter.MAX_BRIGHTNESS, 1, BrightnessFilter.DEFAULT_BRIGHTNESS)
         );
@@ -105,44 +99,34 @@ public class AlbumViewContainer extends AppPanel {
         brightnessMenu.setLayout(new BorderLayout());
         brightnessMenu.add(brightnessControl, BorderLayout.CENTER);
 
-        pageSettingsVerticalMarginSlider = new JSlider(0, 200, 25);
-        pageSettingsVerticalMarginSlider.setExtent(1);
-        pageSettingsVerticalMarginSlider.setMajorTickSpacing(50);
-        pageSettingsVerticalMarginSlider.setPaintTicks(true);
-        pageSettingsVerticalMarginSlider.setPaintTrack(true);
-        pageSettingsVerticalMarginSlider.setPaintLabels(true);
+        verticalMarginControl = new SlidingNumberControl(
+                new SlidingNumberControlModel(0, 200, 1, 25)
+        );
 
-        pageSettingsVerticalMarginSlider.addChangeListener((ChangeEvent ce) -> {
-            adjustVerticalMargin();
+        verticalMarginControl.addListener(new SlidingNumberControlListener() {
+            @Override
+            public void valueUpdated(int value) {
+                adjustVerticalMargin();
+
+            }
         });
 
-        pageSettingsHorizontalMarginSlider = new JSlider(0, 200, 25);
-        pageSettingsHorizontalMarginSlider.setExtent(1);
-        pageSettingsHorizontalMarginSlider.setMajorTickSpacing(50);
-        pageSettingsHorizontalMarginSlider.setPaintTicks(true);
-        pageSettingsHorizontalMarginSlider.setPaintTrack(true);
-        pageSettingsHorizontalMarginSlider.setPaintLabels(true);
+        horizontalMarginControl = new SlidingNumberControl(
+                new SlidingNumberControlModel(0, 200, 1, 25)
+        );
 
-        pageSettingsHorizontalMarginSlider.addChangeListener((ChangeEvent ce) -> {
-            adjustHorizontalMargin();
+        horizontalMarginControl.addListener(new SlidingNumberControlListener() {
+            @Override
+            public void valueUpdated(int value) {
+                adjustHorizontalMargin();
+
+            }
         });
-
-        pageSettingsHorizontalMarginPanel = new AppPanel();
-        pageSettingsHorizontalMarginPanel.setLayout(new BoxLayout(pageSettingsHorizontalMarginPanel, BoxLayout.X_AXIS));
-        pageSettingsHorizontalMarginPanel.add(pageSettingsHorizontalMarginSlider);
-        //pageSettingsPanel.add(btnMarginReset);
-        pageSettingsHorizontalMarginPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-
-        pageSettingsVerticalMarginPanel = new AppPanel();
-        pageSettingsVerticalMarginPanel.setLayout(new BoxLayout(pageSettingsVerticalMarginPanel, BoxLayout.X_AXIS));
-        pageSettingsVerticalMarginPanel.add(pageSettingsVerticalMarginSlider);
-        //pageSettingsPanel.add(btnMarginReset);
-        pageSettingsVerticalMarginPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
         pageSettingsMenu = new JPopupMenu();
         pageSettingsMenu.setLayout(new BoxLayout(pageSettingsMenu, BoxLayout.Y_AXIS));
-        pageSettingsMenu.add(pageSettingsHorizontalMarginPanel);
-        pageSettingsMenu.add(pageSettingsVerticalMarginPanel);
+        pageSettingsMenu.add(horizontalMarginControl);
+        pageSettingsMenu.add(verticalMarginControl);
 
         initToolBar();
     }
@@ -154,7 +138,7 @@ public class AlbumViewContainer extends AppPanel {
             return;
         }
 
-        int newMargin = pageSettingsVerticalMarginSlider.getValue();
+        int newMargin = verticalMarginControl.getValue();
         selected.getPageModel().setVerticalMargin(newMargin);
     }
 
@@ -165,7 +149,7 @@ public class AlbumViewContainer extends AppPanel {
             return;
         }
 
-        int newMargin = pageSettingsHorizontalMarginSlider.getValue();
+        int newMargin = horizontalMarginControl.getValue();
         selected.getPageModel().setHorizontalMargin(newMargin);
     }
 
