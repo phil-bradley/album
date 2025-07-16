@@ -18,18 +18,10 @@ public class SlidingNumberControlModel {
     private final int maxValue;
     private final int stepValue;
     private final int defaultValue;
-    private int currentValue;
+    private int currentValue = -1;
 
     public SlidingNumberControlModel(int minValue, int maxValue) {
         this(minValue, maxValue, 1, minValue);
-    }
-
-    public void addListener(SlidingNumberControlListener l) {
-        this.listeners.add(l);
-    }
-
-    public void removeListeners(SlidingNumberControlListener l) {
-        this.listeners.remove(l);
     }
 
     public SlidingNumberControlModel(int minValue, int maxValue, int stepValue, int defaultValue) {
@@ -39,6 +31,15 @@ public class SlidingNumberControlModel {
         this.defaultValue = defaultValue;
 
         setValue(defaultValue);
+        fireValueUpdated();
+    }
+
+    public void addListener(SlidingNumberControlListener l) {
+        this.listeners.add(l);
+    }
+
+    public void removeListeners(SlidingNumberControlListener l) {
+        this.listeners.remove(l);
     }
 
     public final void setValue(int value) {

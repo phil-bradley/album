@@ -30,6 +30,7 @@ public class IntField extends JTextField {
 
     public IntField(int minValue, int maxValue) {
         ((AbstractDocument) getDocument()).setDocumentFilter(new IntFieldFilter(this, minValue, maxValue));
+        setValue(minValue);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class IntField extends JTextField {
         return Integer.parseInt(super.getText());
     }
 
-    public void setValue(int value) {
+    public final void setValue(int value) {
         super.setText(value + "");
     }
 

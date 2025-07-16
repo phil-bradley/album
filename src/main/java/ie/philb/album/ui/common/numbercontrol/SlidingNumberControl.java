@@ -11,7 +11,9 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -24,6 +26,8 @@ import javax.swing.event.ChangeEvent;
  * @author philb
  */
 public class SlidingNumberControl extends AppPanel implements SlidingNumberControlListener {
+
+    private final List<SlidingNumberControlListener> listeners = new ArrayList<>();
 
     private JSlider slider;
     private IntField field;
@@ -38,6 +42,14 @@ public class SlidingNumberControl extends AppPanel implements SlidingNumberContr
         this.model.addListener(this);
     }
 
+    public void addListener(SlidingNumberControlListener l) {
+        this.listeners.add(l);
+    }
+
+    public void removeListeners(SlidingNumberControlListener l) {
+        this.listeners.remove(l);
+    }
+
     public void setValue(int value) {
         model.setValue(value);
     }
@@ -48,7 +60,7 @@ public class SlidingNumberControl extends AppPanel implements SlidingNumberContr
 
     private void layoutControls() {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        add(Box.createRigidArea(new Dimension(4,4)));
+        add(Box.createRigidArea(new Dimension(4, 4)));
         add(field);
         add(slider);
         add(btnReset);
@@ -89,17 +101,35 @@ public class SlidingNumberControl extends AppPanel implements SlidingNumberContr
         btnReset.addActionListener((ActionEvent ae) -> {
             model.resetValue();
         });
+        
+        
+        field.setValue(model.getDefaultValue());
+        slider.setValue(model.getDefaultValue());
     }
 
     @Override
     public void valueUpdated(int newValue) {
 
+        boolean updated = false;
+
         if (field.getValue() != newValue) {
             field.setValue(newValue);
+            updated=true;
         }
 
         if (slider.getValue() != newValue) {
             slider.setValue(newValue);
+            updated=true;
+        }
+        
+        if (updated) {
+            fireValueUpdated();
+        }
+    }
+
+    private void fireValueUpdated() {
+        for (SlidingNumberControlListener listener : listeners) {
+            listener.valueUpdated(model.getValue());
         }
     }
 }

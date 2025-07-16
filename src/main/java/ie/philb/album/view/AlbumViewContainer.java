@@ -21,6 +21,7 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
 import ie.philb.album.ui.common.filters.BrightnessFilter;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControl;
+import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlListener;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -56,9 +57,6 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnPageSettings;
     private JButton btnBrightness;
     private PageGeometrySelector slctGeometry;
-//    private JSlider brightnessSlider;
-//    private JButton btnBrightnessReset;
-//    private AppPanel brightnessControlPanel;
     private SlidingNumberControl brightnessControl;
     private JPopupMenu brightnessMenu;
     private AppPanel pageSettingsHorizontalMarginPanel;
@@ -90,39 +88,19 @@ public class AlbumViewContainer extends AppPanel {
         this.scrollPane = new JScrollPane(albumView);
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        
-        
-/*
-        brightnessSlider = new JSlider(BrightnessFilter.MIN_BRIGHTNESS, BrightnessFilter.MAX_BRIGHTNESS, BrightnessFilter.DEFAULT_BRIGHTNESS);
-        brightnessSlider.setExtent(1);
-        brightnessSlider.setMajorTickSpacing(100);
-        brightnessSlider.setPaintTicks(true);
-        brightnessSlider.setPaintTrack(true);
-        brightnessSlider.setPaintLabels(true);
-        Hashtable t = new Hashtable<Integer, JLabel>();
-        t.put(BrightnessFilter.DEFAULT_BRIGHTNESS, new JLabel("Default"));
-        brightnessSlider.setLabelTable(t);
 
-        brightnessSlider.addChangeListener((ChangeEvent ce) -> {
-            adjustBrightness();
-        });
-
-        btnBrightnessReset = new JButton(Icons.Small.RESET);
-        btnBrightnessReset.addActionListener((ActionEvent ae) -> {
-            brightnessSlider.setValue(BrightnessFilter.DEFAULT_BRIGHTNESS);
-        });
-
-        brightnessControlPanel = new AppPanel();
-        brightnessControlPanel.setLayout(new BoxLayout(brightnessControlPanel, BoxLayout.X_AXIS));
-        brightnessControlPanel.add(brightnessSlider);
-        brightnessControlPanel.add(btnBrightnessReset);
-        brightnessControlPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-        */
 
         brightnessControl = new SlidingNumberControl(
                 new SlidingNumberControlModel(BrightnessFilter.MIN_BRIGHTNESS, BrightnessFilter.MAX_BRIGHTNESS, 1, BrightnessFilter.DEFAULT_BRIGHTNESS)
         );
-        
+
+        brightnessControl.addListener(new SlidingNumberControlListener() {
+            @Override
+            public void valueUpdated(int value) {
+                adjustBrightness();
+            }
+        });
+
         brightnessMenu = new JPopupMenu();
         brightnessMenu.setLayout(new BorderLayout());
         brightnessMenu.add(brightnessControl, BorderLayout.CENTER);
@@ -307,6 +285,7 @@ public class AlbumViewContainer extends AppPanel {
         setCellButtonsEnabled(view.getPageEntryModel().getImage() != null);
         btnCellType.setEnabled(true);
         updateSelectorButtons(view.getPageEntryModel());
+        brightnessControl.setValue(view.getPageEntryModel().getBrightnessAdjustment());
     }
 
     @Override
