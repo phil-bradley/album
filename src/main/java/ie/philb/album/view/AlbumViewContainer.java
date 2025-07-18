@@ -178,7 +178,7 @@ public class AlbumViewContainer extends AppPanel {
         btnNewPage.setToolTipText("New Page");
         toolBar.add(btnNewPage);
 
-        btnPageSettings = new JButton("P");
+        btnPageSettings = new JButton(Icons.Small.MARGIN);
         btnPageSettings.addActionListener((ActionEvent ae) -> {
             pageSettingsMenu.show(btnPageSettings, 0, btnPageSettings.getHeight());
 

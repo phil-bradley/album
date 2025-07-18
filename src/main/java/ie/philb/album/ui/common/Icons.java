@@ -46,7 +46,8 @@ public class Icons {
         public static final ImageIcon TEXT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/text.png"));
         public static final ImageIcon RESET = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/reset.png"));
         public static final ImageIcon BRIGHTNESS = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/brightness.png"));
-
+        public static final ImageIcon SETTINGS = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/settings.png"));
+        public static final ImageIcon MARGIN = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/margin.png"));
     }
 
 }
