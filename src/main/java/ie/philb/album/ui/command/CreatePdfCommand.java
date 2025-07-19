@@ -5,14 +5,12 @@
 package ie.philb.album.ui.command;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.exporter.AlbumExporter;
+import ie.philb.album.exporter.OpenPdfExporter;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.ui.ApplicationUi;
-import ie.philb.album.ui.action.callback.Callback;
-import ie.philb.album.ui.action.CreatePdfAction;
 import ie.philb.album.ui.common.Dialogs;
-import ie.philb.album.ui.common.PdfViewDialog;
 import java.io.File;
-import java.io.IOException;
 import javax.swing.JFileChooser;
 
 /**
@@ -54,6 +52,15 @@ public class CreatePdfCommand extends AbstractCommand {
             }
         }
 
+        AlbumExporter exporter = new OpenPdfExporter(albumModel);
+
+        try {
+            exporter.export(file);
+        } catch (Exception ex) {
+            Dialogs.showErrorMessage("Failed to load PDF", ex);
+        }
+
+        /*
         new CreatePdfAction(file, albumModel).execute(
                 new Callback<File>() {
 
@@ -79,5 +86,6 @@ public class CreatePdfCommand extends AbstractCommand {
             }
         }
         );
+         */
     }
 }
