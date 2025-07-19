@@ -58,7 +58,7 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
 
         List<ApplicationFont> fonts = Arrays.asList(ApplicationFont.values());
         fontSelector = new FontSelector(fonts);
-        fontSelector.setFont(fonts.get(0).getFont());
+        fontSelector.setFont(fonts.get(0).getFont(btnBold.isSelected(), btnItalic.isSelected()));
 
         fontSizeSelector = new JComboBox<>();
         fontSizeSelector.setModel(getFontSizeSelectorModel());
@@ -73,24 +73,42 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
         add(fontSelector);
 
         btnBold.addItemListener((ItemEvent e) -> {
-            model.setBold(e.getStateChange() == ItemEvent.SELECTED);
+            boolean isBold = (e.getStateChange() == ItemEvent.SELECTED);
+            if (model.isBold() != isBold) {
+                model.setBold(isBold);
+            }
         });
 
         btnItalic.addItemListener((ItemEvent e) -> {
-            model.setItalic(e.getStateChange() == ItemEvent.SELECTED);
+            boolean isItalic = (e.getStateChange() == ItemEvent.SELECTED);
+            if (model.isItalic() != isItalic) {
+                model.setItalic(isItalic);
+            }
         });
 
         btnUnderline.addItemListener((ItemEvent e) -> {
-            model.setUnderline(e.getStateChange() == ItemEvent.SELECTED);
+            boolean isUnderline = (e.getStateChange() == ItemEvent.SELECTED);
+            if (model.isUnderline() != isUnderline) {
+                model.setUnderline(isUnderline);
+            }
         });
 
         fontSizeSelector.addActionListener((ActionEvent ae) -> {
-            model.setFontSize((Integer) fontSizeSelector.getSelectedItem());
+            int selectedSize = (Integer) fontSizeSelector.getSelectedItem();
+            if (model.getFontSize() != selectedSize) {
+                model.setFontSize(selectedSize);
+            }
         });
 
         fontSelector.addActionListener((ActionEvent ae) -> {
-            model.setFontFamily(fontSelector.getSelectedFont().name());
-            fontSelector.setFont(fontSelector.getSelectedFont().getFont());
+            if (!fontSelector.getSelectedFont().name().equals(model.getFontFamily())) {
+                model.setFontFamily(fontSelector.getSelectedFont().name());
+                model.setBold(false);
+                model.setItalic(false);
+                updateFontControls();
+                fontSelector.setFont(fontSelector.getSelectedFont().getFont(false, false));
+            }
+
         });
 
         btnColor.addActionListener((ActionEvent ae) -> {
@@ -117,10 +135,26 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
 
         ApplicationFont applicationFont = ApplicationFont.byFamilyName(model.getFontFamily());
         fontSelector.setSelectedItem(applicationFont);
-        fontSelector.setFont(applicationFont.getFont());
+        fontSelector.setFont(applicationFont.getFont(model.isBold(), model.isItalic()));
 
-        this.fontSelector.setFont(ApplicationFont.byFamilyName(model.getFontFamily()).getFont());
+        this.fontSelector.setFont(ApplicationFont.byFamilyName(model.getFontFamily()).getFont(model.isBold(), model.isItalic()));
         this.btnColor.setForeground(model.getFontColor());
+
+        if (applicationFont.hasBold()) {
+            btnBold.setEnabled(true);
+            btnBold.setToolTipText("Bold");
+        } else {
+            btnBold.setEnabled(false);
+            btnBold.setToolTipText("Bold font not available");
+        }
+
+        if (applicationFont.hasItalic()) {
+            btnItalic.setEnabled(true);
+            btnItalic.setToolTipText("Italic");
+        } else {
+            btnItalic.setEnabled(false);
+            btnItalic.setToolTipText("Italic font not available");
+        }
     }
 
     private ComboBoxModel<Integer> getFontSizeSelectorModel() {

@@ -6,8 +6,6 @@ package ie.philb.album.ui.common.font;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.font.TextAttribute;
-import static java.awt.font.TextAttribute.UNDERLINE_ON;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,70 +16,108 @@ import java.util.Map;
  * @author philb
  */
 public enum ApplicationFont {
-
-    GreatVibes(),
-    Caveat(),
-    Italianno(),
-    Kapakana(),
     NotoSerif(),
     OpenSans(),
-    Parisienne(),
-    PinyonScript(),
-    Tangerine();
+    Orbitron(),
+    Genos(),
+    Caveat(),
+    EduQLD(),
+    DancingScript(),
+    CormorantUpright(),
+    Almendra(),
+    GrenzeGotisch(),;
 
     private static final float DEFAULT_SIZE = 16;
     private static final String FONT_PATH = "/ie/philb/album/fonts";
     private static final Map<String, ApplicationFont> map = new HashMap<>();
-    private static final Map<String, Font> fontCache = new HashMap<>();
+    private static final Map<String, Font> regularFonts = new HashMap<>();
+    private static final Map<String, Font> boldFonts = new HashMap<>();
+    private static final Map<String, Font> italicFonts = new HashMap<>();
+    private static final Map<String, Font> boldItalicFonts = new HashMap<>();
 
-    public Font getFont() {
-        return fontCache.get(name());
+    public Font getFont(boolean bold, boolean italic) {
+
+        if (!bold && !italic) {
+            return regularFonts.get(name());
+        }
+
+        if (bold && !italic) {
+            return boldFonts.get(name());
+        }
+
+        if (!bold && italic) {
+            return italicFonts.get(name());
+        }
+
+        return boldItalicFonts.get(name());
     }
 
-    public String getFontPath() {
-        return FONT_PATH + "/" + name() + ".ttf";
+    public boolean hasBold() {
+        return boldFonts.get(name()) != null;
     }
 
-    public File getFontFile() {
-        String path = getFontPath();
+    public boolean hasItalic() {
+        return italicFonts.get(name()) != null;
+    }
+
+    public boolean hasBoldItalic() {
+        return boldItalicFonts.get(name()) != null;
+    }
+
+    public String getFontPath(boolean bold, boolean italic) {
+        String suffix = "";
+
+        if (bold && italic) {
+            suffix = "-BoldItalic";
+        } else if (bold) {
+            suffix = "-Bold";
+        } else if (italic) {
+            suffix = "-Italic";
+        }
+
+        return FONT_PATH + "/" + name() + suffix + ".ttf";
+    }
+
+    public File getFontFile(boolean bold, boolean italic) {
+        String path = getFontPath(bold, italic);
         String a = getClass().getClassLoader().getResource(path).getFile();
         return new File(a);
     }
 
-    private static Font loadFont(ApplicationFont font) {
+    private static Font loadFont(ApplicationFont font, boolean bold, boolean italic) {
 
-        String fontPath = font.getFontPath();
+        String fontPath = font.getFontPath(bold, italic);
 
         try {
             return Font.createFont(Font.TRUETYPE_FONT, ApplicationFont.class.getResourceAsStream(fontPath)).deriveFont(DEFAULT_SIZE);
         } catch (FontFormatException | IOException ex) {
-            throw new RuntimeException("Failed to load font " + font + ", with path " + fontPath, ex);
+            //throw new RuntimeException("Failed to load font " + font + ", with path " + fontPath, ex);
+            return null;
         }
     }
 
-    public Font getDerivedFont(boolean bold, boolean italic, boolean underline, int size) {
-
-        int style = Font.PLAIN;
-
-        if (bold) {
-            style = style | Font.BOLD;
-        }
-
-        if (italic) {
-            style = style | Font.ITALIC;
-        }
-
-        Font derived = getFont().deriveFont(style).deriveFont((float) size);
-
-        if (underline) {
-            Map<TextAttribute, Integer> attrs = new HashMap<>();
-            attrs.put(TextAttribute.UNDERLINE, UNDERLINE_ON);
-            return derived.deriveFont(attrs);
-        } else {
-            return derived;
-        }
-    }
-
+//    public Font getDerivedFont(boolean bold, boolean italic, boolean underline, int size) {
+//
+//        int style = Font.PLAIN;
+//
+//        if (bold) {
+//            style = style | Font.BOLD;
+//        }
+//
+//        if (italic) {
+//            style = style | Font.ITALIC;
+//        }
+//
+//        Font derived = getFont().deriveFont(style).deriveFont((float) size);
+//
+//        if (underline) {
+//            Map<TextAttribute, Integer> attrs = new HashMap<>();
+//            attrs.put(TextAttribute.UNDERLINE, UNDERLINE_ON);
+//            return derived.deriveFont(attrs);
+//        } else {
+//            return derived;
+//        }
+//    }
     static {
         for (ApplicationFont fonts : values()) {
             map.put(fonts.name(), fonts);
@@ -90,7 +126,10 @@ public enum ApplicationFont {
 
     static {
         for (ApplicationFont applicationFont : values()) {
-            fontCache.put(applicationFont.name(), loadFont(applicationFont));
+            regularFonts.put(applicationFont.name(), loadFont(applicationFont, false, false));
+            boldFonts.put(applicationFont.name(), loadFont(applicationFont, true, false));
+            italicFonts.put(applicationFont.name(), loadFont(applicationFont, false, true));
+            boldItalicFonts.put(applicationFont.name(), loadFont(applicationFont, true, true));
         }
     }
 

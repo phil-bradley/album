@@ -168,7 +168,7 @@ public class CreatePdfAction extends AbstractAction<File> {
         File tempFontFile = File.createTempFile("tempfont", ".ttf");
         tempFontFile.deleteOnExit();
 
-        try (InputStream is = getClass().getResourceAsStream(applicationFont.getFontPath())) {
+        try (InputStream is = getClass().getResourceAsStream(applicationFont.getFontPath(false, false))) {
             Files.copy(is, tempFontFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
 

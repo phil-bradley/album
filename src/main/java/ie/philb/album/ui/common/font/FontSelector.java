@@ -52,7 +52,7 @@ public class FontSelector extends JComboBox<ApplicationFont> {
         public Component getListCellRendererComponent(JList<? extends ApplicationFont> list, ApplicationFont value, int index, boolean isSelected, boolean cellHasFocus) {
 
             setText(value.name());
-            setFont(value.getFont());
+            setFont(value.getFont(false, false));
 
             if (isSelected) {
                 setBackground(list.getSelectionBackground());

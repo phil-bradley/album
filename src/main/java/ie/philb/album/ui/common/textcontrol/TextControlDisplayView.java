@@ -68,9 +68,9 @@ class TextControlDisplayView extends JPanel implements TextControlChangeListener
         boolean bold = model.isBold();
         boolean italic = model.isItalic();
         boolean underline = model.isUnderline();
-        int scaledSize = (int) (fontScalingFactor * model.getFontSize());
+        float scaledSize = (float) (fontScalingFactor * model.getFontSize());
 
-        Font font = ApplicationFont.byFamilyName(model.getFontFamily()).getDerivedFont(bold, italic, underline, scaledSize);
+        Font font = ApplicationFont.byFamilyName(model.getFontFamily()).getFont(bold, italic).deriveFont(scaledSize);
         return font;
     }
 }
