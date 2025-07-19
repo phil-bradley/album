@@ -14,7 +14,6 @@ import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
-import javax.swing.ImageIcon;
 
 /**
  *
@@ -25,17 +24,16 @@ import javax.swing.ImageIcon;
  */
 public class ImagePanel extends AppPanel {
 
-    private ImageIcon imageIcon;
+    private BufferedImage sourceImage;
     private BufferedImage scaledImage;
 
-    public ImagePanel(ImageIcon icon) {
-        setIcon(icon);
+    public ImagePanel(BufferedImage image) {
+        setImage(image);
         addComponentListener(new ResizeListener());
     }
 
-    public final void setIcon(ImageIcon icon) {
-
-        this.imageIcon = icon;
+    public final void setImage(BufferedImage image) {
+        this.sourceImage = image;
         this.scaledImage = createScaledImage();
 
         revalidate();
@@ -44,7 +42,7 @@ public class ImagePanel extends AppPanel {
 
     private BufferedImage createScaledImage() {
 
-        if (imageIcon == null) {
+        if (sourceImage == null) {
             return null;
         }
 
@@ -59,21 +57,17 @@ public class ImagePanel extends AppPanel {
             scaleFactor = 1;
         }
 
-        int scaledWidth = (int) (imageIcon.getIconWidth() * scaleFactor);
-        int scaledHeight = (int) (imageIcon.getIconHeight() * scaleFactor);
+        int scaledWidth = (int) (sourceImage.getWidth() * scaleFactor);
+        int scaledHeight = (int) (sourceImage.getHeight() * scaleFactor);
 
         BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = scaled.createGraphics();
         g.setColor(Color.white);
         g.fillRect(0, 0, scaledWidth, scaledHeight);
-        g.drawImage(imageIcon.getImage(), 0, 0, scaledWidth, scaledHeight, null);
+        g.drawImage(sourceImage, 0, 0, scaledWidth, scaledHeight, null);
         g.dispose();
 
         return scaled;
-    }
-
-    public ImageIcon getIcon() {
-        return imageIcon;
     }
 
     private int getAvailableWidth() {
@@ -90,12 +84,12 @@ public class ImagePanel extends AppPanel {
     // without any cropping
     private double getBestFitScaleFactor() {
 
-        if (imageIcon == null) {
+        if (sourceImage == null) {
             return 1;
         }
 
-        int iconWidth = imageIcon.getIconWidth();
-        int iconHeight = imageIcon.getIconHeight();
+        int width = sourceImage.getWidth();
+        int height = sourceImage.getHeight();
 
         double availableWidth = getAvailableWidth();
         double availableHeight = getAvailableHeight();
@@ -105,7 +99,7 @@ public class ImagePanel extends AppPanel {
             return 0;
         }
 
-        double bestFitZoom = Math.min(availableWidth / iconWidth, availableHeight / iconHeight);
+        double bestFitZoom = Math.min(availableWidth / width, availableHeight / height);
         return bestFitZoom;
 
     }

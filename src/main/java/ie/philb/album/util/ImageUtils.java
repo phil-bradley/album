@@ -196,21 +196,24 @@ public class ImageUtils {
         return transparentToOpaque(transparent, Color.WHITE);
     }
 
-    public static BufferedImage transparentToOpaque(BufferedImage transparent, Color backgroundColor) {
+    public static BufferedImage transparentToOpaque(BufferedImage source, Color backgroundColor) {
 
-        BufferedImage white = new BufferedImage(
-                transparent.getWidth(),
-                transparent.getHeight(),
+        int width = source.getWidth();
+        int height = source.getHeight();
+
+        BufferedImage opaque = new BufferedImage(
+                width,
+                height,
                 BufferedImage.TYPE_INT_RGB // No alpha channel, ensures opaque white background
         );
 
-        Graphics2D g = white.createGraphics();
+        Graphics2D g = opaque.createGraphics();
         g.setColor(backgroundColor);
-        g.fillRect(0, 0, white.getWidth(), white.getHeight());
-        g.drawImage(transparent, 0, 0, null);
+        g.fillRect(0, 0, width, height);
+        g.drawImage(source, 0, 0, width, height, null);
         g.dispose();
 
-        return white;
+        return opaque;
     }
 
 }

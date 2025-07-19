@@ -190,7 +190,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
         if (viewImage != null) {
             Point viewImageOffset = getViewImageOffset();
-            g.drawImage(viewImage, viewImageOffset.x, viewImageOffset.y, null);
+            g.drawImage(ImageUtils.transparentToWhiteBackground(viewImage), viewImageOffset.x, viewImageOffset.y, null);
         }
     }
 
