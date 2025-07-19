@@ -14,7 +14,7 @@ import ie.philb.album.util.TestUtils;
 import static ie.philb.album.util.TestUtils.assertClose;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
+import java.io.IOException;
 import javax.swing.border.LineBorder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -133,7 +133,7 @@ public class PageViewTest {
     }
 
     @Test
-    void givenPageView_whenEntrySelected_expectImageLibrarySelectionApplied() {
+    void givenPageView_whenEntrySelected_expectImageLibrarySelectionApplied() throws IOException {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
         PageView pageView = new PageView(pageModel);

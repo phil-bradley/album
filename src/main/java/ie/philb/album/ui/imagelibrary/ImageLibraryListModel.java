@@ -6,6 +6,7 @@ package ie.philb.album.ui.imagelibrary;
 
 import ie.philb.album.util.FileUtils;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ListModel;
@@ -25,7 +26,7 @@ public class ImageLibraryListModel implements ListModel<ImageLibraryEntry> {
     private final List<ListDataListener> listeners = new ArrayList<>();
     private final File folder;
 
-    public ImageLibraryListModel(File folder) {
+    public ImageLibraryListModel(File folder) throws IOException {
 
         if (folder == null) {
             logger.info("Base folder cannot be null");
@@ -40,11 +41,11 @@ public class ImageLibraryListModel implements ListModel<ImageLibraryEntry> {
         this.folder = folder;
 
         File[] children = folder.listFiles();
-        
+
         if (children == null) {
             return;
         }
-        
+
         for (File file : children) {
             if (file.isDirectory() && !FileUtils.isHidden(file)) {
                 entries.add(new ImageLibraryEntry(file));
