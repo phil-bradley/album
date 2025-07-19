@@ -17,6 +17,8 @@ import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,16 @@ public class PageView extends AppPanel implements PageModelListener {
         setModel(model);
         background(Resources.COLOUR_ALBUM_PAGE_BACKGROUND);
         setLayout(null);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                for (PageEntryView pev : pageEntryViews) {
+                    pev.setPhysicalToViewScalingFactor(getPhysicalToViewScalingFactor());
+                }
+                revalidate();
+            }
+        });
     }
 
     public PageModel getPageModel() {
@@ -229,10 +241,28 @@ public class PageView extends AppPanel implements PageModelListener {
 
     @Override
     public void pageUpdated(PageModel model) {
-        
+
         positionEntries();
-        
+
         revalidate();
         repaint();
+    }
+
+    private double getPhysicalToViewScalingFactor() {
+
+        double viewWidth = getSize().width;
+
+        if (viewWidth == 0) {
+            return 0;
+        }
+
+        double physicalWidth = model.getPageSize().width();
+
+        // No scaling set, assume 1:1
+        if (physicalWidth == 0) {
+            return 1;
+        }
+
+        return viewWidth / physicalWidth;
     }
 }

@@ -392,4 +392,8 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     public String toString() {
         return "Page " + pageView.getPageModel().getPageId() + ", Cell: " + pageEntryModel.getCell() + ", isPreview: " + isPreviewMode;
     }
+
+    public void setPhysicalToViewScalingFactor(double physicalToViewScalingFactor) {
+        textControl.setPhysicalToViewScalingFactor(physicalToViewScalingFactor);
+    }
 }
