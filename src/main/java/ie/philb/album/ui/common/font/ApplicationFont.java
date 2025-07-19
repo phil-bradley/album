@@ -23,6 +23,7 @@ public enum ApplicationFont {
     Caveat(),
     EduQLD(),
     DancingScript(),
+    Tangerine(),
     CormorantUpright(),
     Almendra(),
     GrenzeGotisch(),;
@@ -91,7 +92,6 @@ public enum ApplicationFont {
         try {
             return Font.createFont(Font.TRUETYPE_FONT, ApplicationFont.class.getResourceAsStream(fontPath)).deriveFont(DEFAULT_SIZE);
         } catch (FontFormatException | IOException ex) {
-            //throw new RuntimeException("Failed to load font " + font + ", with path " + fontPath, ex);
             return null;
         }
     }
