@@ -209,5 +209,4 @@ public class TextControlModel {
         }
         return Objects.equals(this.fontColor, other.fontColor);
     }
-
 }

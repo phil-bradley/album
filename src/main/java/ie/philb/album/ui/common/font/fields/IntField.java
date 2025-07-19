@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 import javax.swing.Timer;
+import javax.swing.border.Border;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -23,7 +24,7 @@ public class IntField extends JTextField {
     public IntField() {
         this(Integer.MAX_VALUE);
     }
-    
+
     public IntField(int maxValue) {
         this(0, maxValue);
     }
@@ -107,12 +108,13 @@ public class IntField extends JTextField {
 
         private void indicateValidationFailure() {
 
-            Toolkit.getDefaultToolkit().beep();
+            Border originalBorder = textField.getBorder();
 
+            Toolkit.getDefaultToolkit().beep();
             textField.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 
             // Revert to original after 200ms
-            Timer timer = new Timer(200, e -> textField.setBorder(null));
+            Timer timer = new Timer(200, e -> textField.setBorder(originalBorder));
             timer.setRepeats(false);
             timer.start();
         }

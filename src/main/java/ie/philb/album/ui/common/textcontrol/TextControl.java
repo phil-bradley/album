@@ -53,7 +53,6 @@ public class TextControl extends JPanel implements TextControlChangeListener {
                 Dimension size = layeredPane.getSize();
                 viewEditPanel.setBounds(0, 0, size.width, size.height);
                 toolBar.setBounds(0, 0, size.width, 30);
-                viewEditPanel.setFontScalingFactor(getPhysicalToViewScalingFactor());
                 revalidate();
             }
         });
@@ -93,24 +92,6 @@ public class TextControl extends JPanel implements TextControlChangeListener {
         this.physicalSize = physicalSize;
     }
 
-    private double getPhysicalToViewScalingFactor() {
-
-        double viewWidth = getSize().width;
-
-        if (viewWidth == 0) {
-            return 0;
-        }
-
-        double physicalWidth = physicalSize.width;
-
-        // No scaling set, assume 1:1
-        if (physicalWidth == 0) {
-            return 1;
-        }
-
-        return viewWidth / physicalWidth;
-    }
-
     @Override
     public void textUpdated(TextControlModel model) {
         setEditEnabled(false);
@@ -133,6 +114,10 @@ public class TextControl extends JPanel implements TextControlChangeListener {
     @Override
     public void textEditCancelled(TextControlModel model) {
         setEditEnabled(false);
+    }
+
+    public void setPhysicalToViewScalingFactor(double physicalToViewScalingFactor) {
+        viewEditPanel.setFontScalingFactor(physicalToViewScalingFactor);
     }
 
     public static void main(String[] args) {
