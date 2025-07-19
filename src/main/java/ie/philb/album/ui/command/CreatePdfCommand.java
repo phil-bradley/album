@@ -10,6 +10,7 @@ import ie.philb.album.exporter.OpenPdfExporter;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.ui.ApplicationUi;
 import ie.philb.album.ui.common.Dialogs;
+import ie.philb.album.ui.common.PdfViewDialog;
 import java.io.File;
 import javax.swing.JFileChooser;
 
@@ -56,8 +57,13 @@ public class CreatePdfCommand extends AbstractCommand {
 
         try {
             exporter.export(file);
+
+            PdfViewDialog dlg = new PdfViewDialog();
+            dlg.setFile(file);
+            dlg.setVisible(true);
+
         } catch (Exception ex) {
-            Dialogs.showErrorMessage("Failed to load PDF", ex);
+            Dialogs.showErrorMessage("Failed to load PDF: " + ex.getMessage(), ex);
         }
 
         /*

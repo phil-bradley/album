@@ -39,12 +39,15 @@ public class NewAlbumCommand extends AbstractCommand {
 
         albumModel = new AlbumModel(PageSize.A4_Landscape, defaultMargin, defaultGutter);
 
+        // The title page - single text cell
         PageGeometry geometry = PageGeometry.square(PageEntryType.Text, 1);
         albumModel.addPage(geometry, 0, 0);
 
         PageModel titlePage = albumModel.getPages().get(0);
         PageEntryModel titleEntry = titlePage.getPageEntries().get(0);
         titleEntry.getTextControlModel().setText("The Title!");
+
+        // First album page, 2x2 cells by default
         albumModel.addPage(PageGeometry.square(2));
         albumModel.setLastSaveDate(LocalDateTime.now());
 

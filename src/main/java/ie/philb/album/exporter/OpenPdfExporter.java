@@ -29,6 +29,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,11 +52,16 @@ public class OpenPdfExporter implements AlbumExporter {
     @Override
     public void export(File file) throws Exception {
 
-        try (Document doc = new Document(getPageSize()); PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(file))) {
+        try (Document doc = new Document(getPageSize())) {
 
+            PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(file));
             doc.open();
 
-            for (PageModel pageModel : album.getPages()) {
+            // Insert a blank page after title page
+            List<PageModel> pages = new ArrayList<>(album.getPages());
+            pages.add(1, PageModel.blank(album.getPageSize()));
+
+            for (PageModel pageModel : pages) {
 
                 PageGeometryMapper geometryMapper = new PageGeometryMapper(pageModel, pageModel.getPageSize().size());
                 geometryMapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);
@@ -63,10 +70,12 @@ public class OpenPdfExporter implements AlbumExporter {
                     writePageEntry(doc, writer, geometryMapper, pageEntryModel);
                 }
 
+                writeBlank(doc, writer); // Ensure that a blank page does not get optimised out by iText
                 doc.newPage();
             }
 
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new Exception("Error creating PDF", ex);
         }
     }
@@ -179,5 +188,13 @@ public class OpenPdfExporter implements AlbumExporter {
 
         BaseFont font = BaseFont.createFont(tempFontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         return font;
+    }
+
+    private void writeBlank(Document doc, PdfWriter writer) {
+        PdfContentByte cb = writer.getDirectContent();
+        Rectangle pageSize = doc.getPageSize();
+        cb.rectangle(pageSize.getLeft(), pageSize.getBottom(), 0.01f, 0.01f); // 0.01x0.01pt rectangle
+        cb.setColorFill(Color.WHITE);
+        cb.fill();
     }
 }

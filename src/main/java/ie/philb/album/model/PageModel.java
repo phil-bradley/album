@@ -34,6 +34,10 @@ public class PageModel {
         setGeometry(geometry);
     }
 
+    private PageModel(PageSize pageSize) {
+        this.pageSize = pageSize;
+    }
+
     public void addListener(PageModelListener l) {
         this.listeners.add(l);
     }
@@ -151,7 +155,7 @@ public class PageModel {
         setVerticalMargin(margin);
         setHorizontalMargin(margin);
     }
-    
+
     public PageModel withMargin(int margin) {
         setMargin(margin);
         return this;
@@ -179,7 +183,7 @@ public class PageModel {
     }
 
     public Point getCellPositionPoints(PageCell cell) {
-        int gutterOffset = MathUtils.isEven(pageId) ? gutter : 0; // Title page has pageId =1, followed by virtual blank 
+        int gutterOffset = MathUtils.isEven(pageId) ? gutter : 0; // Title page has pageId =1, followed by virtual blank
         int posX = (getUnitCellWidthPoints() * cell.location().x) + (horizontalMargin * (cell.location().x + 1)) + gutterOffset;
         int posY = (getUnitCellHeightPoints() * cell.location().y) + (verticalMargin * (cell.location().y + 1));
 
@@ -213,5 +217,9 @@ public class PageModel {
         }
 
         return lastChangeDate;
+    }
+
+    public static PageModel blank(PageSize pageSize) {
+        return new PageModel(pageSize);
     }
 }
