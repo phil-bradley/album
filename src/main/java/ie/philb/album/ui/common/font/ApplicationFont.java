@@ -96,28 +96,6 @@ public enum ApplicationFont {
         }
     }
 
-//    public Font getDerivedFont(boolean bold, boolean italic, boolean underline, int size) {
-//
-//        int style = Font.PLAIN;
-//
-//        if (bold) {
-//            style = style | Font.BOLD;
-//        }
-//
-//        if (italic) {
-//            style = style | Font.ITALIC;
-//        }
-//
-//        Font derived = getFont().deriveFont(style).deriveFont((float) size);
-//
-//        if (underline) {
-//            Map<TextAttribute, Integer> attrs = new HashMap<>();
-//            attrs.put(TextAttribute.UNDERLINE, UNDERLINE_ON);
-//            return derived.deriveFont(attrs);
-//        } else {
-//            return derived;
-//        }
-//    }
     static {
         for (ApplicationFont fonts : values()) {
             map.put(fonts.name(), fonts);

@@ -5,7 +5,9 @@
 package ie.philb.album.ui.common.textcontrol;
 
 import ie.philb.album.ui.common.font.ApplicationFont;
+import ie.philb.album.util.FontUtils;
 import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -143,6 +145,18 @@ public class TextControlModel {
             this.fontColor = fontColor;
             fireFormatUpdated();
         }
+    }
+
+    public Font getDisplayFont(double fontScalingFactor) {
+
+        float scaledSize = (float) (fontScalingFactor * getFontSize());
+        Font font = ApplicationFont.byFamilyName(getFontFamily()).getFont(isBold, isItalic).deriveFont(scaledSize);
+
+        if (isUnderline) {
+            return FontUtils.underline(font);
+        }
+
+        return font;
     }
 
     @Override

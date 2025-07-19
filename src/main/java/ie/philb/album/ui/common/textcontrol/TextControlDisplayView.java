@@ -5,8 +5,6 @@
 package ie.philb.album.ui.common.textcontrol;
 
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.common.font.ApplicationFont;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -55,22 +53,12 @@ class TextControlDisplayView extends JPanel implements TextControlChangeListener
 
     @Override
     public final void formatUpdated(TextControlModel model) {
-        this.label.setFont(getDisplayFont());
+        this.label.setFont(model.getDisplayFont(fontScalingFactor));
         this.label.setForeground(model.getFontColor());
     }
 
     void setFontScalingFactor(double fontScalingFactor) {
         this.fontScalingFactor = fontScalingFactor;
-        this.label.setFont(getDisplayFont());
-    }
-
-    private Font getDisplayFont() {
-        boolean bold = model.isBold();
-        boolean italic = model.isItalic();
-        boolean underline = model.isUnderline();
-        float scaledSize = (float) (fontScalingFactor * model.getFontSize());
-
-        Font font = ApplicationFont.byFamilyName(model.getFontFamily()).getFont(bold, italic).deriveFont(scaledSize);
-        return font;
+        this.label.setFont(model.getDisplayFont(fontScalingFactor));
     }
 }

@@ -135,9 +135,8 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
 
         ApplicationFont applicationFont = ApplicationFont.byFamilyName(model.getFontFamily());
         fontSelector.setSelectedItem(applicationFont);
-        fontSelector.setFont(applicationFont.getFont(model.isBold(), model.isItalic()));
+        fontSelector.setFont(applicationFont.getFont(false, false));
 
-        this.fontSelector.setFont(ApplicationFont.byFamilyName(model.getFontFamily()).getFont(model.isBold(), model.isItalic()));
         this.btnColor.setForeground(model.getFontColor());
 
         if (applicationFont.hasBold()) {
@@ -154,6 +153,16 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
         } else {
             btnItalic.setEnabled(false);
             btnItalic.setToolTipText("Italic font not available");
+        }
+
+        if (model.isBold() && !applicationFont.hasBoldItalic()) {
+            btnItalic.setEnabled(false);
+            btnItalic.setToolTipText("Bold-Italic font not available");
+        }
+
+        if (model.isItalic() && !applicationFont.hasBoldItalic()) {
+            btnBold.setEnabled(false);
+            btnBold.setToolTipText("Bold-Italic font not available");
         }
     }
 
