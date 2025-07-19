@@ -44,8 +44,7 @@ public class ImageUtils {
             throw new FileNotFoundException(file.getAbsolutePath());
         }
 
-        ImageIcon icon = new ImageIcon(file.getCanonicalPath());
-        return getBufferedImage(icon);
+        return ImageIO.read(file);
     }
 
     public static BufferedImage getBufferedImage(ImageIcon icon) {
@@ -208,6 +207,7 @@ public class ImageUtils {
         Graphics2D g = white.createGraphics();
         g.setColor(backgroundColor);
         g.fillRect(0, 0, white.getWidth(), white.getHeight());
+        g.drawImage(transparent, 0, 0, null);
         g.dispose();
 
         return white;

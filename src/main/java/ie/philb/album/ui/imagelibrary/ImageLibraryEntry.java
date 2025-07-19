@@ -8,7 +8,10 @@ import ie.philb.album.metadata.ImageMetaData;
 import ie.philb.album.metadata.ImageMetaDataReader;
 import ie.philb.album.ui.common.Icons;
 import ie.philb.album.util.FileUtils;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 /**
@@ -20,25 +23,21 @@ public class ImageLibraryEntry {
     private static final int MAX_NAME_LEN = 20;
 
     private final File file;
-    private ImageIcon icon;
+    private BufferedImage image;
     private final String title;
     private ImageMetaData imageMetadata = null;
 
-    public ImageLibraryEntry(File file) {
+    public ImageLibraryEntry(File file) throws IOException {
         this(file, file.getName());
     }
 
-    public ImageLibraryEntry(File file, String title) {
+    public ImageLibraryEntry(File file, String title) throws IOException {
         this.file = file;
         this.title = title.trim();
 
-        if (file.isDirectory()) {
-            this.icon = Icons.Regular.FOLDER;
-        } else {
-            if (FileUtils.isImage(file)) {
-                this.icon = new ImageIcon(file.getAbsolutePath());
-                updateMetadata();
-            }
+        if (FileUtils.isImage(file)) {
+            this.image = ImageIO.read(file);
+            updateMetadata();
         }
     }
 
@@ -65,7 +64,12 @@ public class ImageLibraryEntry {
     }
 
     public ImageIcon getIcon() {
-        return icon;
+
+        if (isDirectory()) {
+            return Icons.Regular.FOLDER;
+        }
+
+        return new ImageIcon(image);
     }
 
     public File getFile() {

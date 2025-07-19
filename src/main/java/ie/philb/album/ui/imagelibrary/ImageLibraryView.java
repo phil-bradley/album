@@ -6,6 +6,7 @@ package ie.philb.album.ui.imagelibrary;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.ui.common.AppPanel;
+import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.Icons;
 import ie.philb.album.ui.common.foldernavigator.FolderNavigationListener;
@@ -16,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -92,9 +94,13 @@ public class ImageLibraryView extends AppPanel {
     }
 
     private void setBrowseLocation(File file) {
-        ImageLibraryListModel model = new ImageLibraryListModel(file);
-        list.setModel(model);
-        folderNavigationPanel.setPath(file);
+        try {
+            ImageLibraryListModel model = new ImageLibraryListModel(file);
+            list.setModel(model);
+            folderNavigationPanel.setPath(file);
+        } catch (IOException ex) {
+            Dialogs.showErrorMessage("Failed to open folder " + file.getAbsolutePath(), ex);
+        }
     }
 
     private void initToolBar() {
