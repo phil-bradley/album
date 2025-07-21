@@ -50,4 +50,6 @@ public class Icons {
         public static final ImageIcon MARGIN = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/margin.png"));
     }
 
+    public static final ImageIcon LOADING = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/loading.gif"));
+
 }

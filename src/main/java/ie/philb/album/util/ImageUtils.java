@@ -225,6 +225,10 @@ public class ImageUtils {
         if (size.width == 0 || size.height == 0) {
             return null;
         }
+        
+        if (image.getWidth() == size.width && image.getHeight() == size.height) {
+            return image;
+        }
 
         double scaleFactor = getBestFitScaleFactor(image, size);
 

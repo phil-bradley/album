@@ -28,16 +28,16 @@ public class PdfViewPanel extends AppPanel {
     private PDFRenderer renderer;
     private int numberPages = 0;
     private float scale = 1;
-    private final ImagePanel imagePanel;
+    //private final ImagePanel imagePanel;
 
     public PdfViewPanel() {
         setBackground(Color.darkGray);
         setOpaque(true);
 
-        this.imagePanel = new ImagePanel(null);
+        //this.imagePanel = new ImagePanel(null);
 
         GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).weight(1).anchorNorth().fillBoth().inset(0);
-        add(imagePanel, gbc);
+       // add(imagePanel, gbc);
     }
 
     public void showPdf(File file) throws IOException {
@@ -57,7 +57,7 @@ public class PdfViewPanel extends AppPanel {
         BufferedImage pageImage;
         try {
             pageImage = renderer.renderImage(pageNumber);
-            imagePanel.setImage(pageImage);
+            //imagePanel.setImage(pageImage);
             repaint();
         } catch (IOException ex) {
 
