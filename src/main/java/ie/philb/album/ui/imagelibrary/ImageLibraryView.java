@@ -11,8 +11,8 @@ import ie.philb.album.metadata.ImageMetaData;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.common.Icons;
-import ie.philb.album.ui.common.Resources;
+import ie.philb.album.ui.resources.Icons;
+import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.ui.common.foldernavigator.FolderNavigationListener;
 import ie.philb.album.ui.common.foldernavigator.FolderNavigationPanel;
 import ie.philb.album.ui.dnd.ImageLibraryTransferHandler;
@@ -196,7 +196,7 @@ public class ImageLibraryView extends AppPanel {
             thumbnailView.setToolTipText(getToolTip(value));
 
             if (isSelected) {
-                setBackground(Resources.COLOR_SELECTED);
+                setBackground(Colors.COLOR_SELECTED);
                 lblName.setForeground(Color.white);
             } else {
                 setBackground(Color.WHITE);

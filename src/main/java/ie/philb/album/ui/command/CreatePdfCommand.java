@@ -10,7 +10,7 @@ import ie.philb.album.exporter.OpenPdfExporter;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.ui.ApplicationUi;
 import ie.philb.album.ui.common.Dialogs;
-import ie.philb.album.ui.common.PdfViewDialog;
+import ie.philb.album.ui.pdf.PdfViewDialog;
 import java.io.File;
 import javax.swing.JFileChooser;
 

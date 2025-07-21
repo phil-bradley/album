@@ -5,7 +5,7 @@
 package ie.philb.album.ui.common.numbercontrol;
 
 import ie.philb.album.ui.common.AppPanel;
-import ie.philb.album.ui.common.Icons;
+import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.ui.common.font.fields.IntField;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

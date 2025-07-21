@@ -12,7 +12,7 @@ import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageModelListener;
 import ie.philb.album.ui.common.AppPanel;
-import ie.philb.album.ui.common.Resources;
+import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -44,7 +44,7 @@ public class PageView extends AppPanel implements PageModelListener {
 
     public PageView(PageModel model) {
         setModel(model);
-        background(Resources.COLOUR_ALBUM_PAGE_BACKGROUND);
+        background(Colors.COLOUR_ALBUM_PAGE_BACKGROUND);
         setLayout(null);
 
         addComponentListener(new ComponentAdapter() {
@@ -226,7 +226,7 @@ public class PageView extends AppPanel implements PageModelListener {
     }
 
     private Color getBorderColor() {
-        return isSelected ? Resources.COLOR_PHOTO_BORDER_SELECTED : Resources.COLOR_PHOTO_BORDER;
+        return isSelected ? Colors.COLOR_PHOTO_BORDER_SELECTED : Colors.COLOR_PHOTO_BORDER;
     }
 
     @Override

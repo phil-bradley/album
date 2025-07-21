@@ -4,7 +4,7 @@
  */
 package ie.philb.album.io;
 
-import ie.philb.album.ui.common.Icons;
+import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.util.ImageUtils;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;

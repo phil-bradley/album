@@ -8,7 +8,7 @@ import ie.philb.album.AppContext;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
-import static ie.philb.album.ui.common.Resources.COLOUR_ALBUM_BACKGROUND;
+import static ie.philb.album.ui.resources.Colors.COLOUR_ALBUM_BACKGROUND;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
