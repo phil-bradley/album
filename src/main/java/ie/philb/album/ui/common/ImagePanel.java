@@ -8,9 +8,9 @@
  */
 package ie.philb.album.ui.common;
 
-import java.awt.Color;
+import ie.philb.album.util.ImageUtils;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
@@ -34,40 +34,10 @@ public class ImagePanel extends AppPanel {
 
     public final void setImage(BufferedImage image) {
         this.sourceImage = image;
-        this.scaledImage = createScaledImage();
+        this.scaledImage = ImageUtils.scaleImageToFit(sourceImage, getSize());
 
         revalidate();
         repaint();
-    }
-
-    private BufferedImage createScaledImage() {
-
-        if (sourceImage == null) {
-            return null;
-        }
-
-        if (getWidth() == 0 || getHeight() == 0) {
-            return null;
-        }
-
-        double scaleFactor = getBestFitScaleFactor();
-
-        // Don't scale up
-        if (scaleFactor > 1) {
-            scaleFactor = 1;
-        }
-
-        int scaledWidth = (int) (sourceImage.getWidth() * scaleFactor);
-        int scaledHeight = (int) (sourceImage.getHeight() * scaleFactor);
-
-        BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = scaled.createGraphics();
-        g.setColor(Color.white);
-        g.fillRect(0, 0, scaledWidth, scaledHeight);
-        g.drawImage(sourceImage, 0, 0, scaledWidth, scaledHeight, null);
-        g.dispose();
-
-        return scaled;
     }
 
     private int getAvailableWidth() {
@@ -88,20 +58,7 @@ public class ImagePanel extends AppPanel {
             return 1;
         }
 
-        int width = sourceImage.getWidth();
-        int height = sourceImage.getHeight();
-
-        double availableWidth = getAvailableWidth();
-        double availableHeight = getAvailableHeight();
-
-        // Component not yet sized, cannot compute zoom factor
-        if (availableWidth == 0 || availableHeight == 0) {
-            return 0;
-        }
-
-        double bestFitZoom = Math.min(availableWidth / width, availableHeight / height);
-        return bestFitZoom;
-
+        return ImageUtils.getBestFitScaleFactor(sourceImage, new Dimension(getAvailableWidth(), getAvailableHeight()));
     }
 
     @Override
@@ -110,7 +67,7 @@ public class ImagePanel extends AppPanel {
         super.paintComponent(g);
 
         if (scaledImage == null) {
-            this.scaledImage = createScaledImage();
+            this.scaledImage = ImageUtils.scaleImageToFit(sourceImage, getSize());
         }
 
         if (scaledImage == null) {
@@ -128,7 +85,7 @@ public class ImagePanel extends AppPanel {
 
         @Override
         public void componentResized(ComponentEvent e) {
-            scaledImage = createScaledImage();
+            scaledImage = ImageUtils.scaleImageToFit(sourceImage, getSize());
             revalidate();
         }
     }

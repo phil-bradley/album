@@ -4,15 +4,14 @@
  */
 package ie.philb.album.io;
 
+import ie.philb.album.util.ImageUtils;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.imageio.ImageIO;
 
@@ -20,15 +19,17 @@ import javax.imageio.ImageIO;
  *
  * @author philb
  */
-public class ImageProvider {
+public class ThumbnailProvider {
 
     private final Map<String, BufferedImage> imageMap = new ConcurrentHashMap<>();
-    private final BlockingQueue<String> requestQueue = new LinkedBlockingQueue<>();
-    private final Set<String> pendingKeys = ConcurrentHashMap.newKeySet();
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final BlockingQueue<String> pendingLoadQueue = new LinkedBlockingQueue<>();
+    private final Dimension thumbnailSize;
 
-    public ImageProvider() {
-        executor.submit(this::processQueue);
+    public ThumbnailProvider(Dimension size) {
+        this.thumbnailSize = size;
+        Thread worker = new Thread(this::processQueue);
+        worker.setDaemon(true); // Will not block JVM shutdown
+        worker.start();
     }
 
     public BufferedImage getImage(String key) {
@@ -37,9 +38,10 @@ public class ImageProvider {
             return imageMap.get(key);
         }
 
-        // If not already pending, queue it for background loading
-        if (pendingKeys.add(key)) {
-            requestQueue.offer(key);
+        // This check is not thread safe so we may occasionally process the same
+        // value more than once. The processQueue method checks for this
+        if (!pendingLoadQueue.add(key)) {
+            pendingLoadQueue.offer(key);
         }
 
         // Return null, not available yet
@@ -50,13 +52,20 @@ public class ImageProvider {
 
         while (true) {
             try {
-                String key = requestQueue.take(); // blocks if empty
-                imageMap.put(key, loadImage(key));
-                pendingKeys.remove(key);
+                String key = pendingLoadQueue.take(); // block if empty
+
+                if (!imageMap.containsKey(key)) {
+                    imageMap.put(key, scaleImage(loadImage(key)));
+                }
+
             } catch (InterruptedException ix) {
                 Thread.currentThread().interrupt();
             }
         }
+    }
+
+    private BufferedImage scaleImage(BufferedImage image) {
+        return ImageUtils.scaleImageToFit(image, thumbnailSize);
     }
 
     private BufferedImage loadImage(String key) {

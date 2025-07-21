@@ -216,4 +216,60 @@ public class ImageUtils {
         return opaque;
     }
 
+    public static BufferedImage scaleImageToFit(BufferedImage image, Dimension size) {
+
+        if (image == null) {
+            return null;
+        }
+
+        if (size.width == 0 || size.height == 0) {
+            return null;
+        }
+
+        double scaleFactor = getBestFitScaleFactor(image, size);
+
+        // Don't scale up
+        if (scaleFactor > 1) {
+            scaleFactor = 1;
+        }
+
+        int scaledWidth = (int) (image.getWidth() * scaleFactor);
+        int scaledHeight = (int) (image.getHeight() * scaleFactor);
+
+        if (scaledWidth == 0 || scaledHeight == 0) {
+            System.out.println("ok");
+        }
+
+        BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = scaled.createGraphics();
+        g.setColor(Color.white);
+        g.fillRect(0, 0, scaledWidth, scaledHeight);
+        g.drawImage(image, 0, 0, scaledWidth, scaledHeight, null);
+        g.dispose();
+
+        return scaled;
+    }
+
+    public static double getBestFitScaleFactor(BufferedImage image, Dimension size) {
+
+        if (image == null) {
+            return 1;
+        }
+
+        if (size.width == 0 || size.height == 0) {
+            return 0;
+        }
+
+        double boundaryWidth = size.width;
+        double boundaryHeight = size.height;
+        double imageWidth = image.getWidth();
+        double imageHeight = image.getHeight();
+
+        double widthScale = boundaryWidth / imageWidth;
+        double heightScale = boundaryHeight / imageHeight;
+
+        double bestFitZoom = Math.min(widthScale, heightScale);
+        return bestFitZoom;
+
+    }
 }
