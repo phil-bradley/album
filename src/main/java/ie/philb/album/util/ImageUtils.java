@@ -26,6 +26,7 @@ public class ImageUtils {
     private static final Logger LOG = LoggerFactory.getLogger(ImageUtils.class);
 
     private static BufferedImage PLACEHOLDER_IMAGE = null;
+    private static BufferedImage PLACEHOLDER_IMAGE_SMALL = null;
     private static BufferedImage EMPTY_IMAGE = null;
 
     public static BufferedImage getEmptyImage() {
@@ -101,6 +102,18 @@ public class ImageUtils {
         }
 
         return PLACEHOLDER_IMAGE;
+    }
+
+    public static BufferedImage getPlaceholderSmallImage() {
+
+        if (PLACEHOLDER_IMAGE_SMALL == null) {
+            try {
+                PLACEHOLDER_IMAGE_SMALL = ImageIO.read(ImageUtils.class.getResourceAsStream("/ie/philb/album/placeholder_sm.png"));
+            } catch (IOException ex) {
+            }
+        }
+
+        return PLACEHOLDER_IMAGE_SMALL;
     }
 
     /*  width/height = aspect
@@ -216,4 +229,56 @@ public class ImageUtils {
         return opaque;
     }
 
+    public static BufferedImage scaleImageToFit(BufferedImage image, Dimension size) {
+
+        if (image == null) {
+            return null;
+        }
+
+        if (size.width == 0 || size.height == 0) {
+            return null;
+        }
+
+        // Don't scale up
+        if (image.getWidth() <= size.width && image.getHeight() <= size.height) {
+            return image;
+        }
+
+        double scaleFactor = getBestFitScaleFactor(image, size);
+
+        int scaledWidth = (int) (image.getWidth() * scaleFactor);
+        int scaledHeight = (int) (image.getHeight() * scaleFactor);
+
+        BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = scaled.createGraphics();
+        g.setColor(Color.white);
+        g.fillRect(0, 0, scaledWidth, scaledHeight);
+        g.drawImage(image, 0, 0, scaledWidth, scaledHeight, null);
+        g.dispose();
+
+        return scaled;
+    }
+
+    public static double getBestFitScaleFactor(BufferedImage image, Dimension size) {
+
+        if (image == null) {
+            return 1;
+        }
+
+        if (size.width == 0 || size.height == 0) {
+            return 0;
+        }
+
+        double boundaryWidth = size.width;
+        double boundaryHeight = size.height;
+        double imageWidth = image.getWidth();
+        double imageHeight = image.getHeight();
+
+        double widthScale = boundaryWidth / imageWidth;
+        double heightScale = boundaryHeight / imageHeight;
+
+        double bestFitZoom = Math.min(widthScale, heightScale);
+        return bestFitZoom;
+
+    }
 }

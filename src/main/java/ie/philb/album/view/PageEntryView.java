@@ -12,7 +12,7 @@ import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.common.Resources;
+import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.ui.common.textcontrol.TextControl;
 import ie.philb.album.ui.common.textcontrol.TextControlChangeListener;
 import ie.philb.album.ui.common.textcontrol.TextControlModel;
@@ -210,7 +210,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     }
 
     private Color getBorderColor() {
-        return isSelected ? Resources.COLOR_PHOTO_BORDER_SELECTED : Resources.COLOR_PHOTO_BORDER;
+        return isSelected ? Colors.COLOR_PHOTO_BORDER_SELECTED : Colors.COLOR_PHOTO_BORDER;
     }
 
     public void setSelected(boolean b) {

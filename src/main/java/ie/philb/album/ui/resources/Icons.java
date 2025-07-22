@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ie.philb.album.ui.common;
+package ie.philb.album.ui.resources;
 
 import javax.swing.ImageIcon;
 
@@ -49,5 +49,7 @@ public class Icons {
         public static final ImageIcon SETTINGS = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/settings.png"));
         public static final ImageIcon MARGIN = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/margin.png"));
     }
+
+    public static final ImageIcon LOADING = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/loading.gif"));
 
 }

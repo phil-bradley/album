@@ -40,22 +40,10 @@ public class ImageLibraryListModel implements ListModel<ImageLibraryEntry> {
 
         this.folder = folder;
 
-        File[] children = folder.listFiles();
-
-        if (children == null) {
-            return;
-        }
+        List<File> children = FileUtils.getChildren(folder, (File file) -> FileUtils.isImage(file));
 
         for (File file : children) {
-            if (file.isDirectory() && !FileUtils.isHidden(file)) {
-                entries.add(new ImageLibraryEntry(file));
-            }
-        }
-
-        for (File file : children) {
-            if (FileUtils.isImage(file)) {
-                entries.add(new ImageLibraryEntry(file));
-            }
+            entries.add(new ImageLibraryEntry(file));
         }
     }
 

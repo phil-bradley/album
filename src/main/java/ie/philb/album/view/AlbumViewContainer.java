@@ -19,7 +19,7 @@ import ie.philb.album.ui.command.NewPageCommand;
 import ie.philb.album.ui.command.SetGeometryCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.common.Icons;
+import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.ui.common.filters.BrightnessFilter;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControl;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlListener;

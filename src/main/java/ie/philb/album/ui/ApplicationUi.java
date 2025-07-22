@@ -14,7 +14,7 @@ import ie.philb.album.ui.command.OpenAlbumCommand;
 import ie.philb.album.ui.command.PrintAlbumCommand;
 import ie.philb.album.ui.command.SaveAlbumCommand;
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.common.Icons;
+import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.imagelibrary.ImageLibraryView;
 import ie.philb.album.view.AlbumOverviewPanel;

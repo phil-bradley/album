@@ -8,7 +8,7 @@ import ie.philb.album.AppContext;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
-import ie.philb.album.ui.common.Resources;
+import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.util.TestUtils;
 import static ie.philb.album.util.TestUtils.assertClose;
@@ -53,7 +53,7 @@ public class PageViewTest {
         assertNotNull(pageView.getBorder());
 
         LineBorder border = (LineBorder) pageView.getBorder();
-        assertEquals(Resources.COLOR_PHOTO_BORDER_SELECTED, border.getLineColor());
+        assertEquals(Colors.COLOR_PHOTO_BORDER_SELECTED, border.getLineColor());
     }
 
     @Test
@@ -64,11 +64,11 @@ public class PageViewTest {
 
         pageView.pageSelected(pageView);
         LineBorder selectedBorder = (LineBorder) pageView.getBorder();
-        assertEquals(Resources.COLOR_PHOTO_BORDER_SELECTED, selectedBorder.getLineColor());
+        assertEquals(Colors.COLOR_PHOTO_BORDER_SELECTED, selectedBorder.getLineColor());
 
         pageView.pageSelected(null);
         LineBorder unSelectedBorder = (LineBorder) pageView.getBorder();
-        assertEquals(Resources.COLOR_PHOTO_BORDER, unSelectedBorder.getLineColor());
+        assertEquals(Colors.COLOR_PHOTO_BORDER, unSelectedBorder.getLineColor());
     }
 
     @Test

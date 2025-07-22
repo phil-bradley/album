@@ -226,6 +226,7 @@ public class FolderNavigationPanel extends AppPanel {
         try (Stream<Path> paths = Files.list(parent)) {
             return paths
                     .filter(Files::isDirectory)
+                    .sorted((Path t, Path t1) -> t.toFile().getName().toLowerCase().compareTo(t1.toFile().getName().toLowerCase()))
                     .toList();
         } catch (IOException e) {
         }

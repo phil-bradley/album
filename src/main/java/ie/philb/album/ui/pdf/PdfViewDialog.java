@@ -2,13 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ie.philb.album.ui.common;
+package ie.philb.album.ui.pdf;
 
 import ie.philb.album.ui.ApplicationUi;
 import ie.philb.album.ui.command.PrintAlbumCommand;
+import ie.philb.album.ui.common.GridBagCellConstraints;
+import ie.philb.album.ui.resources.Icons;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -32,7 +36,7 @@ public class PdfViewDialog extends JDialog {
     private static final double A4_RATIO = 1.4142;
     private static final int MARGIN = 0;
 
-    private PdfViewPanel displayPanel;
+    private final PdfViewPanel displayPanel;
     private final JToolBar toolbar;
     private final JButton btnNext;
     private final JButton btnPrevious;
@@ -45,6 +49,7 @@ public class PdfViewDialog extends JDialog {
 
         this.btnPrevious = new JButton();
         btnPrevious.setIcon(Icons.Regular.ARROW_LEFT);
+        btnPrevious.setEnabled(false);
 
         this.btnNext = new JButton();
         btnNext.setIcon(Icons.Regular.ARROW_RIGHT);
@@ -69,11 +74,11 @@ public class PdfViewDialog extends JDialog {
         add(displayPanel, gbc);
 
         btnNext.addActionListener((ActionEvent e) -> {
-            displayPanel.nextPage();
+            nextPage();
         });
 
         btnPrevious.addActionListener((ActionEvent e) -> {
-            displayPanel.previousPage();
+            previousPage();
         });
 
         btnPrint.addActionListener((ActionEvent e) -> {
@@ -86,28 +91,62 @@ public class PdfViewDialog extends JDialog {
             public void keyPressed(KeyEvent e) {
 
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    displayPanel.nextPage();
+                    nextPage();
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    displayPanel.previousPage();
+                    previousPage();
                 }
             }
         });
 
-        int panelWidth = 800;
+        int panelWidth = 1000;
         int panelHeight = (int) (panelWidth / A4_RATIO);
 
         setPreferredSize(new Dimension(panelWidth + (MARGIN * 2), panelHeight + (MARGIN * 2)));
         setSize(getPreferredSize());
+        
+        addComponentListener(new ResizeListener());
     }
 
     public void setFile(File pdfFile) throws IOException {
         displayPanel.showPdf(pdfFile);
+        updatePageButtons();
     }
 
     public void setDocument(PDDocument doc) {
         displayPanel.showPdf(doc);
+        updatePageButtons();
     }
 
+    private void nextPage() {
+        displayPanel.nextPage();
+        updatePageButtons();
+    }
+
+    private void previousPage() {
+        displayPanel.previousPage();
+        updatePageButtons();
+    }
+
+    private void updatePageButtons() {
+        int currentPage = displayPanel.getCurrentPage();
+        btnNext.setEnabled(currentPage < displayPanel.getPageCount() - 1);
+        btnPrevious.setEnabled(displayPanel.getCurrentPage() > 0);
+//        displayPanel.revalidate();
+//        revalidate();
+    }
+
+    class ResizeListener extends ComponentAdapter {
+
+        @Override
+        public void componentResized(ComponentEvent e) {
+            displayPanel.showPdfPage(displayPanel.getCurrentPage());
+        }
+        
+        @Override
+        public void componentShown(ComponentEvent e) {
+            displayPanel.showPdfPage(0);
+        }
+    }
 }
