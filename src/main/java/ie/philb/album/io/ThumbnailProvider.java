@@ -4,7 +4,6 @@
  */
 package ie.philb.album.io;
 
-import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.util.ImageUtils;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -41,9 +40,13 @@ public class ThumbnailProvider {
         if (image != null) {
             listener.thumbnailLoaded(image);
         } else {
-            listener.thumbnailLoaded(ImageUtils.getBufferedImage(Icons.LOADING));
+            listener.thumbnailLoaded(ImageUtils.getPlaceholderSmallImage());
             pendingListeners.put(key, listener);
         }
+    }
+
+    public boolean hasImage(String key) {
+        return imageMap.containsKey(key);
     }
 
     public BufferedImage getImage(String key) {
@@ -75,16 +78,16 @@ public class ThumbnailProvider {
 
                     if (scaled == null) {
                         System.out.println("Created placeholder for key " + key);
-                        imageMap.put(key, ImageUtils.getBufferedImage(Icons.LOADING));
+                        imageMap.put(key, ImageUtils.getPlaceholderSmallImage());
                     } else {
-                        System.out.println("Created scaled for key " + key);
+                        System.out.println("Created scaled for key " + key + " with size " + ImageUtils.getImageSize(image));
                         imageMap.put(key, scaled);
                     }
 
                     if (pendingListeners.containsKey(key)) {
                         ThumbnailProviderListener listener = pendingListeners.get(key);
                         pendingListeners.remove(key);
-                        
+
                         System.out.println("Firing update for key " + key);
                         listener.thumbnailLoaded(imageMap.get(key));
                     }

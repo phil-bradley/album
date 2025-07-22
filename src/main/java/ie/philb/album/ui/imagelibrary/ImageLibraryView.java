@@ -11,11 +11,11 @@ import ie.philb.album.metadata.ImageMetaData;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.resources.Icons;
-import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.ui.common.foldernavigator.FolderNavigationListener;
 import ie.philb.album.ui.common.foldernavigator.FolderNavigationPanel;
 import ie.philb.album.ui.dnd.ImageLibraryTransferHandler;
+import ie.philb.album.ui.resources.Colors;
+import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.util.FileUtils;
 import ie.philb.album.util.ImageUtils;
 import ie.philb.album.util.StringUtils;
@@ -189,7 +189,14 @@ public class ImageLibraryView extends AppPanel {
             if (value.isDirectory()) {
                 thumbnailView.setImage(ImageUtils.getBufferedImage(Icons.Regular.FOLDER));
             } else {
-                thumbnailProvider.applyImage(value.getFile().getAbsolutePath(), this);
+                String key = value.getFile().getAbsolutePath();
+
+                if (thumbnailProvider.hasImage(key)) {
+                    thumbnailView.setImage(thumbnailProvider.getImage(key));
+                } else {
+                    thumbnailProvider.applyImage(value.getFile().getAbsolutePath(), this);
+                }
+
             }
 
             lblName.setText(StringUtils.truncate(value.getTitle(), 20));
@@ -241,24 +248,27 @@ public class ImageLibraryView extends AppPanel {
         }
 
         @Override
-        public void thumbnailLoaded(BufferedImage image) {          
-            thumbnailView.setImage(image);
-            SwingUtilities.invokeLater(() -> list.repaint(list.getBounds()));
+        public void thumbnailLoaded(BufferedImage image) {
+            if (!Objects.equals(image, thumbnailView.image)) {
+                System.out.println("Loaded image " + ImageUtils.getImageSize(image));
+                thumbnailView.setImage(image);
+                SwingUtilities.invokeLater(() -> list.repaint(list.getBounds()));
+            }
         }
 
     }
 
     class ThumbnailView extends AppPanel {
 
-        private BufferedImage sourceImage;
+        private BufferedImage image;
 
         public ThumbnailView(BufferedImage image) {
             setImage(image);
         }
 
         public final void setImage(BufferedImage image) {
-            if (!Objects.equals(image, sourceImage)) {
-                this.sourceImage = image;
+            if (!Objects.equals(image, this.image)) {
+                this.image = image;
                 revalidate();
                 repaint();
             }
@@ -279,15 +289,15 @@ public class ImageLibraryView extends AppPanel {
 
             super.paintComponent(g);
 
-            if (sourceImage == null) {
+            if (image == null) {
                 return;
             }
 
             // Centre image if it's less tall or less wide than the available space
-            int x = (getAvailableWidth() - sourceImage.getWidth()) / 2;
-            int y = (getAvailableHeight() - sourceImage.getHeight()) / 2;
+            int x = (getAvailableWidth() - image.getWidth()) / 2;
+            int y = (getAvailableHeight() - image.getHeight()) / 2;
 
-            g.drawImage(sourceImage, x, y, null);
+            g.drawImage(image, x, y, null);
         }
     }
 

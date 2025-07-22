@@ -26,6 +26,7 @@ public class ImageUtils {
     private static final Logger LOG = LoggerFactory.getLogger(ImageUtils.class);
 
     private static BufferedImage PLACEHOLDER_IMAGE = null;
+    private static BufferedImage PLACEHOLDER_IMAGE_SMALL = null;
     private static BufferedImage EMPTY_IMAGE = null;
 
     public static BufferedImage getEmptyImage() {
@@ -101,6 +102,18 @@ public class ImageUtils {
         }
 
         return PLACEHOLDER_IMAGE;
+    }
+
+    public static BufferedImage getPlaceholderSmallImage() {
+
+        if (PLACEHOLDER_IMAGE_SMALL == null) {
+            try {
+                PLACEHOLDER_IMAGE_SMALL = ImageIO.read(ImageUtils.class.getResourceAsStream("/ie/philb/album/placeholder_sm.png"));
+            } catch (IOException ex) {
+            }
+        }
+
+        return PLACEHOLDER_IMAGE_SMALL;
     }
 
     /*  width/height = aspect
@@ -222,11 +235,15 @@ public class ImageUtils {
             return null;
         }
 
+        if (image.getWidth() == 40) {
+            System.out.println("ok");
+        }
+
         if (size.width == 0 || size.height == 0) {
             return null;
         }
-        
-        if (image.getWidth() == size.width && image.getHeight() == size.height) {
+
+        if (image.getWidth() <= size.width && image.getHeight() <= size.height) {
             return image;
         }
 
