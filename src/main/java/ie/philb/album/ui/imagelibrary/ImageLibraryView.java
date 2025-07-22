@@ -190,13 +190,13 @@ public class ImageLibraryView extends AppPanel {
                 if (thumbnailProvider.hasImage(key)) {
                     thumbnailView.setImage(thumbnailProvider.getImage(key));
                 } else {
-                    thumbnailProvider.applyImage(value.getFile().getAbsolutePath(), this);
+                    thumbnailProvider.applyImage(key, this);
                 }
 
+                setToolTipText(getToolTip(value.getFile().getName(), thumbnailProvider.getMetaData(key)));
             }
 
             lblName.setText(StringUtils.truncate(value.getTitle(), 20));
-            thumbnailView.setToolTipText(getToolTip(value));
 
             if (isSelected) {
                 setBackground(Colors.COLOR_SELECTED);
@@ -206,20 +206,12 @@ public class ImageLibraryView extends AppPanel {
                 lblName.setForeground(Color.black);
             }
 
-            setToolTipText(getToolTip(value));
-
             return this;
         }
 
-        private String getToolTip(ImageLibraryEntry entry) {
+        private String getToolTip(String baseName, ImageMetaData imageMetaData) {
 
-            if (entry == null || entry.getFile() == null) {
-                return "";
-            }
-
-            String toolTipText = entry.getFile().getName();
-
-            ImageMetaData imageMetaData = entry.getImageMetaData();
+            String toolTipText = baseName;
 
             if (imageMetaData == null) {
                 return toolTipText;

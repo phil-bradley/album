@@ -4,6 +4,8 @@
  */
 package ie.philb.album.io;
 
+import ie.philb.album.metadata.ImageMetaData;
+import ie.philb.album.metadata.ImageMetaDataReader;
 import ie.philb.album.util.ImageUtils;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -22,6 +24,8 @@ import javax.imageio.ImageIO;
 public class ThumbnailProvider {
 
     public final Map<String, BufferedImage> imageMap = new ConcurrentHashMap<>();
+    public final Map<String, ImageMetaData> metadataMap = new HashMap<>();
+
     private final BlockingQueue<String> pendingLoadQueue = new LinkedBlockingQueue<>();
     private final Dimension thumbnailSize;
     private Map<String, ThumbnailProviderListener> pendingListeners = new HashMap<>();
@@ -79,6 +83,7 @@ public class ThumbnailProvider {
                         imageMap.put(key, ImageUtils.getPlaceholderSmallImage());
                     } else {
                         imageMap.put(key, scaled);
+                        metadataMap.put(key, tryReadMetaData(key));
                     }
 
                     if (pendingListeners.containsKey(key)) {
@@ -95,6 +100,20 @@ public class ThumbnailProvider {
         }
     }
 
+    private ImageMetaData tryReadMetaData(String fileName) {
+        File imageFile = new File(fileName);
+
+        if (!imageFile.exists()) {
+            return null;
+        }
+
+        try {
+            return new ImageMetaDataReader(imageFile).getMetaData();
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
     private BufferedImage scaleImage(BufferedImage image) {
         return ImageUtils.scaleImageToFit(image, thumbnailSize);
     }
@@ -105,5 +124,9 @@ public class ThumbnailProvider {
         } catch (Throwable tx) {
             return null;
         }
+    }
+    
+    public ImageMetaData getMetaData(String key) {
+        return metadataMap.get(key);
     }
 }
