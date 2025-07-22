@@ -190,7 +190,7 @@ public class ImageLibraryView extends AppPanel {
                 if (thumbnailProvider.hasImage(key)) {
                     thumbnailView.setImage(thumbnailProvider.getImage(key));
                 } else {
-                    thumbnailProvider.applyImage(key, this);
+                    thumbnailProvider.applyImage(key, this::thumbnailLoaded);
                 }
 
                 setToolTipText(getToolTip(value.getFile().getName(), thumbnailProvider.getMetaData(key)));
@@ -237,10 +237,10 @@ public class ImageLibraryView extends AppPanel {
 
         @Override
         public void thumbnailLoaded(BufferedImage image) {
-            if (!Objects.equals(image, thumbnailView.image)) {
+            SwingUtilities.invokeLater(() -> {
                 thumbnailView.setImage(image);
-                SwingUtilities.invokeLater(() -> list.repaint(list.getBounds()));
-            }
+                list.repaint(list.getBounds());
+            });
         }
 
     }

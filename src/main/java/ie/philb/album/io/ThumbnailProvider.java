@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 
 /**
@@ -28,7 +29,7 @@ public class ThumbnailProvider {
 
     private final BlockingQueue<String> pendingLoadQueue = new LinkedBlockingQueue<>();
     private final Dimension thumbnailSize;
-    private Map<String, ThumbnailProviderListener> pendingListeners = new HashMap<>();
+    private final Map<String, Consumer<BufferedImage>> pendingConsumers = new HashMap<>();
 
     public ThumbnailProvider(Dimension size) {
         this.thumbnailSize = size;
@@ -37,15 +38,15 @@ public class ThumbnailProvider {
         worker.start();
     }
 
-    public void applyImage(String key, ThumbnailProviderListener listener) {
+    public void applyImage(String key, Consumer<BufferedImage> consumer) {
 
         BufferedImage image = getImage(key);
 
         if (image != null) {
-            listener.thumbnailLoaded(image);
+            consumer.accept(image);
         } else {
-            listener.thumbnailLoaded(ImageUtils.getPlaceholderSmallImage());
-            pendingListeners.put(key, listener);
+            consumer.accept(ImageUtils.getPlaceholderSmallImage());
+            pendingConsumers.put(key, consumer);
         }
     }
 
@@ -86,10 +87,10 @@ public class ThumbnailProvider {
                         metadataMap.put(key, tryReadMetaData(key));
                     }
 
-                    if (pendingListeners.containsKey(key)) {
-                        ThumbnailProviderListener listener = pendingListeners.get(key);
-                        pendingListeners.remove(key);
-                        listener.thumbnailLoaded(imageMap.get(key));
+                    if (pendingConsumers.containsKey(key)) {
+                        Consumer<BufferedImage> consumer = pendingConsumers.get(key);
+                        pendingConsumers.remove(key);
+                        consumer.accept(imageMap.get(key));
                     }
                 } else {
                     // Key already present
