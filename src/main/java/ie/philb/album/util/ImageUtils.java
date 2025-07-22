@@ -235,31 +235,19 @@ public class ImageUtils {
             return null;
         }
 
-        if (image.getWidth() == 40) {
-            System.out.println("ok");
-        }
-
         if (size.width == 0 || size.height == 0) {
             return null;
         }
 
+        // Don't scale up
         if (image.getWidth() <= size.width && image.getHeight() <= size.height) {
             return image;
         }
 
         double scaleFactor = getBestFitScaleFactor(image, size);
 
-        // Don't scale up
-        if (scaleFactor > 1) {
-            scaleFactor = 1;
-        }
-
         int scaledWidth = (int) (image.getWidth() * scaleFactor);
         int scaledHeight = (int) (image.getHeight() * scaleFactor);
-
-        if (scaledWidth == 0 || scaledHeight == 0) {
-            System.out.println("ok");
-        }
 
         BufferedImage scaled = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = scaled.createGraphics();

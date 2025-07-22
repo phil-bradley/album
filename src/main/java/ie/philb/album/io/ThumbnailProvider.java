@@ -70,32 +70,25 @@ public class ThumbnailProvider {
         while (true) {
             try {
                 String key = pendingLoadQueue.take(); // block if empty
-                System.out.println("Will try to load " + key);
 
                 if (!imageMap.containsKey(key)) {
                     BufferedImage image = loadImage(key);
                     BufferedImage scaled = scaleImage(image);
 
                     if (scaled == null) {
-                        System.out.println("Created placeholder for key " + key);
                         imageMap.put(key, ImageUtils.getPlaceholderSmallImage());
                     } else {
-                        System.out.println("Created scaled for key " + key + " with size " + ImageUtils.getImageSize(image));
                         imageMap.put(key, scaled);
                     }
 
                     if (pendingListeners.containsKey(key)) {
                         ThumbnailProviderListener listener = pendingListeners.get(key);
                         pendingListeners.remove(key);
-
-                        System.out.println("Firing update for key " + key);
                         listener.thumbnailLoaded(imageMap.get(key));
                     }
                 } else {
-                    System.out.println("Key already present: " + key);
+                    // Key already present
                 }
-
-                System.out.println("Pending listeners: " + pendingListeners.size());
             } catch (InterruptedException ix) {
                 Thread.currentThread().interrupt();
             }
@@ -110,7 +103,6 @@ public class ThumbnailProvider {
         try {
             return ImageIO.read(new File(key));
         } catch (Throwable tx) {
-            System.out.println("Failed to load " + key + ", " + tx.getMessage());
             return null;
         }
     }

@@ -106,8 +106,6 @@ public class ImageLibraryView extends AppPanel {
             String msg = "Failed to initialise library folder " + FileUtils.getHomeDirectory() + "\n" + ex.getMessage();
             JOptionPane.showMessageDialog(null, msg);
         }
-
-        System.out.println("Thumbs: " + thumbnailProvider.imageMap.size());
     }
 
     @Override
@@ -177,8 +175,6 @@ public class ImageLibraryView extends AppPanel {
             gbc.y(1).fillHorizontal().anchorSouth().weighty(0).inset(1);
             lblName.setHorizontalAlignment(SwingConstants.CENTER);
             add(lblName, gbc);
-
-            System.out.println("Thumbs: " + thumbnailProvider.imageMap.size());
         }
 
         @Override
@@ -250,7 +246,6 @@ public class ImageLibraryView extends AppPanel {
         @Override
         public void thumbnailLoaded(BufferedImage image) {
             if (!Objects.equals(image, thumbnailView.image)) {
-                System.out.println("Loaded image " + ImageUtils.getImageSize(image));
                 thumbnailView.setImage(image);
                 SwingUtilities.invokeLater(() -> list.repaint(list.getBounds()));
             }
