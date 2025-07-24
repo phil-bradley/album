@@ -9,10 +9,12 @@ import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import java.awt.AWTEvent;
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JLayer;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -51,9 +53,34 @@ public class AlbumOverviewPanel extends AppPanel {
             @Override
             protected void processMouseEvent(MouseEvent e, JLayer<? extends JScrollPane> l) {
                 if (e.getID() == MouseEvent.MOUSE_CLICKED) {
-                    Component target = SwingUtilities.getDeepestComponentAt(l.getView(), e.getX(), e.getY());
-                    System.out.println("Intercepted click at: " + e.getPoint() + ", would have hit " + target);
+                    e.consume();
+                    
+                    AlbumView av = (AlbumView) scrollPane.getViewport().getView();
+                    Point avPoint = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),av);
+                    
+                    Component target = SwingUtilities.getDeepestComponentAt(av, avPoint.x, avPoint.y);
+                    System.out.println("Intercepted click at: " + avPoint + ", would have hit " + getComponentDescription(target));
                 }
+            }
+
+            private String getComponentDescription(Component target) {
+                if (target instanceof JLabel label) {
+                    return "Label: " + label.getText();
+                }
+
+                if (target instanceof PageEntryView pev) {
+                    return "Page Entry View: " + pev;
+                }
+
+                if (target instanceof PageView pv) {
+                    return "Page Entry View: Page: " + pv.getPageModel().getPageId();
+                }
+                
+                if (target == null) {
+                    return "NULL";
+                }
+                
+                return "Component: " + target.getClass().getName();
             }
         };
 
