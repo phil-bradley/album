@@ -129,4 +129,15 @@ public class AlbumView extends AppPanel {
 
         selectedPageView.pageEntrySelected(selectedPageView, selectedPageEntryView);
     }
+
+    public PageView getPageViewById(long pageId) {
+
+        for (PageView pageView : pageViews) {
+            if (pageView.getPageModel().getPageId() == pageId) {
+                return pageView;
+            }
+        }
+
+        return null;
+    }
 }

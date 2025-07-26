@@ -19,11 +19,11 @@ import ie.philb.album.ui.command.NewPageCommand;
 import ie.philb.album.ui.command.SetGeometryCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.ui.common.filters.BrightnessFilter;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControl;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlListener;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlModel;
+import ie.philb.album.ui.resources.Icons;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -310,4 +310,14 @@ public class AlbumViewContainer extends AppPanel {
             btnCellType.setIcon(Icons.Small.TEXT);
         }
     }
+
+    @Override
+    public void pageNavigatedTo(long pageId) {
+        PageView pageView = albumView.getPageViewById(pageId);
+        if (pageView != null) {
+            scrollPane.scrollRectToVisible(pageView.getBounds());
+            System.out.println("Would nav to " + pageView.getBounds() + ", " + pageView.getPageModel().getPageId());
+        }
+    }
+
 }

@@ -7,6 +7,7 @@ package ie.philb.album.view;
 import ie.philb.album.AppContext;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
+import ie.philb.album.util.UiUtils;
 import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.Point;
@@ -54,12 +55,16 @@ public class AlbumOverviewPanel extends AppPanel {
             protected void processMouseEvent(MouseEvent e, JLayer<? extends JScrollPane> l) {
                 if (e.getID() == MouseEvent.MOUSE_CLICKED) {
                     e.consume();
-                    
+
                     AlbumView av = (AlbumView) scrollPane.getViewport().getView();
-                    Point avPoint = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),av);
-                    
-                    Component target = SwingUtilities.getDeepestComponentAt(av, avPoint.x, avPoint.y);
-                    System.out.println("Intercepted click at: " + avPoint + ", would have hit " + getComponentDescription(target));
+                    Point avPoint = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), av);
+
+                    PageView pageView = UiUtils.getChildOfType(av, avPoint.x, avPoint.y, PageView.class);
+
+                    if (pageView != null) {
+                        AppContext.INSTANCE.pageNavigatedTo(pageView.getPageModel().getPageId());
+
+                    }
                 }
             }
 
@@ -75,11 +80,11 @@ public class AlbumOverviewPanel extends AppPanel {
                 if (target instanceof PageView pv) {
                     return "Page Entry View: Page: " + pv.getPageModel().getPageId();
                 }
-                
+
                 if (target == null) {
                     return "NULL";
                 }
-                
+
                 return "Component: " + target.getClass().getName();
             }
         };
