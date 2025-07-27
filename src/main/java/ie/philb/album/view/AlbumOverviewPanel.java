@@ -10,14 +10,16 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.util.UiUtils;
 import java.awt.AWTEvent;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JLayer;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.LayerUI;
 
@@ -39,10 +41,13 @@ public class AlbumOverviewPanel extends AppPanel {
         // Simulate a glasspane in order to capture mouse events, that is,
         // prevent them from being handled by lower level elements.
         LayerUI<JScrollPane> mouseInterceptLayer = new LayerUI<>() {
+
+            private Point lastDragPoint;
+
             @Override
             public void installUI(JComponent c) {
                 super.installUI(c);
-                ((JLayer<?>) c).setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK);
+                ((JLayer<?>) c).setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
             }
 
             @Override
@@ -52,9 +57,41 @@ public class AlbumOverviewPanel extends AppPanel {
             }
 
             @Override
+            protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends JScrollPane> l) {
+
+                if (e.getID() == MouseEvent.MOUSE_DRAGGED) {
+
+                    System.out.println("Mouse dragged, last point is " + lastDragPoint);
+
+                    if (lastDragPoint != null) {
+                        JViewport viewport = scrollPane.getViewport();
+                        Point viewPosition = viewport.getViewPosition();
+                        int dx = lastDragPoint.x - e.getX();
+                        viewPosition.translate(dx, 0);
+                        albumView.scrollRectToVisible(new Rectangle(viewPosition, viewport.getSize()));
+                    }
+
+                    lastDragPoint = e.getPoint();
+                }
+            }
+
+            @Override
             protected void processMouseEvent(MouseEvent e, JLayer<? extends JScrollPane> l) {
+
+                e.consume();
+
+                if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                }
+
+                if (e.getID() == MouseEvent.MOUSE_RELEASED) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                }
+
                 if (e.getID() == MouseEvent.MOUSE_CLICKED) {
-                    e.consume();
+
+                    Component c = SwingUtilities.getDeepestComponentAt(scrollPane, e.getPoint().x, e.getPoint().y);
+                    System.out.println("Clicked on " + c.getName());
 
                     AlbumView av = (AlbumView) scrollPane.getViewport().getView();
                     Point avPoint = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), av);
@@ -66,26 +103,7 @@ public class AlbumOverviewPanel extends AppPanel {
 
                     }
                 }
-            }
 
-            private String getComponentDescription(Component target) {
-                if (target instanceof JLabel label) {
-                    return "Label: " + label.getText();
-                }
-
-                if (target instanceof PageEntryView pev) {
-                    return "Page Entry View: " + pev;
-                }
-
-                if (target instanceof PageView pv) {
-                    return "Page Entry View: Page: " + pv.getPageModel().getPageId();
-                }
-
-                if (target == null) {
-                    return "NULL";
-                }
-
-                return "Component: " + target.getClass().getName();
             }
         };
 
@@ -98,7 +116,6 @@ public class AlbumOverviewPanel extends AppPanel {
 
         add(layeredAlbumView, new GridBagCellConstraints().fillBoth().weight(1));
         addComponentListener(new ResizeListener());
-
         setFocusable(true);
     }
 

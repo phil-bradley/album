@@ -66,6 +66,7 @@ public class AlbumViewContainer extends AppPanel {
     public AlbumViewContainer() {
 
         initComponents();
+        initToolBar();
         layoutComponents();
 
         addComponentListener(new ResizeListener());
@@ -128,8 +129,6 @@ public class AlbumViewContainer extends AppPanel {
         pageSettingsMenu.setLayout(new BoxLayout(pageSettingsMenu, BoxLayout.Y_AXIS));
         pageSettingsMenu.add(horizontalMarginControl);
         pageSettingsMenu.add(verticalMarginControl);
-
-        initToolBar();
     }
 
     private void adjustVerticalMargin() {
