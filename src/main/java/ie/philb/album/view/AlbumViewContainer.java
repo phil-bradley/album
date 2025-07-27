@@ -315,8 +315,7 @@ public class AlbumViewContainer extends AppPanel {
     public void pageNavigatedTo(long pageId) {
         PageView pageView = albumView.getPageViewById(pageId);
         if (pageView != null) {
-            scrollPane.scrollRectToVisible(pageView.getBounds());
-            System.out.println("Would nav to " + pageView.getBounds() + ", " + pageView.getPageModel().getPageId());
+            albumView.scrollRectToVisible(pageView.getBounds());
         }
     }
 
