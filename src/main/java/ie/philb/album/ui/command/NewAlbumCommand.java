@@ -47,9 +47,11 @@ public class NewAlbumCommand extends AbstractCommand {
         PageEntryModel titleEntry = titlePage.getPageEntries().get(0);
         titleEntry.getTextControlModel().setText("The Title!");
 
-        // First album page, 2x2 cells by default
-        albumModel.addPage(PageGeometry.square(2));
-        albumModel.setLastSaveDate(LocalDateTime.now());
+        for (int i = 0; i < 20; i++) {
+            // First album page, 2x2 cells by default
+            albumModel.addPage(PageGeometry.square(2));
+            albumModel.setLastSaveDate(LocalDateTime.now());
+        }
 
         AppContext.INSTANCE.setAlbumModel(albumModel);
     }

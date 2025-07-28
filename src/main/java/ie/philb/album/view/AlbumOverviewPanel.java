@@ -18,6 +18,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 import javax.swing.JLayer;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
@@ -57,16 +58,26 @@ public class AlbumOverviewPanel extends AppPanel {
             }
 
             @Override
-            protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends JScrollPane> l) {
+            protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends JScrollPane> layer) {
 
+                Component c = SwingUtilities.getDeepestComponentAt(layer.getView(), e.getPoint().x, e.getPoint().y);
+
+                if (isScrollbar(c)) {
+                    // Let the event pass through normally
+                    e.setSource(c); // Re-target to scrollbar
+                    c.dispatchEvent(SwingUtilities.convertMouseEvent(layer, e, c));
+                    return;
+                }
+
+                // Panning behaviour
                 if (e.getID() == MouseEvent.MOUSE_DRAGGED) {
-
-                    System.out.println("Mouse dragged, last point is " + lastDragPoint);
 
                     if (lastDragPoint != null) {
                         JViewport viewport = scrollPane.getViewport();
                         Point viewPosition = viewport.getViewPosition();
-                        int dx = lastDragPoint.x - e.getX();
+
+                        int dx = lastDragPoint.x - e.getPoint().x;
+
                         viewPosition.translate(dx, 0);
                         albumView.scrollRectToVisible(new Rectangle(viewPosition, viewport.getSize()));
                     }
@@ -76,22 +87,28 @@ public class AlbumOverviewPanel extends AppPanel {
             }
 
             @Override
-            protected void processMouseEvent(MouseEvent e, JLayer<? extends JScrollPane> l) {
+            protected void processMouseEvent(MouseEvent e, JLayer<? extends JScrollPane> layer) {
 
-                e.consume();
+                Component c = SwingUtilities.getDeepestComponentAt(layer.getView(), e.getPoint().x, e.getPoint().y);
+
+                if (isScrollbar(c)) {
+                    // Let the event pass through normally
+                    e.setSource(c); // Re-target to scrollbar
+                    c.dispatchEvent(SwingUtilities.convertMouseEvent(layer, e, c));
+                    return;
+                }
 
                 if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+                    lastDragPoint = null;
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 }
 
                 if (e.getID() == MouseEvent.MOUSE_RELEASED) {
+                    lastDragPoint = null;
                     setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 }
 
                 if (e.getID() == MouseEvent.MOUSE_CLICKED) {
-
-                    Component c = SwingUtilities.getDeepestComponentAt(scrollPane, e.getPoint().x, e.getPoint().y);
-                    System.out.println("Clicked on " + c.getName());
 
                     AlbumView av = (AlbumView) scrollPane.getViewport().getView();
                     Point avPoint = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), av);
@@ -100,10 +117,22 @@ public class AlbumOverviewPanel extends AppPanel {
 
                     if (pageView != null) {
                         AppContext.INSTANCE.pageNavigatedTo(pageView.getPageModel().getPageId());
-
                     }
+
+                    e.consume();
                 }
 
+            }
+
+            private boolean isScrollbar(Component comp) {
+                // Check if the component is a scrollbar or inside one
+                while (comp != null) {
+                    if (comp instanceof JScrollBar) {
+                        return true;
+                    }
+                    comp = comp.getParent();
+                }
+                return false;
             }
         };
 
