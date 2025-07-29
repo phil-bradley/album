@@ -19,11 +19,11 @@ import ie.philb.album.ui.command.NewPageCommand;
 import ie.philb.album.ui.command.SetGeometryCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.ui.common.filters.BrightnessFilter;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControl;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlListener;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlModel;
+import ie.philb.album.ui.resources.Icons;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -66,6 +66,7 @@ public class AlbumViewContainer extends AppPanel {
     public AlbumViewContainer() {
 
         initComponents();
+        initToolBar();
         layoutComponents();
 
         addComponentListener(new ResizeListener());
@@ -128,8 +129,6 @@ public class AlbumViewContainer extends AppPanel {
         pageSettingsMenu.setLayout(new BoxLayout(pageSettingsMenu, BoxLayout.Y_AXIS));
         pageSettingsMenu.add(horizontalMarginControl);
         pageSettingsMenu.add(verticalMarginControl);
-
-        initToolBar();
     }
 
     private void adjustVerticalMargin() {
@@ -310,4 +309,13 @@ public class AlbumViewContainer extends AppPanel {
             btnCellType.setIcon(Icons.Small.TEXT);
         }
     }
+
+    @Override
+    public void pageNavigatedTo(long pageId) {
+        PageView pageView = albumView.getPageViewById(pageId);
+        if (pageView != null) {
+            albumView.scrollRectToVisible(pageView.getBounds());
+        }
+    }
+
 }

@@ -83,7 +83,7 @@ public enum AppContext implements ApplicationListener {
             appListener.libraryImageSelected(entry);
         });
     }
-    
+
     @Override
     public void albumUpdated() {
 
@@ -101,5 +101,12 @@ public enum AppContext implements ApplicationListener {
 
     private List<ApplicationListener> getApplicationListenersCopy() {
         return new ArrayList<>(applicationListeners);
+    }
+
+    @Override
+    public void pageNavigatedTo(long pageId) {
+        getApplicationListenersCopy().forEach(appListener -> {
+            appListener.pageNavigatedTo(pageId);
+        });
     }
 }

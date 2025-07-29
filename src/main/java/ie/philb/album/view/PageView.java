@@ -12,8 +12,8 @@ import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageModelListener;
 import ie.philb.album.ui.common.AppPanel;
-import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
+import ie.philb.album.ui.resources.Colors;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -264,5 +264,10 @@ public class PageView extends AppPanel implements PageModelListener {
         }
 
         return viewWidth / physicalWidth;
+    }
+
+    @Override
+    public String toString() {
+        return model.getPageId() + ", " + model.getGeometry();
     }
 }

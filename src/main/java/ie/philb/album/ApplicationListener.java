@@ -33,4 +33,7 @@ public interface ApplicationListener {
 
     default void pageEntryUpdated(PageEntryModel pageEntryModel) {
     }
+
+    default void pageNavigatedTo(long pageId) {
+    }
 }
