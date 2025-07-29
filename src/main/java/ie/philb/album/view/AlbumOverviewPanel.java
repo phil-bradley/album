@@ -12,7 +12,6 @@ import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
@@ -20,7 +19,6 @@ import javax.swing.JComponent;
 import javax.swing.JLayer;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.LayerUI;
 
@@ -72,17 +70,18 @@ public class AlbumOverviewPanel extends AppPanel {
                 // Panning behaviour
                 if (e.getID() == MouseEvent.MOUSE_DRAGGED) {
 
-                    if (lastDragPoint != null) {
-                        JViewport viewport = scrollPane.getViewport();
-                        Point viewPosition = viewport.getViewPosition();
+                    Point newPoint = e.getLocationOnScreen();
 
-                        int dx = lastDragPoint.x - e.getPoint().x;
+                    int dx = lastDragPoint.x - newPoint.x;
 
-                        viewPosition.translate(dx, 0);
-                        albumView.scrollRectToVisible(new Rectangle(viewPosition, viewport.getSize()));
+                    JScrollBar hBar = scrollPane.getHorizontalScrollBar();
+                    int newPos = hBar.getValue() + dx;
+                    if (newPos < 0) {
+                        newPos = 0;
                     }
 
-                    lastDragPoint = e.getPoint();
+                    hBar.setValue(newPos);
+                    lastDragPoint = newPoint;
                 }
             }
 
@@ -99,7 +98,7 @@ public class AlbumOverviewPanel extends AppPanel {
                 }
 
                 if (e.getID() == MouseEvent.MOUSE_PRESSED) {
-                    lastDragPoint = null;
+                    lastDragPoint = e.getLocationOnScreen();
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 }
 
