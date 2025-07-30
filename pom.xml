@@ -29,31 +29,36 @@
         <tag>v-0.0.1</tag>
     </scm>
     <build>
-	<resources>
-	   <resource>
-		   <directory>src/main/resources</directory>
-		   <filtering>true</filtering>
-	   </resource>
-	</resources>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
-	       <groupId>org.codehaus.mojo</groupId>
-	       <artifactId>buildnumber-maven-plugin</artifactId>
-	       <version>1.4</version>
-	       <executions>
-	          <execution>
-	             <phase>validate</phase>
-		     <goals>
-	                <goal>create</goal>
-		     </goals>
-		  </execution>
-	       </executions>
-	       <configuration>
-	          <doCheck>true</doCheck>
-	          <doUpdate>true</doUpdate>
-		  <shortRevisionLength>10</shortRevisionLength>
-	       </configuration>
-	    </plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.9.10</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <gitPropertiesPath>${project.build.outputDirectory}</gitPropertiesPath>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                    <includeOnlyProperties>
+                        <includeOnlyProperty>git.branch</includeOnlyProperty>
+                        <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
+                        <includeOnlyProperty>git.commit.time</includeOnlyProperty>
+                        <includeOnlyProperty>git.build.time</includeOnlyProperty>
+                    </includeOnlyProperties>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
