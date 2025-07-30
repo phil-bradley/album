@@ -30,9 +30,21 @@
     </scm>
     <build>
         <resources>
+            <!-- Filter any resources with .properties extension -->
             <resource>
-                <directory>src/main/resources/properties</directory>
+                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <!-- Non-filtered resources -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
             </resource>
         </resources>
         <plugins>
