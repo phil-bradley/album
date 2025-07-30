@@ -12,11 +12,11 @@ import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.ui.common.textcontrol.TextControl;
 import ie.philb.album.ui.common.textcontrol.TextControlChangeListener;
 import ie.philb.album.ui.common.textcontrol.TextControlModel;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
+import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.util.ImageUtils;
 import static ie.philb.album.util.ImageUtils.getImageSize;
 import java.awt.Color;
@@ -150,9 +150,10 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
             PageGeometryMapper geometryMapper = getPageGeometryMapper();
             Point modelOffset = new Point(geometryMapper.viewUnitsToPoints(viewOffset.x), geometryMapper.viewUnitsToPoints(viewOffset.y));
             pageEntryModel.setImageViewOffset(modelOffset);
-
-            repaint();
         }
+        
+        revalidate();
+        repaint();
     }
 
     protected BufferedImage getViewImage() {
