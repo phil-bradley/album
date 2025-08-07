@@ -45,16 +45,20 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
 
         btnBold = new JToggleButton("B");
         btnBold.setFont(bold(btnBold.getFont()));
+        btnBold.setToolTipText("Bold");
 
         btnItalic = new JToggleButton("I");
         btnItalic.setFont(italic(btnItalic.getFont()));
+        btnItalic.setToolTipText("Italic");
 
         btnUnderline = new JToggleButton("U");
         btnUnderline.setFont(underline(btnUnderline.getFont()));
+        btnUnderline.setToolTipText("Underline");
 
         btnColor = new JButton("A");
         btnColor.setFont(bold(btnColor.getFont()));
         btnColor.setFont(underline(btnColor.getFont()));
+        btnColor.setToolTipText("Text Colour");
 
         List<ApplicationFont> fonts = Arrays.asList(ApplicationFont.values());
         fontSelector = new FontSelector(fonts);
