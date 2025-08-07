@@ -38,9 +38,5 @@ public abstract class AbstractCellActionListener implements ActionListener, Appl
         doAction();
     }
 
-    @Override
-    public void albumUpdated() {
-    }
-
     protected abstract void doAction();
 }
