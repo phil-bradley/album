@@ -97,6 +97,10 @@ public class PdfViewDialog extends JDialog {
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                     previousPage();
                 }
+                
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    PdfViewDialog.this.dispose();
+                }
             }
         });
 
@@ -105,9 +109,25 @@ public class PdfViewDialog extends JDialog {
 
         setPreferredSize(new Dimension(panelWidth + (MARGIN * 2), panelHeight + (MARGIN * 2)));
         setSize(getPreferredSize());
-        
+
         addComponentListener(new ResizeListener());
     }
+//
+//    private static void bindEscapeKey(JDialog dialog) {
+//        JRootPane rootPane = dialog.getRootPane();
+//
+//        String escapeActionKey = "escapeAction";
+//        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+//        ActionMap actionMap = rootPane.getActionMap();
+//
+//        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), escapeActionKey);
+//        actionMap.put(escapeActionKey, new AbstractAction() {
+//            @Override
+//            public void actionPerformed(java.awt.event.ActionEvent e) {
+//                dialog.dispose();
+//            }
+//        });
+//    }
 
     public void setFile(File pdfFile) throws IOException {
         displayPanel.showPdf(pdfFile);
@@ -143,7 +163,7 @@ public class PdfViewDialog extends JDialog {
         public void componentResized(ComponentEvent e) {
             displayPanel.showPdfPage(displayPanel.getCurrentPage());
         }
-        
+
         @Override
         public void componentShown(ComponentEvent e) {
             displayPanel.showPdfPage(0);

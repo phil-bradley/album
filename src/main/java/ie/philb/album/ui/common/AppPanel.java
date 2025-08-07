@@ -92,6 +92,10 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
         return this;
     }
 
+    public AppPanel size(int width, int height) {
+        return size(new Dimension(width, height));
+    }
+    
     public AppPanel size(Dimension d) {
         this.setSize(d);
         this.setPreferredSize(d);

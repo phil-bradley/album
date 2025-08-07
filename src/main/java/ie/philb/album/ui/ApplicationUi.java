@@ -6,6 +6,7 @@ package ie.philb.album.ui;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.ApplicationListener;
+import ie.philb.album.ui.command.AboutCommand;
 import ie.philb.album.ui.command.AbstractCommand;
 import ie.philb.album.ui.command.CreatePdfCommand;
 import ie.philb.album.ui.command.ExitCommand;
@@ -63,6 +64,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private JToolBar toolBar;
     private JMenuBar menuBar;
     private JMenu fileMenu;
+    private JMenu helpMenu;
     private JButton btnPdf;
     private JButton btnNew;
     private JButton btnOpen;
@@ -136,6 +138,9 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         menuBar = new JMenuBar();
         menuBar.add(fileMenu = new JMenu("File"));
         fileMenu.setMnemonic(KeyEvent.VK_F);
+        
+        menuBar.add(helpMenu = new JMenu("Help"));
+        helpMenu.setMnemonic(KeyEvent.VK_H);
 
         addMenuItem(fileMenu, Icons.Small.NEW, "New", new NewAlbumCommand(), KeyEvent.VK_N);
         addMenuItem(fileMenu, Icons.Small.OPEN, "Open", new OpenAlbumCommand(), KeyEvent.VK_O);
@@ -143,6 +148,8 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand(), KeyEvent.VK_E);
         addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand(), KeyEvent.VK_P);
         addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand(), KeyEvent.VK_X);
+        
+        addMenuItem(helpMenu, null, "About", new AboutCommand(), KeyEvent.VK_I);
     }
 
     private void addMenuItem(JMenu menu, ImageIcon icon, String title, AbstractCommand command, int shortCutKey) {
