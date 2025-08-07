@@ -14,9 +14,9 @@ import ie.philb.album.ui.command.OpenAlbumCommand;
 import ie.philb.album.ui.command.PrintAlbumCommand;
 import ie.philb.album.ui.command.SaveAlbumCommand;
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.imagelibrary.ImageLibraryView;
+import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.view.AlbumOverviewPanel;
 import ie.philb.album.view.AlbumViewContainer;
 import ie.philb.album.view.PageEntryView;
@@ -24,6 +24,7 @@ import ie.philb.album.view.PageView;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -37,6 +38,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,22 +135,23 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private void initMenu() {
         menuBar = new JMenuBar();
         menuBar.add(fileMenu = new JMenu("File"));
+        fileMenu.setMnemonic(KeyEvent.VK_F);
 
-        addMenuItem(fileMenu, Icons.Small.NEW, "New", new NewAlbumCommand());
-        addMenuItem(fileMenu, Icons.Small.OPEN, "Open", new OpenAlbumCommand());
-        addMenuItem(fileMenu, Icons.Small.SAVE, "Save", new SaveAlbumCommand());
-        addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand());
-        addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand());
-        addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand());
+        addMenuItem(fileMenu, Icons.Small.NEW, "New", new NewAlbumCommand(), KeyEvent.VK_N);
+        addMenuItem(fileMenu, Icons.Small.OPEN, "Open", new OpenAlbumCommand(), KeyEvent.VK_O);
+        addMenuItem(fileMenu, Icons.Small.SAVE, "Save", new SaveAlbumCommand(), KeyEvent.VK_S);
+        addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand(), KeyEvent.VK_E);
+        addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand(), KeyEvent.VK_P);
+        addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand(), KeyEvent.VK_X);
     }
 
-    private void addMenuItem(JMenu menu, ImageIcon icon, String title, AbstractCommand command) {
+    private void addMenuItem(JMenu menu, ImageIcon icon, String title, AbstractCommand command, int shortCutKey) {
         JMenuItem menuItem = new JMenuItem(title);
         menuItem.setIcon(icon);
         menuItem.addActionListener((ActionEvent ae) -> {
             command.execute();
         });
-
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(shortCutKey, InputEvent.CTRL_DOWN_MASK));
         menu.add(menuItem);
     }
 
