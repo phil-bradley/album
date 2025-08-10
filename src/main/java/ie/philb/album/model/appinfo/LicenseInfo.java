@@ -2,16 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ie.philb.album.model;
-
-import java.util.List;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+package ie.philb.album.model.appinfo;
 
 /**
  *
  * @author philb
  */
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
+import java.util.List;
+
 @JacksonXmlRootElement(localName = "licenseSummary")
 public record LicenseInfo(
         @JacksonXmlElementWrapper(localName = "dependencies")
@@ -23,6 +25,7 @@ public record LicenseInfo(
             String artifactId,
             String version,
             @JacksonXmlElementWrapper(localName = "licenses")
+            @JacksonXmlProperty(localName = "license")
             List<License> license
             ) {
 

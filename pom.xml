@@ -16,6 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.useModulePath>false</maven.compiler.useModulePath>
         <exec.mainClass>ie.philb.album.Main</exec.mainClass>
         <scm.ssh>git@github.com:phil-bradley/album.git</scm.ssh>
         <scm.https>https://github.com/phil-bradley/album.git</scm.https>
@@ -49,6 +50,15 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>17</release>
+                    <useModulePath>false</useModulePath>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>io.github.git-commit-id</groupId>
                 <artifactId>git-commit-id-maven-plugin</artifactId>
@@ -146,7 +156,7 @@
                 <version>2.2.0</version>
                 <executions>
                     <!-- Generate HTML report of licenses -->
-                    <!-- 
+                    <!--
                     <execution>
                       <id>generate-license-html</id>
                       <phase>verify</phase>
