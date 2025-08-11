@@ -1,0 +1,107 @@
+name: Build and Release Album
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Build JAR
+        run: mvn -B clean package
+
+      # Create tar.gz archive
+      - name: Package tar.gz
+        run: |
+          mkdir -p dist/album
+          cp target/album.jar dist/album/
+          echo '#!/bin/bash' > dist/album/run.sh
+          echo 'java -jar "$(dirname "$0")/album.jar" "$@"' >> dist/album/run.sh
+          chmod +x dist/album/run.sh
+          tar -czf target/album.tar.gz -C dist album
+
+      # Create .deb package (basic)
+      - name: Package .deb
+        run: |
+          mkdir -p dist-deb/usr/local/bin
+          cp target/album.jar dist-deb/usr/local/bin/album.jar
+          echo '#!/bin/bash' > dist-deb/usr/local/bin/album
+          echo 'java -jar /usr/local/bin/album.jar "$@"' >> dist-deb/usr/local/bin/album
+          chmod +x dist-deb/usr/local/bin/album
+
+          mkdir -p dist-deb/DEBIAN
+          cat <<EOF > dist-deb/DEBIAN/control
+          Package: album
+          Version: ${GITHUB_REF_NAME#v}
+          Section: utils
+          Priority: optional
+          Architecture: all
+          Depends: openjdk-17-jre
+          Maintainer: Your Name <you@example.com>
+          Description: Album Application
+           Java-based album application packaged as .deb
+          EOF
+
+          dpkg-deb --build dist-deb target/album.deb
+
+      - name: Upload Linux artifacts to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            target/album.jar
+            target/album.tar.gz
+            target/album.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Build JAR
+        run: mvn -B clean package
+
+      # Create portable self-contained EXE (no installer)
+      - name: Create portable Windows EXE with jpackage
+        run: |
+          jpackage ^
+            --type app-image ^
+            --input target ^
+            --main-jar album.jar ^
+            --main-class ie.philb.album.Main ^
+            --name Album ^
+            --app-version ${env:GITHUB_REF_NAME} ^
+            --vendor "Philip Bradley" ^
+            --icon src/main/resources/icon.ico ^
+            --runtime-image "${JAVA_HOME}"
+
+      # Zip the app-image folder to upload
+      - name: Compress portable app image
+        run: |
+          powershell Compress-Archive -Path Album -DestinationPath target/album-portable.zip
+
+      - name: Upload portable EXE ZIP to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/album-portable.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
