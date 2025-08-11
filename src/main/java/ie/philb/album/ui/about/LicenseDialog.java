@@ -4,15 +4,16 @@
  */
 package ie.philb.album.ui.about;
 
-import ie.philb.album.model.appinfo.LicenseInfo;
 import ie.philb.album.model.appinfo.LicenseInfoHtmlRenderer;
-import ie.philb.album.model.appinfo.LicenseInfoReader;
+import ie.philb.album.model.appinfo.LicenseReader;
+import ie.philb.album.model.appinfo.LicenseSummary;
 import ie.philb.album.ui.ApplicationUi;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -22,7 +23,9 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
 
 /**
  *
@@ -30,12 +33,13 @@ import javax.swing.KeyStroke;
  */
 public class LicenseDialog extends JDialog {
 
-    private LicensePanel licensePanel = new LicensePanel();
+    private final LicensePanel licensePanel = new LicensePanel();
 
     public LicenseDialog() {
 
         super(ApplicationUi.getInstance(), "License");
         setModal(true);
+        setBackground(Color.white);
 
         setLayout(new GridBagLayout());
         GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).weight(1).fillBoth();
@@ -65,7 +69,7 @@ public class LicenseDialog extends JDialog {
 
     class LicensePanel extends AppPanel {
 
-        private LicenseInfo licenseInfo;
+        private LicenseSummary licenseSummary;
         private final JButton btnOk = new JButton("OK");
         private JEditorPane editorPane = new JEditorPane();
 
@@ -74,22 +78,31 @@ public class LicenseDialog extends JDialog {
 
             editorPane.setEditable(false);
             editorPane.setContentType("text/html");
+            editorPane.setBackground(Color.white);
 
             try {
-                licenseInfo = new LicenseInfoReader().read();
-                String html = new LicenseInfoHtmlRenderer(licenseInfo).getHtml();
+                licenseSummary = new LicenseReader().read();
+                String html = new LicenseInfoHtmlRenderer(licenseSummary).getHtml();
                 editorPane.setText(html);
             } catch (Exception ex) {
-                editorPane.setText("<html><body><br/><center>License Info Not Available<br/></body></html>");
+                editorPane.setText("<html><body><br/><center>License Info Not Available<br/>" + ex.getMessage() + "</body></html>");
             }
 
             GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).weight(1).fillBoth();
-            add(editorPane, gbc);
+            JScrollPane scrollPane = new JScrollPane(editorPane);
+            scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+            add(scrollPane, gbc);
 
             gbc.incy().fillNone().weighty(0).anchorSouthEast();
             add(btnOk, gbc);
 
-            //this.licenseInfo = LicenseInfoReader.read();
+            btnOk.addActionListener((ActionEvent ae) -> {
+                LicenseDialog.this.dispose();
+            });
+
+            scrollPane.getVerticalScrollBar().setValue(0);
         }
     }
 }
