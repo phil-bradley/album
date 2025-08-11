@@ -4,7 +4,7 @@
  */
 package ie.philb.album.ui.about;
 
-import ie.philb.album.model.ApplicationInfo;
+import ie.philb.album.model.appinfo.ApplicationInfo;
 import ie.philb.album.ui.ApplicationUi;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
@@ -62,7 +62,7 @@ public class AboutDialog extends JDialog {
         });
     }
 
-    public class AboutPanel extends AppPanel {
+    class AboutPanel extends AppPanel {
 
         private final ApplicationInfo applicationInfo;
         private final JLabel lblApplicationName = new JLabel();

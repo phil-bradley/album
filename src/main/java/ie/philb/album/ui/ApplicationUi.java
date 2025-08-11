@@ -14,6 +14,7 @@ import ie.philb.album.ui.command.NewAlbumCommand;
 import ie.philb.album.ui.command.OpenAlbumCommand;
 import ie.philb.album.ui.command.PrintAlbumCommand;
 import ie.philb.album.ui.command.SaveAlbumCommand;
+import ie.philb.album.ui.command.ShowLicenseCommand;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.imagelibrary.ImageLibraryView;
@@ -138,7 +139,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         menuBar = new JMenuBar();
         menuBar.add(fileMenu = new JMenu("File"));
         fileMenu.setMnemonic(KeyEvent.VK_F);
-        
+
         menuBar.add(helpMenu = new JMenu("Help"));
         helpMenu.setMnemonic(KeyEvent.VK_H);
 
@@ -148,8 +149,10 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand(), KeyEvent.VK_E);
         addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand(), KeyEvent.VK_P);
         addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand(), KeyEvent.VK_X);
-        
+
+        addMenuItem(helpMenu, null, "License", new ShowLicenseCommand(), KeyEvent.VK_L);
         addMenuItem(helpMenu, null, "About", new AboutCommand(), KeyEvent.VK_I);
+
     }
 
     private void addMenuItem(JMenu menu, ImageIcon icon, String title, AbstractCommand command, int shortCutKey) {
