@@ -62,7 +62,7 @@ jobs:
             target/album.tar.gz
             target/album.deb
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
 
   build-windows:
     runs-on: windows-latest
