@@ -79,10 +79,20 @@ jobs:
       - name: Build JAR
         run: mvn -B clean package
 
+      # Create minimal runtime image in a short path to avoid long path issues
+      - name: Create minimal runtime with jlink
+        run: |
+          # OPTIONAL: detect required modules automatically
+          # $mods = & "${env:JAVA_HOME}\bin\jdeps.exe" --print-module-deps --ignore-missing-deps target\album.jar
+          # echo "Modules: $mods"
+
+          mkdir C:\rt
+          ${env:JAVA_HOME}\bin\jlink.exe  --output C:\rt  --add-modules java.base,java.desktop,java.logging  --strip-debug  --no-header-files  --no-man-pages
+
       # Create portable self-contained EXE (no installer)
       - name: Create portable Windows EXE with jpackage
         run: |
-          jpackage --type app-image --verbose --temp D:\tmp --input target --main-jar album.jar --main-class ie.philb.album.Main --name Album --app-version ${env:GITHUB_REF_NAME} --vendor "Phil Bradley" --runtime-image "${JAVA_HOME}"
+          jpackage --type app-image --verbose --temp D:\tmp --input target --main-jar album.jar --main-class ie.philb.album.Main --name Album --app-version ${env:GITHUB_REF_NAME} --vendor "Phil Bradley" --runtime-image C:\rt
 
       # Zip the app-image folder to upload
       - name: Compress portable app image
