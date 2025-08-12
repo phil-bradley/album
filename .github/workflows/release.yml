@@ -82,7 +82,7 @@ jobs:
       # Create portable self-contained EXE (no installer)
       - name: Create portable Windows EXE with jpackage
         run: |
-          jpackage --type app-image --input target --main-jar album.jar --main-class ie.philb.album.Main --name Album --app-version ${env:GITHUB_REF_NAME} --vendor "Phil Bradley" --runtime-image "${JAVA_HOME}"
+          jpackage --type app-image --temp D:\tmp --input target --main-jar album.jar --main-class ie.philb.album.Main --name Album --app-version ${env:GITHUB_REF_NAME} --vendor "Phil Bradley" --runtime-image "${JAVA_HOME}"
 
       # Zip the app-image folder to upload
       - name: Compress portable app image
