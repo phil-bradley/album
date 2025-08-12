@@ -83,24 +83,24 @@ jobs:
       - name: Create minimal runtime with jlink
         shell: pwsh
         run: |
-          # Ensure C:\rt does not already exist
-          if (Test-Path "C:\rt") {
-            Remove-Item -Recurse -Force "C:\rt"
+          # Ensure d:\rt does not already exist
+          if (Test-Path "d:\rt") {
+            Remove-Item -Recurse -Force "d:\rt"
           }
 
           # OPTIONAL: detect required modules automatically
           # $mods = & "${env:JAVA_HOME}\bin\jdeps.exe" --print-module-deps --ignore-missing-deps target\album.jar
           # echo "Modules: $mods"
 
-          New-Item -ItemType Directory -Path "C:\rt" | Out-Null
+          New-Item -ItemType Directory -Path "d:\rt" | Out-Null
 
-          & jlink --output C:\rt --add-modules java.base,java.desktop,java.logging --strip-debug --no-header-files --no-man-pages
+          & jlink --output d:\rt --add-modules java.base,java.desktop,java.logging --strip-debug --no-header-files --no-man-pages
 
       # Create portable self-contained EXE (no installer)
       - name: Create portable Windows EXE with jpackage
         shell: pwsh
         run: |
-          jpackage --type app-image --verbose --temp D:\tmp --input target --main-jar album.jar --main-class ie.philb.album.Main --name Album --app-version ${env:GITHUB_REF_NAME} --vendor "Phil Bradley" --runtime-image C:\rt
+          jpackage --type app-image --verbose --temp D:\tmp --input target --main-jar album.jar --main-class ie.philb.album.Main --name Album --app-version ${env:GITHUB_REF_NAME} --vendor "Phil Bradley" --runtime-image d:\rt
 
       # Zip the app-image folder to upload
       - name: Compress portable app image
