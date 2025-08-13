@@ -345,7 +345,12 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
     @Override
     public void pageEntrySelected(PageView pageView, PageEntryView pageEntryView) {
-        setSelected(this.equals(pageEntryView));
+        
+        boolean pageMatches = (this.pageView.getPageModel().getPageId() == pageEntryView.getPageView().getPageModel().getPageId());
+        boolean cellMatches = this.pageEntryModel.getCell().location().equals(pageEntryView.getPageEntryModel().getCell().location());
+        
+        boolean isSelectedPageEntryView = pageMatches && cellMatches;
+        setSelected(isSelectedPageEntryView);
     }
 
     private PageGeometryMapper getPageGeometryMapper() {
