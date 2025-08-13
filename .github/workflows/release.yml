@@ -84,8 +84,8 @@ jobs:
         shell: pwsh
         run: |
           # Ensure d:\rt does not already exist
-          if (!(Test-Path "d:\rt")) {
-             New-Item -ItemType Directory -Path "d:\rt" | Out-Null
+          if (Test-Path "d:\rt") {
+             Remove-Item -Recurse -Force "d:\rt"
           }
 
           # OPTIONAL: detect required modules automatically
