@@ -7,6 +7,7 @@ package ie.philb.album.view;
 import ie.philb.album.AppContext;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
+import ie.philb.album.model.PageGeometryOption;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.actionlistener.ImageCenterActionListener;
 import ie.philb.album.ui.actionlistener.ToggleCellTypeActionListener;
@@ -25,16 +26,21 @@ import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlListener;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlModel;
 import ie.philb.album.ui.resources.Icons;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.ScrollPaneConstants;
 
 /**
  *
@@ -54,12 +60,13 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnNewPage;
     private JButton btnPageSettings;
     private JButton btnBrightness;
-    private PageGeometrySelector slctGeometry;
     private SlidingNumberControl brightnessControl;
     private JPopupMenu brightnessMenu;
     private SlidingNumberControl horizontalMarginControl;
     private SlidingNumberControl verticalMarginControl;
     private JPopupMenu pageSettingsMenu;
+    private JButton btnPageGeometry;
+    private PageGeometryMenu pageGeometryMenu;
 
     private final AlbumView albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
 
@@ -129,6 +136,9 @@ public class AlbumViewContainer extends AppPanel {
         pageSettingsMenu.setLayout(new BoxLayout(pageSettingsMenu, BoxLayout.Y_AXIS));
         pageSettingsMenu.add(horizontalMarginControl);
         pageSettingsMenu.add(verticalMarginControl);
+
+        pageGeometryMenu = new PageGeometryMenu();
+
     }
 
     private void adjustVerticalMargin() {
@@ -226,15 +236,14 @@ public class AlbumViewContainer extends AppPanel {
         });
         toolBar.add(btnBrightness);
 
-        slctGeometry = new PageGeometrySelector();
-        slctGeometry.addActionListener((ActionEvent ae) -> {
-            new SetGeometryCommand(slctGeometry.getSelectedGeometryOption().geometry()).execute();
+        btnPageGeometry = new JButton("Layout");
+        btnPageGeometry.addActionListener(e -> {
+            pageGeometryMenu.show(btnPageGeometry, 0, btnPageGeometry.getHeight());
         });
 
-        slctGeometry.setMaximumSize(new Dimension(100, 100));
-        toolBar.add(slctGeometry);
+        toolBar.add(btnPageGeometry);
 
-        slctGeometry.setEnabled(false);
+        btnPageGeometry.setEnabled(false);
         setCellButtonsEnabled(false);
         btnCellType.setEnabled(false);
     }
@@ -274,10 +283,10 @@ public class AlbumViewContainer extends AppPanel {
 
     @Override
     public void pageSelected(PageView view) {
-        slctGeometry.setEnabled(view != null);
+        btnPageGeometry.setEnabled(view != null);
         if (view != null) {
             PageModel model = view.getPageModel();
-            slctGeometry.setSelectedGeometry(model.getGeometry());
+            pageGeometryMenu.setSelectedGeometry(model.getGeometry());
             verticalMarginControl.setValue(model.getVerticalMargin());
             horizontalMarginControl.setValue(model.getHorizontalMargin());
         }

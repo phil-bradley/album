@@ -151,7 +151,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
             Point modelOffset = new Point(geometryMapper.viewUnitsToPoints(viewOffset.x), geometryMapper.viewUnitsToPoints(viewOffset.y));
             pageEntryModel.setImageViewOffset(modelOffset);
         }
-        
+
         revalidate();
         repaint();
     }
@@ -345,10 +345,15 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
     @Override
     public void pageEntrySelected(PageView pageView, PageEntryView pageEntryView) {
-        
-        boolean pageMatches = (this.pageView.getPageModel().getPageId() == pageEntryView.getPageView().getPageModel().getPageId());
-        boolean cellMatches = this.pageEntryModel.getCell().location().equals(pageEntryView.getPageEntryModel().getCell().location());
-        
+
+        boolean pageMatches = false;
+        boolean cellMatches = false;
+
+        if (pageView != null && pageEntryView != null) {
+            pageMatches = (this.pageView.getPageModel().getPageId() == pageEntryView.getPageView().getPageModel().getPageId());
+            cellMatches = this.pageEntryModel.getCell().location().equals(pageEntryView.getPageEntryModel().getCell().location());
+        }
+
         boolean isSelectedPageEntryView = pageMatches && cellMatches;
         setSelected(isSelectedPageEntryView);
     }

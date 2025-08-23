@@ -50,6 +50,28 @@ public class Icons {
         public static final ImageIcon MARGIN = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/margin.png"));
     }
 
+    public static final class Pages {
+
+        public static final ImageIcon TITLE = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/TITLE.png"));
+        public static final ImageIcon RECT_1x1 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/RECT_1x1.png"));
+        public static final ImageIcon RECT_1x2 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/RECT_1x2.png"));
+        public static final ImageIcon RECT_1x3 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/RECT_1x3.png"));
+        public static final ImageIcon RECT_2x1 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/RECT_2x1.png"));
+        public static final ImageIcon RECT_2x2 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/RECT_2x2.png"));
+        public static final ImageIcon RECT_2x3 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/RECT_2x3.png"));
+        public static final ImageIcon RECT_3x1 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/RECT_3x1.png"));
+        public static final ImageIcon RECT_3x2 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/RECT_3x2.png"));
+        public static final ImageIcon RECT_3x3 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/RECT_3x3.png"));
+        public static final ImageIcon COLS_1_2 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/COLS_1_2.png"));
+        public static final ImageIcon COLS_2_1 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/COLS_2_1.png"));
+        public static final ImageIcon ROWS_1_2 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/ROWS_1_2.png"));
+        public static final ImageIcon ROWS_1_3 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/ROWS_1_3.png"));
+        public static final ImageIcon ROWS_2_1 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/ROWS_2_1.png"));
+        public static final ImageIcon ROWS_2_3 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/ROWS_2_3.png"));
+        public static final ImageIcon ROWS_3_1 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/ROWS_3_1.png"));
+        public static final ImageIcon ROWS_3_2 = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/pages/ROWS_3_2.png"));
+    }
+
     public static final ImageIcon LOADING = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/loading.gif"));
 
 }
