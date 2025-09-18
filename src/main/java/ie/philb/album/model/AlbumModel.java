@@ -38,13 +38,14 @@ public class AlbumModel {
     }
 
     public void addPage(PageGeometry geometry) {
-        PageModel pageModel = new PageModel(geometry, getPageSize()).withMargin(defaultMargin).withGutter(defaultGutter);
-        pageModel.setPageId(pages.size() + 1);
-        this.pages.add(pageModel);
+        addPage(geometry, defaultMargin, defaultGutter);
     }
 
     public void addPage(PageGeometry geometry, int margin, int gutter) {
-        PageModel pageModel = new PageModel(geometry, getPageSize()).withMargin(margin).withGutter(gutter);
+        addPage(new PageModel(geometry, getPageSize()).withMargin(margin).withGutter(gutter));
+    }
+
+    public void addPage(PageModel pageModel) {
         pageModel.setPageId(pages.size() + 1);
         this.pages.add(pageModel);
     }

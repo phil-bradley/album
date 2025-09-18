@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -25,6 +26,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Accessors(chain = true, fluent = true)
 public class PageCell {
 
@@ -35,7 +37,31 @@ public class PageCell {
     public PageCell(Dimension size, Point location) {
         this(size, location, PageEntryType.Image);
     }
-    
+
+    public Dimension getSize() {
+        return size;
+    }
+
+    public void setSize(Dimension size) {
+        this.size = size;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public void setLocation(Point location) {
+        this.location = location;
+    }
+
+    public PageEntryType getPageEntryType() {
+        return pageEntryType;
+    }
+
+    public void setPageEntryType(PageEntryType pageEntryType) {
+        this.pageEntryType = pageEntryType;
+    }
+
     @Override
     public String toString() {
         return "PageCell size=" + size.width + "x" + size.height + " at {" + location.x + ", " + location.y + "}";

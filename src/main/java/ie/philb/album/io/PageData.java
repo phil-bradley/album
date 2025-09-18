@@ -4,12 +4,13 @@
  */
 package ie.philb.album.io;
 
+import ie.philb.album.model.PageGeometry;
 import java.util.List;
 
 /**
  *
  * @author philb
  */
-public record PageData(List<CellData> cells) {
+public record PageData(List<CellData> cells, PageGeometry pageGeometry) {
 
 }

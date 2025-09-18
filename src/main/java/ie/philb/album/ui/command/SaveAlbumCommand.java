@@ -12,6 +12,7 @@ import ie.philb.album.ui.action.SaveAlbumAction;
 import ie.philb.album.ui.common.Dialogs;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -30,11 +31,21 @@ public class SaveAlbumCommand extends AbstractCommand {
 
         if (saveFile == null) {
             JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Album Files", "album"));
 
             int ret = fileChooser.showSaveDialog(ApplicationUi.getInstance());
 
             if (ret == JFileChooser.APPROVE_OPTION) {
                 saveFile = fileChooser.getSelectedFile();
+
+                String saveFileName = saveFile.getAbsolutePath();
+
+                if (!saveFile.exists()) {
+                    if (saveFileName.endsWith("album")) {
+                        saveFile = new File(saveFileName + ".album");
+                    }
+                }
+
             }
 
             if (saveFile == null) {

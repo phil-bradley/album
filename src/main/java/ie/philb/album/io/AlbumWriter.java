@@ -44,9 +44,10 @@ public class AlbumWriter {
         albumData.setCreated(ZonedDateTime.now());
         albumData.setLastUpdated(ZonedDateTime.now());
         albumData.setCreatedBy(System.getProperty("user.name"));
+        albumData.setPageSize(albumModel.getPageSize());
 
         for (PageModel pageModel : albumModel.getPages()) {
-            PageData pageData = new PageData(getPageCells(pageModel));
+            PageData pageData = new PageData(getPageCells(pageModel), pageModel.getGeometry());
             albumData.getPages().add(pageData);
         }
 

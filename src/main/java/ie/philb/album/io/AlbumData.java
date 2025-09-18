@@ -4,6 +4,7 @@
  */
 package ie.philb.album.io;
 
+import ie.philb.album.model.PageSize;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,15 @@ public class AlbumData {
     private ZonedDateTime lastUpdated;
     private String createdBy;
     private List<PageData> pages = new ArrayList<>();
+    private PageSize pageSize;
+
+    public PageSize getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(PageSize pageSize) {
+        this.pageSize = pageSize;
+    }
 
     public String getName() {
         return name;
