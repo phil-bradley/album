@@ -10,6 +10,7 @@ import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageModel;
+import java.awt.Color;
 import java.io.File;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -70,7 +71,31 @@ public class AlbumWriter {
             imagePath = entry.getImageFile().getAbsolutePath();
         }
 
-        CellData cellData = new CellData(cell.size().width, cell.size().height, cell.location().x, cell.location().y, imagePath, entry.getZoomFactor());
+        CellData cellData = new CellData(
+                cell.size().width,
+                cell.size().height,
+                cell.location().x,
+                cell.location().y,
+                entry.getPageEntryType(),
+                imagePath,
+                entry.getZoomFactor(),
+                entry.isGrayScale(),
+                entry.isCentered(),
+                entry.getImageViewOffset().x,
+                entry.getImageViewOffset().y,
+                entry.getBrightnessAdjustment(),
+                entry.getTextControlModel().getText(),
+                entry.getTextControlModel().getFontFamily(),
+                entry.getTextControlModel().getFontSize(),
+                encodeColor(entry.getTextControlModel().getFontColor()),
+                entry.getTextControlModel().isItalic(),
+                entry.getTextControlModel().isBold(),
+                entry.getTextControlModel().isUnderline()
+        );
         return cellData;
+    }
+
+    private String encodeColor(Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 }
