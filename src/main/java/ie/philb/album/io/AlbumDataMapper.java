@@ -21,13 +21,14 @@ import java.util.List;
  */
 public class AlbumDataMapper {
 
-    // TODO:
-    //   page margin and gutter
     public AlbumModel map(AlbumData albumData) {
         AlbumModel albumModel = new AlbumModel(albumData.getPageSize(), albumData.getDefaultMargin(), albumData.getDefaultGutter());
 
         for (PageData page : albumData.getPages()) {
             PageModel pageModel = new PageModel(page.pageGeometry(), albumData.getPageSize());
+            pageModel.setHorizontalMargin(page.horizontalMargin());
+            pageModel.setVerticalMargin(page.verticalMargin());
+            pageModel.setGutter(page.gutter());
 
             for (int i = 0; i < page.cells().size(); i++) {
                 PageEntryModel pem = pageModel.getPageEntries().get(i);
