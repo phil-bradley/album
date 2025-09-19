@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author philb
  */
-public class AlbumMapperTest {
+public class AlbumModelMapperTest {
 
     private static final int DEFAULT_MARGIN = 20;
     private static final int DEFAULT_GUTTER = 34;
