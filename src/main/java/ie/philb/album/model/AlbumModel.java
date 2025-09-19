@@ -29,6 +29,14 @@ public class AlbumModel {
         this.defaultGutter = gutter;
     }
 
+    public int getDefaultMargin() {
+        return defaultMargin;
+    }
+
+    public int getDefaultGutter() {
+        return defaultGutter;
+    }
+
     public PageSize getPageSize() {
         return pageSize;
     }

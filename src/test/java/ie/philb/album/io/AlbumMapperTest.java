@@ -14,7 +14,6 @@ import ie.philb.album.ui.common.textcontrol.TextControlModel;
 import ie.philb.album.util.TestUtils;
 import java.awt.Color;
 import java.awt.Point;
-import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -36,6 +35,8 @@ public class AlbumMapperTest {
         AlbumData albumData = new AlbumDataMapper().map(albumModel);
         assertNotNull(albumData);
         assertEquals(PageSize.US_Letter_Landscape, albumData.getPageSize());
+        assertEquals(DEFAULT_MARGIN, albumData.getDefaultMargin());
+        assertEquals(DEFAULT_GUTTER, albumData.getDefaultGutter());
     }
 
     @Test
@@ -56,6 +57,21 @@ public class AlbumMapperTest {
         assertEquals(16, page1.cells().size());
         assertEquals(PageGeometry.square(4), page1.pageGeometry());
 
+    }
+
+    @Test
+    void mapPageMarginAndGutter() {
+
+        AlbumModel albumModel = new AlbumModel(PageSize.US_Letter_Landscape, DEFAULT_MARGIN, DEFAULT_GUTTER);
+        albumModel.addPage(PageGeometry.rectangle(3, 2));
+
+        PageModel page = albumModel.getPages().get(0);
+        page.setVerticalMargin(123);
+        page.setHorizontalMargin(41);
+
+        AlbumData albumData = new AlbumDataMapper().map(albumModel);
+        assertEquals(123, albumData.getPages().get(0).verticalMargin());
+        assertEquals(41, albumData.getPages().get(0).horizontalMargin());
     }
 
     @Test

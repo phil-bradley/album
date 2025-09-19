@@ -19,8 +19,10 @@ public class AlbumData {
     private ZonedDateTime created;
     private ZonedDateTime lastUpdated;
     private String createdBy;
-    private List<PageData> pages = new ArrayList<>();
+    private final List<PageData> pages = new ArrayList<>();
     private PageSize pageSize;
+    private int defaultMargin;
+    private int defaultGutter;
 
     public PageSize getPageSize() {
         return pageSize;
@@ -69,6 +71,22 @@ public class AlbumData {
     public void setPages(List<PageData> pages) {
         this.pages.clear();
         this.pages.addAll(pages);
+    }
+
+    public int getDefaultMargin() {
+        return defaultMargin;
+    }
+
+    public void setDefaultMargin(int defaultMargin) {
+        this.defaultMargin = defaultMargin;
+    }
+
+    public int getDefaultGutter() {
+        return defaultGutter;
+    }
+
+    public void setDefaultGutter(int defaultGutter) {
+        this.defaultGutter = defaultGutter;
     }
 
 }

@@ -11,6 +11,6 @@ import java.util.List;
  *
  * @author philb
  */
-public record PageData(List<CellData> cells, PageGeometry pageGeometry) {
+public record PageData(List<CellData> cells, PageGeometry pageGeometry, int verticalMargin, int horizontalMargin, int gutter) {
 
 }

@@ -9,6 +9,8 @@ import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageModel;
 import java.awt.Color;
+import java.awt.Point;
+import java.io.File;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,52 @@ import java.util.List;
  */
 public class AlbumDataMapper {
 
+    // TODO:
+    //   page margin and gutter
+    public AlbumModel map(AlbumData albumData) {
+        AlbumModel albumModel = new AlbumModel(albumData.getPageSize(), albumData.getDefaultMargin(), albumData.getDefaultGutter());
+
+        for (PageData page : albumData.getPages()) {
+            PageModel pageModel = new PageModel(page.pageGeometry(), albumData.getPageSize());
+
+            for (int i = 0; i < page.cells().size(); i++) {
+                PageEntryModel pem = pageModel.getPageEntries().get(i);
+                CellData cellData = page.cells().get(i);
+                applyCellData(cellData, pem);
+            }
+
+            albumModel.addPage(pageModel);
+        }
+
+        return albumModel;
+    }
+
+    private void applyCellData(CellData cellData, PageEntryModel pem) {
+
+        pem.setPageEntryType(cellData.pageEntryType());
+
+        if (!cellData.fileName().isBlank()) {
+            File imageFile = new File(cellData.fileName());
+            if (imageFile.exists()) {
+                pem.setImageFile(imageFile);
+            }
+        }
+
+        pem.setZoomFactor(cellData.zoom());
+        pem.setGrayScale(cellData.isGreyScale());
+        pem.setBrightnessAdjustment(cellData.brightness());
+        pem.setImageViewOffset(new Point(cellData.offsetX(), cellData.offsetY()));
+        pem.setCentered(cellData.isCentered());
+
+        pem.getTextControlModel().setText(cellData.text());
+        pem.getTextControlModel().setBold(cellData.bold());
+        pem.getTextControlModel().setItalic(cellData.italic());
+        pem.getTextControlModel().setUnderline(cellData.underline());
+        pem.getTextControlModel().setFontColor(Color.decode(cellData.fontColor()));
+        pem.getTextControlModel().setFontSize(cellData.fontSize());
+        pem.getTextControlModel().setFontFamily(cellData.fontFamily());
+    }
+
     public AlbumData map(AlbumModel albumModel) {
 
         AlbumData albumData = new AlbumData();
@@ -27,9 +75,17 @@ public class AlbumDataMapper {
         albumData.setLastUpdated(ZonedDateTime.now());
         albumData.setCreatedBy(System.getProperty("user.name"));
         albumData.setPageSize(albumModel.getPageSize());
+        albumData.setDefaultMargin(albumModel.getDefaultMargin());
+        albumData.setDefaultGutter(albumModel.getDefaultGutter());
 
         for (PageModel pageModel : albumModel.getPages()) {
-            PageData pageData = new PageData(getPageCells(pageModel), pageModel.getGeometry());
+            PageData pageData = new PageData(
+                    getPageCells(pageModel),
+                    pageModel.getGeometry(),
+                    pageModel.getVerticalMargin(),
+                    pageModel.getHorizontalMargin(),
+                    pageModel.getGutter()
+            );
             albumData.getPages().add(pageData);
         }
 
