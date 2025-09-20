@@ -7,6 +7,9 @@ package ie.philb.album.io;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import ie.philb.album.model.AlbumModel;
+import ie.philb.album.model.PageEntryType;
+import ie.philb.album.model.PageGeometry;
+import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
 import java.io.File;
 import java.io.IOException;
@@ -46,9 +49,17 @@ public class AlbumDataMapperTest {
     }
 
     @Test
-    @Disabled
     void pageGeometryReadFromJson() throws Exception {
 
+        PageModel page0 = albumModel.getPages().get(0);
+        PageGeometry geometry0 = PageGeometry.square(1);
+        geometry0.getCells().get(0).setPageEntryType(PageEntryType.Text);
+        assertEquals(geometry0, page0.getGeometry());
+
+        PageModel page1 = albumModel.getPages().get(1);
+        PageGeometry geometry1 = PageGeometry.square(2);
+        geometry1.getCells().get(1).setPageEntryType(PageEntryType.Text);
+        assertEquals(geometry1, page1.getGeometry());
     }
 
     @Test
