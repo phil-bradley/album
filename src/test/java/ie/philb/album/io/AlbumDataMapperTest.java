@@ -7,14 +7,20 @@ package ie.philb.album.io;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import ie.philb.album.model.AlbumModel;
+import ie.philb.album.model.PageCell;
+import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
+import ie.philb.album.util.TestUtils;
 import java.io.File;
 import java.io.IOException;
+import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -63,9 +69,30 @@ public class AlbumDataMapperTest {
     }
 
     @Test
-    @Disabled
     void imagePropertiesReadFromJson() throws Exception {
 
+        PageModel page1 = albumModel.getPages().get(1);
+        PageEntryModel pem0 = page1.getPageEntries().get(0);
+
+        assertEquals(PageEntryType.Image, pem0.getPageEntryType());
+        assertEquals("/home/philb/Pictures/5999564640.jpg", pem0.getImageFile().getAbsolutePath());
+        assertEquals(142, pem0.getBrightnessAdjustment());
+        assertEquals(1.741, pem0.getZoomFactor());
+        assertFalse(pem0.isCentered());
+        assertFalse(pem0.isGrayScale());
+        assertEquals(38, pem0.getImageViewOffset().x);
+        assertEquals(151, pem0.getImageViewOffset().y);
+
+        PageEntryModel pem3 = page1.getPageEntries().get(3);
+
+        assertEquals(PageEntryType.Image, pem3.getPageEntryType());
+        assertEquals("/home/philb/Pictures/6739254902.jpg", pem3.getImageFile().getAbsolutePath());
+        assertEquals(324, pem3.getBrightnessAdjustment());
+        assertEquals(1, pem3.getZoomFactor());
+        assertTrue(pem3.isCentered());
+        assertTrue(pem3.isGrayScale());
+        assertEquals(89, pem3.getImageViewOffset().x);
+        assertEquals(0, pem3.getImageViewOffset().y);
     }
 
     @Test
