@@ -13,7 +13,9 @@ import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
+import ie.philb.album.ui.common.textcontrol.TextControlModel;
 import ie.philb.album.util.TestUtils;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
@@ -96,8 +98,20 @@ public class AlbumDataMapperTest {
     }
 
     @Test
-    @Disabled
     void textPropertiesReadFromJson() throws Exception {
 
+        PageModel page1 = albumModel.getPages().get(1);
+        PageEntryModel pem1 = page1.getPageEntries().get(1);
+
+        assertEquals(PageEntryType.Text, pem1.getPageEntryType());
+        TextControlModel tcm = pem1.getTextControlModel();
+
+        assertEquals("Text Cell", tcm.getText());
+        assertEquals("NotoSerif", tcm.getFontFamily());
+        assertEquals(24, tcm.getFontSize());
+        assertEquals(Color.decode("#404040"), tcm.getFontColor());
+        assertTrue(tcm.isBold());
+        assertTrue(tcm.isItalic());
+        assertTrue(tcm.isUnderline());
     }
 }
