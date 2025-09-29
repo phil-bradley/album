@@ -21,4 +21,6 @@ public interface TextControlChangeListener {
 
     default void textEditSelected(TextControlModel model) {
     }
+
+//    public boolean isTextEditSelected();
 }

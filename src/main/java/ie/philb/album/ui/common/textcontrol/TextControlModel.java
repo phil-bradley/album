@@ -12,21 +12,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  *
  * @author philb
  */
+@EqualsAndHashCode
+@ToString
 public class TextControlModel {
+
+    public static final ApplicationFont DEFAULT_FONT = ApplicationFont.NotoSerif;
+    public static final int DEFAULT_FONT_SIZE = 24;
+    public static final Color DEFAULT_FONT_COLOR = Color.DARK_GRAY;
 
     private final List<TextControlChangeListener> listeners = new ArrayList<>();
     private String text = "";
     private boolean isBold = false;
     private boolean isItalic = false;
     private boolean isUnderline = false;
-    private String fontFamily = ApplicationFont.NotoSerif.name();
-    private int fontSize = 24;
-    private Color fontColor = Color.DARK_GRAY;
+    private String fontFamily = DEFAULT_FONT.name();
+    private int fontSize = DEFAULT_FONT_SIZE;
+    private Color fontColor = DEFAULT_FONT_COLOR;
 
     public void addChangeListener(TextControlChangeListener listener) {
         listeners.add(listener);
@@ -159,54 +167,4 @@ public class TextControlModel {
         return font;
     }
 
-    @Override
-    public String toString() {
-        return "TextControlModel{" + "listeners=" + listeners + ", text=" + text + ", isBold=" + isBold + ", isItalic=" + isItalic + ", isUnderline=" + isUnderline + ", fontFamily=" + fontFamily + ", fontSize=" + fontSize + ", fontColor=" + fontColor + '}';
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 37 * hash + Objects.hashCode(this.text);
-        hash = 37 * hash + (this.isBold ? 1 : 0);
-        hash = 37 * hash + (this.isItalic ? 1 : 0);
-        hash = 37 * hash + (this.isUnderline ? 1 : 0);
-        hash = 37 * hash + Objects.hashCode(this.fontFamily);
-        hash = 37 * hash + this.fontSize;
-        hash = 37 * hash + Objects.hashCode(this.fontColor);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final TextControlModel other = (TextControlModel) obj;
-        if (this.isBold != other.isBold) {
-            return false;
-        }
-        if (this.isItalic != other.isItalic) {
-            return false;
-        }
-        if (this.isUnderline != other.isUnderline) {
-            return false;
-        }
-        if (this.fontSize != other.fontSize) {
-            return false;
-        }
-        if (!Objects.equals(this.text, other.text)) {
-            return false;
-        }
-        if (!Objects.equals(this.fontFamily, other.fontFamily)) {
-            return false;
-        }
-        return Objects.equals(this.fontColor, other.fontColor);
-    }
 }
