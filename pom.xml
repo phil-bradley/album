@@ -150,37 +150,26 @@
                     <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>2.2.0</version>
-                <executions>
-                    <!-- Generate HTML report of licenses -->
-                    <!--
-                    <execution>
-                      <id>generate-license-html</id>
-                      <phase>verify</phase>
-                      <goals>
-                        <goal>third-party-report</goal>
-                      </goals>
-                      <configuration>
-                        <outputDirectory>${project.build.directory}/license-report</outputDirectory>
-                      </configuration>
-                    </execution>
-                    -->
-                    <execution>
-                        <id>generate-license-xml</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>download-licenses</goal>
-                        </goals>
-                        <configuration>
-                            <licensesOutputFile>${project.build.outputDirectory}/licenses.xml</licensesOutputFile>
-                            <useMissingFile>true</useMissingFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>license-maven-plugin</artifactId>
+    <version>2.2.0</version>
+    <executions>
+        <execution>
+            <id>generate-license-xml</id>
+            <phase>verify</phase>
+            <goals>
+                <goal>download-licenses</goal>
+            </goals>
+            <configuration>
+                <licensesOutputFile>${project.build.outputDirectory}/licenses.xml</licensesOutputFile>
+                <useMissingFile>true</useMissingFile>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+            -->
         </plugins>
     </build>
     <dependencies>
