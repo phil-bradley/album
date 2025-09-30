@@ -8,7 +8,9 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import javax.swing.JComponent;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,6 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author philb
  */
 public class TestUtils {
+
+    public static BufferedImage getTestImage() throws IOException {
+        return ImageUtils.readBufferedImage(getTestImageFile());
+    }
 
     public static File getTestImageFile() {
         String resourcePath = TestUtils.class.getResource("/test_275x183.jpg").getPath();

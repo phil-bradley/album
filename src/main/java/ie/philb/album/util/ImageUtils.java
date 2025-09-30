@@ -265,7 +265,7 @@ public class ImageUtils {
             return 1;
         }
 
-        if (size.width == 0 || size.height == 0) {
+        if (size.width <= 0 || size.height <= 0) {
             return 0;
         }
 
