@@ -84,4 +84,25 @@ public class TextControlEditorToolBarTest {
         fontSizeSelector.setSelectedItem(72);
         assertEquals(72, model.getFontSize());
     }
+
+    @Test
+    void testFormatUpdatedSyncsToolbarWithModel() throws Exception {
+        // Update model directly
+        model.setBold(true);
+        model.setItalic(true);
+        model.setUnderline(true);
+        model.setFontSize(36);
+
+        toolbar.formatUpdated(model);
+
+        JToggleButton btnBold = (JToggleButton) FieldUtils.readField(toolbar, "btnBold", true);
+        JToggleButton btnItalic = (JToggleButton) FieldUtils.readField(toolbar, "btnItalic", true);
+        JToggleButton btnUnderline = (JToggleButton) FieldUtils.readField(toolbar, "btnUnderline", true);
+        JComboBox<Integer> fontSizeSelector = (JComboBox<Integer>) FieldUtils.readField(toolbar, "fontSizeSelector", true);
+
+        assertTrue(btnBold.isSelected());
+        assertTrue(btnItalic.isSelected());
+        assertTrue(btnUnderline.isSelected());
+        assertEquals(36, fontSizeSelector.getSelectedItem());
+    }
 }
