@@ -5,3 +5,5 @@ as a PDF.
 
 
 ![Screenshot of main UI](docs/screenshot-001.jpg)
+
+...
