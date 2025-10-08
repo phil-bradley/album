@@ -80,7 +80,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         super("Album");
         initComponents();
 
-        setPreferredSize(new Dimension(1200, 800));
+        setPreferredSize(new Dimension(1400, 800));
         setSize(getPreferredSize());
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -205,7 +205,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         gbc.fillBoth().xy(0, 1).weight(1);
 
         add(vSplit, gbc);
-        vSplit.setDividerLocation(400);
+        vSplit.setDividerLocation(450);
         hSplit.setDividerLocation(600);
 
     }
