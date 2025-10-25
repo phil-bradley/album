@@ -53,8 +53,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationUi.class);
 
-    private static final ApplicationUi INSTANCE = new ApplicationUi();
-
+    private AppContext appContext;
     private ImageLibraryView imageLibraryView;
     private AlbumViewContainer albumViewContainer;
     private AlbumOverviewPanel albumOverviewPanel;
@@ -71,13 +70,15 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private JButton btnOpen;
     private JButton btnSave;
 
-    public static ApplicationUi getInstance() {
-        return INSTANCE;
-    }
+//    public static ApplicationUi getInstance() {
+//        return INSTANCE;
+//    }
 
-    private ApplicationUi() {
+    public ApplicationUi(AppContext appContext) {
 
         super("Album");
+        this.appContext = appContext;
+        
         initComponents();
 
         setPreferredSize(new Dimension(1200, 800));
@@ -88,7 +89,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                new ExitCommand().execute();
+                new ExitCommand(appContext).execute();
             }
 
         });
@@ -110,7 +111,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
             }
         });
 
-        AppContext.INSTANCE.addListener(this);
+        appContext.addListener(this);
     }
 
     private void initComponents() {
@@ -122,8 +123,8 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         hSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
         imageLibraryView = new ImageLibraryView();
-        albumViewContainer = new AlbumViewContainer();
-        albumOverviewPanel = new AlbumOverviewPanel();
+        albumViewContainer = new AlbumViewContainer(appContext);
+        albumOverviewPanel = new AlbumOverviewPanel(appContext);
 
         hSplit.setLeftComponent(albumViewContainer);
         hSplit.setRightComponent(albumOverviewPanel);
@@ -143,15 +144,15 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         menuBar.add(helpMenu = new JMenu("Help"));
         helpMenu.setMnemonic(KeyEvent.VK_H);
 
-        addMenuItem(fileMenu, Icons.Small.NEW, "New", new NewAlbumCommand(), KeyEvent.VK_N);
-        addMenuItem(fileMenu, Icons.Small.OPEN, "Open", new OpenAlbumCommand(), KeyEvent.VK_O);
-        addMenuItem(fileMenu, Icons.Small.SAVE, "Save", new SaveAlbumCommand(), KeyEvent.VK_S);
+        addMenuItem(fileMenu, Icons.Small.NEW, "New", new NewAlbumCommand(appContext), KeyEvent.VK_N);
+        addMenuItem(fileMenu, Icons.Small.OPEN, "Open", new OpenAlbumCommand(appContext), KeyEvent.VK_O);
+        addMenuItem(fileMenu, Icons.Small.SAVE, "Save", new SaveAlbumCommand(appContext), KeyEvent.VK_S);
         addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand(), KeyEvent.VK_E);
-        addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand(), KeyEvent.VK_P);
-        addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand(), KeyEvent.VK_X);
+        addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand(appContext), KeyEvent.VK_P);
+        addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand(appContext), KeyEvent.VK_X);
 
-        addMenuItem(helpMenu, null, "License", new ShowLicenseCommand(), KeyEvent.VK_L);
-        addMenuItem(helpMenu, null, "About", new AboutCommand(), KeyEvent.VK_I);
+        addMenuItem(helpMenu, null, "License", new ShowLicenseCommand(appContext), KeyEvent.VK_L);
+        addMenuItem(helpMenu, null, "About", new AboutCommand(appContext), KeyEvent.VK_I);
 
     }
 
@@ -170,9 +171,9 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        initToolbarButton(btnNew, Icons.Regular.NEW, "New Album", new NewAlbumCommand());
-        initToolbarButton(btnOpen, Icons.Regular.OPEN, "Open existing album", new OpenAlbumCommand());
-        initToolbarButton(btnSave, Icons.Regular.SAVE, "Save album", new SaveAlbumCommand());
+        initToolbarButton(btnNew, Icons.Regular.NEW, "New Album", new NewAlbumCommand(appContext));
+        initToolbarButton(btnOpen, Icons.Regular.OPEN, "Open existing album", new OpenAlbumCommand(appContext));
+        initToolbarButton(btnSave, Icons.Regular.SAVE, "Save album", new SaveAlbumCommand(appContext));
         initToolbarButton(btnPdf, Icons.Regular.PDF, "Export to PDF", new CreatePdfCommand());
     }
 

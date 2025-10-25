@@ -19,29 +19,27 @@ import java.util.List;
  */
 public class AlbumView extends AppPanel {
 
-    private AlbumModel albumModel;
+    private final AppContext appContext;
     private final List<PageView> pageViews = new ArrayList<>();
     private boolean isPreviewMode = false;
 
-    public AlbumView(AlbumModel albumModel) {
-        this.albumModel = albumModel;
+    public AlbumView(AppContext appContext) {
+        this.appContext = appContext;
 
         background(COLOUR_ALBUM_BACKGROUND);
         setLayout(null);
 
-        setModel(albumModel);
+        refresh();
     }
 
-    public final void setModel(AlbumModel model) {
-
-        this.albumModel = model;
+    public final void refresh() {
 
         clearPages();
         addPages();
         positionPages();
 
-        PageView selectedPageView = AppContext.INSTANCE.getSelectedPageView();
-        PageEntryView selectedPageEntryView = AppContext.INSTANCE.getSelectedPageEntryView();
+        PageView selectedPageView = appContext.getSelectedPageView();
+        PageEntryView selectedPageEntryView = appContext.getSelectedPageEntryView();
 
         updateSelectedEntry(selectedPageView, selectedPageEntryView);
 
@@ -52,7 +50,7 @@ public class AlbumView extends AppPanel {
 
     private void addPages() {
 
-        for (PageModel page : albumModel.getPages()) {
+        for (PageModel page : appContext.getAlbumModel().getPages()) {
             PageView pageView = new PageView(page);
             this.pageViews.add(pageView);
             add(pageView);
@@ -79,7 +77,7 @@ public class AlbumView extends AppPanel {
         int parentHeight = getParent().getHeight();
 
         int pageHeight = parentHeight - (insetSize * 2);
-        int pageWidth = albumModel.getPageSize().widthFromHeight(pageHeight);
+        int pageWidth = appContext.getAlbumModel().getPageSize().widthFromHeight(pageHeight);
 
         int horizontalInset = insetSize;
 

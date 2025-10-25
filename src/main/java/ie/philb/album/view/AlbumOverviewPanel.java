@@ -28,11 +28,13 @@ import javax.swing.plaf.LayerUI;
  */
 public class AlbumOverviewPanel extends AppPanel {
 
+    private AppContext appContext;
     private AlbumView albumView;
     private JScrollPane scrollPane;
 
-    public AlbumOverviewPanel() {
-        this.albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
+    public AlbumOverviewPanel(AppContext appContext) {
+        this.appContext = appContext;
+        this.albumView = new AlbumView(appContext);
         this.albumView.setPreferredSize(getPreferredSize());
         this.albumView.setPreviewMode(true);
         this.albumView.setVisible(true);
@@ -115,7 +117,7 @@ public class AlbumOverviewPanel extends AppPanel {
                     PageView pageView = UiUtils.getChildOfType(av, avPoint.x, avPoint.y, PageView.class);
 
                     if (pageView != null) {
-                        AppContext.INSTANCE.pageNavigatedTo(pageView.getPageModel().getPageId());
+                        appContext.pageNavigatedTo(pageView.getPageModel().getPageId());
                     }
 
                     e.consume();
@@ -159,7 +161,7 @@ public class AlbumOverviewPanel extends AppPanel {
 
     @Override
     public void albumUpdated() {
-        albumView.setModel(AppContext.INSTANCE.getAlbumModel());
+        albumView.refresh();
         scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
     }
 

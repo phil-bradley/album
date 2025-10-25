@@ -20,6 +20,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class OpenAlbumCommand extends AbstractCommand {
 
+    public OpenAlbumCommand(AppContext appContext) {
+        super(appContext);
+    }
+
     @Override
     public void execute() {
 
@@ -27,7 +31,7 @@ public class OpenAlbumCommand extends AbstractCommand {
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setFileFilter(new FileNameExtensionFilter("Album Files", "album"));
 
-        int ret = fileChooser.showOpenDialog(ApplicationUi.getInstance());
+        int ret = fileChooser.showOpenDialog(getAppContext().ui());
 
         if (ret != JFileChooser.APPROVE_OPTION) {
             return;
@@ -38,12 +42,12 @@ public class OpenAlbumCommand extends AbstractCommand {
         new OpenAlbumAction(albumFile).execute(new Callback<AlbumModel>() {
             @Override
             public void onSuccess(AlbumModel result) {
-                AppContext.INSTANCE.setAlbumModel(result);
+                getAppContext().setAlbumModel(result);
             }
 
             @Override
             public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage("Failed to read album", ex);
+                getAppContext().getDialogFactory().showErrorMessage("Failed to read album", ex);
             }
         });
     }

@@ -17,10 +17,14 @@ import java.util.List;
  */
 public class NewPageCommand extends AbstractCommand {
 
+    public NewPageCommand(AppContext appContext) {
+        super(appContext);
+    }
+
     @Override
     public void execute() {
 
-        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
+        AlbumModel albumModel = getAppContext().getAlbumModel();
 
         PageGeometry lastPageGeometry = PageGeometryOption.Columns_2_1.geometry();
         List<PageModel> pages = albumModel.getPages();
@@ -31,7 +35,7 @@ public class NewPageCommand extends AbstractCommand {
         }
 
         albumModel.addPage(lastPageGeometry);
-        AppContext.INSTANCE.albumUpdated();
+        getAppContext().albumUpdated();
     }
 
 }

@@ -16,14 +16,15 @@ public class SetGeometryCommand extends AbstractCommand {
 
     private final PageGeometry pageGeometry;
 
-    public SetGeometryCommand(PageGeometry pageGeometry) {
+    public SetGeometryCommand(AppContext appContext, PageGeometry pageGeometry) {
+        super(appContext);
         this.pageGeometry = pageGeometry;
     }
 
     @Override
     public void execute() {
 
-        PageView pageView = AppContext.INSTANCE.getSelectedPageView();
+        PageView pageView = getAppContext().getSelectedPageView();
 
         if (pageView == null) {
             return;
@@ -31,7 +32,7 @@ public class SetGeometryCommand extends AbstractCommand {
 
         if (!pageGeometry.equals(pageView.getPageModel().getGeometry())) {
             pageView.getPageModel().setGeometry(pageGeometry);
-            AppContext.INSTANCE.albumUpdated();
+            getAppContext().albumUpdated();
         }
     }
 

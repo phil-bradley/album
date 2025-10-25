@@ -43,8 +43,10 @@ public class PageEntryModel {
     private LocalDateTime lastChanged = LocalDateTime.now();
     private final BrightnessFilter brightnessFilter = new BrightnessFilter();
     private final GrayScaleFilter grayScaleFilter = new GrayScaleFilter();
+    private final AppContext appContext;
 
-    public PageEntryModel(PageCell cell) {
+    public PageEntryModel(AppContext appContext, PageCell cell) {
+        this.appContext = appContext;
         this.cell = cell;
     }
 
@@ -272,7 +274,7 @@ public class PageEntryModel {
             l.imageUpdated();
         }
 
-        AppContext.INSTANCE.pageEntryUpdated(this);
+        appContext.pageEntryUpdated(this);
     }
 
     private void fireTextUpdated() {
@@ -283,7 +285,7 @@ public class PageEntryModel {
             l.textUpdated();
         }
 
-        AppContext.INSTANCE.pageEntryUpdated(this);
+        appContext.pageEntryUpdated(this);
     }
 
     public void setImageViewOffset(Point offset) {

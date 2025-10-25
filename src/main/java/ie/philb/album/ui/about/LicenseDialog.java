@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.about;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.model.appinfo.LicenseInfoHtmlRenderer;
 import ie.philb.album.model.appinfo.LicenseReader;
 import ie.philb.album.model.appinfo.LicenseSummary;
@@ -35,9 +36,9 @@ public class LicenseDialog extends JDialog {
 
     private final LicensePanel licensePanel = new LicensePanel();
 
-    public LicenseDialog() {
+    public LicenseDialog(AppContext appContext) {
 
-        super(ApplicationUi.getInstance(), "License");
+        super(appContext.ui(), "License");
         setModal(true);
         setBackground(Color.white);
 

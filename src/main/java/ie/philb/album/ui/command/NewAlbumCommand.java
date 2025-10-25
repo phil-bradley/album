@@ -23,14 +23,18 @@ public class NewAlbumCommand extends AbstractCommand {
     private final int defaultMargin = 10;
     private final int defaultGutter = 25;
 
+    public NewAlbumCommand(AppContext appContext) {
+        super(appContext);
+    }
+
     @Override
     public void execute() {
 
-        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
+        AlbumModel albumModel = getAppContext().getAlbumModel();
 
         if (albumModel != null && albumModel.hasUnSavedChanges()) {
 
-            boolean ok = Dialogs.confirm("Are you sure?");
+            boolean ok = getAppContext().getDialogFactory().confirm("Are you sure?");
 
             if (!ok) {
                 return;
@@ -53,6 +57,6 @@ public class NewAlbumCommand extends AbstractCommand {
             albumModel.setLastSaveDate(LocalDateTime.now());
         }
 
-        AppContext.INSTANCE.setAlbumModel(albumModel);
+        getAppContext().setAlbumModel(albumModel);
     }
 }

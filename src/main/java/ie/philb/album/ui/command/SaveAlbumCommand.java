@@ -23,17 +23,21 @@ public class SaveAlbumCommand extends AbstractCommand {
     private AlbumModel albumModel;
     private File saveFile;
 
+    public SaveAlbumCommand(AppContext appContext) {
+        super(appContext);
+    }
+
     @Override
     public void execute() {
 
-        this.albumModel = AppContext.INSTANCE.getAlbumModel();
+        this.albumModel = getAppContext().getAlbumModel();
         this.saveFile = albumModel.getFile();
 
         if (saveFile == null) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileFilter(new FileNameExtensionFilter("Album Files", "album"));
 
-            int ret = fileChooser.showSaveDialog(ApplicationUi.getInstance());
+            int ret = fileChooser.showSaveDialog(getAppContext().ui());
 
             if (ret == JFileChooser.APPROVE_OPTION) {
                 saveFile = fileChooser.getSelectedFile();
@@ -55,7 +59,7 @@ public class SaveAlbumCommand extends AbstractCommand {
 
         if (albumModel.getFile() == null && saveFile.exists()) {
             String msg = "Overwrite " + saveFile.getName() + "?";
-            if (!Dialogs.confirm(msg)) {
+            if (!getAppContext().getDialogFactory().confirm(msg)) {
                 return;
             }
         }
@@ -69,7 +73,7 @@ public class SaveAlbumCommand extends AbstractCommand {
 
             @Override
             public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage("Could not save album", ex);
+                getAppContext().getDialogFactory().showErrorMessage("Could not save album", ex);
             }
         }
         );

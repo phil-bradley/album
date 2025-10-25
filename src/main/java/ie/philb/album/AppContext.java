@@ -6,6 +6,8 @@ package ie.philb.album;
 
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageEntryModel;
+import ie.philb.album.ui.ApplicationUi;
+import ie.philb.album.ui.DialogFactory;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.view.PageEntryView;
 import ie.philb.album.view.PageView;
@@ -19,17 +21,34 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philip.Bradley
  */
-public enum AppContext implements ApplicationListener {
-
-    INSTANCE;
+public class AppContext implements ApplicationListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(AppContext.class);
 
+    private final ApplicationUi ui;
+    private final DialogFactory dialogFactory;
     private final List<ApplicationListener> applicationListeners = new ArrayList<>();
     private AlbumModel albumModel = null;
     private PageView selectedPageView = null;
     private PageEntryView selectedPageEntryView = null;
 
+    public AppContext() {
+        this.ui = new ApplicationUi(this);
+        this.dialogFactory = new DialogFactory(this);
+    }
+
+    public void start() {
+        ui.show();
+    }
+
+    public ApplicationUi ui() {
+        return ui;
+    }
+
+    public DialogFactory getDialogFactory() {
+        return dialogFactory;
+    }
+    
     public void addListener(ApplicationListener l) {
         this.applicationListeners.add(l);
     }

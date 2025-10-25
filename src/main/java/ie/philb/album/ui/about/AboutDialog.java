@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.about;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.model.appinfo.ApplicationInfo;
 import ie.philb.album.ui.ApplicationUi;
 import ie.philb.album.ui.common.AppPanel;
@@ -20,6 +21,7 @@ import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
@@ -32,8 +34,8 @@ public class AboutDialog extends JDialog {
 
     private final AboutPanel aboutPanel = new AboutPanel();
 
-    public AboutDialog() {
-        super(ApplicationUi.getInstance(), "About");
+    public AboutDialog(AppContext appContext) {
+        super(appContext.ui(), "About");
         setModal(true);
 
         setLayout(new GridBagLayout());
@@ -42,7 +44,7 @@ public class AboutDialog extends JDialog {
 
         setPreferredSize(new Dimension(350, 200));
         setSize(getPreferredSize());
-        
+
         bindEscapeKey(this);
     }
 
@@ -57,7 +59,7 @@ public class AboutDialog extends JDialog {
         actionMap.put(escapeActionKey, new AbstractAction() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                dialog.dispose(); 
+                dialog.dispose();
             }
         });
     }

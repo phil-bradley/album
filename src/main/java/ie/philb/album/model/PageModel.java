@@ -4,6 +4,7 @@
  */
 package ie.philb.album.model;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.util.MathUtils;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -26,15 +27,18 @@ public class PageModel {
     private int horizontalMargin = 10;
     private int gutter = 0;
     private PageGeometry geometry;
+    private final AppContext appContext;
     private final List<PageEntryModel> pageEntries = new ArrayList<>();
     private final PageSize pageSize;
 
-    public PageModel(PageGeometry geometry, PageSize pageSize) {
+    public PageModel(AppContext appContext, PageGeometry geometry, PageSize pageSize) {
+        this.appContext = appContext;
         this.pageSize = pageSize;
         setGeometry(geometry);
     }
 
-    private PageModel(PageSize pageSize) {
+    private PageModel(AppContext appContext, PageSize pageSize) {
+        this.appContext = appContext;
         this.pageSize = pageSize;
     }
 
@@ -112,7 +116,7 @@ public class PageModel {
         int i = 0;
 
         for (PageCell cell : geometry.getCells()) {
-            PageEntryModel pem = new PageEntryModel(cell);
+            PageEntryModel pem = new PageEntryModel(appContext, cell);
             Dimension physicalSize = getCellSizePoints(cell);
             pem.setPhysicalSize(physicalSize);
 
@@ -219,7 +223,7 @@ public class PageModel {
         return lastChangeDate;
     }
 
-    public static PageModel blank(PageSize pageSize) {
-        return new PageModel(pageSize);
+    public static PageModel blank(AppContext appContext, PageSize pageSize) {
+        return new PageModel(appContext, pageSize);
     }
 }

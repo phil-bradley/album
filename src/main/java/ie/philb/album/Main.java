@@ -28,10 +28,11 @@ public class Main {
             LOG.info("Failed to set LookAndFeel", ex);
         }
 
-        new NewAlbumCommand().execute();
+        AppContext appContext = new AppContext();
+        new NewAlbumCommand(appContext).execute();
 
         java.awt.EventQueue.invokeLater(() -> {
-            ApplicationUi.getInstance().setVisible(true);
+            appContext.start();
         });
     }
 }

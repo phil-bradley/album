@@ -13,9 +13,13 @@ import ie.philb.album.util.FileUtils;
  */
 public class HomeCommand extends AbstractCommand {
 
+    public HomeCommand(AppContext appContext) {
+        super(appContext);
+    }
+   
     @Override
     public void execute() {
-        AppContext.INSTANCE.browseLocationUpdated(FileUtils.getHomeDirectory());
+        getAppContext().browseLocationUpdated(FileUtils.getHomeDirectory());
     }
 
 }

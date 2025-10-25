@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.command;
 
+import ie.philb.album.AppContext;
 import ie.philb.album.ui.about.AboutDialog;
 
 /**
@@ -12,9 +13,13 @@ import ie.philb.album.ui.about.AboutDialog;
  */
 public class AboutCommand extends AbstractCommand {
 
+    public AboutCommand(AppContext appContext) {
+        super(appContext);
+    }
+
     @Override
     public void execute() {
-        AboutDialog dlg = new AboutDialog();
+        AboutDialog dlg = getAppContext().getDialogFactory().createAboutDialog();
         dlg.setVisible(true);
     }
 
