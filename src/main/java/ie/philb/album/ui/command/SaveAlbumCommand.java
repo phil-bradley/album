@@ -22,6 +22,15 @@ public class SaveAlbumCommand extends AbstractCommand {
 
     private AlbumModel albumModel;
     private File saveFile;
+    private boolean forceFileSelection=false;
+    
+    public SaveAlbumCommand() {
+        this(false);
+    }
+    
+    public SaveAlbumCommand(boolean forceFileSelection) {
+        this.forceFileSelection =  forceFileSelection;
+    }
 
     @Override
     public void execute() {
@@ -29,9 +38,13 @@ public class SaveAlbumCommand extends AbstractCommand {
         this.albumModel = AppContext.INSTANCE.getAlbumModel();
         this.saveFile = albumModel.getFile();
 
-        if (saveFile == null) {
+        if (saveFile == null || forceFileSelection) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileFilter(new FileNameExtensionFilter("Album Files", "album"));
+            
+            if (albumModel.getFile() != null) {
+                fileChooser.setSelectedFile(albumModel.getFile());
+            }
 
             int ret = fileChooser.showSaveDialog(ApplicationUi.getInstance());
 
@@ -40,22 +53,19 @@ public class SaveAlbumCommand extends AbstractCommand {
 
                 String saveFileName = saveFile.getAbsolutePath();
 
-                if (!saveFile.exists()) {
-                    if (saveFileName.endsWith("album")) {
-                        saveFile = new File(saveFileName + ".album");
-                    }
+                if (!saveFileName.endsWith("album")) {
+                    saveFile = new File(saveFileName + ".album");
                 }
 
+                if (saveFile.exists()) {
+                    String msg = "Overwrite " + saveFile.getName() + "?";
+                    if (!Dialogs.confirm(msg)) {
+                        return;
+                    }
+                }
             }
 
             if (saveFile == null) {
-                return;
-            }
-        }
-
-        if (albumModel.getFile() == null && saveFile.exists()) {
-            String msg = "Overwrite " + saveFile.getName() + "?";
-            if (!Dialogs.confirm(msg)) {
                 return;
             }
         }
