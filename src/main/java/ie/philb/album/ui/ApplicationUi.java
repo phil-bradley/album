@@ -70,6 +70,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private JButton btnNew;
     private JButton btnOpen;
     private JButton btnSave;
+    private JButton btnSaveAs;
 
     public static ApplicationUi getInstance() {
         return INSTANCE;
@@ -146,6 +147,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         addMenuItem(fileMenu, Icons.Small.NEW, "New", new NewAlbumCommand(), KeyEvent.VK_N);
         addMenuItem(fileMenu, Icons.Small.OPEN, "Open", new OpenAlbumCommand(), KeyEvent.VK_O);
         addMenuItem(fileMenu, Icons.Small.SAVE, "Save", new SaveAlbumCommand(), KeyEvent.VK_S);
+        addMenuItem(fileMenu, Icons.Small.SAVE_AS, "Save As", new SaveAlbumCommand(true), KeyEvent.VK_A);
         addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand(), KeyEvent.VK_E);
         addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand(), KeyEvent.VK_P);
         addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand(), KeyEvent.VK_X);
@@ -173,6 +175,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         initToolbarButton(btnNew, Icons.Regular.NEW, "New Album", new NewAlbumCommand());
         initToolbarButton(btnOpen, Icons.Regular.OPEN, "Open existing album", new OpenAlbumCommand());
         initToolbarButton(btnSave, Icons.Regular.SAVE, "Save album", new SaveAlbumCommand());
+        initToolbarButton(btnSaveAs, Icons.Regular.SAVE_AS, "Save album as", new SaveAlbumCommand(true));
         initToolbarButton(btnPdf, Icons.Regular.PDF, "Export to PDF", new CreatePdfCommand());
     }
 

@@ -30,6 +30,8 @@ public class SaveAlbumAction extends AbstractAction<Void> {
 
         AlbumWriter writer = new AlbumWriter(new AlbumDataMapper());
         writer.write(saveFile, albumModel);
+        
+        logger.info("Saved album to {}", saveFile.getAbsolutePath());
         return null;
     }
 

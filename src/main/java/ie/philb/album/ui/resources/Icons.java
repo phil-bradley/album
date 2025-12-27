@@ -20,6 +20,7 @@ public class Icons {
         public static final ImageIcon PDF = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/pdf.png"));
         public static final ImageIcon PRINT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/print.png"));
         public static final ImageIcon SAVE = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/save.png"));
+        public static final ImageIcon SAVE_AS = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/save-as.png"));
         public static final ImageIcon ARROW_LEFT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/arrow-left.png"));
         public static final ImageIcon ARROW_RIGHT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/arrow-right.png"));
         public static final ImageIcon FOLDER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/folder.png"));
@@ -34,6 +35,7 @@ public class Icons {
         public static final ImageIcon PDF = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/pdf.png"));
         public static final ImageIcon PRINT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/print.png"));
         public static final ImageIcon SAVE = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/save.png"));
+        public static final ImageIcon SAVE_AS = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/save-as.png"));
         public static final ImageIcon FILE_PARENT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/file-parent.png"));
         public static final ImageIcon ZOOM_IN = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/zoom-in.png"));
         public static final ImageIcon ZOOM_OUT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/zoom-out.png"));
