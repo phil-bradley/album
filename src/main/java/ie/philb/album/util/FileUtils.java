@@ -127,4 +127,8 @@ public class FileUtils {
 
         return entries;
     }
+
+    public static boolean isRoot(Path path) {
+        return path.getRoot() != null && path.equals(path.getRoot());
+    }
 }

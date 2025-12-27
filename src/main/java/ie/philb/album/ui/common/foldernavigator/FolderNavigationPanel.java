@@ -144,6 +144,29 @@ public class FolderNavigationPanel extends AppPanel {
             label.addMouseListener(new NodeMouseListener());
             panel.add(label);
 
+            if (FileUtils.isRoot(path) && File.listRoots().length > 1) {
+                label.addMouseListener(new MouseAdapter() {
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        maybeShowPopup(e);
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        maybeShowPopup(e);
+                    }
+
+                    private void maybeShowPopup(MouseEvent e) {
+                        if (SwingUtilities.isLeftMouseButton(e)) {
+                            FolderPanelLabel label = (FolderPanelLabel) e.getSource();
+                            RootsMenu rootsMenu = new RootsMenu();
+                            rootsMenu.show(label, e.getX(), e.getY());
+                        }
+                    }
+                });
+            }
+
             List<Path> children = getChildFolders(path);
 
             if (children.isEmpty()) {
@@ -205,8 +228,6 @@ public class FolderNavigationPanel extends AppPanel {
                 setText(this.text);
             }
 
-//            setBackground(Color.WHITE);
-//            setOpaque(true);
             addMouseListener(new NodeMouseListener());
         }
 
@@ -215,6 +236,7 @@ public class FolderNavigationPanel extends AppPanel {
         }
 
         private String getPathName() {
+
             String pathName = path.toFile().getName();
             if (pathName == null || pathName.isBlank()) {
                 pathName = path.toFile().toString();
@@ -235,6 +257,22 @@ public class FolderNavigationPanel extends AppPanel {
         }
 
         return Collections.emptyList();
+    }
+
+    private class RootsMenu extends JPopupMenu {
+
+        public RootsMenu() {
+            File[] roots = File.listRoots();
+
+            for (File root : roots) {
+                JMenuItem menuItem = new JMenuItem(root.getPath());
+                menuItem.addActionListener((ActionEvent ae) -> {
+                    setPath(root);
+                });
+                add(menuItem);
+
+            }
+        }
     }
 
     private class FolderMenu extends JPopupMenu {
