@@ -31,6 +31,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 /**
  *
@@ -41,7 +42,10 @@ public class FolderNavigationPanel extends AppPanel {
     private File currentLocation;
     private final List<FolderNavigationListener> listeners = new ArrayList<>();
     private final List<Path> pathToRoot = new ArrayList<>();
-    private static final Color HIGHLIGHT = new Color(240, 240, 240);
+    private static final Color COLOR_SELECTED_FOREGROUND = UIManager.getColor("MenuItem.selectionForeground");
+    private static final Color COLOR_SELECTED_BACKGROUND = UIManager.getColor("MenuItem.selectionBackground");
+    private static final Color COLOR_STD_FOREGROUND = UIManager.getColor("MenuItem.foreground");
+
     private JScrollPane scrollPane = new JScrollPane(getNodesPanel());
 
     public FolderNavigationPanel(File file) {
@@ -141,11 +145,11 @@ public class FolderNavigationPanel extends AppPanel {
             panel.add(label);
 
             List<Path> children = getChildFolders(path);
-            
+
             if (children.isEmpty()) {
                 continue;
             }
-            
+
             FolderPanelLabel controlLabel = new FolderPanelLabel(path, ">");
             panel.add(controlLabel);
 
@@ -203,7 +207,6 @@ public class FolderNavigationPanel extends AppPanel {
 
 //            setBackground(Color.WHITE);
 //            setOpaque(true);
-
             addMouseListener(new NodeMouseListener());
         }
 
@@ -259,14 +262,20 @@ public class FolderNavigationPanel extends AppPanel {
 
         @Override
         public void mouseEntered(MouseEvent e) {
+
             JLabel label = (JLabel) e.getSource();
-            label.setBackground(HIGHLIGHT);
+            label.setBackground(COLOR_SELECTED_BACKGROUND);
+            label.setForeground(COLOR_SELECTED_FOREGROUND);
+            label.setOpaque(true);
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
+
             JLabel label = (JLabel) e.getSource();
             label.setBackground(Color.WHITE);
+            label.setForeground(COLOR_STD_FOREGROUND);
+            label.setOpaque(false);
         }
     }
 }
