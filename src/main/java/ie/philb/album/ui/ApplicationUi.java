@@ -83,7 +83,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
         setPreferredSize(new Dimension(1200, 800));
         setSize(getPreferredSize());
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         addWindowListener(new WindowAdapter() {
 
