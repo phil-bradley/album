@@ -4,13 +4,11 @@
  */
 package ie.philb.album.io;
 
-import java.awt.image.BufferedImage;
-
 /**
  *
  * @author philb
  */
 public interface ThumbnailProviderListener {
 
-    void thumbnailLoaded(BufferedImage image);
+    void thumbnailLoaded(Thumbnail thumbnail);
 }

@@ -5,6 +5,7 @@
 package ie.philb.album.ui.imagelibrary;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.io.Thumbnail;
 import ie.philb.album.io.ThumbnailProvider;
 import ie.philb.album.io.ThumbnailProviderListener;
 import ie.philb.album.metadata.ImageMetaData;
@@ -30,7 +31,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -42,7 +42,6 @@ import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -189,13 +188,12 @@ public class ImageLibraryView extends AppPanel {
             } else {
                 String key = value.getFile().getAbsolutePath();
 
-                if (thumbnailProvider.hasImage(key)) {
-                    thumbnailView.setImage(thumbnailProvider.getImage(key));
+                if (thumbnailProvider.hasThumbnail(key)) {
+                    Thumbnail thumbnail = thumbnailProvider.getThumbnail(key);
+                    thumbnailLoaded(thumbnail);
                 } else {
                     thumbnailProvider.applyImage(key, this::thumbnailLoaded);
                 }
-
-                setToolTipText(getToolTip(value.getFile().getName(), thumbnailProvider.getMetaData(key)));
             }
 
             lblName.setText(StringUtils.truncate(value.getTitle(), 20));
@@ -238,14 +236,13 @@ public class ImageLibraryView extends AppPanel {
         }
 
         @Override
-        public void thumbnailLoaded(BufferedImage image) {
-            try {
-                UiUtils.runOnEventDispatchThread(() -> {
-                    thumbnailView.setImage(image);
-                    list.repaint(list.getBounds());
-                });
-            } catch (InterruptedException | InvocationTargetException ex) {
-            }
+        public void thumbnailLoaded(Thumbnail thumbnail) {
+            UiUtils.runOnEventDispatchThread(() -> {
+                thumbnailView.setImage(thumbnail.getBufferedImage());
+                String toolTip = getToolTip(thumbnail.getName(), thumbnail.getImageMetaData());
+                this.setToolTipText(toolTip);
+                list.repaint(list.getBounds());
+            });
         }
 
     }

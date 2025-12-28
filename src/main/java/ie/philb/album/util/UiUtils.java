@@ -26,12 +26,16 @@ public class UiUtils {
 
         return null;
     }
-    
-    public static void runOnEventDispatchThread(Runnable r) throws InterruptedException, InvocationTargetException {
+
+    public static void runOnEventDispatchThread(Runnable r) {
         if (SwingUtilities.isEventDispatchThread()) {
             r.run();
         } else {
-            SwingUtilities.invokeAndWait(r);
+            try {
+                SwingUtilities.invokeAndWait(r);
+            } catch (InterruptedException | InvocationTargetException ex) {
+                throw new RuntimeException("Error when calling invokeAndWait", ex);
+            }
         }
     }
 }

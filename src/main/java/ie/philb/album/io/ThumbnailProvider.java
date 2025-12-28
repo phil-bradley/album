@@ -24,12 +24,14 @@ import javax.imageio.ImageIO;
  */
 public class ThumbnailProvider {
 
-    public final Map<String, BufferedImage> imageMap = new ConcurrentHashMap<>();
-    public final Map<String, ImageMetaData> metadataMap = new HashMap<>();
+    public final Map<String, Thumbnail> thumbnailMap = new ConcurrentHashMap<>();
 
+//    public final Map<String, BufferedImage> imageMap = new ConcurrentHashMap<>();
+//    public final Map<String, ImageMetaData> metadataMap = new HashMap<>();
     private final BlockingQueue<String> pendingLoadQueue = new LinkedBlockingQueue<>();
     private final Dimension thumbnailSize;
-    private final Map<String, Consumer<BufferedImage>> pendingConsumers = new HashMap<>();
+    private final Map<String, Consumer<Thumbnail>> pendingConsumers = new HashMap<>();
+    private final Thumbnail placeHolderThumbnail = new Thumbnail("Loading", ImageUtils.getPlaceholderImage());
 
     public ThumbnailProvider(Dimension size) {
         this.thumbnailSize = size;
@@ -38,26 +40,26 @@ public class ThumbnailProvider {
         worker.start();
     }
 
-    public void applyImage(String key, Consumer<BufferedImage> consumer) {
+    public void applyImage(String key, Consumer<Thumbnail> consumer) {
 
-        BufferedImage image = getImage(key);
+        Thumbnail thumbnail = getThumbnail(key);
 
-        if (image != null) {
-            consumer.accept(image);
+        if (thumbnail != null) {
+            consumer.accept(thumbnail);
         } else {
-            consumer.accept(ImageUtils.getPlaceholderSmallImage());
+            consumer.accept(placeHolderThumbnail);
             pendingConsumers.put(key, consumer);
         }
     }
 
-    public boolean hasImage(String key) {
-        return imageMap.containsKey(key);
+    public boolean hasThumbnail(String key) {
+        return thumbnailMap.containsKey(key);
     }
 
-    public BufferedImage getImage(String key) {
+    public Thumbnail getThumbnail(String key) {
 
-        if (imageMap.containsKey(key)) {
-            return imageMap.get(key);
+        if (thumbnailMap.containsKey(key)) {
+            return thumbnailMap.get(key);
         }
 
         // This check is not thread safe so we may occasionally process the same
@@ -76,21 +78,22 @@ public class ThumbnailProvider {
             try {
                 String key = pendingLoadQueue.take(); // block if empty
 
-                if (!imageMap.containsKey(key)) {
+                if (!thumbnailMap.containsKey(key)) {
                     BufferedImage image = loadImage(key);
                     BufferedImage scaled = scaleImage(image);
 
                     if (scaled == null) {
-                        imageMap.put(key, ImageUtils.getPlaceholderSmallImage());
+                        thumbnailMap.put(key, new Thumbnail("Loading", ImageUtils.getPlaceholderSmallImage()));
                     } else {
-                        imageMap.put(key, scaled);
-                        metadataMap.put(key, tryReadMetaData(key));
+                        ImageMetaData metaData = tryReadMetaData(key);
+                        Thumbnail thumbnail = new Thumbnail(key, scaled, metaData);
+                        thumbnailMap.put(key, thumbnail);
                     }
 
                     if (pendingConsumers.containsKey(key)) {
-                        Consumer<BufferedImage> consumer = pendingConsumers.get(key);
+                        Consumer<Thumbnail> consumer = pendingConsumers.get(key);
                         pendingConsumers.remove(key);
-                        consumer.accept(imageMap.get(key));
+                        consumer.accept(thumbnailMap.get(key));
                     }
                 } else {
                     // Key already present
@@ -126,8 +129,5 @@ public class ThumbnailProvider {
             return null;
         }
     }
-    
-    public ImageMetaData getMetaData(String key) {
-        return metadataMap.get(key);
-    }
+
 }
