@@ -19,6 +19,7 @@ import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.util.FileUtils;
 import ie.philb.album.util.ImageUtils;
 import ie.philb.album.util.StringUtils;
+import ie.philb.album.util.UiUtils;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -29,6 +30,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -237,10 +239,13 @@ public class ImageLibraryView extends AppPanel {
 
         @Override
         public void thumbnailLoaded(BufferedImage image) {
-            SwingUtilities.invokeLater(() -> {
-                thumbnailView.setImage(image);
-                list.repaint(list.getBounds());
-            });
+            try {
+                UiUtils.runOnEventDispatchThread(() -> {
+                    thumbnailView.setImage(image);
+                    list.repaint(list.getBounds());
+                });
+            } catch (InterruptedException | InvocationTargetException ex) {
+            }
         }
 
     }

@@ -5,6 +5,7 @@
 package ie.philb.album.util;
 
 import java.awt.Component;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 
 /**
@@ -24,5 +25,13 @@ public class UiUtils {
         }
 
         return null;
+    }
+    
+    public static void runOnEventDispatchThread(Runnable r) throws InterruptedException, InvocationTargetException {
+        if (SwingUtilities.isEventDispatchThread()) {
+            r.run();
+        } else {
+            SwingUtilities.invokeAndWait(r);
+        }
     }
 }
