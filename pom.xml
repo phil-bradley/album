@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ie.philb</groupId>
     <artifactId>album</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3.2</version>
     <packaging>jar</packaging>
     <distributionManagement>
         <repository>
@@ -28,7 +28,7 @@
         <connection>scm:git:${scm.ssh}</connection>
         <url>${scm.https}</url>
         <developerConnection>scm:git:${scm.ssh}</developerConnection>
-        <tag>v-0.0.1</tag>
+        <tag>0.3.2</tag>
     </scm>
     <build>
         <resources>
