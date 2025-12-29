@@ -24,6 +24,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.dnd.DropTarget;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
@@ -76,7 +77,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     }
 
     @Override
-    public void mouseClicked(MouseEvent me) {
+        public void mouseClicked(MouseEvent me) {
 
         if (pageEntryModel.getPageEntryType() != PageEntryType.Image) {
             return;
@@ -401,7 +402,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
     @Override
     public String toString() {
-        return "Page " + pageView.getPageModel().getPageId() + ", Cell: " + pageEntryModel.getCell() + ", isPreview: " + isPreviewMode;
+        return "PageEntryView " + pageView.getPageModel().getPageId() + ", Cell: " + pageEntryModel.getCell() + ", isPreview: " + isPreviewMode;
     }
 
     public void setPhysicalToViewScalingFactor(double physicalToViewScalingFactor) {

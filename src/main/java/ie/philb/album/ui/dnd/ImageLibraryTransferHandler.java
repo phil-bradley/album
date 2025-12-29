@@ -18,7 +18,7 @@ public class ImageLibraryTransferHandler extends TransferHandler {
 
     @Override
     public int getSourceActions(JComponent c) {
-        return COPY;
+        return COPY_OR_MOVE;
     }
 
     @Override
@@ -32,6 +32,7 @@ public class ImageLibraryTransferHandler extends TransferHandler {
             return null;
         }
 
+        System.out.println("Create iage tx with file " + selected.getFile());
         return new ImageFileTransferable(selected.getFile());
     }
 }

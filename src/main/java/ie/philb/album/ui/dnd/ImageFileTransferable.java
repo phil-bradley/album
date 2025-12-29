@@ -10,6 +10,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,6 +18,13 @@ import java.util.List;
  * @author philb
  */
 public class ImageFileTransferable implements Transferable {
+
+    public static final DataFlavor LOCAL_FILE_LIST_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=java.util.List", "Local File List");
+
+    public static final DataFlavor[] SUPPORTED_FLAVORS = {
+        DataFlavor.javaFileListFlavor,
+        LOCAL_FILE_LIST_FLAVOR
+    };
 
     private final File file;
 
@@ -27,12 +35,12 @@ public class ImageFileTransferable implements Transferable {
 
     @Override
     public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[]{DataFlavor.javaFileListFlavor};
+        return SUPPORTED_FLAVORS;
     }
 
     @Override
     public boolean isDataFlavorSupported(DataFlavor flavor) {
-        return DataFlavor.javaFileListFlavor.equals(flavor);
+        return Arrays.asList(SUPPORTED_FLAVORS).contains(flavor);
     }
 
     @Override
@@ -61,7 +69,7 @@ public class ImageFileTransferable implements Transferable {
 
         if (!FileUtils.isImage(file)) {
             throw new RuntimeException("Cannot create transferable will non-image file: " + file.getAbsolutePath());
-        }               
+        }
     }
 
 }
