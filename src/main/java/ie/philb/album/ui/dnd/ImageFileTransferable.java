@@ -19,13 +19,6 @@ import java.util.List;
  */
 public class ImageFileTransferable implements Transferable {
 
-    public static final DataFlavor LOCAL_FILE_LIST_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=java.util.List", "Local File List");
-
-    public static final DataFlavor[] SUPPORTED_FLAVORS = {
-        DataFlavor.javaFileListFlavor,
-        LOCAL_FILE_LIST_FLAVOR
-    };
-
     private final File file;
 
     public ImageFileTransferable(File file) {
@@ -35,12 +28,12 @@ public class ImageFileTransferable implements Transferable {
 
     @Override
     public DataFlavor[] getTransferDataFlavors() {
-        return SUPPORTED_FLAVORS;
+        return new DataFlavor[]{DataFlavor.javaFileListFlavor};
     }
 
     @Override
     public boolean isDataFlavorSupported(DataFlavor flavor) {
-        return Arrays.asList(SUPPORTED_FLAVORS).contains(flavor);
+        return DataFlavor.javaFileListFlavor.equals(flavor);
     }
 
     @Override

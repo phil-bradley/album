@@ -15,8 +15,10 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.textcontrol.TextControl;
 import ie.philb.album.ui.common.textcontrol.TextControlChangeListener;
 import ie.philb.album.ui.common.textcontrol.TextControlModel;
+import ie.philb.album.ui.dnd.ImageFileTransferable;
 import ie.philb.album.ui.dnd.PageEntryViewTransferHandler;
 import ie.philb.album.ui.resources.Colors;
+import ie.philb.album.util.FileUtils;
 import ie.philb.album.util.ImageUtils;
 import static ie.philb.album.util.ImageUtils.getImageSize;
 import java.awt.Color;
@@ -24,12 +26,24 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import javax.swing.BorderFactory;
+import javax.swing.TransferHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,11 +87,84 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         this.pageEntryModel.getTextControlModel().addChangeListener(this);
 
         setTransferHandler(new PageEntryViewTransferHandler());
+
+        DropTarget dropTarget = new DropTarget(this, DnDConstants.ACTION_COPY, new DropTargetAdapter() {
+            @Override
+            public void dragEnter(DropTargetDragEvent dtde) {
+                updateCursor(dtde);
+            }
+
+            @Override
+            public void dragOver(DropTargetDragEvent dtde) {
+                updateCursor(dtde);
+            }
+
+            @Override
+            public void dragExit(DropTargetEvent dte) {
+            }
+
+            private void updateCursor(DropTargetDragEvent dtde) {
+                if (canAccept(dtde)) {
+                    dtde.acceptDrag(DnDConstants.ACTION_COPY);
+                } else {
+                    dtde.rejectDrag();
+                }
+            }
+
+            private boolean canAccept(DropTargetDragEvent dtde) {
+                // Check if the dragged flavor is acceptable
+                return dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
+            }
+
+            @Override
+            public void drop(DropTargetDropEvent dtde) {
+
+                if (!dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                    dtde.rejectDrop();
+                    return;
+                }
+
+                File imageFile = getTransferredFile(dtde.getTransferable());
+                getPageEntryModel().setImageFile(imageFile);
+                centerImage();
+
+                AppContext.INSTANCE.pageEntrySelected(getPageView(), PageEntryView.this);
+            }
+
+            private File getTransferredFile(Transferable transferable) {
+
+                List<File> files;
+
+                try {
+                    files = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
+                } catch (IOException | UnsupportedFlavorException ex) {
+                    throw new RuntimeException("Failed to fetch files from drag & drop transfer");
+                }
+
+                if (files.isEmpty()) {
+                    throw new RuntimeException("Cannot transfer empty list of files");
+                }
+
+                if (files.size() > 1) {
+                    throw new RuntimeException("Cannot transfer multiple files");
+                }
+
+                File file = files.get(0);
+
+                if (!FileUtils.isImage(file)) {
+                    throw new RuntimeException("Cannot transfer non image file " + file.getName());
+                }
+
+                return file;
+            }
+        }, true, null);
+
+//        setDropTarget(dropTarget);
         updateBorder();
     }
 
     @Override
-        public void mouseClicked(MouseEvent me) {
+    public void mouseClicked(MouseEvent me) {
 
         if (pageEntryModel.getPageEntryType() != PageEntryType.Image) {
             return;

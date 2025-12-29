@@ -9,11 +9,14 @@ import ie.philb.album.io.Thumbnail;
 import ie.philb.album.io.ThumbnailProvider;
 import ie.philb.album.io.ThumbnailProviderListener;
 import ie.philb.album.metadata.ImageMetaData;
+import ie.philb.album.model.PageEntryType;
+import ie.philb.album.ui.ApplicationUi;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.foldernavigator.FolderNavigationListener;
 import ie.philb.album.ui.common.foldernavigator.FolderNavigationPanel;
+import ie.philb.album.ui.dnd.ImageFileTransferable;
 import ie.philb.album.ui.dnd.ImageLibraryTransferHandler;
 import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.ui.resources.Icons;
@@ -21,10 +24,17 @@ import ie.philb.album.util.FileUtils;
 import ie.philb.album.util.ImageUtils;
 import ie.philb.album.util.StringUtils;
 import ie.philb.album.util.UiUtils;
+import ie.philb.album.view.PageEntryView;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceAdapter;
+import java.awt.dnd.DragSourceDragEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -42,6 +52,7 @@ import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -61,7 +72,6 @@ public class ImageLibraryView extends AppPanel {
     public ImageLibraryView() {
 
         thumbnailProvider = new ThumbnailProvider(CELL_SIZE);
-        list.setDragEnabled(true);
         list.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(-1);
         list.setCellRenderer(new ImageLibraryViewCellRenderer());
@@ -98,8 +108,56 @@ public class ImageLibraryView extends AppPanel {
             }
         });
 
-        list.setDragEnabled(true);
-        list.setTransferHandler(new ImageLibraryTransferHandler());
+        // Manually implement DND handling rather than calling 
+        // setDragEnabled and setTransferHandler due to bugs in the cursor
+        // handling (both Windows and Linux exhibit different buggy behaviour)
+        DragSource ds = new DragSource();
+        ds.createDefaultDragGestureRecognizer(list, DnDConstants.ACTION_COPY, e -> {
+
+            ImageLibraryEntry selected = list.getSelectedValue();
+
+            if (selected == null) {
+                return;
+            }
+
+            
+            ImageFileTransferable transferable = new ImageFileTransferable(selected.getFile());
+            ds.startDrag(e,
+                    DragSource.DefaultCopyDrop,
+                    getDragImage(selected),
+                    new Point(0, 0),
+                    transferable,
+                    new DragSourceAdapter() {
+
+                @Override
+                public void dragMouseMoved(DragSourceDragEvent dsde) {
+                    updateCursor(dsde);
+                }
+
+                @Override
+                public void dragOver(DragSourceDragEvent dsde) {
+                    updateCursor(dsde);
+                }
+
+                private void updateCursor(DragSourceDragEvent dsde) {
+                    if (canDropHere(dsde.getLocation())) {
+                        dsde.getDragSourceContext().setCursor(DragSource.DefaultCopyDrop);
+                    } else {
+                        dsde.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
+                    }
+                }
+
+                private boolean canDropHere(Point dragLocation) {
+                    Component comp = SwingUtilities.getDeepestComponentAt(ApplicationUi.getInstance(), dragLocation.x, dragLocation.y);
+
+                    if (!(comp instanceof PageEntryView view)) {
+                        return false;
+                    }
+
+                    return view.getPageEntryModel().getPageEntryType() == PageEntryType.Image;
+                }
+            });
+        });
 
         try {
             list.setModel(new ImageLibraryListModel(FileUtils.getHomeDirectory()));
@@ -110,6 +168,7 @@ public class ImageLibraryView extends AppPanel {
     }
 
     @Override
+
     public void browseLocationUpdated(File file) {
         setBrowseLocation(file);
         btnUp.setEnabled(file.getParent() != null);
@@ -157,6 +216,22 @@ public class ImageLibraryView extends AppPanel {
         });
 
         toolBar.add(folderNavigationPanel);
+    }
+
+    private Image getDragImage(ImageLibraryEntry selected) {
+
+        if (selected == null) {
+            return null;
+        }
+
+        String key = selected.getFile().getAbsolutePath();
+        Thumbnail thumbnail = thumbnailProvider.getThumbnail(key);
+
+        if (thumbnail == null) {
+            return null;
+        }
+
+        return thumbnail.getBufferedImage();
     }
 
     class ImageLibraryViewCellRenderer extends AppPanel implements ThumbnailProviderListener, ListCellRenderer<ImageLibraryEntry> {
