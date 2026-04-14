@@ -22,8 +22,10 @@ public class WelcomePanel extends AppPanel {
 
     private static final float WELCOME_FONT_SIZE = 36f;
     private static final Color WELCOME_FONT_COLOR = new Color(10, 202, 245);
-    
-    private JLabel lblMain;
+
+    private JLabel lblWelcome;
+    private JLabel lblNewAlbum;
+    private JLabel lblOpenAlbum;
 
     public WelcomePanel() {
         background(Color.white);
@@ -31,13 +33,19 @@ public class WelcomePanel extends AppPanel {
     }
 
     private void initComponents() {
-        
-        lblMain = new JLabel();
-        lblMain.setHorizontalAlignment(SwingConstants.CENTER);
-        lblMain.setFont(getFont().deriveFont(WELCOME_FONT_SIZE));
-        lblMain.setForeground(WELCOME_FONT_COLOR);
-        lblMain.setText("Welcome!!");
-        
+
+        lblWelcome = new JLabel();
+        lblWelcome.setHorizontalAlignment(SwingConstants.CENTER);
+        lblWelcome.setFont(getFont().deriveFont(WELCOME_FONT_SIZE));
+        lblWelcome.setForeground(WELCOME_FONT_COLOR);
+        lblWelcome.setText("Welcome!!");
+
+        lblNewAlbum = new JLabel();
+        lblNewAlbum.setText("New Album");
+
+        lblOpenAlbum = new JLabel();
+        lblOpenAlbum.setText("Open");
+
         layoutComponents();
     }
 
@@ -47,22 +55,30 @@ public class WelcomePanel extends AppPanel {
                 .anchorNorth()
                 .fillHorizontal()
                 .weight(1)
-                .insetTop(30);
+                .insetTop(30).width(2);
 
-        add(lblMain, gbc);
+        add(lblWelcome, gbc);
+        
+        gbc.width(1);
+        
+        gbc.xy(0, 1);
+        add(lblNewAlbum, gbc);
+        
+        gbc.xy(1,1);
+        add(lblOpenAlbum, gbc);
     }
 
     public static void main(String[] args) {
-        
+
         JFrame frame = new JFrame();
         frame.getContentPane().setBackground(Color.yellow);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setLayout(new GridBagLayout());
         frame.setPreferredSize(new Dimension(400, 250));
         frame.setSize(frame.getPreferredSize());
-        
+
         GridBagCellConstraints gbc = new GridBagCellConstraints().fillBoth().weight(1);
-        
+
         WelcomePanel welcomePanel = new WelcomePanel();
         frame.add(welcomePanel, gbc);
         frame.setVisible(true);
