@@ -4,13 +4,21 @@
  */
 package ie.philb.album.view;
 
+import ie.philb.album.ui.command.NewAlbumCommand;
+import ie.philb.album.ui.command.OpenAlbumCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
@@ -24,8 +32,9 @@ public class WelcomePanel extends AppPanel {
     private static final Color WELCOME_FONT_COLOR = new Color(10, 202, 245);
 
     private JLabel lblWelcome;
-    private JLabel lblNewAlbum;
-    private JLabel lblOpenAlbum;
+    private JButton btnNewAlbum;
+    private JButton btnOpenAlbum;
+    private AppPanel buttonsPanel = new AppPanel();
 
     public WelcomePanel() {
         background(Color.white);
@@ -40,11 +49,16 @@ public class WelcomePanel extends AppPanel {
         lblWelcome.setForeground(WELCOME_FONT_COLOR);
         lblWelcome.setText("Welcome!!");
 
-        lblNewAlbum = new JLabel();
-        lblNewAlbum.setText("New Album");
+        btnNewAlbum = new JButton("New Album");
+        btnOpenAlbum = new JButton("Open Album");
 
-        lblOpenAlbum = new JLabel();
-        lblOpenAlbum.setText("Open");
+        btnNewAlbum.addActionListener((ActionEvent e) -> {
+            new NewAlbumCommand().execute();
+        });
+
+        btnOpenAlbum.addActionListener((ActionEvent e) -> {
+            new OpenAlbumCommand().execute();
+        });
 
         layoutComponents();
     }
@@ -55,17 +69,19 @@ public class WelcomePanel extends AppPanel {
                 .anchorNorth()
                 .fillHorizontal()
                 .weight(1)
-                .insetTop(30).width(2);
+                .insetTop(30);
 
         add(lblWelcome, gbc);
-        
-        gbc.width(1);
-        
+
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+        buttonsPanel.add(Box.createHorizontalGlue());
+        buttonsPanel.add(btnNewAlbum);
+        buttonsPanel.add(Box.createRigidArea(new Dimension(10, 0))); // spacing
+        buttonsPanel.add(btnOpenAlbum);
+        buttonsPanel.add(Box.createHorizontalGlue());
+
         gbc.xy(0, 1);
-        add(lblNewAlbum, gbc);
-        
-        gbc.xy(1,1);
-        add(lblOpenAlbum, gbc);
+        add(buttonsPanel, gbc);
     }
 
     public static void main(String[] args) {
