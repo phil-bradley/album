@@ -7,7 +7,6 @@ package ie.philb.album.view;
 import ie.philb.album.AppContext;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
-import ie.philb.album.model.PageGeometryOption;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.actionlistener.ImageCenterActionListener;
 import ie.philb.album.ui.actionlistener.ToggleCellTypeActionListener;
@@ -17,7 +16,6 @@ import ie.philb.album.ui.actionlistener.ZoomOutActionListener;
 import ie.philb.album.ui.actionlistener.ZoomResetActionListener;
 import ie.philb.album.ui.actionlistener.ZoomToCoverFitActionListener;
 import ie.philb.album.ui.command.NewPageCommand;
-import ie.philb.album.ui.command.SetGeometryCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.filters.BrightnessFilter;
@@ -26,21 +24,15 @@ import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlListener;
 import ie.philb.album.ui.common.numbercontrol.SlidingNumberControlModel;
 import ie.philb.album.ui.resources.Icons;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.ScrollPaneConstants;
 
 /**
  *
