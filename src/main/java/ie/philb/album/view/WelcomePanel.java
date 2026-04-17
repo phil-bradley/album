@@ -8,11 +8,13 @@ import ie.philb.album.ui.command.NewAlbumCommand;
 import ie.philb.album.ui.command.OpenAlbumCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
+import ie.philb.album.ui.resources.Icons;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -21,6 +23,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 /**
  *
@@ -47,10 +53,10 @@ public class WelcomePanel extends AppPanel {
         lblWelcome.setHorizontalAlignment(SwingConstants.CENTER);
         lblWelcome.setFont(getFont().deriveFont(WELCOME_FONT_SIZE));
         lblWelcome.setForeground(WELCOME_FONT_COLOR);
-        lblWelcome.setText("Welcome!!");
+        lblWelcome.setText("Welcome to album");
 
-        btnNewAlbum = new JButton("New Album");
-        btnOpenAlbum = new JButton("Open Album");
+        btnNewAlbum = new JButton( "New Album", Icons.Regular.NEW);
+        btnOpenAlbum = new JButton("Open Album", Icons.Regular.OPEN);
 
         btnNewAlbum.addActionListener((ActionEvent e) -> {
             new NewAlbumCommand().execute();
@@ -60,6 +66,12 @@ public class WelcomePanel extends AppPanel {
             new OpenAlbumCommand().execute();
         });
 
+        setBorder(
+            new CompoundBorder(
+                new EmptyBorder(10, 10, 10, 10),
+                new LineBorder(Color.lightGray, 1, true)
+            )
+        );
         layoutComponents();
     }
 
