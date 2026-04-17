@@ -20,8 +20,25 @@ import java.time.LocalDateTime;
  */
 public class NewAlbumCommand extends AbstractCommand {
 
-    private final int defaultMargin = 10;
-    private final int defaultGutter = 25;
+    private final int defaultMargin;
+    private final int defaultGutter;
+    private final int pageCount;
+    private final PageSize pageSize;
+    private final String title;
+    private final PageGeometry defaultPageGeometry;
+
+    public NewAlbumCommand() {
+        this(10, 25, 10, PageSize.A4_Landscape, "The Title", PageGeometry.square(2));
+    }
+
+    public NewAlbumCommand(int defaultMargin, int defaultGutter, int pageCount, PageSize pageSize, String title, PageGeometry pageGeometry) {
+        this.defaultMargin = defaultMargin;
+        this.defaultGutter = defaultGutter;
+        this.pageCount = pageCount;
+        this.pageSize = pageSize;
+        this.title = title;
+        this.defaultPageGeometry = pageGeometry;
+    }
 
     @Override
     public void execute() {
@@ -47,9 +64,8 @@ public class NewAlbumCommand extends AbstractCommand {
         PageEntryModel titleEntry = titlePage.getPageEntries().get(0);
         titleEntry.getTextControlModel().setText("The Title!");
 
-        for (int i = 0; i < 20; i++) {
-            // First album page, 2x2 cells by default
-            albumModel.addPage(PageGeometry.square(2));
+        for (int i = 0; i < pageCount; i++) {
+            albumModel.addPage(defaultPageGeometry);
             albumModel.setLastSaveDate(LocalDateTime.now());
         }
 
