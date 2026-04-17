@@ -10,9 +10,12 @@ import javax.swing.JComponent;
  *
  * @author philb
  */
-public record DialogValidationState (
+public record DialogValidationState(
         boolean isValid,
         String message,
         JComponent invalidField) {
-    
+
+    public static DialogValidationState ok() {
+        return new DialogValidationState(true, null, null);
+    }
 }

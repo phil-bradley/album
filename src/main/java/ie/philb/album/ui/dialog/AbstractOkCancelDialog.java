@@ -68,6 +68,10 @@ public abstract class AbstractOkCancelDialog<T> extends AbstractDialog {
         this.okPressed = false;
         dispose();
     }
+    
+    public boolean isOkPressed() {
+        return okPressed;
+    }
 
     private void initComponents() {
 

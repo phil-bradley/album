@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ie.philb.album.ui.common.font.fields;
+package ie.philb.album.ui.common.fields;
 
 import java.awt.Color;
 import java.awt.Toolkit;
@@ -31,7 +31,6 @@ public class IntField extends JTextField {
 
     public IntField(int minValue, int maxValue) {
         ((AbstractDocument) getDocument()).setDocumentFilter(new IntFieldFilter(this, minValue, maxValue));
-        setValue(minValue);
     }
 
     @Override

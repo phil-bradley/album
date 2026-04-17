@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.dialog;
 
+import ie.philb.album.ui.ApplicationUi;
 import java.awt.GridBagLayout;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -17,6 +18,8 @@ public abstract class AbstractDialog extends JDialog {
     protected abstract JComponent getView();
 
     public AbstractDialog() {
+        super(ApplicationUi.getInstance());
+        setModal(true);
         setLayout(new GridBagLayout());
         setName(getClass().getSimpleName());
     }

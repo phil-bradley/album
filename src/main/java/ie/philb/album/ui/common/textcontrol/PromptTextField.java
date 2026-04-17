@@ -16,7 +16,7 @@ import javax.swing.JTextField;
  */
 class PromptTextField extends JTextField {
 
-    private String prompt;
+    private final String prompt;
 
     public PromptTextField(String prompt) {
         super();

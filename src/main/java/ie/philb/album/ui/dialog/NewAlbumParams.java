@@ -4,10 +4,16 @@
  */
 package ie.philb.album.ui.dialog;
 
+import ie.philb.album.model.PageSize;
+
 /**
  *
  * @author philb
  */
-public class NewAlbumParams {
+public record NewAlbumParams(String title,
+        int margin,
+        int gutter,
+        int pages,
+        PageSize pageSize) {
     
 }

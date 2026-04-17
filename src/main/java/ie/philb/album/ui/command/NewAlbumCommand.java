@@ -10,8 +10,9 @@ import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
-import ie.philb.album.model.PageSize;
 import ie.philb.album.ui.common.Dialogs;
+import ie.philb.album.ui.dialog.NewAlbumDialog;
+import ie.philb.album.ui.dialog.NewAlbumParams;
 import java.time.LocalDateTime;
 
 /**
@@ -20,29 +21,23 @@ import java.time.LocalDateTime;
  */
 public class NewAlbumCommand extends AbstractCommand {
 
-    private final int defaultMargin;
-    private final int defaultGutter;
-    private final int pageCount;
-    private final PageSize pageSize;
-    private final String title;
-    private final PageGeometry defaultPageGeometry;
+    private final PageGeometry defaultPageGeometry = PageGeometry.square(2);
 
     public NewAlbumCommand() {
-        this(10, 25, 10, PageSize.A4_Landscape, "The Title", PageGeometry.square(2));
-    }
-
-    public NewAlbumCommand(int defaultMargin, int defaultGutter, int pageCount, PageSize pageSize, String title, PageGeometry pageGeometry) {
-        this.defaultMargin = defaultMargin;
-        this.defaultGutter = defaultGutter;
-        this.pageCount = pageCount;
-        this.pageSize = pageSize;
-        this.title = title;
-        this.defaultPageGeometry = pageGeometry;
     }
 
     @Override
     public void execute() {
 
+        NewAlbumDialog dlg = new NewAlbumDialog();
+        dlg.setVisible(true);
+        
+        if (!dlg.isOkPressed()) {
+            return;
+        }
+        
+        NewAlbumParams params = dlg.getResult();
+        
         AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
 
         if (albumModel != null && albumModel.hasUnSavedChanges()) {
@@ -54,7 +49,7 @@ public class NewAlbumCommand extends AbstractCommand {
             }
         }
 
-        albumModel = new AlbumModel(PageSize.A4_Landscape, defaultMargin, defaultGutter);
+        albumModel = new AlbumModel(params.pageSize(), params.margin(), params.gutter());
 
         // The title page - single text cell
         PageGeometry geometry = PageGeometry.square(PageEntryType.Text, 1);
@@ -62,9 +57,9 @@ public class NewAlbumCommand extends AbstractCommand {
 
         PageModel titlePage = albumModel.getPages().get(0);
         PageEntryModel titleEntry = titlePage.getPageEntries().get(0);
-        titleEntry.getTextControlModel().setText("The Title!");
+        titleEntry.getTextControlModel().setText(params.title());
 
-        for (int i = 0; i < pageCount; i++) {
+        for (int i = 0; i < params.pages(); i++) {
             albumModel.addPage(defaultPageGeometry);
             albumModel.setLastSaveDate(LocalDateTime.now());
         }

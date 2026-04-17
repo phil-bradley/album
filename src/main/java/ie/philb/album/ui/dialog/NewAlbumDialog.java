@@ -4,14 +4,16 @@
  */
 package ie.philb.album.ui.dialog;
 
+import ie.philb.album.model.PageSize;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
+import ie.philb.album.ui.common.fields.IntField;
+import ie.philb.album.ui.common.fields.MaxLengthTextField;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 /**
  *
@@ -29,7 +31,14 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
 
     @Override
     public NewAlbumParams getResult() {
-        return null;
+
+        return new NewAlbumParams(
+                view.txtTitle.getText(),
+                view.txtMargin.getValue(),
+                view.txtGutter.getValue(),
+                view.txtPages.getValue(),
+                PageSize.A4_Landscape
+        );
     }
 
     @Override
@@ -37,13 +46,30 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
         if (this.view == null) {
             this.view = new NewAlbumDialogView();
         }
-        
+
         return this.view;
     }
 
     @Override
     public DialogValidationState getValidationState() {
-        return new DialogValidationState(false, "It didn't work", view.txtGutter);
+
+        if (view.txtTitle.getText().isBlank()) {
+            return new DialogValidationState(false, "Please provide a title", view.txtTitle);
+        }
+
+        if (view.txtGutter.getText().isBlank()) {
+            return new DialogValidationState(false, "Please provide a gutter value", view.txtGutter);
+        }
+
+        if (view.txtMargin.getText().isBlank()) {
+            return new DialogValidationState(false, "Please provide a margin value", view.txtMargin);
+        }
+        
+        if (view.txtPages.getText().isBlank()) {
+            return new DialogValidationState(false, "Please specify the numner of pages", view.txtPages);
+        }
+
+        return DialogValidationState.ok();
     }
 
     private class NewAlbumDialogView extends AppPanel {
@@ -51,16 +77,16 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
         private final JLabel[] labels = {
             new JLabel("TItle"),
             new JLabel("Page size"),
-            new JLabel("Default Gutter"),
-            new JLabel("Default Margin"),
-            new JLabel("Pages")
+            new JLabel("Default Gutter (max 200)"),
+            new JLabel("Default Margin (max 200)"),
+            new JLabel("Pages (max 100)")
         };
 
-        private final JTextField txtTitle = new JTextField();
+        private final MaxLengthTextField txtTitle = new MaxLengthTextField(50);
         private final JComboBox cmbPageSize = new JComboBox();
-        private final JTextField txtGutter = new JTextField();
-        private final JTextField txtMargin = new JTextField();
-        private final JTextField txtPages = new JTextField();
+        private final IntField txtGutter = new IntField(0, 200);
+        private final IntField txtMargin = new IntField(0, 200);
+        private final IntField txtPages = new IntField(1, 100);
 
         private final JComponent[] fields = {
             txtTitle,
@@ -77,7 +103,7 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
                     .inset(5)
                     .anchor(GridBagConstraints.LINE_END)
                     .weight(0);
-            
+
             for (JLabel label : labels) {
                 add(label, gbc);
                 gbc.incy();
@@ -90,7 +116,7 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
             for (JComponent field : fields) {
                 add(field, gbc);
                 gbc.incy();
-            }                   
+            }
         }
     }
 
