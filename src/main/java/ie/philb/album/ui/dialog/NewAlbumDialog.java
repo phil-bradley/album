@@ -11,6 +11,8 @@ import ie.philb.album.ui.common.fields.IntField;
 import ie.philb.album.ui.common.fields.MaxLengthTextField;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -30,15 +32,14 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
     }
 
     @Override
-    public NewAlbumParams getResult() {
+    protected NewAlbumParams getResult() {
 
         return new NewAlbumParams(
                 view.txtTitle.getText(),
                 view.txtMargin.getValue(),
                 view.txtGutter.getValue(),
                 view.txtPages.getValue(),
-                PageSize.A4_Landscape
-        );
+                (PageSize) view.cmbPageSize.getSelectedItem());
     }
 
     @Override
@@ -51,25 +52,25 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
     }
 
     @Override
-    public DialogValidationState getValidationState() {
+    public DialogValidationState<NewAlbumParams> getValidationState() {
 
         if (view.txtTitle.getText().isBlank()) {
-            return new DialogValidationState(false, "Please provide a title", view.txtTitle);
+            return DialogValidationState.error("Please provide a title", view.txtTitle);
         }
 
         if (view.txtGutter.getText().isBlank()) {
-            return new DialogValidationState(false, "Please provide a gutter value", view.txtGutter);
+            return DialogValidationState.error("Please provide a gutter value", view.txtGutter);
         }
 
         if (view.txtMargin.getText().isBlank()) {
-            return new DialogValidationState(false, "Please provide a margin value", view.txtMargin);
-        }
-        
-        if (view.txtPages.getText().isBlank()) {
-            return new DialogValidationState(false, "Please specify the numner of pages", view.txtPages);
+            return DialogValidationState.error("Please provide a margin value", view.txtMargin);
         }
 
-        return DialogValidationState.ok();
+        if (view.txtPages.getText().isBlank()) {
+            return DialogValidationState.error("Please specify the numner of pages", view.txtPages);
+        }
+
+        return DialogValidationState.ok(getResult());
     }
 
     private class NewAlbumDialogView extends AppPanel {
@@ -83,7 +84,7 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
         };
 
         private final MaxLengthTextField txtTitle = new MaxLengthTextField(50);
-        private final JComboBox cmbPageSize = new JComboBox();
+        private final JComboBox<PageSize> cmbPageSize = new JComboBox();
         private final IntField txtGutter = new IntField(0, 200);
         private final IntField txtMargin = new IntField(0, 200);
         private final IntField txtPages = new IntField(1, 100);
@@ -97,6 +98,8 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
         };
 
         public NewAlbumDialogView() {
+
+            cmbPageSize.setModel(getPageSizeSelectionModel());
 
             GridBagCellConstraints gbc = new GridBagCellConstraints()
                     .fillHorizontal()
@@ -118,6 +121,17 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
                 gbc.incy();
             }
         }
+    }
+
+    private ComboBoxModel<PageSize> getPageSizeSelectionModel() {
+
+        DefaultComboBoxModel<PageSize> model = new DefaultComboBoxModel<>();
+
+        for (PageSize pageSize : PageSize.values()) {
+            model.addElement(pageSize);
+        }
+
+        return model;
     }
 
     public static void main(String[] args) {

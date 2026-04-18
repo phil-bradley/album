@@ -5,19 +5,16 @@
 package ie.philb.album.ui.common.textcontrol;
 
 import ie.philb.album.ui.common.font.ApplicationFont;
-import ie.philb.album.ui.font.FontSelector;
+import ie.philb.album.ui.common.font.FontSelector;
 import java.awt.Color;
-import java.lang.reflect.Field;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JToggleButton;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *

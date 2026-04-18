@@ -37,9 +37,9 @@ public abstract class AbstractOkCancelDialog<T> extends AbstractDialog {
         initComponents();
     }
 
-    public abstract T getResult();
+    protected abstract T getResult();
 
-    public abstract DialogValidationState getValidationState();
+    public abstract DialogValidationState<T> getValidationState();
 
     protected void ok() {
 
@@ -115,7 +115,7 @@ public abstract class AbstractOkCancelDialog<T> extends AbstractDialog {
         lblFeedback.setOpaque(true);
         lblFeedback.setText(message);
 
-        new Timer(2000, (ActionEvent e) -> {
+        new Timer(3000, (ActionEvent e) -> {
             hideValidationMessage();
         }).start();
     }

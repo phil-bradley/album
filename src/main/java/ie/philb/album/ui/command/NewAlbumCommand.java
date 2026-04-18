@@ -36,7 +36,7 @@ public class NewAlbumCommand extends AbstractCommand {
             return;
         }
         
-        NewAlbumParams params = dlg.getResult();
+        NewAlbumParams params = dlg.getValidationState().result();
         
         AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
 

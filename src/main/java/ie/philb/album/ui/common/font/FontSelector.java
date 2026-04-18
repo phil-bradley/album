@@ -2,9 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ie.philb.album.ui.font;
+package ie.philb.album.ui.common.font;
 
-import ie.philb.album.ui.common.font.ApplicationFont;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collection;
