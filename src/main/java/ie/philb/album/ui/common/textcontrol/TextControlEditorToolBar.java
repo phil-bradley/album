@@ -6,7 +6,7 @@ package ie.philb.album.ui.common.textcontrol;
 
 import com.bric.colorpicker.ColorPickerDialog;
 import ie.philb.album.ui.common.font.ApplicationFont;
-import ie.philb.album.ui.font.FontSelector;
+import ie.philb.album.ui.common.font.FontSelector;
 import static ie.philb.album.util.FontUtils.bold;
 import static ie.philb.album.util.FontUtils.italic;
 import static ie.philb.album.util.FontUtils.underline;

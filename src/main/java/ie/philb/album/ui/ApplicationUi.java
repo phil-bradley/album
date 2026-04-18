@@ -19,10 +19,11 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.imagelibrary.ImageLibraryView;
 import ie.philb.album.ui.resources.Icons;
-import ie.philb.album.view.AlbumOverviewPanel;
-import ie.philb.album.view.AlbumViewContainer;
+import ie.philb.album.view.AlbumContainerWithOverviewPanel;
 import ie.philb.album.view.PageEntryView;
 import ie.philb.album.view.PageView;
+import ie.philb.album.view.WelcomeWithAlbumViewCardPanel;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -56,11 +57,8 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private static final ApplicationUi INSTANCE = new ApplicationUi();
 
     private ImageLibraryView imageLibraryView;
-    private AlbumViewContainer albumViewContainer;
-    private AlbumOverviewPanel albumOverviewPanel;
     private PageView selectedPageView;
     private PageEntryView selectedPageEntryView;
-    private JSplitPane hSplit;
     private JSplitPane vSplit;
     private JToolBar toolBar;
     private JMenuBar menuBar;
@@ -71,6 +69,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private JButton btnOpen;
     private JButton btnSave;
     private JButton btnSaveAs;
+    private WelcomeWithAlbumViewCardPanel welcomeWithAlbumViewCardPanel;
 
     public static ApplicationUi getInstance() {
         return INSTANCE;
@@ -120,18 +119,12 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         initToolBar();
 
         vSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        hSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
         imageLibraryView = new ImageLibraryView();
-        albumViewContainer = new AlbumViewContainer();
-        albumOverviewPanel = new AlbumOverviewPanel();
-
-        hSplit.setLeftComponent(albumViewContainer);
-        hSplit.setRightComponent(albumOverviewPanel);
-        hSplit.setResizeWeight(1);
+        welcomeWithAlbumViewCardPanel = new WelcomeWithAlbumViewCardPanel();
 
         vSplit.setLeftComponent(imageLibraryView);
-        vSplit.setRightComponent(hSplit);
+        vSplit.setRightComponent(welcomeWithAlbumViewCardPanel);
 
         layoutComponents();
     }
@@ -209,8 +202,6 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
         add(vSplit, gbc);
         vSplit.setDividerLocation(400);
-        hSplit.setDividerLocation(600);
-
     }
 
     @Override

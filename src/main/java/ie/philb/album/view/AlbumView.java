@@ -37,6 +37,11 @@ public class AlbumView extends AppPanel {
         this.albumModel = model;
 
         clearPages();
+        
+        if (this.albumModel == null) {
+            return;
+        }
+        
         addPages();
         positionPages();
 
@@ -70,7 +75,7 @@ public class AlbumView extends AppPanel {
     }
 
     public void positionPages() {
-
+        
         if (!canPosition()) {
             return;
         }
@@ -98,6 +103,10 @@ public class AlbumView extends AppPanel {
 
     private boolean canPosition() {
 
+        if (albumModel == null) {
+            return false;
+        }
+        
         if (getParent() == null) {
             return false;
         }

@@ -28,7 +28,7 @@ public class Main {
             LOG.info("Failed to set LookAndFeel", ex);
         }
 
-        new NewAlbumCommand().execute();
+        //new NewAlbumCommand().execute();
 
         java.awt.EventQueue.invokeLater(() -> {
             ApplicationUi.getInstance().setVisible(true);
