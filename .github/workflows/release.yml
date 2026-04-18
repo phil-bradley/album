@@ -1,4 +1,6 @@
 name: Build and Release Album
+permissions:
+  contents: write
 
 on:
   release:
@@ -62,7 +64,7 @@ jobs:
             target/album.tar.gz
             target/album.deb
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows:
     runs-on: windows-latest
@@ -110,5 +112,5 @@ jobs:
         with:
           files: target/album-portable.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
