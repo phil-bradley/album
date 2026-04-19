@@ -98,6 +98,11 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
             public void keyPressed(KeyEvent e) {
 
                 LOG.info("Key event " + e);
+
+                if (selectedPageEntryView == null) {
+                    return;
+                }
+
                 if (e.getKeyCode() == KeyEvent.VK_Z) {
                     selectedPageEntryView.zoomIn();
                 }
@@ -105,9 +110,25 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
                 if (e.getKeyCode() == KeyEvent.VK_X) {
                     selectedPageEntryView.zoomOut();
                 }
-                
+
                 if (e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
                     selectedPageEntryView.clearImage();
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    selectedPageEntryView.shiftOffset(-1, 0);
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    selectedPageEntryView.shiftOffset(1, 0);
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    selectedPageEntryView.shiftOffset(0, -1);
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    selectedPageEntryView.shiftOffset(0, 1);
                 }
             }
         });
