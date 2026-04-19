@@ -9,6 +9,7 @@ import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.fields.IntField;
 import ie.philb.album.ui.common.fields.MaxLengthTextField;
+import static ie.philb.album.ui.common.fields.PromptAlignment.TRAILING;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import javax.swing.ComboBoxModel;
@@ -22,6 +23,11 @@ import javax.swing.JLabel;
  * @author philb
  */
 public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
+
+    private static final String DEFAULT_TITLE = "My Album";
+    private static final int DEFAULT_MARGIN = 10;
+    private static final int DEFAULT_GUTTER = 10;
+    private static final int DEFAULT_PAGE_COUNT = 5;
 
     private NewAlbumDialogView view;
 
@@ -78,9 +84,9 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
         private final JLabel[] labels = {
             new JLabel("TItle"),
             new JLabel("Page size"),
-            new JLabel("Default Gutter (max 200)"),
-            new JLabel("Default Margin (max 200)"),
-            new JLabel("Pages (max 100)")
+            new JLabel("Default Gutter"),
+            new JLabel("Default Margin"),
+            new JLabel("Pages")
         };
 
         private final MaxLengthTextField txtTitle = new MaxLengthTextField(50);
@@ -100,6 +106,29 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
         public NewAlbumDialogView() {
 
             cmbPageSize.setModel(getPageSizeSelectionModel());
+
+            txtTitle.setText(DEFAULT_TITLE);
+            txtGutter.setValue(DEFAULT_GUTTER);
+            txtMargin.setValue(DEFAULT_MARGIN);
+            txtPages.setValue(DEFAULT_PAGE_COUNT);
+
+            txtGutter.prompt()
+                    .withPrefix("(mm) ")
+                    .withAlignment(TRAILING)
+                    .withHideOnInput(false);
+
+            txtMargin.prompt()
+                    .withPrefix("(mm) ")
+                    .withAlignment(TRAILING)
+                    .withHideOnInput(false);
+
+            txtMargin.prompt()
+                    .withAlignment(TRAILING)
+                    .withHideOnInput(false);
+            
+            txtPages.prompt()
+                    .withAlignment(TRAILING)
+                    .withHideOnInput(false);
 
             GridBagCellConstraints gbc = new GridBagCellConstraints()
                     .fillHorizontal()
@@ -138,5 +167,6 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
         NewAlbumDialog dlg = new NewAlbumDialog();
         dlg.setLocation(500, 500);
         dlg.setVisible(true);
+        System.exit(0);
     }
 }

@@ -19,10 +19,18 @@ import javax.swing.text.DocumentFilter;
  *
  * @author philb
  */
-public class MaxLengthTextField extends JTextField {
+public class MaxLengthTextField extends PromptField {
 
+    private final int maxLength;
+    
     public MaxLengthTextField(int maxLength) {
+        this.maxLength = maxLength;
         ((AbstractDocument) getDocument()).setDocumentFilter(new MaxLengthFilter(this, maxLength));
+    }
+
+    @Override
+    protected String getDefaultPrompt() {
+        return "Max length " + maxLength;
     }
 
     class MaxLengthFilter extends DocumentFilter {
