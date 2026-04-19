@@ -19,18 +19,51 @@ import javax.swing.text.DocumentFilter;
  *
  * @author philb
  */
-public class IntField extends JTextField {
+public class IntField extends PromptField {
+
+    private int minValue = 0;
+    private int maxValue = Integer.MAX_VALUE;
 
     public IntField() {
-        this(Integer.MAX_VALUE);
+        this(0, Integer.MAX_VALUE, false);
     }
 
     public IntField(int maxValue) {
-        this(0, maxValue);
+        this(0, maxValue, true);
     }
 
     public IntField(int minValue, int maxValue) {
+        this(minValue, maxValue, true);
+    }
+
+    public IntField(int minValue, int maxValue, boolean isPromptEnabled) {
+
+        if (minValue > maxValue) {
+            throw new IllegalArgumentException("Unexpected range, min:" + minValue + ", max:" + maxValue);
+        }
+
         ((AbstractDocument) getDocument()).setDocumentFilter(new IntFieldFilter(this, minValue, maxValue));
+        this.setPromptEnabled(isPromptEnabled);
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+    }
+
+    @Override
+    protected String getDefaultPrompt() {
+
+        if (minValue != 0 && maxValue != Integer.MAX_VALUE) {
+            return "Range " + minValue + " to " + maxValue;
+        }
+
+        if (minValue != 0) {
+            return "Min " + minValue;
+        }
+
+        if (maxValue != Integer.MAX_VALUE) {
+            return "Max " + maxValue;
+        }
+
+        return "";
     }
 
     @Override
@@ -118,4 +151,5 @@ public class IntField extends JTextField {
             timer.start();
         }
     }
+
 }
