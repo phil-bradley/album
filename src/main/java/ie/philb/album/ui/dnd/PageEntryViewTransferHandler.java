@@ -24,19 +24,27 @@ public class PageEntryViewTransferHandler extends TransferHandler {
 
     @Override
     public boolean canImport(TransferSupport support) {
-        try {
-            JComponent comp = (JComponent) support.getComponent();
-
-            if (comp instanceof PageEntryView view) {
-                if (view.getPageEntryModel().getPageEntryType() != PageEntryType.Image) {
-                    return false;
-                }
-            }
-
-            return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
-        } catch (Exception ex) {
+        
+        if (!support.isDrop()) {
             return false;
         }
+
+        if (!support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+            return false;
+        }
+
+        JComponent comp = (JComponent) support.getComponent();
+
+        if (comp instanceof PageEntryView view) {
+            if (view.getPageEntryModel().getPageEntryType() != PageEntryType.Image) {
+                return false;
+            }
+        }
+
+        support.setShowDropLocation(true);
+        support.setDropAction(COPY);
+        return true;
+
     }
 
     @Override
@@ -59,7 +67,7 @@ public class PageEntryViewTransferHandler extends TransferHandler {
             Dialogs.showErrorMessage("Drag & drop failed: " + ex.getMessage(), ex);
         }
 
-        return false;
+        return true;
     }
 
     private File getTransferredFile(TransferSupport transferSupport) throws Exception {
