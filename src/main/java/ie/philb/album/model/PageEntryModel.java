@@ -81,14 +81,18 @@ public class PageEntryModel {
     }
 
     public void setImageFile(File imageFile) {
+        
         this.imageFile = imageFile;
-        try {
-            if (imageFile != null) {
+        if (imageFile == null) {
+            image = null;
+        } else {
+            try {
                 image = ImageUtils.readBufferedImage(imageFile);
+            } catch (IOException ex) {
+                throw new RuntimeException("Failed to set image", ex);
             }
-        } catch (IOException ex) {
-            throw new RuntimeException("Failed to set image", ex);
         }
+
         setZoomFactor(1);
         fireImageUpdated();
     }

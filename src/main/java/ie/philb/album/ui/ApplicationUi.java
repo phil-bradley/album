@@ -19,11 +19,9 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.imagelibrary.ImageLibraryView;
 import ie.philb.album.ui.resources.Icons;
-import ie.philb.album.view.AlbumContainerWithOverviewPanel;
 import ie.philb.album.view.PageEntryView;
 import ie.philb.album.view.PageView;
 import ie.philb.album.view.WelcomeWithAlbumViewCardPanel;
-import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -101,11 +99,15 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
                 LOG.info("Key event " + e);
                 if (e.getKeyCode() == KeyEvent.VK_Z) {
-                    LOG.info("Would zoom in");
+                    selectedPageEntryView.zoomIn();
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_X) {
-                    LOG.info("Would zoom out");
+                    selectedPageEntryView.zoomOut();
+                }
+                
+                if (e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                    selectedPageEntryView.clearImage();
                 }
             }
         });
