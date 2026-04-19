@@ -12,8 +12,8 @@ import java.awt.Dimension;
  */
 public enum PageSize {
 
-    A4_Portrait(595, 842, "A4 Portrait"),
     A4_Landscape(842, 595, "A4 Landscape"),
+    A4_Portrait(595, 842, "A4 Portrait"),
     US_Letter_Portrait(612, 792, "US Letter Portrait"),
     US_Letter_Landscape(792, 612, "US Letter Landscape");
 
@@ -38,7 +38,7 @@ public enum PageSize {
     public String description() {
         return description;
     }
-    
+
     public Dimension size() {
         return new Dimension(width, height);
     }
@@ -52,7 +52,7 @@ public enum PageSize {
         double heightToWidthRatio = (double) height / (double) width;
         return (int) ((double) h / heightToWidthRatio);
     }
-    
+
     @Override
     public String toString() {
         return description;

@@ -25,8 +25,8 @@ import javax.swing.JLabel;
 public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
 
     private static final String DEFAULT_TITLE = "My Album";
-    private static final int DEFAULT_MARGIN = 10;
-    private static final int DEFAULT_GUTTER = 10;
+    private static final int DEFAULT_MARGIN = 20;
+    private static final int DEFAULT_GUTTER = 50;
     private static final int DEFAULT_PAGE_COUNT = 5;
 
     private NewAlbumDialogView view;
