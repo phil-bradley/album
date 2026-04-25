@@ -14,6 +14,7 @@ import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.foldernavigator.FolderNavigationListener;
 import ie.philb.album.ui.common.foldernavigator.FolderNavigationPanel;
+import ie.philb.album.ui.dnd.ImageFileTransferable;
 import ie.philb.album.ui.dnd.ImageLibraryTransferHandler;
 import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.ui.resources.Icons;
@@ -25,6 +26,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceAdapter;
+import java.awt.dnd.InvalidDnDOperationException;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -32,6 +40,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -51,6 +60,7 @@ public class ImageLibraryView extends AppPanel {
 
     private static final Dimension CELL_SIZE = new Dimension(120, 120);
 
+    private final DragSource dragSource = new DragSource();
     private final JList<ImageLibraryEntry> list = new JList<>();
     private final JToolBar toolBar = new JToolBar();
     private JButton btnHome;
@@ -61,7 +71,6 @@ public class ImageLibraryView extends AppPanel {
     public ImageLibraryView() {
 
         thumbnailProvider = new ThumbnailProvider(CELL_SIZE);
-        list.setDragEnabled(true);
         list.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(-1);
         list.setCellRenderer(new ImageLibraryViewCellRenderer());
@@ -98,14 +107,64 @@ public class ImageLibraryView extends AppPanel {
             }
         });
 
-        list.setDragEnabled(true);
-        list.setTransferHandler(new ImageLibraryTransferHandler());
+        // Swing DnD - has bug with cursor handling
+         list.setDragEnabled(true);
+         list.setTransferHandler(new ImageLibraryTransferHandler());
+//        dragSource.createDefaultDragGestureRecognizer(
+//                list,
+//                DnDConstants.ACTION_COPY,
+//                dge -> startDrag(dge)
+//        );
 
         try {
             list.setModel(new ImageLibraryListModel(FileUtils.getHomeDirectory()));
         } catch (IOException ex) {
             String msg = "Failed to initialise library folder " + FileUtils.getHomeDirectory() + "\n" + ex.getMessage();
             JOptionPane.showMessageDialog(null, msg);
+        }
+    }
+
+    private void __startDrag(DragGestureEvent dge) {
+
+        Point p = dge.getDragOrigin();
+        int index = list.locationToIndex(p);
+
+        if (index < 0) {
+            return;
+        }
+
+        ImageLibraryEntry selected = list.getModel().getElementAt(index);
+
+        if (selected == null || selected.isDirectory()) {
+            return;
+        }
+
+        try {
+            File file = selected.getFile();
+
+            Transferable transferable = new ImageFileTransferable(file);
+
+            Image dragImage = null;
+            try {
+                BufferedImage img = ImageIO.read(file);
+                if (img != null) {
+                    dragImage = img.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+                }
+            } catch (IOException ignored) {
+            }
+
+            dragSource.startDrag(
+                    dge,
+                    DragSource.DefaultCopyDrop,
+                    dragImage,
+                    new Point(0, 0),
+                    transferable,
+                    new DragSourceAdapter() {
+            }
+            );
+
+        } catch (InvalidDnDOperationException ex) {
+            ex.printStackTrace();
         }
     }
 
