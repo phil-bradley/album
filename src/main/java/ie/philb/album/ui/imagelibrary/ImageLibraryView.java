@@ -15,7 +15,6 @@ import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.foldernavigator.FolderNavigationListener;
 import ie.philb.album.ui.common.foldernavigator.FolderNavigationPanel;
 import ie.philb.album.ui.dnd.ImageFileTransferable;
-import ie.philb.album.ui.dnd.ImageLibraryTransferHandler;
 import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.util.FileUtils;
@@ -24,14 +23,20 @@ import ie.philb.album.util.StringUtils;
 import ie.philb.album.util.UiUtils;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
-import java.awt.dnd.DragSourceAdapter;
+import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DragSourceDropEvent;
+import java.awt.dnd.DragSourceEvent;
+import java.awt.dnd.DragSourceListener;
+import java.awt.dnd.DnDConstants;
 import java.awt.dnd.InvalidDnDOperationException;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -107,64 +112,18 @@ public class ImageLibraryView extends AppPanel {
             }
         });
 
-        // Swing DnD - has bug with cursor handling
-         list.setDragEnabled(true);
-         list.setTransferHandler(new ImageLibraryTransferHandler());
-//        dragSource.createDefaultDragGestureRecognizer(
-//                list,
-//                DnDConstants.ACTION_COPY,
-//                dge -> startDrag(dge)
-//        );
+        // Use low-level DragSource API for proper cursor feedback
+        dragSource.createDefaultDragGestureRecognizer(
+                list,
+                DnDConstants.ACTION_COPY,
+                new ImageLibraryDragGestureListener()
+        );
 
         try {
             list.setModel(new ImageLibraryListModel(FileUtils.getHomeDirectory()));
         } catch (IOException ex) {
             String msg = "Failed to initialise library folder " + FileUtils.getHomeDirectory() + "\n" + ex.getMessage();
             JOptionPane.showMessageDialog(null, msg);
-        }
-    }
-
-    private void __startDrag(DragGestureEvent dge) {
-
-        Point p = dge.getDragOrigin();
-        int index = list.locationToIndex(p);
-
-        if (index < 0) {
-            return;
-        }
-
-        ImageLibraryEntry selected = list.getModel().getElementAt(index);
-
-        if (selected == null || selected.isDirectory()) {
-            return;
-        }
-
-        try {
-            File file = selected.getFile();
-
-            Transferable transferable = new ImageFileTransferable(file);
-
-            Image dragImage = null;
-            try {
-                BufferedImage img = ImageIO.read(file);
-                if (img != null) {
-                    dragImage = img.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
-                }
-            } catch (IOException ignored) {
-            }
-
-            dragSource.startDrag(
-                    dge,
-                    DragSource.DefaultCopyDrop,
-                    dragImage,
-                    new Point(0, 0),
-                    transferable,
-                    new DragSourceAdapter() {
-            }
-            );
-
-        } catch (InvalidDnDOperationException ex) {
-            ex.printStackTrace();
         }
     }
 
@@ -216,6 +175,105 @@ public class ImageLibraryView extends AppPanel {
         });
 
         toolBar.add(folderNavigationPanel);
+    }
+
+    /**
+     * Handles drag gesture initiation from the JList
+     */
+    private class ImageLibraryDragGestureListener implements DragGestureListener {
+
+        @Override
+        public void dragGestureRecognized(DragGestureEvent dge) {
+
+            Point p = dge.getDragOrigin();
+            int index = list.locationToIndex(p);
+
+            if (index < 0) {
+                return;
+            }
+
+            ImageLibraryEntry selected = list.getModel().getElementAt(index);
+
+            if (selected == null || selected.isDirectory()) {
+                return;
+            }
+
+            try {
+                File file = selected.getFile();
+                Transferable transferable = new ImageFileTransferable(file);
+
+                Image dragImage = null;
+                try {
+                    BufferedImage img = ImageIO.read(file);
+                    if (img != null) {
+                        dragImage = img.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+                    }
+                } catch (IOException ignored) {
+                }
+
+                dragSource.startDrag(
+                        dge,
+                        DragSource.DefaultCopyDrop,
+                        dragImage,
+                        new Point(0, 0),
+                        transferable,
+                        new LibraryDragSourceListener()
+                );
+
+            } catch (InvalidDnDOperationException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Handles drag source events and provides cursor feedback
+     */
+    private static class LibraryDragSourceListener implements DragSourceListener {
+
+        @Override
+        public void dragEnter(DragSourceDragEvent dsde) {
+            updateCursor(dsde);
+        }
+
+        @Override
+        public void dragOver(DragSourceDragEvent dsde) {
+            updateCursor(dsde);
+        }
+
+        @Override
+        public void dropActionChanged(DragSourceDragEvent dsde) {
+            updateCursor(dsde);
+        }
+
+        @Override
+        public void dragExit(DragSourceEvent dse) {
+            // Reset to default cursor
+            dse.getDragSourceContext().setCursor(Cursor.getDefaultCursor());
+        }
+
+        @Override
+        public void dragDropEnd(DragSourceDropEvent dsde) {
+            // Cleanup
+        }
+
+        /**
+         * Updates the drag cursor based on whether the drop target accepts the data.
+         * If the drop action is supported, shows the copy cursor (green ✓).
+         * Otherwise, shows the no-drop cursor (red ✗).
+         */
+        private void updateCursor(DragSourceDragEvent dsde) {
+            int dropAction = dsde.getDropAction();
+            int sourceActions = DnDConstants.ACTION_COPY;
+
+            if ((dropAction & sourceActions) != 0) {
+                // Drop is accepted - show copy cursor
+                dsde.getDragSourceContext().setCursor(DragSource.DefaultCopyDrop);
+            } else {
+                // Drop is not accepted - show no-drop cursor
+                dsde.getDragSourceContext().setCursor(DragSource.DefaultCopyNoDrop);
+            }
+        }
     }
 
     class ImageLibraryViewCellRenderer extends AppPanel implements ThumbnailProviderListener, ListCellRenderer<ImageLibraryEntry> {
