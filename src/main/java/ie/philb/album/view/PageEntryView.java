@@ -24,6 +24,8 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
@@ -71,7 +73,14 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         this.pageEntryModel.addListener(this);
         this.pageEntryModel.getTextControlModel().addChangeListener(this);
 
-        setTransferHandler(new PageEntryViewTransferHandler());
+        // Set up drag and drop with explicit DropTarget
+        PageEntryViewTransferHandler transferHandler = new PageEntryViewTransferHandler();
+        setTransferHandler(transferHandler);
+        
+        // Explicitly set the DropTarget to use our transfer handler as the listener
+        // This ensures DropTargetListener callbacks are properly invoked
+        new DropTarget(this, (DropTargetListener) transferHandler);
+        
         updateBorder();
     }
 
