@@ -85,15 +85,19 @@ public class PageEntryViewTransferHandler extends TransferHandler implements Dro
      */
     @Override
     public void dragEnter(DropTargetDragEvent dtde) {
+        System.out.println("DROP TARGET dragEnter called");
         if (canDropHere(dtde)) {
+            System.out.println("Accepting drag - calling acceptDrag");
             dtde.acceptDrag(DnDConstants.ACTION_COPY);
         } else {
+            System.out.println("Rejecting drag - calling rejectDrag");
             dtde.rejectDrag();
         }
     }
 
     @Override
     public void dragOver(DropTargetDragEvent dtde) {
+        System.out.println("DROP TARGET dragOver called");
         if (canDropHere(dtde)) {
             dtde.acceptDrag(DnDConstants.ACTION_COPY);
         } else {
@@ -103,6 +107,7 @@ public class PageEntryViewTransferHandler extends TransferHandler implements Dro
 
     @Override
     public void dropActionChanged(DropTargetDragEvent dtde) {
+        System.out.println("DROP TARGET dropActionChanged called");
         if (canDropHere(dtde)) {
             dtde.acceptDrag(DnDConstants.ACTION_COPY);
         } else {
@@ -112,11 +117,13 @@ public class PageEntryViewTransferHandler extends TransferHandler implements Dro
 
     @Override
     public void dragExit(DropTargetEvent dte) {
+        System.out.println("DROP TARGET dragExit called");
         // Cursor will be reset by the drag source
     }
 
     @Override
     public void drop(DropTargetDropEvent dtde) {
+        System.out.println("DROP TARGET drop called");
         if (!canDropHere(dtde)) {
             dtde.rejectDrop();
             return;
