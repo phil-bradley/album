@@ -45,17 +45,18 @@ public class AlbumModel {
         return Collections.unmodifiableList(pages);
     }
 
-    public void addPage(PageGeometry geometry) {
-        addPage(geometry, defaultMargin, defaultGutter);
+    public void addPage(int index, PageGeometry geometry) {
+        addPage(index, geometry, defaultMargin, defaultGutter);
     }
 
-    public void addPage(PageGeometry geometry, int margin, int gutter) {
-        addPage(new PageModel(geometry, getPageSize()).withMargin(margin).withGutter(gutter));
+    public void addPage(int index, PageGeometry geometry, int margin, int gutter) {
+        addPage(index, new PageModel(geometry, getPageSize()).withMargin(margin).withGutter(gutter));
     }
 
-    public void addPage(PageModel pageModel) {
-        pageModel.setPageId(pages.size() + 1);
-        this.pages.add(pageModel);
+    public void addPage(int index, PageModel pageModel) {
+        pageModel.setPageId(index);
+        this.pages.add(index, pageModel);
+        renumberPages();
     }
 
     public File getFile() {
@@ -84,5 +85,14 @@ public class AlbumModel {
 
     public void setLastSaveDate(LocalDateTime saveDate) {
         this.lastSaveDate = saveDate;
+    }
+
+    private void renumberPages() {
+
+        int idx=0;
+        for (PageModel pageModel : pages) {
+            pageModel.setPageId(idx);
+            idx++;
+        }
     }
 }

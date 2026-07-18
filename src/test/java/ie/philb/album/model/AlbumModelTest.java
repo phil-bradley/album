@@ -28,8 +28,8 @@ public class AlbumModelTest {
         assertEquals(0, albumModel.getPages().size());
 
         PageGeometry geometry = PageGeometry.square(2);
-        albumModel.addPage(geometry);
-        albumModel.addPage(geometry);
+        albumModel.addPage(0, geometry);
+        albumModel.addPage(1, geometry);
         assertEquals(2, albumModel.getPages().size());
     }
 }
