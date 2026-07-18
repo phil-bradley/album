@@ -2,13 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ie.philb.album.ui.command;
+package ie.philb.album.ui.action;
 
 import ie.philb.album.AppContext;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageGeometryOption;
 import ie.philb.album.model.PageModel;
+import ie.philb.album.ui.command.AbstractCommand;
 import ie.philb.album.view.PageView;
 import java.util.List;
 
@@ -16,11 +17,10 @@ import java.util.List;
  *
  * @author philb
  */
-public class NewPageCommand extends AbstractCommand {
+public class AddPageAction extends AbstractCommand {
 
     @Override
     public void execute() {
-
         AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
         PageView selectedPageView = AppContext.INSTANCE.getSelectedPageView();
         List<PageModel> pages = albumModel.getPages();
