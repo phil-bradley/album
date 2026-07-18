@@ -59,6 +59,11 @@ public class AlbumModel {
         renumberPages();
     }
 
+    public void deletePage(int index) {
+        this.pages.remove(index);
+        renumberPages();
+    }
+
     public File getFile() {
         return file;
     }
@@ -89,7 +94,7 @@ public class AlbumModel {
 
     private void renumberPages() {
 
-        int idx=0;
+        int idx = 0;
         for (PageModel pageModel : pages) {
             pageModel.setPageId(idx);
             idx++;

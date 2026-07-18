@@ -50,6 +50,7 @@ public class Icons {
         public static final ImageIcon BRIGHTNESS = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/brightness.png"));
         public static final ImageIcon SETTINGS = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/settings.png"));
         public static final ImageIcon MARGIN = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/margin.png"));
+        public static final ImageIcon PAGE_DELETE = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/small/page-delete.png"));
     }
 
     public static final class Pages {

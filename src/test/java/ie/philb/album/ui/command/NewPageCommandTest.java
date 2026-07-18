@@ -31,7 +31,7 @@ class NewPageCommandTest {
         AlbumModel albumModel = new AlbumModel(pageSize, margin, gutter);
         AppContext.INSTANCE.setAlbumModel(albumModel);
 
-        NewPageCommand cmd = new NewPageCommand();
+        AddPageCommand cmd = new AddPageCommand();
         cmd.execute();
 
         assertEquals(1, albumModel.getPages().size());
@@ -54,7 +54,7 @@ class NewPageCommandTest {
         // We expect pageCount +1 pages, 1 extra for the title page
         assertEquals(pageCount + 1, albumModel.getPages().size());
 
-        NewPageCommand cmd = new NewPageCommand();
+        AddPageCommand cmd = new AddPageCommand();
         cmd.execute();
 
         // We expect pageCount + 2 pages
@@ -83,7 +83,7 @@ class NewPageCommandTest {
         PageGeometry lastPagePriorToInsertGeometry = PageGeometry.rectangle(11, 9);
         lastPagePriorToInsert.setGeometry(lastPagePriorToInsertGeometry);
 
-        NewPageCommand cmd = new NewPageCommand();
+        AddPageCommand cmd = new AddPageCommand();
         cmd.execute();
 
         PageModel penultimatePage = albumModel.getPages().get(albumModel.getPages().size() - 2);

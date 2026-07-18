@@ -15,7 +15,8 @@ import ie.philb.album.ui.actionlistener.ZoomInActionListener;
 import ie.philb.album.ui.actionlistener.ZoomOutActionListener;
 import ie.philb.album.ui.actionlistener.ZoomResetActionListener;
 import ie.philb.album.ui.actionlistener.ZoomToCoverFitActionListener;
-import ie.philb.album.ui.command.NewPageCommand;
+import ie.philb.album.ui.command.DeletePageCommand;
+import ie.philb.album.ui.command.AddPageCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.filters.BrightnessFilter;
@@ -50,6 +51,7 @@ public class AlbumViewContainer extends AppPanel {
     private JToggleButton btnGray;
     private JToggleButton btnCellType;
     private JButton btnNewPage;
+    private JButton btnDeletePage;
     private JButton btnPageSettings;
     private JButton btnBrightness;
     private SlidingNumberControl brightnessControl;
@@ -174,11 +176,20 @@ public class AlbumViewContainer extends AppPanel {
 
         btnNewPage = new JButton(Icons.Small.NEW);
         btnNewPage.addActionListener((ActionEvent ae) -> {
-            new NewPageCommand().execute();
+            new AddPageCommand().execute();
         });
         btnNewPage.setToolTipText("New Page");
         toolBar.add(btnNewPage);
 
+        
+        btnDeletePage = new JButton(Icons.Small.PAGE_DELETE);
+        btnDeletePage.addActionListener((ActionEvent ae) -> {
+            new DeletePageCommand().execute();
+        });
+        btnDeletePage.setToolTipText("Delete Page");
+        toolBar.add(btnDeletePage);
+        btnDeletePage.setEnabled(false);
+        
         btnPageSettings = new JButton(Icons.Small.MARGIN);
         btnPageSettings.addActionListener((ActionEvent ae) -> {
             pageSettingsMenu.show(btnPageSettings, 0, btnPageSettings.getHeight());
@@ -275,7 +286,10 @@ public class AlbumViewContainer extends AppPanel {
 
     @Override
     public void pageSelected(PageView view) {
+        
         btnPageGeometry.setEnabled(view != null);
+        btnDeletePage.setEnabled(view != null);
+        
         if (view != null) {
             PageModel model = view.getPageModel();
             pageGeometryMenu.setSelectedGeometry(model.getGeometry());
