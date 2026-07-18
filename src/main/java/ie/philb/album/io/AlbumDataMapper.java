@@ -24,6 +24,7 @@ public class AlbumDataMapper {
     public AlbumModel map(AlbumData albumData) {
         AlbumModel albumModel = new AlbumModel(albumData.getPageSize(), albumData.getDefaultMargin(), albumData.getDefaultGutter());
 
+        int pageId=0;
         for (PageData page : albumData.getPages()) {
             PageModel pageModel = new PageModel(page.pageGeometry(), albumData.getPageSize());
             pageModel.setHorizontalMargin(page.horizontalMargin());
@@ -36,7 +37,8 @@ public class AlbumDataMapper {
                 applyCellData(cellData, pem);
             }
 
-            albumModel.addPage(pageModel);
+            albumModel.addPage(pageId, pageModel);
+            pageId++;
         }
 
         return albumModel;

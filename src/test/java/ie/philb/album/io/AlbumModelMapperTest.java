@@ -43,8 +43,8 @@ public class AlbumModelMapperTest {
     void mapGeometry() {
 
         AlbumModel albumModel = new AlbumModel(PageSize.US_Letter_Landscape, DEFAULT_MARGIN, DEFAULT_GUTTER);
-        albumModel.addPage(PageGeometry.rectangle(3, 2));
-        albumModel.addPage(PageGeometry.square(4));
+        albumModel.addPage(0, PageGeometry.rectangle(3, 2));
+        albumModel.addPage(1, PageGeometry.square(4));
 
         AlbumData albumData = new AlbumDataMapper().map(albumModel);
         assertEquals(2, albumData.getPages().size());
@@ -63,7 +63,7 @@ public class AlbumModelMapperTest {
     void mapPageMarginAndGutter() {
 
         AlbumModel albumModel = new AlbumModel(PageSize.US_Letter_Landscape, DEFAULT_MARGIN, DEFAULT_GUTTER);
-        albumModel.addPage(PageGeometry.rectangle(3, 2));
+        albumModel.addPage(0, PageGeometry.rectangle(3, 2));
 
         PageModel page = albumModel.getPages().get(0);
         page.setVerticalMargin(123);
@@ -78,7 +78,7 @@ public class AlbumModelMapperTest {
     void mapTextProperties() {
 
         AlbumModel albumModel = new AlbumModel(PageSize.US_Letter_Landscape, DEFAULT_MARGIN, DEFAULT_GUTTER);
-        albumModel.addPage(PageGeometry.rectangle(3, 2));
+        albumModel.addPage(0, PageGeometry.rectangle(3, 2));
 
         PageModel page = albumModel.getPages().get(0);
         PageEntryModel textPem = page.getPageEntries().get(1);
@@ -111,7 +111,7 @@ public class AlbumModelMapperTest {
     void mapImageProperties() {
 
         AlbumModel albumModel = new AlbumModel(PageSize.US_Letter_Landscape, DEFAULT_MARGIN, DEFAULT_GUTTER);
-        albumModel.addPage(PageGeometry.rectangle(3, 2));
+        albumModel.addPage(0, PageGeometry.rectangle(3, 2));
 
         PageModel page = albumModel.getPages().get(0);
         PageEntryModel pem = page.getPageEntries().get(1);
