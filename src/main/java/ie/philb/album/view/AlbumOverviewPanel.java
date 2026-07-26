@@ -32,9 +32,9 @@ public class AlbumOverviewPanel extends AppPanel {
     private JScrollPane scrollPane;
 
     public AlbumOverviewPanel(Context context) {
-        
+
         super(context);
-        
+
         this.albumView = new AlbumView(context);
         this.albumView.setPreferredSize(getPreferredSize());
         this.albumView.setPreviewMode(true);
