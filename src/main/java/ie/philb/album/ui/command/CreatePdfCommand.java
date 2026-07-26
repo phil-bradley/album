@@ -4,11 +4,10 @@
  */
 package ie.philb.album.ui.command;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.exporter.AlbumExporter;
 import ie.philb.album.exporter.OpenPdfExporter;
 import ie.philb.album.model.AlbumModel;
-import ie.philb.album.ui.ApplicationUi;
 import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.ui.pdf.PdfViewDialog;
 import java.io.File;
@@ -22,19 +21,21 @@ public class CreatePdfCommand extends AbstractCommand {
 
     private File file = null;
 
-    public CreatePdfCommand() {
+    public CreatePdfCommand(Context context) {
+        this(context, null);
     }
 
-    public CreatePdfCommand(File file) {
+    public CreatePdfCommand(Context context, File file) {
+        super(context);
         this.file = file;
     }
 
     @Override
     public void execute() {
-        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
+        AlbumModel albumModel = context.session().getAlbumModel();
 
         final JFileChooser chooser = new JFileChooser();
-        int ret = chooser.showSaveDialog(ApplicationUi.getInstance());
+        int ret = chooser.showSaveDialog(context.ui());
 
         if (file == null) {
             if (ret == JFileChooser.APPROVE_OPTION) {
@@ -48,7 +49,7 @@ public class CreatePdfCommand extends AbstractCommand {
 
         if (file.exists()) {
             String msg = "Overwrite file " + file.getName() + "?";
-            if (!Dialogs.confirm(msg)) {
+            if (!Dialogs.confirm(context.ui(), msg)) {
                 return;
             }
         }
@@ -63,7 +64,7 @@ public class CreatePdfCommand extends AbstractCommand {
             dlg.setVisible(true);
 
         } catch (Exception ex) {
-            Dialogs.showErrorMessage("Failed to load PDF: " + ex.getMessage(), ex);
+            Dialogs.showErrorMessage(context.ui(), "Failed to load PDF: " + ex.getMessage(), ex);
         }
 
         /*

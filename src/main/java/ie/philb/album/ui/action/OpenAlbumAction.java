@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.action;
 
+import ie.philb.album.AppSession;
 import ie.philb.album.io.AlbumReader;
 import ie.philb.album.model.AlbumModel;
 import java.io.File;
@@ -16,7 +17,8 @@ public class OpenAlbumAction extends AbstractAction<AlbumModel> {
 
     private final File albumFile;
 
-    public OpenAlbumAction(File albumFile) {
+    public OpenAlbumAction(AppSession session, File albumFile) {
+        super(session);
         this.albumFile = albumFile;
     }
 

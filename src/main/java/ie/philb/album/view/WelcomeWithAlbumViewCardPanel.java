@@ -4,7 +4,7 @@
  */
 package ie.philb.album.view;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.ui.common.AppPanel;
 import java.awt.CardLayout;
 
@@ -23,13 +23,14 @@ public class WelcomeWithAlbumViewCardPanel extends AppPanel {
     private WelcomePanel welcomePanel;
     private AlbumContainerWithOverviewPanel albumContainerWithOverviewPanel;
 
-    public WelcomeWithAlbumViewCardPanel() {
+    public WelcomeWithAlbumViewCardPanel(Context context) {
+        super(context);
         initComponents();
     }
 
     private void initComponents() {
-        welcomePanel = new WelcomePanel();
-        albumContainerWithOverviewPanel = new AlbumContainerWithOverviewPanel();
+        welcomePanel = new WelcomePanel(context);
+        albumContainerWithOverviewPanel = new AlbumContainerWithOverviewPanel(context);
         layoutComponents();
     }
 

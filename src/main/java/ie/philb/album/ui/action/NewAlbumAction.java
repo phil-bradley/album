@@ -4,7 +4,7 @@
  */
 package ie.philb.album.ui.action;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.AppSession;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
@@ -23,7 +23,8 @@ public class NewAlbumAction extends AbstractAction<Void> {
 
     private final NewAlbumParams params;
 
-    public NewAlbumAction(NewAlbumParams params) {
+    public NewAlbumAction(AppSession session, NewAlbumParams params) {
+        super(session);
         this.params = params;
     }
 
@@ -45,7 +46,7 @@ public class NewAlbumAction extends AbstractAction<Void> {
             albumModel.setLastSaveDate(LocalDateTime.now());
         }
 
-        AppContext.INSTANCE.setAlbumModel(albumModel);
+        session.setAlbumModel(albumModel);
         return null;
     }
 }

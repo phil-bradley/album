@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.dialog;
 
+import ie.philb.album.Context;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import java.awt.Color;
@@ -32,8 +33,8 @@ public abstract class AbstractOkCancelDialog<T> extends AbstractDialog {
     private final JButton btnCancel = new JButton("Cancel");
     private final JLabel lblFeedback = new JLabel(" ");
 
-    public AbstractOkCancelDialog() {
-        super();
+    public AbstractOkCancelDialog(Context context) {
+        super(context);
         initComponents();
     }
 
@@ -95,7 +96,7 @@ public abstract class AbstractOkCancelDialog<T> extends AbstractDialog {
         add(getView(), gbc);
 
         gbc.incy().fillBoth().weight(1);
-        add(new AppPanel(), gbc);
+        add(new AppPanel(null), gbc);
 
         gbc.incy()
                 .fillHorizontal()
@@ -126,7 +127,7 @@ public abstract class AbstractOkCancelDialog<T> extends AbstractDialog {
     }
 
     private JPanel getButtonsPanel() {
-        AppPanel buttonsPanel = new AppPanel();
+        AppPanel buttonsPanel = new AppPanel(null);
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
         buttonsPanel.add(Box.createHorizontalGlue());
         buttonsPanel.add(btnCancel);

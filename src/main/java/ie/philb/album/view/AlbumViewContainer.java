@@ -4,7 +4,7 @@
  */
 package ie.philb.album.view;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageModel;
@@ -15,8 +15,8 @@ import ie.philb.album.ui.actionlistener.ZoomInActionListener;
 import ie.philb.album.ui.actionlistener.ZoomOutActionListener;
 import ie.philb.album.ui.actionlistener.ZoomResetActionListener;
 import ie.philb.album.ui.actionlistener.ZoomToCoverFitActionListener;
-import ie.philb.album.ui.command.DeletePageCommand;
 import ie.philb.album.ui.command.AddPageCommand;
+import ie.philb.album.ui.command.DeletePageCommand;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.common.filters.BrightnessFilter;
@@ -62,9 +62,11 @@ public class AlbumViewContainer extends AppPanel {
     private JButton btnPageGeometry;
     private PageGeometryMenu pageGeometryMenu;
 
-    private final AlbumView albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
+    private AlbumView albumView;
 
-    public AlbumViewContainer() {
+    public AlbumViewContainer(Context context) {
+
+        super(context);
 
         initComponents();
         initToolBar();
@@ -83,11 +85,13 @@ public class AlbumViewContainer extends AppPanel {
 
     private void initComponents() {
 
+        this.albumView = new AlbumView(context);
         this.scrollPane = new JScrollPane(albumView);
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
         brightnessControl = new SlidingNumberControl(
+                context,
                 new SlidingNumberControlModel(BrightnessFilter.MIN_BRIGHTNESS, BrightnessFilter.MAX_BRIGHTNESS, 1, BrightnessFilter.DEFAULT_BRIGHTNESS)
         );
 
@@ -103,6 +107,7 @@ public class AlbumViewContainer extends AppPanel {
         brightnessMenu.add(brightnessControl, BorderLayout.CENTER);
 
         verticalMarginControl = new SlidingNumberControl(
+                context,
                 new SlidingNumberControlModel(0, 200, 1, 25)
         );
 
@@ -115,6 +120,7 @@ public class AlbumViewContainer extends AppPanel {
         });
 
         horizontalMarginControl = new SlidingNumberControl(
+                context,
                 new SlidingNumberControlModel(0, 200, 1, 25)
         );
 
@@ -131,12 +137,12 @@ public class AlbumViewContainer extends AppPanel {
         pageSettingsMenu.add(horizontalMarginControl);
         pageSettingsMenu.add(verticalMarginControl);
 
-        pageGeometryMenu = new PageGeometryMenu();
+        pageGeometryMenu = new PageGeometryMenu(context);
 
     }
 
     private void adjustVerticalMargin() {
-        PageView selected = AppContext.INSTANCE.getSelectedPageView();
+        PageView selected = context.session().getSelectedPageView();
 
         if (selected == null) {
             return;
@@ -147,7 +153,7 @@ public class AlbumViewContainer extends AppPanel {
     }
 
     private void adjustHorizontalMargin() {
-        PageView selected = AppContext.INSTANCE.getSelectedPageView();
+        PageView selected = context.session().getSelectedPageView();
 
         if (selected == null) {
             return;
@@ -159,7 +165,7 @@ public class AlbumViewContainer extends AppPanel {
 
     private void adjustBrightness() {
 
-        PageEntryView selected = AppContext.INSTANCE.getSelectedPageEntryView();
+        PageEntryView selected = context.session().getSelectedPageEntryView();
 
         if (selected == null) {
             return;
@@ -176,20 +182,19 @@ public class AlbumViewContainer extends AppPanel {
 
         btnNewPage = new JButton(Icons.Small.NEW);
         btnNewPage.addActionListener((ActionEvent ae) -> {
-            new AddPageCommand().execute();
+            new AddPageCommand(context).execute();
         });
         btnNewPage.setToolTipText("New Page");
         toolBar.add(btnNewPage);
 
-        
         btnDeletePage = new JButton(Icons.Small.PAGE_DELETE);
         btnDeletePage.addActionListener((ActionEvent ae) -> {
-            new DeletePageCommand().execute();
+            new DeletePageCommand(context).execute();
         });
         btnDeletePage.setToolTipText("Delete Page");
         toolBar.add(btnDeletePage);
         btnDeletePage.setEnabled(false);
-        
+
         btnPageSettings = new JButton(Icons.Small.MARGIN);
         btnPageSettings.addActionListener((ActionEvent ae) -> {
             pageSettingsMenu.show(btnPageSettings, 0, btnPageSettings.getHeight());
@@ -286,10 +291,10 @@ public class AlbumViewContainer extends AppPanel {
 
     @Override
     public void pageSelected(PageView view) {
-        
+
         btnPageGeometry.setEnabled(view != null);
         btnDeletePage.setEnabled(view != null);
-        
+
         if (view != null) {
             PageModel model = view.getPageModel();
             pageGeometryMenu.setSelectedGeometry(model.getGeometry());
@@ -300,7 +305,8 @@ public class AlbumViewContainer extends AppPanel {
 
     @Override
     public void albumUpdated() {
-        albumView.setModel(AppContext.INSTANCE.getAlbumModel());
+        // TODO - get rid of refresh
+        albumView.refreshAlbum();
         LOG.info("Updated album");
     }
 

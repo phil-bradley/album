@@ -4,7 +4,7 @@
  */
 package ie.philb.album.view;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.util.UiUtils;
@@ -31,8 +31,11 @@ public class AlbumOverviewPanel extends AppPanel {
     private AlbumView albumView;
     private JScrollPane scrollPane;
 
-    public AlbumOverviewPanel() {
-        this.albumView = new AlbumView(AppContext.INSTANCE.getAlbumModel());
+    public AlbumOverviewPanel(Context context) {
+        
+        super(context);
+        
+        this.albumView = new AlbumView(context);
         this.albumView.setPreferredSize(getPreferredSize());
         this.albumView.setPreviewMode(true);
         this.albumView.setVisible(true);
@@ -115,7 +118,8 @@ public class AlbumOverviewPanel extends AppPanel {
                     PageView pageView = UiUtils.getChildOfType(av, avPoint.x, avPoint.y, PageView.class);
 
                     if (pageView != null) {
-                        AppContext.INSTANCE.pageNavigatedTo(pageView.getPageModel().getPageId());
+                        long pageId = pageView.getPageModel().getPageId();
+                        context.session().getEventBus().pageNavigatedTo(pageId);
                     }
 
                     e.consume();
@@ -159,7 +163,7 @@ public class AlbumOverviewPanel extends AppPanel {
 
     @Override
     public void albumUpdated() {
-        albumView.setModel(AppContext.INSTANCE.getAlbumModel());
+        albumView.refreshAlbum();
         scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
     }
 

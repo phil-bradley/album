@@ -4,7 +4,6 @@
  */
 package ie.philb.album;
 
-import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.view.PageEntryView;
@@ -12,23 +11,14 @@ import ie.philb.album.view.PageView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author Philip.Bradley
+ * @author philb
  */
-public enum AppContext implements ApplicationListener {
-
-    ZZ_INSTANCE;
-
-    private static final Logger LOG = LoggerFactory.getLogger(AppContext.class);
+public class AppEventBus {
 
     private final List<ApplicationListener> applicationListeners = new ArrayList<>();
-    private AlbumModel albumModel = null;
-    private PageView selectedPageView = null;
-    private PageEntryView selectedPageEntryView = null;
 
     public void addListener(ApplicationListener l) {
         this.applicationListeners.add(l);
@@ -42,49 +32,12 @@ public enum AppContext implements ApplicationListener {
         return Collections.unmodifiableList(applicationListeners);
     }
 
-    public void setAlbumModel(AlbumModel model) {
-        this.albumModel = model;
-        albumUpdated();
-    }
-
-    public AlbumModel getAlbumModel() {
-        return albumModel;
-    }
-
-    public PageView getSelectedPageView() {
-        return selectedPageView;
-    }
-
-    public PageEntryView getSelectedPageEntryView() {
-        return selectedPageEntryView;
-    }
-
-    @Override
-    public void pageEntrySelected(PageView pageView, PageEntryView pageEntryView) {
-        this.selectedPageEntryView = pageEntryView;
-        pageSelected(pageView);
-
-        getApplicationListenersCopy().forEach(appListener -> {
-            appListener.pageEntrySelected(pageView, pageEntryView);
-        });
-    }
-
-    @Override
-    public void pageSelected(PageView view) {
-        this.selectedPageView = view;
-        getApplicationListenersCopy().forEach(appListener -> {
-            appListener.pageSelected(view);
-        });
-    }
-
-    @Override
     public void libraryImageSelected(ImageLibraryEntry entry) {
         getApplicationListenersCopy().forEach(appListener -> {
             appListener.libraryImageSelected(entry);
         });
     }
 
-    @Override
     public void albumUpdated() {
 
         getApplicationListenersCopy().forEach(appListener -> {
@@ -92,7 +45,6 @@ public enum AppContext implements ApplicationListener {
         });
     }
 
-    @Override
     public void pageEntryUpdated(PageEntryModel pem) {
         getApplicationListenersCopy().forEach(appListener -> {
             appListener.pageEntryUpdated(pem);
@@ -103,10 +55,23 @@ public enum AppContext implements ApplicationListener {
         return new ArrayList<>(applicationListeners);
     }
 
-    @Override
     public void pageNavigatedTo(long pageId) {
         getApplicationListenersCopy().forEach(appListener -> {
             appListener.pageNavigatedTo(pageId);
+        });
+    }
+    
+    public void pageEntrySelected(PageView pageView, PageEntryView pageEntryView) {
+        pageSelected(pageView);
+
+        getApplicationListenersCopy().forEach(appListener -> {
+            appListener.pageEntrySelected(pageView, pageEntryView);
+        });
+    }
+
+    public void pageSelected(PageView view) {
+        getApplicationListenersCopy().forEach(appListener -> {
+            appListener.pageSelected(view);
         });
     }
 }

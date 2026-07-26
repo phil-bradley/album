@@ -4,7 +4,7 @@
  */
 package ie.philb.album.view;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
@@ -42,7 +42,8 @@ public class PageView extends AppPanel implements PageModelListener {
     private PageModel model;
     private boolean isPreviewMode = false;
 
-    public PageView(PageModel model) {
+    public PageView(Context context, PageModel model) {
+        super(context);
         setModel(model);
         background(Colors.COLOUR_ALBUM_PAGE_BACKGROUND);
         setLayout(null);
@@ -133,7 +134,7 @@ public class PageView extends AppPanel implements PageModelListener {
         selectedPageEntryView.setSelected(true);
         selectedPageEntryView.centerImage();
 
-        AppContext.INSTANCE.pageEntrySelected(selectedPageEntryView.getPageView(), selectedPageEntryView);
+        context.session().getEventBus().pageEntrySelected(selectedPageEntryView.getPageView(), selectedPageEntryView);
     }
 
     private void setModel(PageModel model) {
@@ -161,7 +162,7 @@ public class PageView extends AppPanel implements PageModelListener {
 
         for (int i = 0; i < entryCount; i++) {
             PageEntryModel pem = model.getPageEntries().get(i);
-            PageEntryView pageEntryView = new PageEntryView(this, pem);
+            PageEntryView pageEntryView = new PageEntryView(context, this, pem);
 
             pageEntryViews.add(pageEntryView);
             add(pageEntryView);
@@ -207,7 +208,7 @@ public class PageView extends AppPanel implements PageModelListener {
             return;
         }
 
-        AppContext.INSTANCE.pageSelected(this);
+        context.session().getEventBus().pageSelected(this);
     }
 
     private void setSelected(boolean b) {

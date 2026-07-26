@@ -4,7 +4,7 @@
  */
 package ie.philb.album.ui.action;
 
-import ie.philb.album.ui.common.Dialogs;
+import ie.philb.album.AppSession;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import javax.print.PrintService;
@@ -20,7 +20,8 @@ public class PrintPdfAction extends AbstractAction<Void> {
 
     private final File file;
 
-    public PrintPdfAction(File file) {
+    public PrintPdfAction(AppSession session, File file) {
+        super(session);
         this.file = file;
     }
 
@@ -37,8 +38,7 @@ public class PrintPdfAction extends AbstractAction<Void> {
         }
 
         if (printService == null) {
-            Dialogs.showErrorMessage("Could not find printer, cannot print", new Exception("Printer not found"));
-            return null;
+            throw new Exception("Printer not found");
         }
 
         job.setPrintService(printService);

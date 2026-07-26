@@ -4,9 +4,9 @@
  */
 package ie.philb.album.ui.action;
 
+import ie.philb.album.AppSession;
 import ie.philb.album.io.AlbumDataMapper;
 import ie.philb.album.io.AlbumWriter;
-import ie.philb.album.model.AlbumModel;
 import java.io.File;
 import java.time.LocalDateTime;
 
@@ -17,19 +17,18 @@ import java.time.LocalDateTime;
 public class SaveAlbumAction extends AbstractAction<Void> {
 
     private final File saveFile;
-    private final AlbumModel albumModel;
 
-    public SaveAlbumAction(File saveFile, AlbumModel albumModel) {
+    public SaveAlbumAction(AppSession session, File saveFile) {
+        super(session);
         this.saveFile = saveFile;
-        this.albumModel = albumModel;
     }
 
     @Override
     protected Void doAction() throws Exception {
-        albumModel.setLastSaveDate(LocalDateTime.now());
+        session.getAlbumModel().setLastSaveDate(LocalDateTime.now());
 
         AlbumWriter writer = new AlbumWriter(new AlbumDataMapper());
-        writer.write(saveFile, albumModel);
+        writer.write(saveFile, session.getAlbumModel());
         
         logger.info("Saved album to {}", saveFile.getAbsolutePath());
         return null;

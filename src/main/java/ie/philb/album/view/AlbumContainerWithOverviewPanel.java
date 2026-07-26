@@ -4,6 +4,7 @@
  */
 package ie.philb.album.view;
 
+import ie.philb.album.Context;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import javax.swing.JSplitPane;
@@ -18,7 +19,8 @@ public class AlbumContainerWithOverviewPanel extends AppPanel {
     private AlbumViewContainer albumViewContainer;
     private AlbumOverviewPanel albumOverviewPanel;
 
-    public AlbumContainerWithOverviewPanel() {
+    public AlbumContainerWithOverviewPanel(Context context) {
+        super(context);
         initComponents();
     }
 
@@ -26,8 +28,8 @@ public class AlbumContainerWithOverviewPanel extends AppPanel {
 
         splitter = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
-        albumViewContainer = new AlbumViewContainer();
-        albumOverviewPanel = new AlbumOverviewPanel();
+        albumViewContainer = new AlbumViewContainer(context);
+        albumOverviewPanel = new AlbumOverviewPanel(context);
 
         splitter.setLeftComponent(albumViewContainer);
         splitter.setRightComponent(albumOverviewPanel);

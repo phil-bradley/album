@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.command;
 
+import ie.philb.album.Context;
 import ie.philb.album.ui.about.LicenseDialog;
 
 /**
@@ -12,9 +13,13 @@ import ie.philb.album.ui.about.LicenseDialog;
  */
 public class ShowLicenseCommand extends AbstractCommand {
 
+    public ShowLicenseCommand(Context context) {
+        super(context);
+    }
+
     @Override
     public void execute() {
-        LicenseDialog dlg = new LicenseDialog();
+        LicenseDialog dlg = new LicenseDialog(context.ui());
         dlg.setVisible(true);
     }
 

@@ -4,8 +4,7 @@
  */
 package ie.philb.album.view;
 
-import ie.philb.album.AppContext;
-import ie.philb.album.model.AlbumModel;
+import ie.philb.album.Context;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.ui.common.AppPanel;
 import static ie.philb.album.ui.resources.Colors.COLOUR_ALBUM_BACKGROUND;
@@ -19,34 +18,32 @@ import java.util.List;
  */
 public class AlbumView extends AppPanel {
 
-    private AlbumModel albumModel;
     private final List<PageView> pageViews = new ArrayList<>();
     private boolean isPreviewMode = false;
 
-    public AlbumView(AlbumModel albumModel) {
-        this.albumModel = albumModel;
+    public AlbumView(Context context) {
+        super(context);
 
         background(COLOUR_ALBUM_BACKGROUND);
         setLayout(null);
 
-        setModel(albumModel);
+        refreshAlbum();
     }
 
-    public final void setModel(AlbumModel model) {
-
-        this.albumModel = model;
+    // TODO This should not exist
+    public final void refreshAlbum() {
 
         clearPages();
-        
-        if (this.albumModel == null) {
+
+        if (context.session().getAlbumModel() == null) {
             return;
         }
-        
+
         addPages();
         positionPages();
 
-        PageView selectedPageView = AppContext.INSTANCE.getSelectedPageView();
-        PageEntryView selectedPageEntryView = AppContext.INSTANCE.getSelectedPageEntryView();
+        PageView selectedPageView = context.session().getSelectedPageView();
+        PageEntryView selectedPageEntryView = context.session().getSelectedPageEntryView();
 
         updateSelectedEntry(selectedPageView, selectedPageEntryView);
 
@@ -57,8 +54,8 @@ public class AlbumView extends AppPanel {
 
     private void addPages() {
 
-        for (PageModel page : albumModel.getPages()) {
-            PageView pageView = new PageView(page);
+        for (PageModel page : context.session().getAlbumModel().getPages()) {
+            PageView pageView = new PageView(context, page);
             this.pageViews.add(pageView);
             add(pageView);
         }
@@ -75,7 +72,7 @@ public class AlbumView extends AppPanel {
     }
 
     public void positionPages() {
-        
+
         if (!canPosition()) {
             return;
         }
@@ -84,7 +81,7 @@ public class AlbumView extends AppPanel {
         int parentHeight = getParent().getHeight();
 
         int pageHeight = parentHeight - (insetSize * 2);
-        int pageWidth = albumModel.getPageSize().widthFromHeight(pageHeight);
+        int pageWidth = context.session().getAlbumModel().getPageSize().widthFromHeight(pageHeight);
 
         int horizontalInset = insetSize;
 
@@ -103,10 +100,10 @@ public class AlbumView extends AppPanel {
 
     private boolean canPosition() {
 
-        if (albumModel == null) {
+        if (context.session().getAlbumModel() == null) {
             return false;
         }
-        
+
         if (getParent() == null) {
             return false;
         }

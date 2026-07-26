@@ -4,8 +4,8 @@
  */
 package ie.philb.album.ui.common;
 
-import ie.philb.album.AppContext;
 import ie.philb.album.ApplicationListener;
+import ie.philb.album.Context;
 import ie.philb.album.ui.config.UiConfigListener;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,18 +23,23 @@ import org.slf4j.LoggerFactory;
 public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseListener, DefaultMouseMotionListener, ApplicationListener, DefaultMouseWheelListener {
 
     private static final long serialVersionUID = 1L;
-    protected static final Logger LOG = LoggerFactory.getLogger(AppPanel.class);
-    private final UUID panelId = UUID.randomUUID();
     protected static final Logger logger = LoggerFactory.getLogger(AppPanel.class);
 
-    public AppPanel() {
+    protected static final Logger LOG = LoggerFactory.getLogger(AppPanel.class);
+
+    private final UUID panelId = UUID.randomUUID();
+    protected final Context context;
+
+    public AppPanel(Context context) {
         super();
+
+        this.context = context;
 
         setLayout(new GridBagLayout());
         opaque(false);
         setName(getClass().getSimpleName());
 
-        AppContext.INSTANCE.addListener(this);
+        this.context.session().addListener(this);
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
@@ -46,7 +51,7 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
         removeMouseWheelListener(this);
         removeMouseMotionListener(this);
         removeMouseListener(this);
-        AppContext.INSTANCE.removeListener(this);
+        context.session().removeListener(this);
     }
 
     public AppPanel foreground(Color fg) {
@@ -95,7 +100,7 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
     public AppPanel size(int width, int height) {
         return size(new Dimension(width, height));
     }
-    
+
     public AppPanel size(Dimension d) {
         this.setSize(d);
         this.setPreferredSize(d);
@@ -103,20 +108,20 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
     }
 
     public AppPanel filler(Color background) {
-        AppPanel ap = new AppPanel();
+        AppPanel ap = new AppPanel(context);
         ap.setOpaque(true);
         ap.setBackground(background);
         return ap;
     }
 
     public AppPanel filler() {
-        AppPanel ap = new AppPanel();
+        AppPanel ap = new AppPanel(context);
         ap.setOpaque(false);
         return ap;
     }
 
     public AppPanel filler(Dimension size) {
-        AppPanel ap = new AppPanel();
+        AppPanel ap = new AppPanel(context);
         ap.setOpaque(false);
         ap.setPreferredSize(size);
         ap.setMinimumSize(size);

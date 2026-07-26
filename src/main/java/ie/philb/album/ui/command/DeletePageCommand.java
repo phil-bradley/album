@@ -4,7 +4,7 @@
  */
 package ie.philb.album.ui.command;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.ui.action.DeletePageAction;
 import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.view.PageView;
@@ -15,17 +15,21 @@ import ie.philb.album.view.PageView;
  */
 public class DeletePageCommand extends AbstractCommand {
 
+    public DeletePageCommand(Context context) {
+        super(context);
+    }
+
     @Override
     public void execute() {
 
-        PageView selected = AppContext.INSTANCE.getSelectedPageView();
+        PageView selected = context.session().getSelectedPageView();
 
         if (selected == null) {
             return;
         }
 
-        if (Dialogs.confirm("Delete this page?")) {
-            new DeletePageAction(selected.getPageModel().getPageId()).execute();
+        if (Dialogs.confirm(context.ui(), "Delete this page?")) {
+            executeAction(new DeletePageAction(context.session(), selected.getPageModel().getPageId()));
         }
     }
 

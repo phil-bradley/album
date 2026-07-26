@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.command;
 
+import ie.philb.album.Context;
 import ie.philb.album.ui.action.AddPageAction;
 
 /**
@@ -12,9 +13,13 @@ import ie.philb.album.ui.action.AddPageAction;
  */
 public class AddPageCommand extends AbstractCommand {
 
+    public AddPageCommand(Context context) {
+        super(context);
+    }
+
     @Override
     public void execute() {
-        new AddPageAction().execute();
+        executeAction(new AddPageAction(context.session()));
     }
 
 }

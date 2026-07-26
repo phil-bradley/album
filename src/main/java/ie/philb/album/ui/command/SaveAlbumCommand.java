@@ -4,11 +4,9 @@
  */
 package ie.philb.album.ui.command;
 
-import ie.philb.album.AppContext;
-import ie.philb.album.model.AlbumModel;
-import ie.philb.album.ui.ApplicationUi;
-import ie.philb.album.ui.action.callback.Callback;
+import ie.philb.album.Context;
 import ie.philb.album.ui.action.SaveAlbumAction;
+import ie.philb.album.ui.action.callback.Callback;
 import ie.philb.album.ui.common.Dialogs;
 import java.io.File;
 import javax.swing.JFileChooser;
@@ -20,33 +18,32 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class SaveAlbumCommand extends AbstractCommand {
 
-    private AlbumModel albumModel;
-    private File saveFile;
-    private boolean forceFileSelection=false;
-    
-    public SaveAlbumCommand() {
-        this(false);
+    private boolean forceFileSelection = false;
+    private File saveFile = null;
+
+    public SaveAlbumCommand(Context context) {
+        this(context, false);
     }
-    
-    public SaveAlbumCommand(boolean forceFileSelection) {
-        this.forceFileSelection =  forceFileSelection;
+
+    public SaveAlbumCommand(Context context, boolean forceFileSelection) {
+        super(context);
+        this.forceFileSelection = forceFileSelection;
     }
 
     @Override
     public void execute() {
 
-        this.albumModel = AppContext.INSTANCE.getAlbumModel();
-        this.saveFile = albumModel.getFile();
+        saveFile = context.session().getAlbumModel().getFile();
 
         if (saveFile == null || forceFileSelection) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileFilter(new FileNameExtensionFilter("Album Files", "album"));
-            
-            if (albumModel.getFile() != null) {
-                fileChooser.setSelectedFile(albumModel.getFile());
+
+            if (saveFile != null) {
+                fileChooser.setSelectedFile(saveFile);
             }
 
-            int ret = fileChooser.showSaveDialog(ApplicationUi.getInstance());
+            int ret = fileChooser.showSaveDialog(context.ui());
 
             if (ret == JFileChooser.APPROVE_OPTION) {
                 saveFile = fileChooser.getSelectedFile();
@@ -59,7 +56,7 @@ public class SaveAlbumCommand extends AbstractCommand {
 
                 if (saveFile.exists()) {
                     String msg = "Overwrite " + saveFile.getName() + "?";
-                    if (!Dialogs.confirm(msg)) {
+                    if (!Dialogs.confirm(context.ui(), msg)) {
                         return;
                     }
                 }
@@ -70,16 +67,16 @@ public class SaveAlbumCommand extends AbstractCommand {
             }
         }
 
-        new SaveAlbumAction(saveFile, albumModel).execute(
+        new SaveAlbumAction(context.session(), saveFile).execute(
                 new Callback<Void>() {
             @Override
             public void onSuccess(Void result) {
-                albumModel.setFile(saveFile);
+                context.session().getAlbumModel().setFile(saveFile);
             }
 
             @Override
             public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage("Could not save album", ex);
+                Dialogs.showErrorMessage(context.ui(), "Could not save album", ex);
             }
         }
         );
