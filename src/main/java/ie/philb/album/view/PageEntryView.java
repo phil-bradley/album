@@ -71,7 +71,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         this.pageEntryModel.addListener(this);
         this.pageEntryModel.getTextControlModel().addChangeListener(this);
 
-        setTransferHandler(new PageEntryViewTransferHandler());
+        setTransferHandler(new PageEntryViewTransferHandler(context));
         updateBorder();
     }
 

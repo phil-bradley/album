@@ -4,7 +4,9 @@
  */
 package ie.philb.album.ui.actionlistener;
 
+import ie.philb.album.Context;
 import ie.philb.album.ui.action.ZoomToCoverFitAction;
+import ie.philb.album.ui.action.callback.DefaultNoResultCallback;
 
 /**
  *
@@ -12,9 +14,14 @@ import ie.philb.album.ui.action.ZoomToCoverFitAction;
  */
 public class ZoomToCoverFitActionListener extends AbstractCellActionListener {
 
+    public ZoomToCoverFitActionListener(Context context) {
+        super(context);
+    }
+
     @Override
     protected void doAction() {
-
-        new ZoomToCoverFitAction(selectedPageEntryView).execute();
+        new ZoomToCoverFitAction(context.session(), selectedPageEntryView).execute(
+                new DefaultNoResultCallback<>(context.ui())
+        );
     }
 }

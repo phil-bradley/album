@@ -275,8 +275,6 @@ public class PageEntryModel {
         for (var l : listeners) {
             l.imageUpdated();
         }
-
-        AppContext.INSTANCE.pageEntryUpdated(this);
     }
 
     private void fireTextUpdated() {
@@ -286,8 +284,6 @@ public class PageEntryModel {
         for (var l : listeners) {
             l.textUpdated();
         }
-
-        AppContext.INSTANCE.pageEntryUpdated(this);
     }
 
     public void setImageViewOffset(Point offset) {

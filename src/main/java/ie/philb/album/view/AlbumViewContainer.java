@@ -205,37 +205,37 @@ public class AlbumViewContainer extends AppPanel {
 
         btnCellType = new JToggleButton(Icons.Small.PICTURE);
         btnCellType.setText("Image");
-        btnCellType.addActionListener(new ToggleCellTypeActionListener());
+        btnCellType.addActionListener(new ToggleCellTypeActionListener(context));
         toolBar.add(btnCellType);
 
         btnZoomIn = new JButton(Icons.Small.ZOOM_IN);
-        btnZoomIn.addActionListener(new ZoomInActionListener());
+        btnZoomIn.addActionListener(new ZoomInActionListener(context));
         btnZoomIn.setText("Zoom In");
         toolBar.add(btnZoomIn);
 
         btnZoomOut = new JButton(Icons.Small.ZOOM_OUT);
-        btnZoomOut.addActionListener(new ZoomOutActionListener());
+        btnZoomOut.addActionListener(new ZoomOutActionListener(context));
         btnZoomOut.setText("Zoom Out");
         toolBar.add(btnZoomOut);
 
         btnZoomReset = new JButton(Icons.Small.ZOOM_RESET);
-        btnZoomReset.addActionListener(new ZoomResetActionListener());
+        btnZoomReset.addActionListener(new ZoomResetActionListener(context));
         btnZoomReset.setText("Reset to fit");
         toolBar.add(btnZoomReset);
 
         btnZoomCover = new JButton(Icons.Small.ZOOM_COVER);
-        btnZoomCover.addActionListener(new ZoomToCoverFitActionListener());
+        btnZoomCover.addActionListener(new ZoomToCoverFitActionListener(context));
         btnZoomCover.setText("Reset to cover");
         toolBar.add(btnZoomCover);
 
         btnCenter = new JButton(Icons.Small.ALIGN_CENTER);
-        btnCenter.addActionListener(new ImageCenterActionListener());
+        btnCenter.addActionListener(new ImageCenterActionListener(context));
         btnCenter.setText("Center");
         toolBar.add(btnCenter);
 
         btnGray = new JToggleButton(Icons.Small.COLOR);
         btnGray.setText("Color");
-        btnGray.addActionListener(new ToggleGrayScaleActionListener());
+        btnGray.addActionListener(new ToggleGrayScaleActionListener(context));
         toolBar.add(btnGray);
 
         btnBrightness = new JButton(Icons.Small.BRIGHTNESS);

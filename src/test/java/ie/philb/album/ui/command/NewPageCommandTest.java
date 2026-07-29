@@ -5,11 +5,15 @@
 package ie.philb.album.ui.command;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.AppEventBus;
+import ie.philb.album.AppSession;
+import ie.philb.album.Context;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
 import ie.philb.album.ui.action.NewAlbumAction;
+import ie.philb.album.ui.action.callback.DefaultNoResultCallback;
 import ie.philb.album.ui.dialog.NewAlbumParams;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Disabled;
@@ -28,10 +32,11 @@ class NewPageCommandTest {
         int margin = 10;
         int gutter = 25;
 
+        Context context = new Context(null, new AppSession(new AppEventBus()));
         AlbumModel albumModel = new AlbumModel(pageSize, margin, gutter);
-        AppContext.INSTANCE.setAlbumModel(albumModel);
+        context.session().setAlbumModel(albumModel);
 
-        AddPageCommand cmd = new AddPageCommand();
+        AddPageCommand cmd = new AddPageCommand(context);
         cmd.execute();
 
         assertEquals(1, albumModel.getPages().size());
@@ -46,15 +51,17 @@ class NewPageCommandTest {
         int pageCount = 17;
         PageSize pageSize = PageSize.A4_Landscape;
 
-        NewAlbumParams params = new NewAlbumParams(title, margin, gutter, pageCount, pageSize);
-        new NewAlbumAction(params).execute();
+        Context context = new Context(null, new AppSession(new AppEventBus()));
 
-        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
+        NewAlbumParams params = new NewAlbumParams(title, margin, gutter, pageCount, pageSize);
+        new NewAlbumAction(context.session(), params).execute(new DefaultNoResultCallback<>(null));
+
+        AlbumModel albumModel = context.session().getAlbumModel();
 
         // We expect pageCount +1 pages, 1 extra for the title page
         assertEquals(pageCount + 1, albumModel.getPages().size());
 
-        AddPageCommand cmd = new AddPageCommand();
+        AddPageCommand cmd = new AddPageCommand(context);
         cmd.execute();
 
         // We expect pageCount + 2 pages

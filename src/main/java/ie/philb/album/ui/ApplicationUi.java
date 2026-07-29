@@ -146,7 +146,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
         vSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
-        imageLibraryView = new ImageLibraryView();
+        imageLibraryView = new ImageLibraryView(context);
         welcomeWithAlbumViewCardPanel = new WelcomeWithAlbumViewCardPanel(context);
 
         vSplit.setLeftComponent(imageLibraryView);

@@ -4,9 +4,9 @@
  */
 package ie.philb.album.ui.actionlistener;
 
-import ie.philb.album.ui.action.callback.Callback;
+import ie.philb.album.Context;
 import ie.philb.album.ui.action.ZoomResetAction;
-import ie.philb.album.ui.common.Dialogs;
+import ie.philb.album.ui.action.callback.DefaultNoResultCallback;
 
 /**
  *
@@ -14,18 +14,14 @@ import ie.philb.album.ui.common.Dialogs;
  */
 public class ZoomResetActionListener extends AbstractCellActionListener {
 
+    public ZoomResetActionListener(Context context) {
+        super(context);
+    }
+
     @Override
     protected void doAction() {
-        new ZoomResetAction(selectedPageEntryView).execute(new Callback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-            }
-
-            @Override
-            public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage("Zoom failed", ex);
-            }
-
-        });
+        new ZoomResetAction(context.session(), selectedPageEntryView).execute(
+                new DefaultNoResultCallback<>(context.ui())
+        );
     }
 }

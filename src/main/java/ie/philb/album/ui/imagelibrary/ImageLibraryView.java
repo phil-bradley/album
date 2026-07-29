@@ -5,6 +5,7 @@
 package ie.philb.album.ui.imagelibrary;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.io.Thumbnail;
 import ie.philb.album.io.ThumbnailProvider;
 import ie.philb.album.io.ThumbnailProviderListener;
@@ -37,6 +38,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
@@ -53,18 +55,22 @@ public class ImageLibraryView extends AppPanel {
 
     private final JList<ImageLibraryEntry> list = new JList<>();
     private final JToolBar toolBar = new JToolBar();
+    private final Context context;
     private JButton btnHome;
     private JButton btnUp;
     private FolderNavigationPanel folderNavigationPanel;
     private final ThumbnailProvider thumbnailProvider;
 
-    public ImageLibraryView() {
+    public ImageLibraryView(Context context) {
 
+        super(context);
+        this.context = context;
+        
         thumbnailProvider = new ThumbnailProvider(CELL_SIZE);
         list.setDragEnabled(true);
         list.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(-1);
-        list.setCellRenderer(new ImageLibraryViewCellRenderer());
+        list.setCellRenderer(new ImageLibraryViewCellRenderer(context));
 
         JScrollPane scrollPane = new JScrollPane(list);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -93,7 +99,7 @@ public class ImageLibraryView extends AppPanel {
                 }
 
                 if (evt.getClickCount() == 2 && FileUtils.isImage(selected.getFile())) {
-                    AppContext.INSTANCE.libraryImageSelected(selected);
+                    context.session().getEventBus().libraryImageSelected(selected);
                 }
             }
         });
@@ -121,7 +127,7 @@ public class ImageLibraryView extends AppPanel {
             list.setModel(model);
             folderNavigationPanel.setPath(file);
         } catch (IOException ex) {
-            Dialogs.showErrorMessage("Failed to open folder " + file.getAbsolutePath(), ex);
+            Dialogs.showErrorMessage(context.ui(), "Failed to open folder " + file.getAbsolutePath(), ex);
         }
     }
 
@@ -148,7 +154,7 @@ public class ImageLibraryView extends AppPanel {
 
         toolBar.add(btnUp);
 
-        folderNavigationPanel = new FolderNavigationPanel(FileUtils.getHomeDirectory());
+        folderNavigationPanel = new FolderNavigationPanel(context, FileUtils.getHomeDirectory());
         folderNavigationPanel.addListener(new FolderNavigationListener() {
             @Override
             public void locationUpdated(File file) {
@@ -163,10 +169,11 @@ public class ImageLibraryView extends AppPanel {
 
         private final ThumbnailView thumbnailView = new ThumbnailView(null);
         private final JLabel lblName = new JLabel();
-        private int index = -1;
 
-        public ImageLibraryViewCellRenderer() {
+        public ImageLibraryViewCellRenderer(Context context) {
 
+            super(context);
+            
             background(Color.WHITE);
             GridBagCellConstraints gbc = new GridBagCellConstraints().weight(1).fillBoth().insetHorizontal(8).insetVertical(2);
             thumbnailView.setPreferredSize(CELL_SIZE);
@@ -180,8 +187,6 @@ public class ImageLibraryView extends AppPanel {
 
         @Override
         public Component getListCellRendererComponent(JList<? extends ImageLibraryEntry> list, ImageLibraryEntry value, int index, boolean isSelected, boolean cellHasFocus) {
-
-            this.index = index;
 
             if (value.isDirectory()) {
                 thumbnailView.setImage(ImageUtils.getBufferedImage(Icons.Regular.FOLDER));
@@ -247,7 +252,7 @@ public class ImageLibraryView extends AppPanel {
 
     }
 
-    class ThumbnailView extends AppPanel {
+    class ThumbnailView extends JPanel {
 
         private BufferedImage image;
 

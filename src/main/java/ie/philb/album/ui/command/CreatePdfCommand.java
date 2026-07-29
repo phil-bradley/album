@@ -59,7 +59,7 @@ public class CreatePdfCommand extends AbstractCommand {
         try {
             exporter.export(file);
 
-            PdfViewDialog dlg = new PdfViewDialog();
+            PdfViewDialog dlg = new PdfViewDialog(context);
             dlg.setFile(file);
             dlg.setVisible(true);
 
