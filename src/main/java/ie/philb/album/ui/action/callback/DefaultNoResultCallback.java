@@ -16,6 +16,10 @@ public class DefaultNoResultCallback<T> implements NoResultCallback<T> {
 
     private final Frame owner;
 
+    public DefaultNoResultCallback() {
+        this(null);
+    }
+    
     public DefaultNoResultCallback(Frame owner) {
         this.owner = owner;
     }

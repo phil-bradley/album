@@ -5,6 +5,9 @@
 package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.AppEventBus;
+import ie.philb.album.AppSession;
+import ie.philb.album.Context;
 import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageGeometry;
@@ -19,7 +22,6 @@ import java.awt.image.BufferedImage;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,21 +34,23 @@ import org.junit.jupiter.api.Test;
  */
 public class PageEntryViewTest {
 
+    private Context context;
+
     @BeforeEach
     void setUp() {
-        AppContext.INSTANCE.pageEntrySelected(null, null);
+        context = new Context(null, new AppSession(new AppEventBus()));
     }
 
     @Test
     void givenPageEntryView_whenZoomedIn_expectedModelZoomIn() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
         PageCell pageCell = new PageCell(new Dimension(1, 1), new Point(0, 0));
         PageEntryModel pageEntryModel = new PageEntryModel(pageCell);
 
-        PageEntryView pageEntryView = new PageEntryView(pageView, pageEntryModel);
+        PageEntryView pageEntryView = new PageEntryView(context, pageView, pageEntryModel);
         pageEntryView.zoomIn();
 
         assertEquals(Double.valueOf("1.1"), pageEntryModel.getZoomFactor());
@@ -56,12 +60,12 @@ public class PageEntryViewTest {
     void givenPageEntryView_whenZoomedOut_expectedModelZoomOut() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
         PageCell pageCell = new PageCell(new Dimension(1, 1), new Point(0, 0));
         PageEntryModel pageEntryModel = new PageEntryModel(pageCell);
 
-        PageEntryView pageEntryView = new PageEntryView(pageView, pageEntryModel);
+        PageEntryView pageEntryView = new PageEntryView(context, pageView, pageEntryModel);
         pageEntryView.zoomOut();
 
         MatcherAssert.assertThat(pageEntryModel.getZoomFactor(), Matchers.closeTo(0.909, 0.01));
@@ -79,13 +83,13 @@ public class PageEntryViewTest {
         int expectedHeight = ImageUtils.getHeightFromWidth(VIEW_WIDTH, imageAspectRatio);
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
         PageCell pageCell = new PageCell(new Dimension(1, 1), new Point(0, 0));
         PageEntryModel pageEntryModel = new PageEntryModel(pageCell);
         pageEntryModel.setImageFile(TestUtils.getTestImageFile());
 
-        PageEntryView pageEntryView = new PageEntryView(pageView, pageEntryModel);
+        PageEntryView pageEntryView = new PageEntryView(context, pageView, pageEntryModel);
         pageEntryView.size(new Dimension(VIEW_WIDTH, VIEW_HEIGHT));
         pageEntryView.setBounds(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
         pageEntryView.zoomToFit();
@@ -108,13 +112,13 @@ public class PageEntryViewTest {
         int expectedHeight = ImageUtils.getHeightFromWidth(VIEW_WIDTH, imageAspectRatio);
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
         PageCell pageCell = new PageCell(new Dimension(1, 1), new Point(0, 0));
         PageEntryModel pageEntryModel = new PageEntryModel(pageCell);
         pageEntryModel.setImageFile(TestUtils.getTestImageFile());
 
-        PageEntryView pageEntryView = new PageEntryView(pageView, pageEntryModel);
+        PageEntryView pageEntryView = new PageEntryView(context, pageView, pageEntryModel);
         pageEntryView.size(new Dimension(VIEW_WIDTH, VIEW_HEIGHT));
         pageEntryView.setBounds(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
         pageEntryView.zoomToFit();
@@ -132,40 +136,40 @@ public class PageEntryViewTest {
     void givenPageEntryView_whenClick_expectedSelected() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
-        PageEntryView pageEntryView = new PageEntryView(pageView, pageModel.getPageEntries().get(0));
+        PageEntryView pageEntryView = new PageEntryView(context, pageView, pageModel.getPageEntries().get(0));
         pageModel.setImage(TestUtils.getTestImageFile(), 0);
 
-        assertNull(AppContext.INSTANCE.getSelectedPageView());
-        assertNull(AppContext.INSTANCE.getSelectedPageEntryView());
+        assertNull(context.session().getSelectedPageView());
+        assertNull(context.session().getSelectedPageEntryView());
 
         pageEntryView.mousePressed(TestUtils.createMouseClickEvent(pageEntryView));
 
-        assertEquals(AppContext.INSTANCE.getSelectedPageView(), pageView);
-        assertEquals(AppContext.INSTANCE.getSelectedPageEntryView(), pageEntryView);
+        assertEquals(context.session().getSelectedPageView(), pageView);
+        assertEquals(context.session().getSelectedPageEntryView(), pageEntryView);
     }
 
     @Test
     void givenPageEntryViewIsPreviewMode_whenClick_expectedSelected() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageEntryView pageEntryView = new PageEntryView(new PageView(pageModel), pageModel.getPageEntries().get(0));
+        PageEntryView pageEntryView = new PageEntryView(context, new PageView(context, pageModel), pageModel.getPageEntries().get(0));
         pageEntryView.setPreviewMode(true);
 
-        assertNull(AppContext.INSTANCE.getSelectedPageView());
-        assertNull(AppContext.INSTANCE.getSelectedPageEntryView());
+        assertNull(context.session().getSelectedPageView());
+        assertNull(context.session().getSelectedPageEntryView());
 
         pageEntryView.mousePressed(TestUtils.createMouseClickEvent(pageEntryView));
 
-        assertNull(AppContext.INSTANCE.getSelectedPageView());
-        assertNull(AppContext.INSTANCE.getSelectedPageEntryView());
+        assertNull(context.session().getSelectedPageView());
+        assertNull(context.session().getSelectedPageEntryView());
     }
 
     @Test
     void givenPageEntryView_whenMouseDragged_expectViewOffset() {
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageEntryView pageEntryView = new PageEntryView(new PageView(pageModel), pageModel.getPageEntries().get(0));
+        PageEntryView pageEntryView = new PageEntryView(context, new PageView(context, pageModel), pageModel.getPageEntries().get(0));
         pageEntryView.getPageEntryModel().setImageFile(TestUtils.getTestImageFile());
 
         MouseEvent startEvent = TestUtils.createMouseClickEvent(pageEntryView, new Point(10, 20));
@@ -184,7 +188,7 @@ public class PageEntryViewTest {
     void givenPageEntryViewNoImage_whenMouseDragged_expectNoViewOffset() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageEntryView pageEntryView = new PageEntryView(new PageView(pageModel), pageModel.getPageEntries().get(0));
+        PageEntryView pageEntryView = new PageEntryView(context, new PageView(context, pageModel), pageModel.getPageEntries().get(0));
 
         MouseEvent startEvent = TestUtils.createMouseClickEvent(pageEntryView, new Point(10, 20));
         pageEntryView.mousePressed(startEvent);
@@ -202,7 +206,7 @@ public class PageEntryViewTest {
     void givenPageEntryViewPreviewMode_whenMouseDragged_expectNoViewOffset() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageEntryView pageEntryView = new PageEntryView(new PageView(pageModel), pageModel.getPageEntries().get(0));
+        PageEntryView pageEntryView = new PageEntryView(context, new PageView(context, pageModel), pageModel.getPageEntries().get(0));
         pageEntryView.getPageEntryModel().setImageFile(TestUtils.getTestImageFile());
         pageEntryView.setPreviewMode(true);
 

@@ -77,12 +77,13 @@ class NewPageCommandTest {
         int pageCount = 17;
         PageSize pageSize = PageSize.A4_Landscape;
 
-        NewAlbumParams params = new NewAlbumParams(title, margin, gutter, pageCount, pageSize);
-        new NewAlbumAction(params).execute();
+        Context context = new Context(null, new AppSession(new AppEventBus()));
 
-        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
+        NewAlbumParams params = new NewAlbumParams(title, margin, gutter, pageCount, pageSize);
+        new NewAlbumAction(context.session(), params).execute(new DefaultNoResultCallback<>());
 
         // We expect pageCount +1 pages, 1 extra for the title page
+        AlbumModel albumModel = context.session().getAlbumModel();
         assertEquals(pageCount + 1, albumModel.getPages().size());
 
         PageModel lastPagePriorToInsert = albumModel.getPages().get(albumModel.getPages().size() - 1);
@@ -90,7 +91,7 @@ class NewPageCommandTest {
         PageGeometry lastPagePriorToInsertGeometry = PageGeometry.rectangle(11, 9);
         lastPagePriorToInsert.setGeometry(lastPagePriorToInsertGeometry);
 
-        AddPageCommand cmd = new AddPageCommand();
+        AddPageCommand cmd = new AddPageCommand(context);
         cmd.execute();
 
         PageModel penultimatePage = albumModel.getPages().get(albumModel.getPages().size() - 2);
