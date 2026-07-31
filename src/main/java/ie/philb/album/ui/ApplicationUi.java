@@ -53,7 +53,6 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationUi.class);
 
-//    private static final ApplicationUi INSTANCE = new ApplicationUi();
     private final Context context;
     private ImageLibraryView imageLibraryView;
     private PageView selectedPageView;
@@ -70,9 +69,6 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private JButton btnSaveAs;
     private WelcomeWithAlbumViewCardPanel welcomeWithAlbumViewCardPanel;
 
-//    public static ApplicationUi getInstance() {
-//        return INSTANCE;
-//    }
     public ApplicationUi(AppSession session) {
 
         super("Album");
