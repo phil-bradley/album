@@ -34,7 +34,7 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
     public AppPanel(Context context) {
         super();
 
-        this.context = Objects.requireNonNull(context);
+        this.context = Objects.requireNonNull(context, "Context must not be null for panel");
 
         setLayout(new GridBagLayout());
         opaque(false);

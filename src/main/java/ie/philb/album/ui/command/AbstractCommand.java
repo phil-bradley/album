@@ -18,7 +18,7 @@ public abstract class AbstractCommand {
     protected final Context context;
 
     public AbstractCommand(Context context) {
-        this.context = Objects.requireNonNull(context);
+        this.context = Objects.requireNonNull(context, "Context must not be null for command");
     }
 
     public abstract void execute();
