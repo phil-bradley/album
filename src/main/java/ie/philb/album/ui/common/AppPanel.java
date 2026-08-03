@@ -10,6 +10,7 @@ import ie.philb.album.ui.config.UiConfigListener;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
+import java.util.Objects;
 import java.util.UUID;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -33,7 +34,7 @@ public class AppPanel extends JPanel implements UiConfigListener, DefaultMouseLi
     public AppPanel(Context context) {
         super();
 
-        this.context = context;
+        this.context = Objects.requireNonNull(context);
 
         setLayout(new GridBagLayout());
         opaque(false);

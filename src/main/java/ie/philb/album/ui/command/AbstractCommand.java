@@ -7,6 +7,7 @@ package ie.philb.album.ui.command;
 import ie.philb.album.Context;
 import ie.philb.album.ui.action.AbstractAction;
 import ie.philb.album.ui.action.callback.DefaultNoResultCallback;
+import java.util.Objects;
 
 /**
  *
@@ -14,14 +15,14 @@ import ie.philb.album.ui.action.callback.DefaultNoResultCallback;
  */
 public abstract class AbstractCommand {
 
-    protected final Context context; 
-    
+    protected final Context context;
+
     public AbstractCommand(Context context) {
-        this.context = context;
+        this.context = Objects.requireNonNull(context);
     }
-    
+
     public abstract void execute();
-    
+
     protected void executeAction(AbstractAction t) {
         t.execute(new DefaultNoResultCallback(context.ui()));
     }

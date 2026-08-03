@@ -96,7 +96,7 @@ public abstract class AbstractOkCancelDialog<T> extends AbstractDialog {
         add(getView(), gbc);
 
         gbc.incy().fillBoth().weight(1);
-        add(new AppPanel(null), gbc);
+        add(new AppPanel(context), gbc);
 
         gbc.incy()
                 .fillHorizontal()
@@ -127,7 +127,7 @@ public abstract class AbstractOkCancelDialog<T> extends AbstractDialog {
     }
 
     private JPanel getButtonsPanel() {
-        AppPanel buttonsPanel = new AppPanel(null);
+        AppPanel buttonsPanel = new AppPanel(context);
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
         buttonsPanel.add(Box.createHorizontalGlue());
         buttonsPanel.add(btnCancel);

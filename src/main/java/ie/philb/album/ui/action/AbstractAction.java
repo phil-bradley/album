@@ -6,6 +6,7 @@ package ie.philb.album.ui.action;
 
 import ie.philb.album.AppSession;
 import ie.philb.album.ui.action.callback.Callback;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,7 @@ public abstract class AbstractAction<T> {
     protected final AppSession session;
 
     public AbstractAction(AppSession session) {
-        this.session = session;
+        this.session = Objects.requireNonNull(session);
     }
 
     private Callback<T> callback;

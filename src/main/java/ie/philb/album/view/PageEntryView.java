@@ -265,7 +265,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
             return;
         }
 
-        context.session().getEventBus().pageEntrySelected(pageView, this);
+        context.session().pageEntrySelected(pageView, this);
 
         if (pageEntryModel.getImage() == null) {
             return;

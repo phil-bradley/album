@@ -208,7 +208,7 @@ public class PageView extends AppPanel implements PageModelListener {
             return;
         }
 
-        context.session().getEventBus().pageSelected(this);
+        context.session().pageSelected(this);
     }
 
     private void setSelected(boolean b) {
