@@ -7,16 +7,12 @@ package ie.philb.album;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.view.PageEntryView;
 import ie.philb.album.view.PageView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author philb
  */
 public class AppSession {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AppContext.class);
 
     private AlbumModel albumModel = null;
     private PageView selectedPageView = null;

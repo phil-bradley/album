@@ -4,7 +4,6 @@
  */
 package ie.philb.album.ui.imagelibrary;
 
-import ie.philb.album.AppContext;
 import ie.philb.album.Context;
 import ie.philb.album.io.Thumbnail;
 import ie.philb.album.io.ThumbnailProvider;

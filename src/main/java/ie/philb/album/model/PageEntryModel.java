@@ -4,7 +4,6 @@
  */
 package ie.philb.album.model;
 
-import ie.philb.album.AppContext;
 import ie.philb.album.ui.common.filters.BrightnessFilter;
 import ie.philb.album.ui.common.filters.GrayScaleFilter;
 import ie.philb.album.ui.common.textcontrol.TextControlModel;
