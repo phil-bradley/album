@@ -6,7 +6,6 @@ package ie.philb.album;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import ie.philb.album.ui.ApplicationUi;
-import ie.philb.album.ui.command.NewAlbumCommand;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.slf4j.Logger;
@@ -28,10 +27,11 @@ public class Main {
             LOG.info("Failed to set LookAndFeel", ex);
         }
 
-        //new NewAlbumCommand().execute();
+        AppSession session = new AppSession(new AppEventBus());
 
         java.awt.EventQueue.invokeLater(() -> {
-            ApplicationUi.getInstance().setVisible(true);
+            ApplicationUi ui = new ApplicationUi(session);
+            ui.setVisible(true);
         });
     }
 }

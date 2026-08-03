@@ -4,9 +4,10 @@
  */
 package ie.philb.album.ui.common.numbercontrol;
 
+import ie.philb.album.Context;
 import ie.philb.album.ui.common.AppPanel;
-import ie.philb.album.ui.resources.Icons;
 import ie.philb.album.ui.common.fields.IntField;
+import ie.philb.album.ui.resources.Icons;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
@@ -34,7 +35,8 @@ public class SlidingNumberControl extends AppPanel implements SlidingNumberContr
     private JButton btnReset;
     private final SlidingNumberControlModel model;
 
-    public SlidingNumberControl(SlidingNumberControlModel model) {
+    public SlidingNumberControl(Context context, SlidingNumberControlModel model) {
+        super(context);
         this.model = model;
 
         initControls();
@@ -101,8 +103,7 @@ public class SlidingNumberControl extends AppPanel implements SlidingNumberContr
         btnReset.addActionListener((ActionEvent ae) -> {
             model.resetValue();
         });
-        
-        
+
         field.setValue(model.getDefaultValue());
         slider.setValue(model.getDefaultValue());
     }
@@ -114,14 +115,14 @@ public class SlidingNumberControl extends AppPanel implements SlidingNumberContr
 
         if (field.getValue() != newValue) {
             field.setValue(newValue);
-            updated=true;
+            updated = true;
         }
 
         if (slider.getValue() != newValue) {
             slider.setValue(newValue);
-            updated=true;
+            updated = true;
         }
-        
+
         if (updated) {
             fireValueUpdated();
         }

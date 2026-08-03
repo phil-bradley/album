@@ -4,12 +4,11 @@
  */
 package ie.philb.album.ui.action;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.AppSession;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageGeometryOption;
 import ie.philb.album.model.PageModel;
-import ie.philb.album.ui.command.AbstractCommand;
 import ie.philb.album.view.PageView;
 import java.util.List;
 
@@ -17,12 +16,16 @@ import java.util.List;
  *
  * @author philb
  */
-public class AddPageAction extends AbstractCommand {
+public class AddPageAction extends AbstractAction<Void> {
+
+    public AddPageAction(AppSession session) {
+        super(session);
+    }
 
     @Override
-    public void execute() {
-        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
-        PageView selectedPageView = AppContext.INSTANCE.getSelectedPageView();
+    protected Void doAction() throws Exception {
+        AlbumModel albumModel = session.getAlbumModel();
+        PageView selectedPageView = session.getSelectedPageView();
         List<PageModel> pages = albumModel.getPages();
 
         int pageId = pages.size();
@@ -39,7 +42,10 @@ public class AddPageAction extends AbstractCommand {
         }
 
         albumModel.addPage(pageId, lastPageGeometry);
-        AppContext.INSTANCE.albumUpdated();
+        session.getEventBus().albumUpdated();
+        
+        return null;
     }
+
 
 }

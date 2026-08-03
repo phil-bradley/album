@@ -13,6 +13,7 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
+import ie.philb.album.AppSession;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
@@ -41,11 +42,10 @@ public class CreatePdfAction extends AbstractAction<File> {
 
     private static final Logger LOG = LoggerFactory.getLogger(CreatePdfAction.class);
 
-    private final AlbumModel albumModel;
     private final File file;
 
-    public CreatePdfAction(File file, AlbumModel albumModel) {
-        this.albumModel = albumModel;
+    public CreatePdfAction(AppSession session, File file) {
+        super(session);
         this.file = file;
     }
 
@@ -56,10 +56,10 @@ public class CreatePdfAction extends AbstractAction<File> {
 
         // Model page is measured in mm
         // PDF page size is measured in  inch/72
-        Dimension modelPageSize = albumModel.getPageSize().size();
+        Dimension modelPageSize = session.getAlbumModel().getPageSize().size();
         Dimension pageSize = new Dimension(modelUnitsToPageUnits(modelPageSize.width), modelUnitsToPageUnits(modelPageSize.height));
 
-        try (Document doc = new Document(getPageSize(albumModel))) {
+        try (Document doc = new Document(getPageSize(session.getAlbumModel()))) {
 
             logger.info("Creating doc {} with page size {}", file.getAbsolutePath(), doc.getPageSize());
 
@@ -67,7 +67,7 @@ public class CreatePdfAction extends AbstractAction<File> {
             PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(file));
             doc.open();
 
-            for (PageModel pageModel : albumModel.getPages()) {
+            for (PageModel pageModel : session.getAlbumModel().getPages()) {
 
                 PageGeometryMapper geometryMapper = new PageGeometryMapper(pageModel, pageSize);
                 geometryMapper.setOriginLocation(PageGeometryMapper.OriginLocation.SouthWest);

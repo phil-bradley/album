@@ -4,7 +4,7 @@
  */
 package ie.philb.album.ui.command;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.view.PageView;
 
@@ -16,14 +16,15 @@ public class SetGeometryCommand extends AbstractCommand {
 
     private final PageGeometry pageGeometry;
 
-    public SetGeometryCommand(PageGeometry pageGeometry) {
+    public SetGeometryCommand(Context context, PageGeometry pageGeometry) {
+        super(context);
         this.pageGeometry = pageGeometry;
     }
 
     @Override
     public void execute() {
 
-        PageView pageView = AppContext.INSTANCE.getSelectedPageView();
+        PageView pageView = context.session().getSelectedPageView();
 
         if (pageView == null) {
             return;
@@ -31,7 +32,7 @@ public class SetGeometryCommand extends AbstractCommand {
 
         if (!pageGeometry.equals(pageView.getPageModel().getGeometry())) {
             pageView.getPageModel().setGeometry(pageGeometry);
-            AppContext.INSTANCE.albumUpdated();
+            context.session().getEventBus().albumUpdated();
         }
     }
 

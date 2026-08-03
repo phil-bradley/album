@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.dialog;
 
+import ie.philb.album.Context;
 import ie.philb.album.model.PageSize;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
@@ -31,8 +32,8 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
 
     private NewAlbumDialogView view;
 
-    public NewAlbumDialog() {
-        super();
+    public NewAlbumDialog(Context context) {
+        super(context);
         setPreferredSize(new Dimension(500, 300));
         setSize(getPreferredSize());
     }
@@ -51,7 +52,7 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
     @Override
     protected JComponent getView() {
         if (this.view == null) {
-            this.view = new NewAlbumDialogView();
+            this.view = new NewAlbumDialogView(context);
         }
 
         return this.view;
@@ -103,7 +104,9 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
             txtPages
         };
 
-        public NewAlbumDialogView() {
+        public NewAlbumDialogView(Context context) {
+
+            super(context);
 
             cmbPageSize.setModel(getPageSizeSelectionModel());
 
@@ -125,7 +128,7 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
             txtMargin.prompt()
                     .withAlignment(TRAILING)
                     .withHideOnInput(false);
-            
+
             txtPages.prompt()
                     .withAlignment(TRAILING)
                     .withHideOnInput(false);
@@ -164,7 +167,7 @@ public class NewAlbumDialog extends AbstractOkCancelDialog<NewAlbumParams> {
     }
 
     public static void main(String[] args) {
-        NewAlbumDialog dlg = new NewAlbumDialog();
+        NewAlbumDialog dlg = new NewAlbumDialog(null);
         dlg.setLocation(500, 500);
         dlg.setVisible(true);
         System.exit(0);

@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.pdf;
 
+import ie.philb.album.Context;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.util.ImageUtils;
 import java.awt.Color;
@@ -33,7 +34,8 @@ public class PdfViewPanel extends AppPanel {
     private float scale = 1;
     private BufferedImage pageImage = null;
 
-    public PdfViewPanel() {
+    public PdfViewPanel(Context context) {
+        super(context);
         setBackground(Color.darkGray);
         setOpaque(true);
     }

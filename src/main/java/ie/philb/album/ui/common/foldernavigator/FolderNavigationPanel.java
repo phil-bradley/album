@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.common.foldernavigator;
 
+import ie.philb.album.Context;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.util.FileUtils;
@@ -48,8 +49,10 @@ public class FolderNavigationPanel extends AppPanel {
 
     private JScrollPane scrollPane = new JScrollPane(getNodesPanel());
 
-    public FolderNavigationPanel(File file) {
+    public FolderNavigationPanel(Context context, File file) {
 
+        super(context);
+        
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
@@ -133,7 +136,7 @@ public class FolderNavigationPanel extends AppPanel {
 
     private AppPanel getNodesPanel() {
 
-        AppPanel panel = new AppPanel();
+        AppPanel panel = new AppPanel(context);
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
         // Leading space for visual appeal

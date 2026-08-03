@@ -4,7 +4,7 @@
  */
 package ie.philb.album.view;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.model.PageCell;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryModelListener;
@@ -51,9 +51,9 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     private boolean canResize = false;
     private final TextControl textControl;
 
-    public PageEntryView(PageView pageView, PageEntryModel pageEntryModel) {
+    public PageEntryView(Context context, PageView pageView, PageEntryModel pageEntryModel) {
 
-        super();
+        super(context);
 
         this.pageView = pageView;
         this.pageEntryModel = pageEntryModel;
@@ -71,7 +71,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         this.pageEntryModel.addListener(this);
         this.pageEntryModel.getTextControlModel().addChangeListener(this);
 
-        setTransferHandler(new PageEntryViewTransferHandler());
+        setTransferHandler(new PageEntryViewTransferHandler(context));
         updateBorder();
     }
 
@@ -150,7 +150,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
             PageGeometryMapper geometryMapper = getPageGeometryMapper();
             Point modelOffset = new Point(geometryMapper.viewUnitsToPoints(viewOffset.x), geometryMapper.viewUnitsToPoints(viewOffset.y));
             pageEntryModel.setImageViewOffset(modelOffset);
-            
+
             System.out.println("Updated offset: " + this.viewOffset);
         }
 
@@ -265,7 +265,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
             return;
         }
 
-        AppContext.INSTANCE.pageEntrySelected(pageView, this);
+        context.session().pageEntrySelected(pageView, this);
 
         if (pageEntryModel.getImage() == null) {
             return;
@@ -397,7 +397,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     @Override
     public void textEditSelected(TextControlModel textControlModel) {
         if (!isPreviewMode) {
-            AppContext.INSTANCE.pageEntrySelected(pageView, this);
+            context.session().getEventBus().pageEntrySelected(pageView, this);
         }
     }
 
@@ -423,5 +423,5 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         ));
 
     }
-    
+
 }

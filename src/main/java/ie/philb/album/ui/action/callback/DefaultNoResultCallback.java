@@ -5,6 +5,7 @@
 package ie.philb.album.ui.action.callback;
 
 import ie.philb.album.ui.common.Dialogs;
+import java.awt.Frame;
 
 /**
  *
@@ -13,9 +14,19 @@ import ie.philb.album.ui.common.Dialogs;
  */
 public class DefaultNoResultCallback<T> implements NoResultCallback<T> {
 
+    private final Frame owner;
+
+    public DefaultNoResultCallback() {
+        this(null);
+    }
+    
+    public DefaultNoResultCallback(Frame owner) {
+        this.owner = owner;
+    }
+
     @Override
     public void onFailure(Exception ex) {
-        Dialogs.showErrorMessage("Error", ex);
+        Dialogs.showErrorMessage(owner, "Error", ex);
     }
 
 }

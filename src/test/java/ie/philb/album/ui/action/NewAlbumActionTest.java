@@ -5,6 +5,9 @@
 package ie.philb.album.ui.action;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.AppEventBus;
+import ie.philb.album.AppSession;
+import ie.philb.album.Context;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
@@ -24,19 +27,19 @@ public class NewAlbumActionTest {
     @Test
     public void givenNewAlbumParams_whenNewAlbumInvoked_expectPageParamsApplied() throws Exception {
 
-        AppContext.INSTANCE.setAlbumModel(null);
-
         String title = "";
         int margin = 12;
         int gutter = 27;
         int pageCount = 7;
         PageSize pageSize = PageSize.A4_Landscape;
 
+        Context context = new Context(null, new AppSession(new AppEventBus()));
+
         NewAlbumParams params = new NewAlbumParams(title, margin, gutter, pageCount, pageSize);
-        NewAlbumAction action = new NewAlbumAction(params);
+        NewAlbumAction action = new NewAlbumAction(context.session(), params);
         action.doAction();
 
-        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
+        AlbumModel albumModel = context.session().getAlbumModel();
 
         assertNotNull(albumModel);
         assertEquals(pageCount + 1, albumModel.getPages().size(), "Expect specified pages + title page");
@@ -54,11 +57,13 @@ public class NewAlbumActionTest {
         int pageCount = 7;
         PageSize pageSize = PageSize.A4_Landscape;
 
+        Context context = new Context(null, new AppSession(new AppEventBus()));
+
         NewAlbumParams params = new NewAlbumParams(title, margin, gutter, pageCount, pageSize);
-        NewAlbumAction action = new NewAlbumAction(params);
+        NewAlbumAction action = new NewAlbumAction(context.session(), params);
         action.doAction();
 
-        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
+        AlbumModel albumModel = context.session().getAlbumModel();
 
         assertNotNull(albumModel);
 

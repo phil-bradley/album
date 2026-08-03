@@ -4,6 +4,9 @@
  */
 package ie.philb.album.view;
 
+import ie.philb.album.AppEventBus;
+import ie.philb.album.AppSession;
+import ie.philb.album.Context;
 import ie.philb.album.ui.command.NewAlbumCommand;
 import ie.philb.album.ui.command.OpenAlbumCommand;
 import ie.philb.album.ui.common.AppPanel;
@@ -13,17 +16,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -40,37 +39,39 @@ public class WelcomePanel extends AppPanel {
     private JLabel lblWelcome;
     private JButton btnNewAlbum;
     private JButton btnOpenAlbum;
-    private AppPanel buttonsPanel = new AppPanel();
+    private AppPanel buttonsPanel;
 
-    public WelcomePanel() {
+    public WelcomePanel(Context context) {
+        super(context);
         background(Color.white);
         initComponents();
     }
 
     private void initComponents() {
 
+        buttonsPanel = new AppPanel(context);
         lblWelcome = new JLabel();
         lblWelcome.setHorizontalAlignment(SwingConstants.CENTER);
         lblWelcome.setFont(getFont().deriveFont(WELCOME_FONT_SIZE));
         lblWelcome.setForeground(WELCOME_FONT_COLOR);
         lblWelcome.setText("Welcome to album");
 
-        btnNewAlbum = new JButton( "New Album", Icons.Regular.NEW);
+        btnNewAlbum = new JButton("New Album", Icons.Regular.NEW);
         btnOpenAlbum = new JButton("Open Album", Icons.Regular.OPEN);
 
         btnNewAlbum.addActionListener((ActionEvent e) -> {
-            new NewAlbumCommand().execute();
+            new NewAlbumCommand(context).execute();
         });
 
         btnOpenAlbum.addActionListener((ActionEvent e) -> {
-            new OpenAlbumCommand().execute();
+            new OpenAlbumCommand(context).execute();
         });
 
         setBorder(
-            new CompoundBorder(
-                new EmptyBorder(10, 10, 10, 10),
-                new LineBorder(Color.lightGray, 1, true)
-            )
+                new CompoundBorder(
+                        new EmptyBorder(10, 10, 10, 10),
+                        new LineBorder(Color.lightGray, 1, true)
+                )
         );
         layoutComponents();
     }
@@ -107,7 +108,7 @@ public class WelcomePanel extends AppPanel {
 
         GridBagCellConstraints gbc = new GridBagCellConstraints().fillBoth().weight(1);
 
-        WelcomePanel welcomePanel = new WelcomePanel();
+        WelcomePanel welcomePanel = new WelcomePanel(new Context(null, new AppSession(new AppEventBus())));
         frame.add(welcomePanel, gbc);
         frame.setVisible(true);
     }

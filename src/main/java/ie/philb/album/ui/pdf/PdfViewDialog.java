@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.pdf;
 
+import ie.philb.album.Context;
 import ie.philb.album.ui.ApplicationUi;
 import ie.philb.album.ui.command.PrintAlbumCommand;
 import ie.philb.album.ui.common.GridBagCellConstraints;
@@ -41,21 +42,24 @@ public class PdfViewDialog extends JDialog {
     private final JButton btnNext;
     private final JButton btnPrevious;
     private final JButton btnPrint;
+    private final Context context;
+    
+    public PdfViewDialog(Context context) {
 
-    public PdfViewDialog() {
-
-        super(ApplicationUi.getInstance(), "Preview");
+        super(context.ui(), "Preview");
         setModal(true);
 
+        this.context = context;
+        
         this.btnPrevious = new JButton();
-        btnPrevious.setIcon(Icons.Regular.ARROW_LEFT);
-        btnPrevious.setEnabled(false);
+        this.btnPrevious.setIcon(Icons.Regular.ARROW_LEFT);
+        this.btnPrevious.setEnabled(false);
 
         this.btnNext = new JButton();
-        btnNext.setIcon(Icons.Regular.ARROW_RIGHT);
+        this.btnNext.setIcon(Icons.Regular.ARROW_RIGHT);
 
         this.btnPrint = new JButton();
-        btnPrint.setIcon(Icons.Regular.PRINT);
+        this.btnPrint.setIcon(Icons.Regular.PRINT);
 
         this.toolbar = new JToolBar();
         this.toolbar.setFloatable(false);
@@ -63,7 +67,7 @@ public class PdfViewDialog extends JDialog {
         this.toolbar.add(btnNext);
         this.toolbar.add(btnPrint);
 
-        this.displayPanel = new PdfViewPanel();
+        this.displayPanel = new PdfViewPanel(context);
 
         setLayout(new GridBagLayout());
 
@@ -73,16 +77,16 @@ public class PdfViewDialog extends JDialog {
         gbc.xy(0, 1).fillBoth().weight(1).inset(MARGIN);
         add(displayPanel, gbc);
 
-        btnNext.addActionListener((ActionEvent e) -> {
+        this.btnNext.addActionListener((ActionEvent e) -> {
             nextPage();
         });
 
-        btnPrevious.addActionListener((ActionEvent e) -> {
+        this.btnPrevious.addActionListener((ActionEvent e) -> {
             previousPage();
         });
 
-        btnPrint.addActionListener((ActionEvent e) -> {
-            new PrintAlbumCommand().execute();
+        this.btnPrint.addActionListener((ActionEvent e) -> {
+            new PrintAlbumCommand(context).execute();
         });
 
         addKeyListener(new KeyAdapter() {

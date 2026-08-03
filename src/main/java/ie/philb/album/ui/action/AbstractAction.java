@@ -4,8 +4,9 @@
  */
 package ie.philb.album.ui.action;
 
-import ie.philb.album.ui.action.callback.DefaultNoResultCallback;
+import ie.philb.album.AppSession;
 import ie.philb.album.ui.action.callback.Callback;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,12 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractAction<T> {
 
     protected static final Logger logger = LoggerFactory.getLogger(AbstractAction.class);
+
+    protected final AppSession session;
+
+    public AbstractAction(AppSession session) {
+        this.session = Objects.requireNonNull(session);
+    }
 
     private Callback<T> callback;
 
@@ -35,10 +42,6 @@ public abstract class AbstractAction<T> {
     }
 
     protected abstract T doAction() throws Exception;
-
-    public void execute() {
-        this.execute(new DefaultNoResultCallback());
-    }
 
     public void execute(Callback<T> callback) {
         this.callback = callback;

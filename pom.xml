@@ -14,8 +14,8 @@
     </distributionManagement>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.useModulePath>false</maven.compiler.useModulePath>
         <exec.mainClass>ie.philb.album.Main</exec.mainClass>
         <scm.ssh>git@github.com:phil-bradley/album.git</scm.ssh>

@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.actionlistener;
 
+import ie.philb.album.Context;
 import ie.philb.album.model.PageEntryType;
 import static ie.philb.album.model.PageEntryType.Image;
 import static ie.philb.album.model.PageEntryType.Text;
@@ -14,11 +15,15 @@ import static ie.philb.album.model.PageEntryType.Text;
  */
 public class ToggleCellTypeActionListener extends AbstractCellActionListener {
 
+    public ToggleCellTypeActionListener(Context context) {
+        super(context);
+    }
+
     @Override
     protected void doAction() {
         PageEntryType pageEntryType = selectedPageEntryView.getPageEntryModel().getPageEntryType();
         PageEntryType newType = (pageEntryType == Image) ? Text : Image;
         selectedPageEntryView.getPageEntryModel().setPageEntryType(newType);
     }
-    
+
 }

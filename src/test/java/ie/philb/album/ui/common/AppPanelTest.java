@@ -5,6 +5,9 @@
 package ie.philb.album.ui.common;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.AppEventBus;
+import ie.philb.album.AppSession;
+import ie.philb.album.Context;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -23,12 +26,12 @@ import org.junit.jupiter.api.Test;
  */
 public class AppPanelTest {
 
-    private static final AppContext APP_CONTEXT = AppContext.INSTANCE;
-
+    private static final Context context = new Context(null, new AppSession(new AppEventBus()));
+    
     @Test
     void givenAppPanel_expectGridBagLayout_andIsOpaque() {
 
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
 
         assertInstanceOf(GridBagLayout.class, appPanel.getLayout());
         assertFalse(appPanel.isOpaque());
@@ -36,14 +39,14 @@ public class AppPanelTest {
 
     @Test
     void givenAppPanel_verifyForegroundColor() {
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
         appPanel.foreground(Color.ORANGE);
         assertEquals(Color.ORANGE, appPanel.getForeground());
     }
 
     @Test
     void givenAppPanel_verifyBackgroundColor() {
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
         appPanel.background(Color.CYAN);
         assertEquals(Color.CYAN, appPanel.getBackground());
     }
@@ -51,7 +54,7 @@ public class AppPanelTest {
     @Test
     void givenAppPanel_verifyOpaque() {
 
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
         assertFalse(appPanel.isOpaque());
 
         appPanel.opaque();
@@ -64,7 +67,7 @@ public class AppPanelTest {
     @Test
     void givenAppPanel_verifyTransparent() {
 
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
         assertFalse(appPanel.isOpaque());
 
         appPanel.opaque();
@@ -77,7 +80,7 @@ public class AppPanelTest {
     @Test
     void givenAppPanel_verifyBorder() {
 
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
         assertNull(appPanel.getBorder());
 
         appPanel.border(Color.red);
@@ -96,7 +99,7 @@ public class AppPanelTest {
 
     @Test
     void givenPanel_verifySizeSetsSize_andPreferredSize() {
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
         appPanel.setSize(new Dimension(1, 1));
         appPanel.setMinimumSize(new Dimension(2, 2));
         appPanel.setMaximumSize(new Dimension(3, 3));
@@ -113,7 +116,7 @@ public class AppPanelTest {
 
     @Test
     void givenPanel_verifyLockSizeSetsSize_andPreferredSize_andMinimumSize_andMaximumSize() {
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
 
         Dimension size = new Dimension(123, 456);
         appPanel.lockSize(size);
@@ -126,7 +129,7 @@ public class AppPanelTest {
 
     @Test
     void givenPanelFiller_expectTransparentPanel() {
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
         AppPanel fillerPanel = appPanel.filler();
         assertFalse(fillerPanel.isOpaque());
         assertEquals(new Dimension(0, 0), fillerPanel.getSize());
@@ -134,7 +137,7 @@ public class AppPanelTest {
 
     @Test
     void givenPanelFillerWithColor_expectOpaquePanel() {
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
         AppPanel fillerPanel = appPanel.filler(Color.YELLOW);
         assertTrue(fillerPanel.isOpaque());
         assertEquals(Color.YELLOW, fillerPanel.getBackground());
@@ -143,7 +146,7 @@ public class AppPanelTest {
 
     @Test
     void givenPanelFillerWithSize_expectTransparentPanel() {
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
 
         Dimension size = new Dimension(432, 562);
         AppPanel fillerPanel = appPanel.filler(size);
@@ -156,7 +159,7 @@ public class AppPanelTest {
 
     @Test
     void givenPanelFillerWithSizeAndColor_expectOpaquePanel() {
-        AppPanel appPanel = new AppPanel();
+        AppPanel appPanel = new AppPanel(context);
 
         Dimension size = new Dimension(432, 562);
         AppPanel fillerPanel = appPanel.filler(size, Color.DARK_GRAY);
@@ -170,16 +173,16 @@ public class AppPanelTest {
 
     @Test
     void givenPanel_expectRegisteredAsApplicationListener() {
-        AppPanel appPanel = new AppPanel();
-        assertTrue(APP_CONTEXT.listeners().contains(appPanel));
+        AppPanel appPanel = new AppPanel(context);
+        assertTrue(context.session().getEventBus().listeners().contains(appPanel));
     }
 
     @Test
     void givenPanelRemoved_expectUnregisteredAsApplicationListener() {
-        AppPanel appPanel = new AppPanel();
-        assertTrue(APP_CONTEXT.listeners().contains(appPanel));
+        AppPanel appPanel = new AppPanel(context);
+        assertTrue(context.session().getEventBus().listeners().contains(appPanel));
 
         appPanel.removeNotify();
-        assertFalse(APP_CONTEXT.listeners().contains(appPanel));
+        assertFalse(context.session().getEventBus().listeners().contains(appPanel));
     }
 }

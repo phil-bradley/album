@@ -4,11 +4,26 @@
  */
 package ie.philb.album.ui.command;
 
+import ie.philb.album.Context;
+import ie.philb.album.ui.action.AbstractAction;
+import ie.philb.album.ui.action.callback.DefaultNoResultCallback;
+import java.util.Objects;
+
 /**
  *
  * @author Philip.Bradley
  */
-public  abstract class AbstractCommand {
-    
+public abstract class AbstractCommand {
+
+    protected final Context context;
+
+    public AbstractCommand(Context context) {
+        this.context = Objects.requireNonNull(context, "Context must not be null for command");
+    }
+
     public abstract void execute();
+
+    protected void executeAction(AbstractAction t) {
+        t.execute(new DefaultNoResultCallback(context.ui()));
+    }
 }

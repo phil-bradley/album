@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.action;
 
+import ie.philb.album.AppSession;
 import ie.philb.album.view.PageEntryView;
 
 /**
@@ -14,8 +15,9 @@ public class ZoomResetAction extends AbstractAction<Void> {
 
     private final PageEntryView pageEntryView;
 
-    public ZoomResetAction(PageEntryView view) {
-        this.pageEntryView = view;
+    public ZoomResetAction(AppSession session, PageEntryView pageEntryView) {
+        super(session);
+        this.pageEntryView = pageEntryView;
     }
 
     @Override

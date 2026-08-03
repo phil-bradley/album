@@ -5,6 +5,7 @@
 package ie.philb.album.ui.dnd;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.model.PageEntryType;
 import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.util.FileUtils;
@@ -22,9 +23,15 @@ import javax.swing.TransferHandler;
  */
 public class PageEntryViewTransferHandler extends TransferHandler {
 
+    private final Context context;
+
+    public PageEntryViewTransferHandler(Context context) {
+        this.context = context;
+    }
+
     @Override
     public boolean canImport(TransferSupport support) {
-        
+
         if (!support.isDrop()) {
             return false;
         }
@@ -62,9 +69,9 @@ public class PageEntryViewTransferHandler extends TransferHandler {
             view.getPageEntryModel().setImageFile(imageFile);
             view.centerImage();
 
-            AppContext.INSTANCE.pageEntrySelected(view.getPageView(), view);
+            context.session().getEventBus().pageEntrySelected(view.getPageView(), view);
         } catch (Exception ex) {
-            Dialogs.showErrorMessage("Drag & drop failed: " + ex.getMessage(), ex);
+            Dialogs.showErrorMessage(context.ui(), "Drag & drop failed: " + ex.getMessage(), ex);
         }
 
         return true;

@@ -4,6 +4,7 @@
  */
 package ie.philb.album.view;
 
+import ie.philb.album.Context;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageGeometryOption;
 import ie.philb.album.ui.command.SetGeometryCommand;
@@ -29,8 +30,11 @@ public class PageGeometryMenu extends JPopupMenu {
 
     private PageGeometry selectedGeometry = null;
     private List<JButton> buttons = new ArrayList<>();
+    private final Context context;
 
-    public PageGeometryMenu() {
+    public PageGeometryMenu(Context context) {
+
+        this.context = context;
 
         JPanel pageLayoutItemPanel = new JPanel();
         pageLayoutItemPanel.setLayout(new BoxLayout(pageLayoutItemPanel, BoxLayout.Y_AXIS));
@@ -42,7 +46,7 @@ public class PageGeometryMenu extends JPopupMenu {
             btn.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
 
             btn.addActionListener((ActionEvent ae) -> {
-                new SetGeometryCommand(geometryOption.geometry()).execute();
+                new SetGeometryCommand(context, geometryOption.geometry()).execute();
                 setSelectedGeometry(geometryOption.geometry());
                 setVisible(false);
             });

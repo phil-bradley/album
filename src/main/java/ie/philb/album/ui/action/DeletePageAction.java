@@ -4,7 +4,7 @@
  */
 package ie.philb.album.ui.action;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.AppSession;
 import ie.philb.album.model.AlbumModel;
 
 /**
@@ -15,16 +15,18 @@ public class DeletePageAction extends AbstractAction<Void> {
 
     private final int pageId;
 
-    public DeletePageAction(int pageId) {
+    public DeletePageAction(AppSession session, int pageId) {
+        super(session);
         this.pageId = pageId;
+
     }
 
     @Override
     protected Void doAction() throws Exception {
 
-        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
+        AlbumModel albumModel = session.getAlbumModel();
         albumModel.deletePage(pageId);
-        AppContext.INSTANCE.albumUpdated();
+        session.getEventBus().albumUpdated();
 
         return null;
     }

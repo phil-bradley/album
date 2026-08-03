@@ -4,7 +4,7 @@
  */
 package ie.philb.album.ui.command;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.model.AlbumModel;
 import ie.philb.album.ui.action.NewAlbumAction;
 import ie.philb.album.ui.common.Dialogs;
@@ -17,13 +17,14 @@ import ie.philb.album.ui.dialog.NewAlbumParams;
  */
 public class NewAlbumCommand extends AbstractCommand {
 
-    public NewAlbumCommand() {
+    public NewAlbumCommand(Context context) {
+        super(context);
     }
 
     @Override
     public void execute() {
 
-        NewAlbumDialog dlg = new NewAlbumDialog();
+        NewAlbumDialog dlg = new NewAlbumDialog(context);
         dlg.setVisible(true);
 
         if (!dlg.isOkPressed()) {
@@ -32,17 +33,17 @@ public class NewAlbumCommand extends AbstractCommand {
 
         NewAlbumParams params = dlg.getValidationState().result();
 
-        AlbumModel albumModel = AppContext.INSTANCE.getAlbumModel();
+        AlbumModel albumModel = context.session().getAlbumModel();
 
         if (albumModel != null && albumModel.hasUnSavedChanges()) {
 
-            boolean ok = Dialogs.confirm("Are you sure?");
+            boolean ok = Dialogs.confirm(context.ui(), "Are you sure?");
 
             if (!ok) {
                 return;
             }
         }
 
-        new NewAlbumAction(params).execute();
+        executeAction(new NewAlbumAction(context.session(), params));
     }
 }

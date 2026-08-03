@@ -4,11 +4,11 @@
  */
 package ie.philb.album.ui.command;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.Context;
 import ie.philb.album.model.AlbumModel;
-import ie.philb.album.ui.action.callback.Callback;
 import ie.philb.album.ui.action.CreatePdfAction;
 import ie.philb.album.ui.action.PrintPdfAction;
+import ie.philb.album.ui.action.callback.Callback;
 import ie.philb.album.ui.common.Dialogs;
 import java.io.File;
 import java.io.IOException;
@@ -21,20 +21,29 @@ public class PrintAlbumCommand extends AbstractCommand {
 
     private boolean exportComplete;
 
+    public PrintAlbumCommand(Context context) {
+        this(context, false);
+    }
+
+    public PrintAlbumCommand(Context context, boolean exportComplete) {
+        super(context);
+        this.exportComplete = exportComplete;
+    }
+
     @Override
     public void execute() {
 
-        AlbumModel album = AppContext.INSTANCE.getAlbumModel();
+        AlbumModel album = context.session().getAlbumModel();
         File tempFile = null;
 
         try {
             tempFile = File.createTempFile("album-", ".pdf");
         } catch (IOException ex) {
-            Dialogs.showErrorMessage("Cannot create PDF export", ex);
+            Dialogs.showErrorMessage(context.ui(), "Cannot create PDF export", ex);
             return;
         }
 
-        new CreatePdfAction(tempFile, album).execute(new Callback<File>() {
+        new CreatePdfAction(context.session(), tempFile).execute(new Callback<File>() {
             @Override
             public void onSuccess(File result) {
                 exportComplete = true;
@@ -42,19 +51,19 @@ public class PrintAlbumCommand extends AbstractCommand {
 
             @Override
             public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage("Failed to create PDF", ex);
+                Dialogs.showErrorMessage(context.ui(), "Failed to create PDF", ex);
             }
         });
 
         if (exportComplete) {
-            new PrintPdfAction(tempFile).execute(new Callback<Void>() {
+            new PrintPdfAction(context.session(), tempFile).execute(new Callback<Void>() {
                 @Override
                 public void onSuccess(Void result) {
                 }
 
                 @Override
                 public void onFailure(Exception ex) {
-                    Dialogs.showErrorMessage("Failed to print", ex);
+                    Dialogs.showErrorMessage(context.ui(), "Failed to print", ex);
                 }
             });
         }

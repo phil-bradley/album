@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.action;
 
+import ie.philb.album.AppSession;
 import ie.philb.album.view.PageEntryView;
 
 /**
@@ -14,7 +15,8 @@ public class ZoomOutAction extends AbstractAction<Void> {
 
     private final PageEntryView pageEntryView;
 
-    public ZoomOutAction(PageEntryView pageEntryView) {
+    public ZoomOutAction(AppSession session, PageEntryView pageEntryView) {
+        super(session);
         this.pageEntryView = pageEntryView;
     }
 

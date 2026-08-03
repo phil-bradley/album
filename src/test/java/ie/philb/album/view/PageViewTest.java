@@ -5,6 +5,9 @@
 package ie.philb.album.view;
 
 import ie.philb.album.AppContext;
+import ie.philb.album.AppEventBus;
+import ie.philb.album.AppSession;
+import ie.philb.album.Context;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
@@ -30,15 +33,17 @@ import org.junit.jupiter.api.Test;
  */
 public class PageViewTest {
 
+    private Context context;
+
     @BeforeEach
     void setUp() {
-        AppContext.INSTANCE.pageSelected(null);
+        context = new Context(null, new AppSession(new AppEventBus()));
     }
 
     @Test
     void givenPageView_expectEntryViewForEachModelView() {
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
         assertEquals(pageModel.getPageEntries().size(), pageView.pageEntryViews.size());
     }
@@ -46,7 +51,7 @@ public class PageViewTest {
     @Test
     void givenPageView_whenSelected_expectBorderShown() {
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
         assertNull(pageView.getBorder());
 
         pageView.pageSelected(pageView);
@@ -60,7 +65,7 @@ public class PageViewTest {
     void givenPageView_whenDeselected_expectNoBorderShown() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
         pageView.pageSelected(pageView);
         LineBorder selectedBorder = (LineBorder) pageView.getBorder();
@@ -74,7 +79,7 @@ public class PageViewTest {
     @Test
     void givenPageViewPreviewMode_whenSelected_expectNoBorderShown() {
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
         pageView.setPreviewMode(true);
         assertNull(pageView.getBorder());
 
@@ -86,7 +91,7 @@ public class PageViewTest {
     void givenPageView_whenPageEntrySelected_expectSelectedPageEntryViewUpdated() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
         PageEntryView toSelect = pageView.pageEntryViews.get(2);
 
@@ -100,7 +105,7 @@ public class PageViewTest {
     void givenPageView_whenPNullageEntrySelected_expectPageAndPageEntryDeselected() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
         pageView.pageEntrySelected(pageView, null);
         assertTrue(pageView.isSelected);
@@ -114,7 +119,7 @@ public class PageViewTest {
     void givenPageView_whenWidthSet_expectAspectRatioPreserved() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
         pageView.setWidth(100);
         int expectedHeight = PageSize.A4_Landscape.heigthFromWidth(100);
@@ -125,7 +130,7 @@ public class PageViewTest {
     void givenPageView_whenHeightSet_expectAspectRatioPreserved() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
         pageView.setHeight(100);
         int expectedWidth = PageSize.A4_Landscape.widthFromHeight(100);
@@ -136,7 +141,7 @@ public class PageViewTest {
     void givenPageView_whenEntrySelected_expectImageLibrarySelectionApplied() throws IOException {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
         pageView.pageEntrySelected(pageView, pageView.pageEntryViews.get(2));
 
         ImageLibraryEntry imageLibraryEntry = new ImageLibraryEntry(TestUtils.getTestImageFile());
@@ -149,7 +154,7 @@ public class PageViewTest {
     void givenPageHasNoSize_andPositionEntriesInvoked_expectEntriesHaveNoSize() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
         pageView.positionEntries();
 
         Dimension zeroDimension = new Dimension(0, 0);
@@ -166,7 +171,7 @@ public class PageViewTest {
     void givenPageHasCell_andSizeSet_andPositionEntriesInvoked_expectEntrySizeIsPageSize() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(1), PageSize.A4_Landscape).withMargin(0);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
         pageView.setWidth(1200);
         pageView.positionEntries();
 
@@ -184,7 +189,7 @@ public class PageViewTest {
         int margin = 12;
 
         PageModel pageModel = new PageModel(PageGeometry.square(2), PageSize.A4_Landscape).withMargin(margin);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
         pageView.setWidth(842);  // 1 - 1 mapping from viewsize to point size of page
         pageView.positionEntries();
 
@@ -206,25 +211,25 @@ public class PageViewTest {
     void givenPageView_whenClicked_expectedPageSelected() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(1), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
 
-        assertNull(AppContext.INSTANCE.getSelectedPageView());
+        assertNull(context.session().getSelectedPageView());
 
         pageView.mousePressed(TestUtils.createMouseClickEvent(pageView));
-        assertNotNull(AppContext.INSTANCE.getSelectedPageView());
-        assertEquals(AppContext.INSTANCE.getSelectedPageView(), pageView);
+        assertNotNull(context.session().getSelectedPageView());
+        assertEquals(context.session().getSelectedPageView(), pageView);
     }
 
     @Test
     void givenPageViewIsPreview_whenClicked_expectedPageNotSelected() {
 
         PageModel pageModel = new PageModel(PageGeometry.square(1), PageSize.A4_Landscape);
-        PageView pageView = new PageView(pageModel);
+        PageView pageView = new PageView(context, pageModel);
         pageView.setPreviewMode(true);
 
-        assertNull(AppContext.INSTANCE.getSelectedPageView());
+        assertNull(context.session().getSelectedPageView());
 
         pageView.mousePressed(TestUtils.createMouseClickEvent(pageView));
-        assertNull(AppContext.INSTANCE.getSelectedPageView());
+        assertNull(context.session().getSelectedPageView());
     }
 }

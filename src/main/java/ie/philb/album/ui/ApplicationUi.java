@@ -4,8 +4,9 @@
  */
 package ie.philb.album.ui;
 
-import ie.philb.album.AppContext;
+import ie.philb.album.AppSession;
 import ie.philb.album.ApplicationListener;
+import ie.philb.album.Context;
 import ie.philb.album.ui.command.AboutCommand;
 import ie.philb.album.ui.command.AbstractCommand;
 import ie.philb.album.ui.command.CreatePdfCommand;
@@ -52,8 +53,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationUi.class);
 
-    private static final ApplicationUi INSTANCE = new ApplicationUi();
-
+    private final Context context;
     private ImageLibraryView imageLibraryView;
     private PageView selectedPageView;
     private PageEntryView selectedPageEntryView;
@@ -69,13 +69,12 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private JButton btnSaveAs;
     private WelcomeWithAlbumViewCardPanel welcomeWithAlbumViewCardPanel;
 
-    public static ApplicationUi getInstance() {
-        return INSTANCE;
-    }
-
-    private ApplicationUi() {
+    public ApplicationUi(AppSession session) {
 
         super("Album");
+
+        this.context = new Context(this, session);
+
         initComponents();
 
         setPreferredSize(new Dimension(1200, 800));
@@ -86,7 +85,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                new ExitCommand().execute();
+                new ExitCommand(context).execute();
             }
 
         });
@@ -133,7 +132,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
             }
         });
 
-        AppContext.INSTANCE.addListener(this);
+        context.session().getEventBus().addListener(this);
     }
 
     private void initComponents() {
@@ -143,8 +142,8 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
         vSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
-        imageLibraryView = new ImageLibraryView();
-        welcomeWithAlbumViewCardPanel = new WelcomeWithAlbumViewCardPanel();
+        imageLibraryView = new ImageLibraryView(context);
+        welcomeWithAlbumViewCardPanel = new WelcomeWithAlbumViewCardPanel(context);
 
         vSplit.setLeftComponent(imageLibraryView);
         vSplit.setRightComponent(welcomeWithAlbumViewCardPanel);
@@ -160,16 +159,16 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         menuBar.add(helpMenu = new JMenu("Help"));
         helpMenu.setMnemonic(KeyEvent.VK_H);
 
-        addMenuItem(fileMenu, Icons.Small.NEW, "New", new NewAlbumCommand(), KeyEvent.VK_N);
-        addMenuItem(fileMenu, Icons.Small.OPEN, "Open", new OpenAlbumCommand(), KeyEvent.VK_O);
-        addMenuItem(fileMenu, Icons.Small.SAVE, "Save", new SaveAlbumCommand(), KeyEvent.VK_S);
-        addMenuItem(fileMenu, Icons.Small.SAVE_AS, "Save As", new SaveAlbumCommand(true), KeyEvent.VK_A);
-        addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand(), KeyEvent.VK_E);
-        addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand(), KeyEvent.VK_P);
-        addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand(), KeyEvent.VK_X);
+        addMenuItem(fileMenu, Icons.Small.NEW, "New", new NewAlbumCommand(context), KeyEvent.VK_N);
+        addMenuItem(fileMenu, Icons.Small.OPEN, "Open", new OpenAlbumCommand(context), KeyEvent.VK_O);
+        addMenuItem(fileMenu, Icons.Small.SAVE, "Save", new SaveAlbumCommand(context), KeyEvent.VK_S);
+        addMenuItem(fileMenu, Icons.Small.SAVE_AS, "Save As", new SaveAlbumCommand(context, true), KeyEvent.VK_A);
+        addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand(context), KeyEvent.VK_E);
+        addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand(context), KeyEvent.VK_P);
+        addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand(context), KeyEvent.VK_X);
 
-        addMenuItem(helpMenu, null, "License", new ShowLicenseCommand(), KeyEvent.VK_L);
-        addMenuItem(helpMenu, null, "About", new AboutCommand(), KeyEvent.VK_I);
+        addMenuItem(helpMenu, null, "License", new ShowLicenseCommand(context), KeyEvent.VK_L);
+        addMenuItem(helpMenu, null, "About", new AboutCommand(context), KeyEvent.VK_I);
 
     }
 
@@ -188,11 +187,11 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        initToolbarButton(btnNew, Icons.Regular.NEW, "New Album", new NewAlbumCommand());
-        initToolbarButton(btnOpen, Icons.Regular.OPEN, "Open existing album", new OpenAlbumCommand());
-        initToolbarButton(btnSave, Icons.Regular.SAVE, "Save album", new SaveAlbumCommand());
-        initToolbarButton(btnSaveAs, Icons.Regular.SAVE_AS, "Save album as", new SaveAlbumCommand(true));
-        initToolbarButton(btnPdf, Icons.Regular.PDF, "Export to PDF", new CreatePdfCommand());
+        initToolbarButton(btnNew, Icons.Regular.NEW, "New Album", new NewAlbumCommand(context));
+        initToolbarButton(btnOpen, Icons.Regular.OPEN, "Open existing album", new OpenAlbumCommand(context));
+        initToolbarButton(btnSave, Icons.Regular.SAVE, "Save album", new SaveAlbumCommand(context));
+        initToolbarButton(btnSaveAs, Icons.Regular.SAVE_AS, "Save album as", new SaveAlbumCommand(context, true));
+        initToolbarButton(btnPdf, Icons.Regular.PDF, "Export to PDF", new CreatePdfCommand(context));
     }
 
     private void initToolbarButton(JButton button, ImageIcon icon, String title, AbstractCommand command) {
