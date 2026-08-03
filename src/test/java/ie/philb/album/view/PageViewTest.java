@@ -4,15 +4,14 @@
  */
 package ie.philb.album.view;
 
-import ie.philb.album.AppContext;
 import ie.philb.album.AppEventBus;
 import ie.philb.album.AppSession;
 import ie.philb.album.Context;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
-import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
+import ie.philb.album.ui.resources.Colors;
 import ie.philb.album.util.TestUtils;
 import static ie.philb.album.util.TestUtils.assertClose;
 import java.awt.Dimension;

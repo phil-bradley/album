@@ -4,7 +4,6 @@
  */
 package ie.philb.album.ui.command;
 
-import ie.philb.album.AppContext;
 import ie.philb.album.AppEventBus;
 import ie.philb.album.AppSession;
 import ie.philb.album.Context;

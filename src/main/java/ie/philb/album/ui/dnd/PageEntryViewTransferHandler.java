@@ -4,7 +4,6 @@
  */
 package ie.philb.album.ui.dnd;
 
-import ie.philb.album.AppContext;
 import ie.philb.album.Context;
 import ie.philb.album.model.PageEntryType;
 import ie.philb.album.ui.common.Dialogs;
