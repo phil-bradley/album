@@ -78,6 +78,8 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
     @Override
     public void mouseClicked(MouseEvent me) {
 
+        requestFocus();
+        
         if (pageEntryModel.getPageEntryType() != PageEntryType.Image) {
             return;
         }
@@ -225,6 +227,8 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         this.isSelected = b;
         updateBorder();
         updateEditor();
+        
+        requestFocus();
     }
 
     public boolean isSelected() {
