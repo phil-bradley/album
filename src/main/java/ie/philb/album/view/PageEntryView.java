@@ -24,6 +24,8 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
@@ -71,15 +73,55 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         this.pageEntryModel.addListener(this);
         this.pageEntryModel.getTextControlModel().addChangeListener(this);
 
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                handleKeyPressed(e);
+            }
+        });
+
         setTransferHandler(new PageEntryViewTransferHandler(context));
         updateBorder();
+    }
+
+    private void handleKeyPressed(KeyEvent e) {
+
+        if (e.getKeyCode() == KeyEvent.VK_Z) {
+            zoomIn();
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_X) {
+            zoomOut();
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+            clearImage();
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            shiftOffset(-1, 0);
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            shiftOffset(1, 0);
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            shiftOffset(0, -1);
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            shiftOffset(0, 1);
+        }
+        
+        repaint();
     }
 
     @Override
     public void mouseClicked(MouseEvent me) {
 
         requestFocus();
-        
+
         if (pageEntryModel.getPageEntryType() != PageEntryType.Image) {
             return;
         }
@@ -227,7 +269,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         this.isSelected = b;
         updateBorder();
         updateEditor();
-        
+
         requestFocus();
     }
 
