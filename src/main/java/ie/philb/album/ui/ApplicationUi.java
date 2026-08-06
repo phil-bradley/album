@@ -27,7 +27,6 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -88,48 +87,6 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
                 new ExitCommand(context).execute();
             }
 
-        });
-
-        setFocusable(true);
-
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-                LOG.info("Key event " + e);
-
-                if (selectedPageEntryView == null) {
-                    return;
-                }
-
-                if (e.getKeyCode() == KeyEvent.VK_Z) {
-                    selectedPageEntryView.zoomIn();
-                }
-
-                if (e.getKeyCode() == KeyEvent.VK_X) {
-                    selectedPageEntryView.zoomOut();
-                }
-
-                if (e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-                    selectedPageEntryView.clearImage();
-                }
-
-                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    selectedPageEntryView.shiftOffset(-1, 0);
-                }
-
-                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    selectedPageEntryView.shiftOffset(1, 0);
-                }
-
-                if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    selectedPageEntryView.shiftOffset(0, -1);
-                }
-
-                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    selectedPageEntryView.shiftOffset(0, 1);
-                }
-            }
         });
 
         context.session().getEventBus().addListener(this);

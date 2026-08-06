@@ -24,13 +24,17 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.KeyAdapter;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,54 +77,56 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         this.pageEntryModel.addListener(this);
         this.pageEntryModel.getTextControlModel().addChangeListener(this);
 
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                handleKeyPressed(e);
-            }
-        });
-
+        initKeyBindings();
         setTransferHandler(new PageEntryViewTransferHandler(context));
         updateBorder();
     }
 
-    private void handleKeyPressed(KeyEvent e) {
+    private void initKeyBindings() {
 
-        if (e.getKeyCode() == KeyEvent.VK_Z) {
-            zoomIn();
-        }
+        InputMap im = getInputMap(WHEN_FOCUSED);
 
-        if (e.getKeyCode() == KeyEvent.VK_X) {
-            zoomOut();
-        }
+        ActionMap am = getActionMap();
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "panUp");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "panDown");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "panLeft");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "panRight");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, 0), "zoomIn");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, 0), "zoomOut");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "clearImage");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "clearImage");
 
-        if (e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-            clearImage();
-        }
+        am.put("panUp", new PanAction(0, -1));
+        am.put("panDown", new PanAction(0, 1));
+        am.put("panLeft", new PanAction(-1, 0));
+        am.put("panRight", new PanAction(1, 0));
 
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            shiftOffset(-1, 0);
-        }
+        am.put("zoomIn", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                zoomIn();
+            }
+        });
 
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            shiftOffset(1, 0);
-        }
+        am.put("zoomOut", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                zoomOut();
+            }
+        });
 
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
-            shiftOffset(0, -1);
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            shiftOffset(0, 1);
-        }
-        
-        repaint();
+        am.put("clearImage", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearImage();
+            }
+        });
     }
 
     @Override
     public void mouseClicked(MouseEvent me) {
 
-        requestFocus();
+        requestFocusInWindow();
 
         if (pageEntryModel.getPageEntryType() != PageEntryType.Image) {
             return;
@@ -270,7 +276,7 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         updateBorder();
         updateEditor();
 
-        requestFocus();
+        requestFocusInWindow();
     }
 
     public boolean isSelected() {
@@ -467,7 +473,30 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
                 viewOffset.x + x,
                 viewOffset.y + y
         ));
-
     }
 
+    class PanAction extends AbstractAction {
+
+        private final int dx;
+        private final int dy;
+
+        public PanAction(int dx, int dy) {
+            this.dx = dx;
+            this.dy = dy;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            if (pageEntryModel.getImage() == null) {
+                return;
+            }
+            
+            setViewOffset(new Point(
+                    viewOffset.x + dx,
+                    viewOffset.y + dy
+            ));
+        }
+
+    }
 }
