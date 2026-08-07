@@ -8,6 +8,7 @@ import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.view.PageEntryView;
 import ie.philb.album.view.PageView;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,7 +61,7 @@ public class AppEventBus {
             appListener.pageNavigatedTo(pageId);
         });
     }
-    
+
     public void pageEntrySelected(PageView pageView, PageEntryView pageEntryView) {
         pageSelected(pageView);
 
@@ -72,6 +73,12 @@ public class AppEventBus {
     public void pageSelected(PageView view) {
         getApplicationListenersCopy().forEach(appListener -> {
             appListener.pageSelected(view);
+        });
+    }
+
+    public void browseLocationUpdated(File file) {
+        getApplicationListenersCopy().forEach(appListener -> {
+            appListener.browseLocationUpdated(file);
         });
     }
 }

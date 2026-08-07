@@ -5,6 +5,7 @@
 package ie.philb.album.ui.command;
 
 import ie.philb.album.Context;
+import ie.philb.album.util.FileUtils;
 
 /**
  *
@@ -18,8 +19,6 @@ public class HomeCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        // TODO
-        //AppContext.INSTANCE.browseLocationUpdated(FileUtils.getHomeDirectory());
+        context.session().getEventBus().browseLocationUpdated(FileUtils.getHomeDirectory());
     }
-
 }
