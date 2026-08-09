@@ -4,14 +4,14 @@
  */
 package ie.philb.album.exporter;
 
-import ie.philb.album.model.AlbumModel;
-import java.io.FileOutputStream;
-
 /**
  *
  * @author philb
  */
-public interface AlbumExporter {
+public class ExportException extends Exception {
 
-    void export(AlbumModel albumModel, FileOutputStream os) throws ExportException;
+    public ExportException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

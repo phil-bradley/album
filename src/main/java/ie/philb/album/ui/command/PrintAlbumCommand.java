@@ -5,7 +5,7 @@
 package ie.philb.album.ui.command;
 
 import ie.philb.album.Context;
-import ie.philb.album.model.AlbumModel;
+import ie.philb.album.exporter.AlbumExporter;
 import ie.philb.album.ui.action.CreatePdfAction;
 import ie.philb.album.ui.action.PrintPdfAction;
 import ie.philb.album.ui.action.callback.Callback;
@@ -20,20 +20,21 @@ import java.io.IOException;
 public class PrintAlbumCommand extends AbstractCommand {
 
     private boolean exportComplete;
+    private final AlbumExporter albumExporter;
 
-    public PrintAlbumCommand(Context context) {
-        this(context, false);
+    public PrintAlbumCommand(Context context, AlbumExporter exporter) {
+        this(context, exporter, false);
     }
 
-    public PrintAlbumCommand(Context context, boolean exportComplete) {
+    public PrintAlbumCommand(Context context, AlbumExporter exporter, boolean exportComplete) {
         super(context);
+        this.albumExporter = exporter;
         this.exportComplete = exportComplete;
     }
 
     @Override
     public void execute() {
 
-        AlbumModel album = context.session().getAlbumModel();
         File tempFile = null;
 
         try {
@@ -43,9 +44,9 @@ public class PrintAlbumCommand extends AbstractCommand {
             return;
         }
 
-        new CreatePdfAction(context.session(), tempFile).execute(new Callback<File>() {
+        new CreatePdfAction(context.session(), albumExporter, tempFile).execute(new Callback<Void>() {
             @Override
-            public void onSuccess(File result) {
+            public void onSuccess(Void result) {
                 exportComplete = true;
             }
 

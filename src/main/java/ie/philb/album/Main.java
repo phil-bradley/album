@@ -5,6 +5,8 @@
 package ie.philb.album;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import ie.philb.album.exporter.AlbumExporter;
+import ie.philb.album.exporter.OpenPdfExporter;
 import ie.philb.album.ui.ApplicationUi;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -28,9 +30,10 @@ public class Main {
         }
 
         AppSession session = new AppSession(new AppEventBus());
+        AlbumExporter exporter = new OpenPdfExporter();
 
         java.awt.EventQueue.invokeLater(() -> {
-            ApplicationUi ui = new ApplicationUi(session);
+            ApplicationUi ui = new ApplicationUi(session, exporter);
             ui.setVisible(true);
         });
     }

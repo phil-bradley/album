@@ -42,19 +42,15 @@ public class OpenPdfExporter implements AlbumExporter {
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenPdfExporter.class);
 
-    private AlbumModel album;
-    private File file;
-
-    public OpenPdfExporter(AlbumModel album) {
-        this.album = album;
+    public OpenPdfExporter() {
     }
 
     @Override
-    public void export(File file) throws Exception {
+    public void export(AlbumModel album, FileOutputStream os) throws ExportException {
 
-        try (Document doc = new Document(getPageSize())) {
+        try (Document doc = new Document(getPageSize(album))) {
 
-            PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(file));
+            PdfWriter writer = PdfWriter.getInstance(doc, os);
             doc.open();
 
             // Insert a blank page after title page
@@ -75,8 +71,7 @@ public class OpenPdfExporter implements AlbumExporter {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new Exception("Error creating PDF", ex);
+            throw new ExportException("Error creating PDF", ex);
         }
     }
 
@@ -89,7 +84,7 @@ public class OpenPdfExporter implements AlbumExporter {
         }
     }
 
-    private Rectangle getPageSize() {
+    private Rectangle getPageSize(AlbumModel album) {
         return new Rectangle((float) album.getPageSize().width(), (float) album.getPageSize().height());
     }
 

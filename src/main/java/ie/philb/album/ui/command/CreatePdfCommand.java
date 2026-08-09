@@ -6,10 +6,9 @@ package ie.philb.album.ui.command;
 
 import ie.philb.album.Context;
 import ie.philb.album.exporter.AlbumExporter;
-import ie.philb.album.exporter.OpenPdfExporter;
-import ie.philb.album.model.AlbumModel;
+import ie.philb.album.ui.action.CreatePdfAction;
+import ie.philb.album.ui.action.callback.Callback;
 import ie.philb.album.ui.common.Dialogs;
-import ie.philb.album.ui.pdf.PdfViewDialog;
 import java.io.File;
 import javax.swing.JFileChooser;
 
@@ -20,19 +19,20 @@ import javax.swing.JFileChooser;
 public class CreatePdfCommand extends AbstractCommand {
 
     private File file = null;
+    private final AlbumExporter albumExporter;
 
-    public CreatePdfCommand(Context context) {
-        this(context, null);
+    public CreatePdfCommand(Context context, AlbumExporter albumExporter) {
+        this(context, albumExporter, null);
     }
 
-    public CreatePdfCommand(Context context, File file) {
+    public CreatePdfCommand(Context context, AlbumExporter albumExporter, File file) {
         super(context);
+        this.albumExporter = albumExporter;
         this.file = file;
     }
 
     @Override
     public void execute() {
-        AlbumModel albumModel = context.session().getAlbumModel();
 
         final JFileChooser chooser = new JFileChooser();
         int ret = chooser.showSaveDialog(context.ui());
@@ -54,45 +54,15 @@ public class CreatePdfCommand extends AbstractCommand {
             }
         }
 
-        AlbumExporter exporter = new OpenPdfExporter(albumModel);
-
-        try {
-            exporter.export(file);
-
-            PdfViewDialog dlg = new PdfViewDialog(context);
-            dlg.setFile(file);
-            dlg.setVisible(true);
-
-        } catch (Exception ex) {
-            Dialogs.showErrorMessage(context.ui(), "Failed to load PDF: " + ex.getMessage(), ex);
-        }
-
-        /*
-        new CreatePdfAction(file, albumModel).execute(
-                new Callback<File>() {
-
+        new CreatePdfAction(context.session(), albumExporter, file).execute(new Callback<Void>() {
             @Override
-            public void onSuccess(File result) {
-                boolean ok = true;
-                //boolean ok = Dialogs.confirm("Done!", "Preview the result?");
-                if (ok) {
-                    PdfViewDialog dlg = new PdfViewDialog();
-
-                    try {
-                        dlg.setFile(result);
-                        dlg.setVisible(true);
-                    } catch (IOException ex) {
-                        Dialogs.showErrorMessage("Failed to load PDF", ex);
-                    }
-                }
+            public void onSuccess(Void result) {
             }
 
             @Override
             public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage("Failed to save PDF", ex);
+                Dialogs.showErrorMessage(context.ui(), "Failed to load PDF: " + ex.getMessage(), ex);
             }
-        }
-        );
-         */
+        });
     }
 }

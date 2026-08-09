@@ -5,7 +5,7 @@
 package ie.philb.album.ui.pdf;
 
 import ie.philb.album.Context;
-import ie.philb.album.ui.ApplicationUi;
+import ie.philb.album.exporter.OpenPdfExporter;
 import ie.philb.album.ui.command.PrintAlbumCommand;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import ie.philb.album.ui.resources.Icons;
@@ -86,7 +86,7 @@ public class PdfViewDialog extends JDialog {
         });
 
         this.btnPrint.addActionListener((ActionEvent e) -> {
-            new PrintAlbumCommand(context).execute();
+            new PrintAlbumCommand(context, new OpenPdfExporter()).execute();
         });
 
         addKeyListener(new KeyAdapter() {

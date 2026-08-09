@@ -5,8 +5,8 @@
 package ie.philb.album.ui;
 
 import ie.philb.album.AppSession;
-import ie.philb.album.ApplicationListener;
 import ie.philb.album.Context;
+import ie.philb.album.exporter.AlbumExporter;
 import ie.philb.album.ui.command.AboutCommand;
 import ie.philb.album.ui.command.AbstractCommand;
 import ie.philb.album.ui.command.CreatePdfCommand;
@@ -17,11 +17,8 @@ import ie.philb.album.ui.command.PrintAlbumCommand;
 import ie.philb.album.ui.command.SaveAlbumCommand;
 import ie.philb.album.ui.command.ShowLicenseCommand;
 import ie.philb.album.ui.common.GridBagCellConstraints;
-import ie.philb.album.ui.imagelibrary.ImageLibraryEntry;
 import ie.philb.album.ui.imagelibrary.ImageLibraryView;
 import ie.philb.album.ui.resources.Icons;
-import ie.philb.album.view.PageEntryView;
-import ie.philb.album.view.PageView;
 import ie.philb.album.view.WelcomeWithAlbumViewCardPanel;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -30,7 +27,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -48,14 +44,12 @@ import org.slf4j.LoggerFactory;
  *
  * @author philb
  */
-public class ApplicationUi extends JFrame implements ApplicationListener {
+public class ApplicationUi extends JFrame {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationUi.class);
 
     private final Context context;
     private ImageLibraryView imageLibraryView;
-    private PageView selectedPageView;
-    private PageEntryView selectedPageEntryView;
     private JSplitPane vSplit;
     private JToolBar toolBar;
     private JMenuBar menuBar;
@@ -67,11 +61,13 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
     private JButton btnSave;
     private JButton btnSaveAs;
     private WelcomeWithAlbumViewCardPanel welcomeWithAlbumViewCardPanel;
+    private final AlbumExporter albumExporter;
 
-    public ApplicationUi(AppSession session) {
+    public ApplicationUi(AppSession session, AlbumExporter albumExporter) {
 
         super("Album");
 
+        this.albumExporter = albumExporter;
         this.context = new Context(this, session);
 
         initComponents();
@@ -88,8 +84,6 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
             }
 
         });
-
-        context.session().getEventBus().addListener(this);
     }
 
     private void initComponents() {
@@ -120,8 +114,8 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         addMenuItem(fileMenu, Icons.Small.OPEN, "Open", new OpenAlbumCommand(context), KeyEvent.VK_O);
         addMenuItem(fileMenu, Icons.Small.SAVE, "Save", new SaveAlbumCommand(context), KeyEvent.VK_S);
         addMenuItem(fileMenu, Icons.Small.SAVE_AS, "Save As", new SaveAlbumCommand(context, true), KeyEvent.VK_A);
-        addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand(context), KeyEvent.VK_E);
-        addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand(context), KeyEvent.VK_P);
+        addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand(context, albumExporter), KeyEvent.VK_E);
+        addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand(context, albumExporter), KeyEvent.VK_P);
         addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand(context), KeyEvent.VK_X);
 
         addMenuItem(helpMenu, null, "License", new ShowLicenseCommand(context), KeyEvent.VK_L);
@@ -148,7 +142,7 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
         initToolbarButton(btnOpen, Icons.Regular.OPEN, "Open existing album", new OpenAlbumCommand(context));
         initToolbarButton(btnSave, Icons.Regular.SAVE, "Save album", new SaveAlbumCommand(context));
         initToolbarButton(btnSaveAs, Icons.Regular.SAVE_AS, "Save album as", new SaveAlbumCommand(context, true));
-        initToolbarButton(btnPdf, Icons.Regular.PDF, "Export to PDF", new CreatePdfCommand(context));
+        initToolbarButton(btnPdf, Icons.Regular.PDF, "Export to PDF", new CreatePdfCommand(context, albumExporter));
     }
 
     private void initToolbarButton(JButton button, ImageIcon icon, String title, AbstractCommand command) {
@@ -181,27 +175,5 @@ public class ApplicationUi extends JFrame implements ApplicationListener {
 
         add(vSplit, gbc);
         vSplit.setDividerLocation(400);
-    }
-
-    @Override
-    public void pageEntrySelected(PageView pageView, PageEntryView pageEntryView) {
-        this.selectedPageView = pageView;
-        this.selectedPageEntryView = pageEntryView;
-    }
-
-    @Override
-    public void libraryImageSelected(ImageLibraryEntry entry) {
-    }
-
-    @Override
-    public void browseLocationUpdated(File file) {
-    }
-
-    @Override
-    public void albumUpdated() {
-    }
-
-    @Override
-    public void pageSelected(PageView pageView) {
     }
 }
