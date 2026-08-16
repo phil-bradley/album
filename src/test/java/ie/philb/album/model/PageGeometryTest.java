@@ -187,4 +187,12 @@ class PageGeometryTest {
 
         assertThat(cells, containsInAnyOrder(expected));
     }
+    
+    @Test
+    void givenBlankGeometry_expectNoCells() {
+        PageGeometry geometry = PageGeometry.blank();
+        assertEquals(0, geometry.getCells().size());
+        assertEquals(0, geometry.horizontalCellCount());
+        assertEquals(0, geometry.verticalCellCount()); 
+    }
 }

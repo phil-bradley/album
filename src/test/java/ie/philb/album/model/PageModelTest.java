@@ -12,6 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 /**
  *
@@ -112,6 +114,16 @@ public class PageModelTest {
     @Test
     @Disabled
     void givenPageModel_whenGeometryUpdated_expectedZoomPreserved() {
+
+    }
+
+    @ParameterizedTest
+    @EnumSource(PageSize.class)
+    void givenPageModel_whenBlankCreated_expectSizeApplied(PageSize pageSize) {
+        PageModel pageModel = PageModel.blank(pageSize);
+        assertEquals(pageSize, pageModel.getPageSize());
+        assertEquals(0, pageModel.getCellCount());
+        assertTrue(pageModel.getPageEntries().isEmpty());
 
     }
 }

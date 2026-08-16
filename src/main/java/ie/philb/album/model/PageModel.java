@@ -35,7 +35,7 @@ public class PageModel {
     }
 
     private PageModel(PageSize pageSize) {
-        this.pageSize = pageSize;
+       this(PageGeometry.blank(), pageSize);
     }
 
     public void addListener(PageModelListener l) {

@@ -32,7 +32,7 @@ public class PageGeometry {
 
     public int horizontalCellCount() {
 
-        int maxWidth = 1;
+        int maxWidth = 0;
 
         for (PageCell cell : cells) {
             int cellOffset = cell.location().x;
@@ -44,7 +44,7 @@ public class PageGeometry {
 
     public int verticalCellCount() {
 
-        int maxHeight = 1;
+        int maxHeight = 0;
 
         for (PageCell cell : cells) {
             int cellOffset = cell.location().y;
@@ -54,6 +54,10 @@ public class PageGeometry {
         return maxHeight;
     }
 
+    public static PageGeometry blank() {
+        return new PageGeometry();
+    }
+    
     public static PageGeometry rectangle(int width, int height) {
         return rectangle(PageEntryType.Image, width, height);
     }
