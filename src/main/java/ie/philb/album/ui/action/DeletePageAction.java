@@ -25,6 +25,21 @@ public class DeletePageAction extends AbstractAction<Void> {
     protected Void doAction() throws Exception {
 
         AlbumModel albumModel = session.getAlbumModel();
+
+        if (albumModel.getPages().isEmpty()) {
+            throw new IllegalArgumentException("Cannot delete page from empty album");
+        }
+
+        if (pageId < 0) {
+            throw new IllegalArgumentException("Cannot delete page < 0: " + pageId);
+        }
+
+        int maxPage = albumModel.getPages().size();
+
+        if (pageId >= maxPage) {
+            throw new IllegalArgumentException("Cannot delete page > " + maxPage + ": " + pageId);
+        }
+
         albumModel.deletePage(pageId);
         session.getEventBus().albumUpdated();
 

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 public class CreatePdfActionTest {
 
     @Test
-    public void testDoAction() throws Exception {
+    public void givenAlbum_whenPdfActionInvoked_expectedPdfWritten() throws Exception {
 
         Context context = new Context(null, new AppSession(new AppEventBus()));
         context.session().setAlbumModel(new AlbumModel(PageSize.A4_Landscape, 0, 0));
