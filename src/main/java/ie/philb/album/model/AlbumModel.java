@@ -92,6 +92,10 @@ public class AlbumModel {
         this.lastSaveDate = saveDate;
     }
 
+    public LocalDateTime getLastSaveDate() {
+        return lastSaveDate;
+    }
+
     private void renumberPages() {
 
         int idx = 0;
