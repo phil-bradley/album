@@ -12,3 +12,5 @@ dropped into the placeholders where the following in place editing operations ca
 
 Image placeholders can also be used to present text in multiple fonts and styles. The album 
 can then be exported to PDF.
+
+[Code coverage report here.](https://phil-bradley.github.io/album/)
