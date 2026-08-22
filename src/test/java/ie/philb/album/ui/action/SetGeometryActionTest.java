@@ -11,7 +11,6 @@ import ie.philb.album.model.AlbumModel;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
 import ie.philb.album.model.PageSize;
-import java.io.File;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
@@ -20,35 +19,15 @@ import org.junit.jupiter.api.Test;
  *
  * @author philb
  */
-public class OpenAlbumActionTest {
+public class SetGeometryActionTest {
 
     @Test
-    public void givenSavedAlbum_whenAlbumLoaded_expectPageCountMatches() throws Exception {
+    public void testDoAction() throws Exception {
 
         Context context = new Context(null, new AppSession(new AppEventBus()));
         context.session().setAlbumModel(new AlbumModel(PageSize.A4_Landscape, 0, 0));
 
-        int pageCount = 10;
-
-        for (int i = 0; i < pageCount; i++) {
-            new AddPageAction(context.session()).doAction();
-        }
-
-        File saveFile = File.createTempFile("test", "album");
-
-        new SaveAlbumAction(context.session(), saveFile).doAction();
-
-        AlbumModel loaded = new OpenAlbumAction(context.session(), saveFile).doAction();
-        assertEquals(pageCount, loaded.getPages().size());
-    }
-
-    @Test
-    public void givenSavedAlbum_whenAlbumLoaded_expectPageGeometryMatches() throws Exception {
-
-        Context context = new Context(null, new AppSession(new AppEventBus()));
-        context.session().setAlbumModel(new AlbumModel(PageSize.A4_Landscape, 0, 0));
-
-        var geometries = List.of(
+        List<PageGeometry> geometries = List.of(
                 PageGeometry.blank(),
                 PageGeometry.square(2),
                 PageGeometry.square(10),
@@ -60,8 +39,10 @@ public class OpenAlbumActionTest {
 
         int pageCount = geometries.size();
 
+        AddPageAction newPageAction = new AddPageAction(context.session());
+
         for (int i = 0; i < pageCount; i++) {
-            new AddPageAction(context.session()).doAction();
+            newPageAction.doAction();
         }
 
         for (int i = 0; i < pageCount; i++) {
@@ -69,18 +50,13 @@ public class OpenAlbumActionTest {
             new SetGeometryAction(context.session(), pageModel, geometries.get(i)).doAction();
         }
 
-        File saveFile = File.createTempFile("test", "album");
-
-        new SaveAlbumAction(context.session(), saveFile).doAction();
-
-        AlbumModel loaded = new OpenAlbumAction(context.session(), saveFile).doAction();
-        assertEquals(pageCount, loaded.getPages().size());
+        assertEquals(pageCount, context.session().getAlbumModel().getPages().size());
 
         for (int i = 0; i < pageCount; i++) {
-            PageModel pageModel = loaded.getPages().get(i);
+            PageModel pageModel = context.session().getAlbumModel().getPages().get(i);
             PageGeometry pageGeometry = pageModel.getGeometry();
             assertEquals(geometries.get(i), pageGeometry);
         }
-
     }
+
 }

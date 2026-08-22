@@ -6,6 +6,8 @@ package ie.philb.album.ui.command;
 
 import ie.philb.album.Context;
 import ie.philb.album.model.PageGeometry;
+import ie.philb.album.ui.action.SetGeometryAction;
+import ie.philb.album.ui.action.callback.DefaultNoResultCallback;
 import ie.philb.album.view.PageView;
 
 /**
@@ -30,10 +32,10 @@ public class SetGeometryCommand extends AbstractCommand {
             return;
         }
 
-        if (!pageGeometry.equals(pageView.getPageModel().getGeometry())) {
-            pageView.getPageModel().setGeometry(pageGeometry);
-            context.session().getEventBus().albumUpdated();
-        }
+        new SetGeometryAction(context.session(), pageView.getPageModel(), pageGeometry).execute(
+                new DefaultNoResultCallback<>(context.ui())
+        );
+
     }
 
 }
