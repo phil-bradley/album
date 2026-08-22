@@ -16,19 +16,21 @@ import java.util.List;
  *
  * @author philb
  */
-public class AddPageAction extends AbstractAction<Void> {
+public class AddPageAction extends AbstractAction<PageModel> {
+
+    private int pageId;
 
     public AddPageAction(AppSession session) {
         super(session);
     }
 
     @Override
-    protected Void doAction() throws Exception {
+    protected PageModel doAction() throws Exception {
         AlbumModel albumModel = session.getAlbumModel();
         PageView selectedPageView = session.getSelectedPageView();
         List<PageModel> pages = albumModel.getPages();
 
-        int pageId = pages.size();
+        pageId = pages.size();
 
         if (selectedPageView != null) {
             pageId = selectedPageView.getPageModel().getPageId() + 1;
@@ -43,9 +45,14 @@ public class AddPageAction extends AbstractAction<Void> {
 
         albumModel.addPage(pageId, lastPageGeometry);
         session.getEventBus().albumUpdated();
-        
-        return null;
-    }
 
+        List<PageModel> filtered = albumModel.getPages().stream().filter(m -> m.getPageId() == pageId).toList();
+
+        if (filtered.size() != 1) {
+            throw new IllegalStateException("Expected 1 entry with pageId " + pageId + " but found " + filtered.size());
+        }
+
+        return filtered.get(0);
+    }
 
 }
