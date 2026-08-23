@@ -276,7 +276,9 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
         updateBorder();
         updateEditor();
 
-        requestFocusInWindow();
+        if (!textControl.isEnabled()) {
+            requestFocusInWindow();
+        }
     }
 
     public boolean isSelected() {
@@ -487,11 +489,11 @@ public class PageEntryView extends AppPanel implements PageEntryModelListener, T
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            
+
             if (pageEntryModel.getImage() == null) {
                 return;
             }
-            
+
             setViewOffset(new Point(
                     viewOffset.x + dx,
                     viewOffset.y + dy
