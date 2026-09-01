@@ -1,4 +1,7 @@
-The album project is a desktop application for creating PDF photo albums. 
+# Album
+
+Album is a free and open-source Java desktop application for creating, organising, and exporting photo albums. Users can arrange photographs, add captions, and generate PDF albums for printing or sharing.
+
 The album is created by adding pages which contain placeholders for photos. Images can be 
 dropped into the placeholders where the following in place editing operations can be applied
 
