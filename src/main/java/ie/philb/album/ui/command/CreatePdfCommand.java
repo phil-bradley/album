@@ -35,6 +35,14 @@ public class CreatePdfCommand extends AbstractCommand {
     public void execute() {
 
         final JFileChooser chooser = new JFileChooser();
+
+        String title = context.session().getAlbumModel().getTitle();
+
+        if (title != null) {
+            File proposedFile = new File(title + ".pdf");
+            chooser.setSelectedFile(proposedFile);
+        }
+
         int ret = chooser.showSaveDialog(context.ui());
 
         if (file == null) {

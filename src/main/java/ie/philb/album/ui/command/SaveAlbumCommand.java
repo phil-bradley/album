@@ -39,7 +39,15 @@ public class SaveAlbumCommand extends AbstractCommand {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileFilter(new FileNameExtensionFilter("Album Files", "album"));
 
-            if (saveFile != null) {
+            if (saveFile == null) {
+                String title = context.session().getAlbumModel().getTitle();
+
+                if (title != null) {
+                    File proposedFile = new File(title + ".album");
+                    fileChooser.setSelectedFile(proposedFile);
+                }
+
+            } else {
                 fileChooser.setSelectedFile(saveFile);
             }
 
