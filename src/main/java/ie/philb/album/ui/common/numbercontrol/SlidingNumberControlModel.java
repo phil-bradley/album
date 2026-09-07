@@ -17,7 +17,7 @@ public class SlidingNumberControlModel {
     private final int minValue;
     private final int maxValue;
     private final int stepValue;
-    private final int defaultValue;
+    private int defaultValue;
     private int currentValue = -1;
 
     public SlidingNumberControlModel(int minValue, int maxValue) {
@@ -69,6 +69,10 @@ public class SlidingNumberControlModel {
 
     public int getDefaultValue() {
         return defaultValue;
+    }
+
+    public void setDefaultValue(int defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
     public void resetValue() {

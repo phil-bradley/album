@@ -298,8 +298,12 @@ public class AlbumViewContainer extends AppPanel {
         if (view != null) {
             PageModel model = view.getPageModel();
             pageGeometryMenu.setSelectedGeometry(model.getGeometry());
+            
             verticalMarginControl.setValue(model.getVerticalMargin());
+            verticalMarginControl.setDefaultValue(context.session().getAlbumModel().getDefaultMargin());
+            
             horizontalMarginControl.setValue(model.getHorizontalMargin());
+            horizontalMarginControl.setDefaultValue(context.session().getAlbumModel().getDefaultMargin());
         }
     }
 

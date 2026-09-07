@@ -60,6 +60,15 @@ public class SlidingNumberControl extends AppPanel implements SlidingNumberContr
         return model.getValue();
     }
 
+    public void setDefaultValue(int defaultValue) {
+        model.setDefaultValue(defaultValue);
+        updateSliderLabel();
+    }
+
+    public int getDefaultValue() {
+        return model.getDefaultValue();
+    }
+
     private void layoutControls() {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         add(Box.createRigidArea(new Dimension(4, 4)));
@@ -88,13 +97,8 @@ public class SlidingNumberControl extends AppPanel implements SlidingNumberContr
         slider.setPaintTicks(true);
         slider.setPaintTrack(true);
         slider.setPaintLabels(true);
-
-        if (model.getDefaultValue() != 0) {
-            Hashtable t = new Hashtable<Integer, JLabel>();
-            t.put(model.getDefaultValue(), new JLabel("Default: " + model.getDefaultValue()));
-            slider.setLabelTable(t);
-        }
-
+        updateSliderLabel();
+        
         slider.addChangeListener((ChangeEvent ce) -> {
             setValue(slider.getValue());
         });
@@ -106,6 +110,14 @@ public class SlidingNumberControl extends AppPanel implements SlidingNumberContr
 
         field.setValue(model.getDefaultValue());
         slider.setValue(model.getDefaultValue());
+    }
+
+    private void updateSliderLabel() {
+        if (model.getDefaultValue() != 0) {
+            Hashtable t = new Hashtable<Integer, JLabel>();
+            t.put(model.getDefaultValue(), new JLabel("Default: " + model.getDefaultValue()));
+            slider.setLabelTable(t);
+        }
     }
 
     @Override
