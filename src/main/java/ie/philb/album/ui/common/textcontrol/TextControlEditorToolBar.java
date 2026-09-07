@@ -107,8 +107,6 @@ class TextControlEditorToolBar extends JToolBar implements TextControlChangeList
         fontSelector.addActionListener((ActionEvent ae) -> {
             if (!fontSelector.getSelectedFont().name().equals(model.getFontFamily())) {
                 model.setFontFamily(fontSelector.getSelectedFont().name());
-                model.setBold(false);
-                model.setItalic(false);
                 updateFontControls();
                 fontSelector.setFont(fontSelector.getSelectedFont().getFont(false, false));
             }
