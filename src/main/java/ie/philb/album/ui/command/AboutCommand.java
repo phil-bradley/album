@@ -20,7 +20,7 @@ public class AboutCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        AboutDialog dlg = new AboutDialog(context.ui());
+        AboutDialog dlg = new AboutDialog(context);
         dlg.setVisible(true);
     }
 

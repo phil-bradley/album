@@ -4,6 +4,7 @@
  */
 package ie.philb.album.ui.about;
 
+import ie.philb.album.Context;
 import ie.philb.album.model.appinfo.LicenseInfoHtmlRenderer;
 import ie.philb.album.model.appinfo.LicenseReader;
 import ie.philb.album.model.appinfo.LicenseSummary;
@@ -11,7 +12,6 @@ import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -33,17 +33,15 @@ import javax.swing.ScrollPaneConstants;
  */
 public class LicenseDialog extends JDialog {
 
-    private final LicensePanel licensePanel = new LicensePanel();
+    public LicenseDialog(Context context) {
 
-    public LicenseDialog(Frame owner) {
-
-        super(owner, "License");
+        super(context.ui(), "License");
         setModal(true);
         setBackground(Color.white);
 
         setLayout(new GridBagLayout());
         GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).weight(1).fillBoth();
-        add(licensePanel, gbc);
+        add(new LicensePanel(context), gbc);
 
         setPreferredSize(new Dimension(500, 400));
         setSize(getPreferredSize());
@@ -73,8 +71,8 @@ public class LicenseDialog extends JDialog {
         private final JButton btnOk = new JButton("OK");
         private JEditorPane editorPane = new JEditorPane();
 
-        public LicensePanel() {
-            super(null);
+        public LicensePanel(Context context) {
+            super(context);
             background(Color.WHITE);
 
             editorPane.setEditable(false);

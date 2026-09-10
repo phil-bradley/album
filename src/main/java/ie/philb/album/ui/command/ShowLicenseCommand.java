@@ -19,7 +19,7 @@ public class ShowLicenseCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        LicenseDialog dlg = new LicenseDialog(context.ui());
+        LicenseDialog dlg = new LicenseDialog(context);
         dlg.setVisible(true);
     }
 

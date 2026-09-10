@@ -4,13 +4,13 @@
  */
 package ie.philb.album.ui.about;
 
+import ie.philb.album.Context;
 import ie.philb.album.model.appinfo.ApplicationInfo;
 import ie.philb.album.ui.common.AppPanel;
 import ie.philb.album.ui.common.GridBagCellConstraints;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -30,15 +30,14 @@ import javax.swing.KeyStroke;
  */
 public class AboutDialog extends JDialog {
 
-    private final AboutPanel aboutPanel = new AboutPanel();
 
-    public AboutDialog(Frame owner) {
-        super(owner, "About");
+    public AboutDialog(Context context) {
+        super(context.ui(), "About");
         setModal(true);
 
         setLayout(new GridBagLayout());
         GridBagCellConstraints gbc = new GridBagCellConstraints(0, 0).weight(1).fillBoth();
-        add(aboutPanel, gbc);
+        add(new AboutPanel(context), gbc);
 
         setPreferredSize(new Dimension(350, 200));
         setSize(getPreferredSize());
@@ -70,8 +69,8 @@ public class AboutDialog extends JDialog {
         private final JLabel lblBuildInfo = new JLabel();
         private final JButton btnOk = new JButton("OK");
 
-        public AboutPanel() {
-            super(null);
+        public AboutPanel(Context context) {
+            super(context);
             background(Color.WHITE);
             this.applicationInfo = new ApplicationInfo();
 

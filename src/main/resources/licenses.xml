@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licenseSummary>
+  <dependencies>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.5.18</version>
+      <licenses>
+        <license>
+          <name>Eclipse Public License - v 1.0</name>
+          <url>http://www.eclipse.org/legal/epl-v10.html</url>
+          <file>eclipse public license - v 1.0 - epl-v10.html</file>
+        </license>
+        <license>
+          <name>GNU Lesser General Public License</name>
+          <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>1.5.18</version>
+      <licenses>
+        <license>
+          <name>Eclipse Public License - v 1.0</name>
+          <url>http://www.eclipse.org/legal/epl-v10.html</url>
+          <file>eclipse public license - v 1.0 - epl-v10.html</file>
+        </license>
+        <license>
+          <name>GNU Lesser General Public License</name>
+          <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe.xmp</groupId>
+      <artifactId>xmpcore</artifactId>
+      <version>6.1.11</version>
+      <licenses>
+        <license>
+          <name>The BSD 3-Clause License (BSD3)</name>
+          <url>https://opensource.org/licenses/BSD-3-Clause</url>
+          <file>the bsd 3-clause license (bsd3) - bsd-3-clause.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.drewnoakes</groupId>
+      <artifactId>metadata-extractor</artifactId>
+      <version>2.19.0</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.19.2</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.19.2</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.19.2</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-xml</artifactId>
+      <version>2.19.2</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.19.2</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.woodstox</groupId>
+      <artifactId>woodstox-core</artifactId>
+      <version>6.5.0</version>
+      <licenses>
+        <license>
+          <name>The Apache License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.formdev</groupId>
+      <artifactId>flatlaf</artifactId>
+      <version>3.6</version>
+      <licenses>
+        <license>
+          <name>The Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.github.librepdf</groupId>
+      <artifactId>openpdf</artifactId>
+      <version>2.0.3</version>
+      <licenses>
+        <license>
+          <name>GNU Lesser General Public License (LGPL), Version 2.1</name>
+          <url>https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+          <distribution>repo</distribution>
+        </license>
+        <license>
+          <name>Mozilla Public License Version 2.0</name>
+          <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+          <distribution>repo</distribution>
+          <file>mozilla public license version 2.0 - 2.0.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.common</groupId>
+      <artifactId>common-image</artifactId>
+      <version>3.12.0</version>
+      <licenses>
+        <license>
+          <name>The BSD License</name>
+          <url>https://github.com/haraldk/TwelveMonkeys#license</url>
+          <distribution>repo</distribution>
+          <file>the bsd license - twelvemonkeys.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.common</groupId>
+      <artifactId>common-io</artifactId>
+      <version>3.12.0</version>
+      <licenses>
+        <license>
+          <name>The BSD License</name>
+          <url>https://github.com/haraldk/TwelveMonkeys#license</url>
+          <distribution>repo</distribution>
+          <file>the bsd license - twelvemonkeys.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.common</groupId>
+      <artifactId>common-lang</artifactId>
+      <version>3.12.0</version>
+      <licenses>
+        <license>
+          <name>The BSD License</name>
+          <url>https://github.com/haraldk/TwelveMonkeys#license</url>
+          <distribution>repo</distribution>
+          <file>the bsd license - twelvemonkeys.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-batik</artifactId>
+      <version>3.12.0</version>
+      <licenses>
+        <license>
+          <name>The BSD License</name>
+          <url>https://github.com/haraldk/TwelveMonkeys#license</url>
+          <distribution>repo</distribution>
+          <file>the bsd license - twelvemonkeys.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-bmp</artifactId>
+      <version>3.12.0</version>
+      <licenses>
+        <license>
+          <name>The BSD License</name>
+          <url>https://github.com/haraldk/TwelveMonkeys#license</url>
+          <distribution>repo</distribution>
+          <file>the bsd license - twelvemonkeys.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-core</artifactId>
+      <version>3.12.0</version>
+      <licenses>
+        <license>
+          <name>The BSD License</name>
+          <url>https://github.com/haraldk/TwelveMonkeys#license</url>
+          <distribution>repo</distribution>
+          <file>the bsd license - twelvemonkeys.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-jpeg</artifactId>
+      <version>3.12.0</version>
+      <licenses>
+        <license>
+          <name>The BSD License</name>
+          <url>https://github.com/haraldk/TwelveMonkeys#license</url>
+          <distribution>repo</distribution>
+          <file>the bsd license - twelvemonkeys.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-metadata</artifactId>
+      <version>3.12.0</version>
+      <licenses>
+        <license>
+          <name>The BSD License</name>
+          <url>https://github.com/haraldk/TwelveMonkeys#license</url>
+          <distribution>repo</distribution>
+          <file>the bsd license - twelvemonkeys.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-tiff</artifactId>
+      <version>3.12.0</version>
+      <licenses>
+        <license>
+          <name>The BSD License</name>
+          <url>https://github.com/haraldk/TwelveMonkeys#license</url>
+          <distribution>repo</distribution>
+          <file>the bsd license - twelvemonkeys.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-webp</artifactId>
+      <version>3.12.0</version>
+      <licenses>
+        <license>
+          <name>The BSD License</name>
+          <url>https://github.com/haraldk/TwelveMonkeys#license</url>
+          <distribution>repo</distribution>
+          <file>the bsd license - twelvemonkeys.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.17.0</version>
+      <licenses>
+        <license>
+          <name>Apache-2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.3.5</version>
+      <licenses>
+        <license>
+          <name>Apache-2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.19.0</version>
+      <licenses>
+        <license>
+          <name>Apache-2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>fontbox</artifactId>
+      <version>3.0.5</version>
+      <licenses>
+        <license>
+          <name>Apache-2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>pdfbox</artifactId>
+      <version>3.0.5</version>
+      <licenses>
+        <license>
+          <name>Apache-2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>pdfbox-io</artifactId>
+      <version>3.0.5</version>
+      <licenses>
+        <license>
+          <name>Apache-2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-all</artifactId>
+      <version>1.19</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>xmlgraphics-commons</artifactId>
+      <version>2.11</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apiguardian</groupId>
+      <artifactId>apiguardian-api</artifactId>
+      <version>1.1.2</version>
+      <licenses>
+        <license>
+          <name>The Apache License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.woodstox</groupId>
+      <artifactId>stax2-api</artifactId>
+      <version>4.2.2</version>
+      <licenses>
+        <license>
+          <name>The BSD 2-Clause License</name>
+          <url>http://www.opensource.org/licenses/bsd-license.php</url>
+          <distribution>repo</distribution>
+          <file>the bsd 2-clause license - bsd-license.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.drjekyll</groupId>
+      <artifactId>colorpicker</artifactId>
+      <version>2.0.1</version>
+      <licenses>
+        <license>
+          <name>BSD 3-Clause License</name>
+          <url>https://opensource.org/licenses/BSD-3-Clause</url>
+          <file>the bsd 3-clause license (bsd3) - bsd-3-clause.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>3.0</version>
+      <licenses>
+        <license>
+          <name>BSD-3-Clause</name>
+          <url>https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE</url>
+          <file>bsd-3-clause - license.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.12.2</version>
+      <licenses>
+        <license>
+          <name>Eclipse Public License v2.0</name>
+          <url>https://www.eclipse.org/legal/epl-v20.html</url>
+          <file>eclipse public license v2.0 - epl-v20.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.12.2</version>
+      <licenses>
+        <license>
+          <name>Eclipse Public License v2.0</name>
+          <url>https://www.eclipse.org/legal/epl-v20.html</url>
+          <file>eclipse public license v2.0 - epl-v20.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.12.2</version>
+      <licenses>
+        <license>
+          <name>Eclipse Public License v2.0</name>
+          <url>https://www.eclipse.org/legal/epl-v20.html</url>
+          <file>eclipse public license v2.0 - epl-v20.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>5.12.2</version>
+      <licenses>
+        <license>
+          <name>Eclipse Public License v2.0</name>
+          <url>https://www.eclipse.org/legal/epl-v20.html</url>
+          <file>eclipse public license v2.0 - epl-v20.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-commons</artifactId>
+      <version>1.12.2</version>
+      <licenses>
+        <license>
+          <name>Eclipse Public License v2.0</name>
+          <url>https://www.eclipse.org/legal/epl-v20.html</url>
+          <file>eclipse public license v2.0 - epl-v20.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-engine</artifactId>
+      <version>1.12.2</version>
+      <licenses>
+        <license>
+          <name>Eclipse Public License v2.0</name>
+          <url>https://www.eclipse.org/legal/epl-v20.html</url>
+          <file>eclipse public license v2.0 - epl-v20.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.opentest4j</groupId>
+      <artifactId>opentest4j</artifactId>
+      <version>1.3.0</version>
+      <licenses>
+        <license>
+          <name>The Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.48</version>
+      <licenses>
+        <license>
+          <name>The MIT License</name>
+          <url>https://projectlombok.org/LICENSE</url>
+          <distribution>repo</distribution>
+          <file>the mit license - license.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>2.0.17</version>
+      <licenses>
+        <license>
+          <name>MIT</name>
+          <url>https://opensource.org/license/mit</url>
+          <distribution>repo</distribution>
+          <file>mit - mit.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <version>1.4.01</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+        <license>
+          <name>The SAX License</name>
+          <url>http://www.saxproject.org/copying.html</url>
+          <distribution>repo</distribution>
+          <file>the sax license - copying.html</file>
+        </license>
+        <license>
+          <name>The W3C License</name>
+          <url>http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/java-binding.zip</url>
+          <distribution>repo</distribution>
+          <file>the w3c license - java-binding.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis-ext</artifactId>
+      <version>1.3.04</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+  </dependencies>
+</licenseSummary>
