@@ -9,7 +9,9 @@ import ie.philb.album.exporter.AlbumExporter;
 import ie.philb.album.ui.action.CreatePdfAction;
 import ie.philb.album.ui.action.callback.Callback;
 import ie.philb.album.ui.common.Dialogs;
+import ie.philb.album.ui.pdf.PdfViewDialog;
 import java.io.File;
+import java.io.IOException;
 import javax.swing.JFileChooser;
 
 /**
@@ -65,6 +67,7 @@ public class CreatePdfCommand extends AbstractCommand {
         new CreatePdfAction(context.session(), albumExporter, file).execute(new Callback<Void>() {
             @Override
             public void onSuccess(Void result) {
+                showPdf();
             }
 
             @Override
@@ -72,5 +75,16 @@ public class CreatePdfCommand extends AbstractCommand {
                 Dialogs.showErrorMessage(context.ui(), "Failed to load PDF: " + ex.getMessage(), ex);
             }
         });
+    }
+
+    private void showPdf() {
+        try {
+            PdfViewDialog dlg = new PdfViewDialog(context);
+            dlg.setFile(file);
+            dlg.setVisible(true);
+        } catch (IOException ex) {
+            Dialogs.showErrorMessage(context.ui(), "Failed to load PDF: " + ex.getMessage(), ex);
+
+        }
     }
 }

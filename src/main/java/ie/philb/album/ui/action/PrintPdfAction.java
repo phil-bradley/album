@@ -35,16 +35,18 @@ public class PrintPdfAction extends AbstractAction<Void> {
 
         if (job.printDialog()) {
             printService = job.getPrintService();
+
+            if (printService == null) {
+                throw new Exception("Printer not found");
+            }
+
+            job.setPrintService(printService);
+
+            job.setPageable(new PDFPageable(document));
+            job.print();
+        } else {
+            logger.info("Print cancelled");
         }
-
-        if (printService == null) {
-            throw new Exception("Printer not found");
-        }
-
-        job.setPrintService(printService);
-
-        job.setPageable(new PDFPageable(document));
-        job.print();
 
         return null;
     }

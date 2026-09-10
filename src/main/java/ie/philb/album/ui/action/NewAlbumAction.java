@@ -10,6 +10,7 @@ import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometry;
 import ie.philb.album.model.PageModel;
+import ie.philb.album.ui.common.font.ApplicationFont;
 import ie.philb.album.ui.dialog.NewAlbumParams;
 import java.time.LocalDateTime;
 
@@ -40,6 +41,8 @@ public class NewAlbumAction extends AbstractAction<Void> {
         PageModel titlePage = albumModel.getPages().get(0);
         PageEntryModel titleEntry = titlePage.getPageEntries().get(0);
         titleEntry.getTextControlModel().setText(params.title());
+        titleEntry.getTextControlModel().setFontFamily(ApplicationFont.CormorantUpright.name());
+        titleEntry.getTextControlModel().setFontSize(44);
 
         for (int i = 1; i <= params.pages(); i++) {
             albumModel.addPage(i, defaultPageGeometry);
