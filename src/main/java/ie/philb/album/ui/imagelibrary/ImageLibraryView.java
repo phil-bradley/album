@@ -280,6 +280,12 @@ public class ImageLibraryView extends AppPanel {
 
             for (char c : text.toCharArray()) {
 
+                if (c == ' ' || c == '\n' || c == '\r') {
+                    result.append(" ");
+                    alphanumericRun = 0;
+                    continue;
+                }
+
                 if (alphanumericRun >= maxRunLength && c != '.') {
                     result.append(" ");
                     alphanumericRun = 0;
