@@ -23,15 +23,19 @@ public class StringUtils {
     }
 
     public static String truncate(String title, int i) {
+        return truncate(title, i, "");
+    }
 
-        if (title == null) {
+    public static String truncate(String title, int i, String elipsis) {
+
+        if (title == null || title.trim().isBlank()) {
             return null;
         }
 
-        if (title.length() > i) {
-            return title.substring(0, i);
+        if (title.length() + elipsis.length() > i) {
+            return title.substring(0, i) + elipsis;
         }
-        
+
         return title;
     }
 }

@@ -29,11 +29,6 @@ public class ImageLibraryEntry {
     }
 
     public String getTitle() {
-
-        if (title.length() > MAX_NAME_LEN) {
-            return title.substring(MAX_NAME_LEN) + "...";
-        }
-
         return title;
     }
 

@@ -50,11 +50,10 @@ import javax.swing.SwingConstants;
  */
 public class ImageLibraryView extends AppPanel {
 
-    private static final Dimension CELL_SIZE = new Dimension(120, 120);
+    private static final Dimension CELL_SIZE = new Dimension(80, 80);
 
     private final JList<ImageLibraryEntry> list = new JList<>();
     private final JToolBar toolBar = new JToolBar();
-    private final Context context;
     private JButton btnHome;
     private JButton btnUp;
     private FolderNavigationPanel folderNavigationPanel;
@@ -63,8 +62,7 @@ public class ImageLibraryView extends AppPanel {
     public ImageLibraryView(Context context) {
 
         super(context);
-        this.context = context;
-        
+
         thumbnailProvider = new ThumbnailProvider(CELL_SIZE);
         list.setDragEnabled(true);
         list.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
@@ -168,20 +166,27 @@ public class ImageLibraryView extends AppPanel {
 
         private final ThumbnailView thumbnailView = new ThumbnailView(null);
         private final JLabel lblName = new JLabel();
+        private final int MAX_FILE_NAME_LENGTH = 28;
 
         public ImageLibraryViewCellRenderer(Context context) {
 
             super(context);
-            
+
             background(Color.WHITE);
-            GridBagCellConstraints gbc = new GridBagCellConstraints().weight(1).fillBoth().insetHorizontal(8).insetVertical(2);
+            GridBagCellConstraints gbc = new GridBagCellConstraints().weightx(1).insetHorizontal(2).insetVertical(2);
             thumbnailView.setPreferredSize(CELL_SIZE);
+            thumbnailView.setMinimumSize(CELL_SIZE);
+            thumbnailView.setMaximumSize(CELL_SIZE);
+            thumbnailView.setBackground(Color.WHITE);
+
             thumbnailView.setBorder(BorderFactory.createLineBorder(new Color(240, 240, 240)));
+
             add(thumbnailView, gbc);
 
-            gbc.y(1).fillHorizontal().anchorSouth().weighty(0).inset(1);
+            gbc.y(1).fillHorizontal().anchorNorth().weightx(1).inset(1);
             lblName.setHorizontalAlignment(SwingConstants.CENTER);
             add(lblName, gbc);
+
         }
 
         @Override
@@ -189,6 +194,7 @@ public class ImageLibraryView extends AppPanel {
 
             if (value.isDirectory()) {
                 thumbnailView.setImage(ImageUtils.getBufferedImage(Icons.Regular.FOLDER));
+                thumbnailView.setToolTipText(value.getTitle());
             } else {
                 String key = value.getFile().getAbsolutePath();
 
@@ -200,7 +206,11 @@ public class ImageLibraryView extends AppPanel {
                 }
             }
 
-            lblName.setText(StringUtils.truncate(value.getTitle(), 20));
+            String title = sanitiseTitle(value.getTitle());
+
+            lblName.setText("<html><div style='text-align: center; width: 80px;'>" + title + "</div></html>");
+            lblName.setToolTipText(value.getTitle());
+            lblName.setHorizontalAlignment(SwingConstants.CENTER);
 
             if (isSelected) {
                 setBackground(Colors.COLOR_SELECTED);
@@ -249,49 +259,80 @@ public class ImageLibraryView extends AppPanel {
             });
         }
 
-    }
+        private String sanitiseTitle(String title) {
 
-    class ThumbnailView extends JPanel {
-
-        private BufferedImage image;
-
-        public ThumbnailView(BufferedImage image) {
-            setImage(image);
-        }
-
-        public final void setImage(BufferedImage image) {
-            if (!Objects.equals(image, this.image)) {
-                this.image = image;
-                revalidate();
-                repaint();
-            }
-        }
-
-        private int getAvailableWidth() {
-            int availableWidth = getBounds().width;
-            return availableWidth;
-        }
-
-        private int getAvailableHeight() {
-            int availableHeight = getBounds().height;
-            return availableHeight;
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-
-            super.paintComponent(g);
-
-            if (image == null) {
-                return;
+            if (title == null || title.isBlank()) {
+                return "";
             }
 
-            // Centre image if it's less tall or less wide than the available space
-            int x = (getAvailableWidth() - image.getWidth()) / 2;
-            int y = (getAvailableHeight() - image.getHeight()) / 2;
+            String truncated = StringUtils.truncate(title.trim(), MAX_FILE_NAME_LENGTH, "...");
+            String withWordBreaks = addWordBreaks(truncated, MAX_FILE_NAME_LENGTH/2);
 
-            g.drawImage(image, x, y, null);
+            return withWordBreaks;
+        }
+
+        // Every non-alphanum gets prepended with a zero width space 
+        // Also, runs of alphanums get broken up
+        private String addWordBreaks(String text, int maxRunLength) {
+            StringBuilder result = new StringBuilder();
+
+            int alphanumericRun = 0;
+
+            for (char c : text.toCharArray()) {
+
+                if (alphanumericRun >= maxRunLength && c != '.') {
+                    result.append(" ");
+                    alphanumericRun = 0;
+                }
+
+                alphanumericRun++;
+                result.append(c);
+            }
+
+            return result.toString();
+        }
+
+        class ThumbnailView extends JPanel {
+
+            private BufferedImage image;
+
+            public ThumbnailView(BufferedImage image) {
+                setImage(image);
+            }
+
+            public final void setImage(BufferedImage image) {
+                if (!Objects.equals(image, this.image)) {
+                    this.image = image;
+                    revalidate();
+                    repaint();
+                }
+            }
+
+            private int getAvailableWidth() {
+                int availableWidth = getBounds().width;
+                return availableWidth;
+            }
+
+            private int getAvailableHeight() {
+                int availableHeight = getBounds().height;
+                return availableHeight;
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+
+                super.paintComponent(g);
+
+                if (image == null) {
+                    return;
+                }
+
+                // Centre image if it's less tall or less wide than the available space
+                int x = (getAvailableWidth() - image.getWidth()) / 2;
+                int y = (getAvailableHeight() - image.getHeight()) / 2;
+
+                g.drawImage(image, x, y, null);
+            }
         }
     }
-
 }
