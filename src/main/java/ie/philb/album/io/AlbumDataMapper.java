@@ -73,7 +73,7 @@ public class AlbumDataMapper {
     public AlbumData map(AlbumModel albumModel) {
 
         AlbumData albumData = new AlbumData();
-        albumData.setName("test");
+        albumData.setName(albumModel.getTitle());
         albumData.setCreated(ZonedDateTime.now());
         albumData.setLastUpdated(ZonedDateTime.now());
         albumData.setCreatedBy(System.getProperty("user.name"));
