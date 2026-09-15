@@ -16,6 +16,7 @@ import ie.philb.album.model.PageEntryModel;
 import ie.philb.album.model.PageEntryType;
 import ie.philb.album.model.PageGeometryMapper;
 import ie.philb.album.model.PageModel;
+import ie.philb.album.ui.common.FontProvider;
 import ie.philb.album.ui.common.font.ApplicationFont;
 import ie.philb.album.ui.common.textcontrol.TextControlModel;
 import ie.philb.album.util.ImageUtils;
@@ -24,15 +25,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +38,8 @@ import org.slf4j.LoggerFactory;
 public class OpenPdfExporter implements AlbumExporter {
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenPdfExporter.class);
-    private static final Map<ApplicationFont, BaseFont> fontCache = new HashMap<>();
-
+    private static final FontProvider fontProvider = new FontProvider();
+    
     public OpenPdfExporter() {
     }
 
@@ -97,7 +92,7 @@ public class OpenPdfExporter implements AlbumExporter {
         String text = tcm.getText();
         ApplicationFont appFont = ApplicationFont.byFamilyName(tcm.getFontFamily());
         int fontSize = tcm.getFontSize();
-        BaseFont font = loadFont(appFont, tcm.isBold(), tcm.isItalic());
+        BaseFont font = fontProvider.getFont(appFont, tcm.isBold(), tcm.isItalic());
         Color fontColor = tcm.getFontColor();
 
         Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
@@ -174,26 +169,7 @@ public class OpenPdfExporter implements AlbumExporter {
         img.setAbsolutePosition(imageLocation.x, imageLocation.y);
         doc.add(img);
     }
-
-    private BaseFont loadFont(ApplicationFont applicationFont, boolean bold, boolean italic) throws Exception {
-
-        if (fontCache.containsKey(applicationFont)) {
-            return fontCache.get(applicationFont);
-        }
-        
-        File tempFontFile = File.createTempFile("tempfont", ".ttf");
-        tempFontFile.deleteOnExit();
-
-        try (InputStream is = getClass().getResourceAsStream(applicationFont.getFontPath(bold, italic))) {
-            Files.copy(is, tempFontFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        }
-
-        BaseFont font = BaseFont.createFont(tempFontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-        fontCache.put(applicationFont, font);
-        
-        return font;
-    }
-
+    
     private void writeBlank(Document doc, PdfWriter writer) {
         PdfContentByte cb = writer.getDirectContent();
         Rectangle pageSize = doc.getPageSize();

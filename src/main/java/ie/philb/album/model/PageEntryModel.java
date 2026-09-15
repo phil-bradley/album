@@ -8,6 +8,7 @@ import ie.philb.album.ui.common.filters.BrightnessFilter;
 import ie.philb.album.ui.common.filters.GrayScaleFilter;
 import ie.philb.album.ui.common.textcontrol.TextControlModel;
 import ie.philb.album.util.ImageUtils;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -80,7 +81,7 @@ public class PageEntryModel {
     }
 
     public void setImageFile(File imageFile) {
-        
+
         this.imageFile = imageFile;
         if (imageFile == null) {
             image = null;
@@ -154,6 +155,8 @@ public class PageEntryModel {
 
         BufferedImage zoomed = new BufferedImage(zoomedWidth, zoomedHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = zoomed.createGraphics();
+        g.setColor(Color.white);
+        g.fillRect(0, 0, zoomedWidth, zoomedHeight);
         g.drawImage(image, 0, 0, zoomedWidth, zoomedHeight, null);
         g.dispose();
 
