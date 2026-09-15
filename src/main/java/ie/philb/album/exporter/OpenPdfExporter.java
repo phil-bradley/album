@@ -30,7 +30,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +43,7 @@ import org.slf4j.LoggerFactory;
 public class OpenPdfExporter implements AlbumExporter {
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenPdfExporter.class);
+    private static final Map<ApplicationFont, BaseFont> fontCache = new HashMap<>();
 
     public OpenPdfExporter() {
     }
@@ -174,6 +177,10 @@ public class OpenPdfExporter implements AlbumExporter {
 
     private BaseFont loadFont(ApplicationFont applicationFont, boolean bold, boolean italic) throws Exception {
 
+        if (fontCache.containsKey(applicationFont)) {
+            return fontCache.get(applicationFont);
+        }
+        
         File tempFontFile = File.createTempFile("tempfont", ".ttf");
         tempFontFile.deleteOnExit();
 
@@ -182,6 +189,8 @@ public class OpenPdfExporter implements AlbumExporter {
         }
 
         BaseFont font = BaseFont.createFont(tempFontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        fontCache.put(applicationFont, font);
+        
         return font;
     }
 
