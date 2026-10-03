@@ -23,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -49,6 +50,7 @@ public class CreatePdfCommand extends AbstractCommand {
     public void execute() {
 
         final JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new FileNameExtensionFilter("PDF files (*.pdf)", "pdf"));
 
         String exportBaseName = "";
 
@@ -74,6 +76,8 @@ public class CreatePdfCommand extends AbstractCommand {
                 return;
             }
         }
+
+        file = ensurePdfExtension(file);
 
         if (file.exists()) {
             String msg = "Overwrite file " + file.getName() + "?";
@@ -127,6 +131,19 @@ public class CreatePdfCommand extends AbstractCommand {
             Dialogs.showErrorMessage(context.ui(), "Failed to display PDF: " + ex.getMessage(), ex);
 
         }
+    }
+
+    private File ensurePdfExtension(File f) {
+        String ext = FilenameUtils.getExtension(f.getName());
+
+        if (ext.equalsIgnoreCase("pdf")) {
+            return f;   // already fine (also accepts .PDF)
+        }
+
+        // No extension: just append .pdf. Wrong extension: replace it.
+        // removeExtension returns the name unchanged when there is no extension.
+        String baseName = FilenameUtils.removeExtension(f.getName());
+        return new File(f.getParentFile(), baseName + ".pdf");
     }
 
     private class ExportProgressDialog extends JDialog {
