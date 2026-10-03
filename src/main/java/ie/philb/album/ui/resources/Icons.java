@@ -25,6 +25,9 @@ public class Icons {
         public static final ImageIcon ARROW_RIGHT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/arrow-right.png"));
         public static final ImageIcon FOLDER = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/folder.png"));
         public static final ImageIcon FILE_HOME = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/file-home.png"));
+        public static final ImageIcon EXPORT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/export.png"));
+        public static final ImageIcon IMPORT = new ImageIcon(Icons.class.getResource("/ie/philb/album/icons/regular/import.png"));
+
     };
 
     public static final class Small {

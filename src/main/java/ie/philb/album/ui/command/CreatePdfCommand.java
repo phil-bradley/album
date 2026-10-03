@@ -10,9 +10,18 @@ import ie.philb.album.ui.action.CreatePdfAction;
 import ie.philb.album.ui.action.callback.Callback;
 import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.ui.pdf.PdfViewDialog;
+import ie.philb.album.ui.resources.Icons;
+import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -22,6 +31,7 @@ public class CreatePdfCommand extends AbstractCommand {
 
     private File file = null;
     private final AlbumExporter albumExporter;
+    private Exception exportException;
 
     public CreatePdfCommand(Context context, AlbumExporter albumExporter) {
         this(context, albumExporter, null);
@@ -64,17 +74,40 @@ public class CreatePdfCommand extends AbstractCommand {
             }
         }
 
-        new CreatePdfAction(context.session(), albumExporter, file).execute(new Callback<Void>() {
+        ExportProgressDialog dialog = new ExportProgressDialog(context.ui());
+        dialog.setLocationRelativeTo(context.ui());
+
+        new SwingWorker<Void, Void>() {
             @Override
-            public void onSuccess(Void result) {
-                showPdf();
+            protected Void doInBackground() {
+
+                new CreatePdfAction(context.session(), albumExporter, file).execute(new Callback<Void>() {
+                    @Override
+                    public void onSuccess(Void result) {
+                    }
+
+                    @Override
+                    public void onFailure(Exception ex) {
+                        exportException = ex;
+                    }
+                });
+
+                return null;
             }
 
             @Override
-            public void onFailure(Exception ex) {
-                Dialogs.showErrorMessage(context.ui(), "Failed to load PDF: " + ex.getMessage(), ex);
+            protected void done() {
+                dialog.dispose();   // or dialog.setVisible(false)
             }
-        });
+        }.execute();
+
+        dialog.setVisible(true);
+
+        if (exportException == null) {
+            showPdf();
+        } else {
+            Dialogs.showErrorMessage(context.ui(), "Failed to load PDF: " + exportException.getMessage(), exportException);
+        }
     }
 
     private void showPdf() {
@@ -83,8 +116,29 @@ public class CreatePdfCommand extends AbstractCommand {
             dlg.setFile(file);
             dlg.setVisible(true);
         } catch (IOException ex) {
-            Dialogs.showErrorMessage(context.ui(), "Failed to load PDF: " + ex.getMessage(), ex);
+            Dialogs.showErrorMessage(context.ui(), "Failed to display PDF: " + ex.getMessage(), ex);
 
+        }
+    }
+
+    private class ExportProgressDialog extends JDialog {
+
+        public ExportProgressDialog(Frame parent) {
+            super(parent, "Exporting", true);
+            setUndecorated(true);
+
+            JPanel content = new JPanel(new BorderLayout());
+            content.setBorder(BorderFactory.createRaisedBevelBorder());
+            
+            JLabel exportLabel = new JLabel("", SwingConstants.CENTER);
+            exportLabel.setText("Creating PDF, Please wait...");
+            exportLabel.setIcon(Icons.Regular.EXPORT);
+            
+            content.add(exportLabel, BorderLayout.CENTER);
+            setContentPane(content);
+
+            setSize(300, 150);
+            setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         }
     }
 }

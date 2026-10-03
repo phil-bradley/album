@@ -51,9 +51,7 @@ public class OpenPdfExporter implements AlbumExporter {
             PdfWriter writer = PdfWriter.getInstance(doc, os);
             doc.open();
 
-            // Insert a blank page after title page
             List<PageModel> pages = new ArrayList<>(album.getPages());
-            pages.add(1, PageModel.blank(album.getPageSize()));
 
             for (PageModel pageModel : pages) {
 

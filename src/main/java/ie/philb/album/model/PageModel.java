@@ -35,7 +35,7 @@ public class PageModel {
     }
 
     private PageModel(PageSize pageSize) {
-       this(PageGeometry.blank(), pageSize);
+        this(PageGeometry.blank(), pageSize);
     }
 
     public void addListener(PageModelListener l) {
@@ -183,7 +183,14 @@ public class PageModel {
     }
 
     public Point getCellPositionPoints(PageCell cell) {
-        int gutterOffset = MathUtils.isEven(pageId) ? gutter : 0; // Title page has pageId =1, followed by virtual blank
+
+        int gutterOffset = 0;
+
+        // Title page has pageId = 0
+        if (pageId > 0) {
+            gutterOffset = MathUtils.isEven(pageId) ? gutter : 0; // Title page has pageId =1
+        }
+
         int posX = (getUnitCellWidthPoints() * cell.location().x) + (horizontalMargin * (cell.location().x + 1)) + gutterOffset;
         int posY = (getUnitCellHeightPoints() * cell.location().y) + (verticalMargin * (cell.location().y + 1));
 

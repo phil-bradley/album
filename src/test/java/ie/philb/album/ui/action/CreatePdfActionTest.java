@@ -46,8 +46,8 @@ public class CreatePdfActionTest {
 
         PDDocument document = Loader.loadPDF(outputFile);
 
-        // Expect pageCount pages, + 1 additional blank page, 
-        assertEquals(pageCount + 1, document.getNumberOfPages());
+        // Expect pageCount pages
+        assertEquals(pageCount, document.getNumberOfPages());
 
         outputFile.delete();
         assertFalse(outputFile.exists());

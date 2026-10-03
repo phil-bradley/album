@@ -24,10 +24,10 @@ public class CreatePdfAction extends AbstractAction<Void> {
         this.file = file;
         this.albumExporter = exporter;
     }
-
+    
     @Override
     protected Void doAction() throws Exception {
-
+        
         logger.info("Creating doc...");
         try (FileOutputStream fos = new FileOutputStream(file)) {
             albumExporter.export(session.getAlbumModel(), fos);
@@ -37,4 +37,5 @@ public class CreatePdfAction extends AbstractAction<Void> {
 
         return null;
     }
+    
 }
