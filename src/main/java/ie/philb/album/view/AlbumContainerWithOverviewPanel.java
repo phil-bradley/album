@@ -50,4 +50,5 @@ public class AlbumContainerWithOverviewPanel extends AppPanel {
 
         add(splitter, gbc);
     }
+
 }

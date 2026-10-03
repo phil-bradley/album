@@ -47,6 +47,10 @@ public class WelcomeWithAlbumViewCardPanel extends AppPanel {
 
     @Override
     public void albumUpdated() {
-        showPanel(Card.Album);
+        if (context.session().getAlbumModel() == null) {
+            showPanel(Card.Welcome);
+        } else {
+            showPanel(Card.Album);
+        }
     }
 }

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import ie.philb.album.model.AlbumModel;
 import java.io.File;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -29,6 +30,8 @@ public class AlbumReader {
 
         AlbumModel model =  new AlbumDataMapper().map(albumData);
         model.setFile(file);
+        model.setLastSaveDate(LocalDateTime.now());
+        
         return model;
     }
 }

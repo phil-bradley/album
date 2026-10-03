@@ -5,10 +5,12 @@
 package ie.philb.album.ui;
 
 import ie.philb.album.AppSession;
+import ie.philb.album.ApplicationListener;
 import ie.philb.album.Context;
 import ie.philb.album.exporter.AlbumExporter;
 import ie.philb.album.ui.command.AboutCommand;
 import ie.philb.album.ui.command.AbstractCommand;
+import ie.philb.album.ui.command.CloseAlbumCommand;
 import ie.philb.album.ui.command.CreatePdfCommand;
 import ie.philb.album.ui.command.ExitCommand;
 import ie.philb.album.ui.command.NewAlbumCommand;
@@ -84,6 +86,15 @@ public class ApplicationUi extends JFrame {
             }
 
         });
+
+        context.session().addListener(new ApplicationListener() {
+
+            @Override
+            public void albumUpdated() {
+                enableCommands(session.getAlbumModel() == null);
+            }
+        }
+        );
     }
 
     private void initComponents() {
@@ -116,6 +127,7 @@ public class ApplicationUi extends JFrame {
         addMenuItem(fileMenu, Icons.Small.SAVE_AS, "Save As", new SaveAlbumCommand(context, true), KeyEvent.VK_A);
         addMenuItem(fileMenu, Icons.Small.PDF, "Export to PDF", new CreatePdfCommand(context, albumExporter), KeyEvent.VK_E);
         addMenuItem(fileMenu, Icons.Small.PRINT, "Print", new PrintAlbumCommand(context, albumExporter), KeyEvent.VK_P);
+        addMenuItem(fileMenu, Icons.Small.CLOSE, "Close", new CloseAlbumCommand(context), KeyEvent.VK_C);
         addMenuItem(fileMenu, Icons.Small.EXIT, "Exit", new ExitCommand(context), KeyEvent.VK_X);
 
         addMenuItem(helpMenu, null, "License", new ShowLicenseCommand(context), KeyEvent.VK_L);
