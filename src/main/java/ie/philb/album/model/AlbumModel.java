@@ -104,25 +104,4 @@ public class AlbumModel {
             idx++;
         }
     }
-
-    public String getTitle() {
-
-        if (pages.isEmpty()) {
-            return null;
-        }
-
-        PageModel firstPage = pages.getFirst();
-
-        if (firstPage.getPageEntries().size() != 1) {
-            return null;
-        }
-
-        PageEntryModel firstEntry = firstPage.getPageEntries().getFirst();
-
-        if (firstEntry.getPageEntryType() != PageEntryType.Text) {
-            return null;
-        }
-
-        return firstEntry.getTextControlModel().getText();
-    }
 }

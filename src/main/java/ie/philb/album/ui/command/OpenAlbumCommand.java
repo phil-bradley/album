@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -60,6 +61,7 @@ public class OpenAlbumCommand extends AbstractCommand {
                     @Override
                     public void onSuccess(AlbumModel result) {
                         context.session().setAlbumModel(result);
+                        context.ui().setTitle("Album: " + FilenameUtils.getBaseName(result.getFile().getName()));
                     }
 
                     @Override

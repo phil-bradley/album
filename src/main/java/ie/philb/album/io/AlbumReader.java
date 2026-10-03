@@ -27,6 +27,8 @@ public class AlbumReader {
         mapper.registerModule(new JSR310Module());
         AlbumData albumData = mapper.readValue(file, AlbumData.class);
 
-        return new AlbumDataMapper().map(albumData);
+        AlbumModel model =  new AlbumDataMapper().map(albumData);
+        model.setFile(file);
+        return model;
     }
 }

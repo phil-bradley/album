@@ -11,6 +11,7 @@ import ie.philb.album.ui.action.callback.Callback;
 import ie.philb.album.ui.common.Dialogs;
 import ie.philb.album.ui.pdf.PdfViewDialog;
 import ie.philb.album.ui.resources.Icons;
+import ie.philb.album.util.StringUtils;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.io.File;
@@ -22,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -48,10 +50,16 @@ public class CreatePdfCommand extends AbstractCommand {
 
         final JFileChooser chooser = new JFileChooser();
 
-        String title = context.session().getAlbumModel().getTitle();
+        String exportBaseName = "";
 
-        if (title != null) {
-            File proposedFile = new File(title + ".pdf");
+        File albumFile = context.session().getAlbumModel().getFile();
+
+        if (albumFile != null) {
+            exportBaseName = FilenameUtils.removeExtension(albumFile.getName());
+        }
+
+        if (StringUtils.hasValue(exportBaseName)) {
+            File proposedFile = new File(exportBaseName + ".pdf");
             chooser.setSelectedFile(proposedFile);
         }
 
@@ -129,11 +137,11 @@ public class CreatePdfCommand extends AbstractCommand {
 
             JPanel content = new JPanel(new BorderLayout());
             content.setBorder(BorderFactory.createRaisedBevelBorder());
-            
+
             JLabel exportLabel = new JLabel("", SwingConstants.CENTER);
             exportLabel.setText("Creating PDF, Please wait...");
             exportLabel.setIcon(Icons.Regular.EXPORT);
-            
+
             content.add(exportLabel, BorderLayout.CENTER);
             setContentPane(content);
 
