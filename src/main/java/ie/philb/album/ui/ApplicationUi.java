@@ -5,7 +5,6 @@
 package ie.philb.album.ui;
 
 import ie.philb.album.AppSession;
-import ie.philb.album.ApplicationListener;
 import ie.philb.album.Context;
 import ie.philb.album.exporter.AlbumExporter;
 import ie.philb.album.ui.command.AboutCommand;
@@ -87,14 +86,6 @@ public class ApplicationUi extends JFrame {
 
         });
 
-        context.session().addListener(new ApplicationListener() {
-
-            @Override
-            public void albumUpdated() {
-                enableCommands(session.getAlbumModel() == null);
-            }
-        }
-        );
     }
 
     private void initComponents() {
