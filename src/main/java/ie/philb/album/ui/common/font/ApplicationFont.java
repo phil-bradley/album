@@ -6,6 +6,7 @@ package ie.philb.album.ui.common.font;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -90,7 +91,9 @@ public enum ApplicationFont {
         String fontPath = font.getFontPath(bold, italic);
 
         try {
-            return Font.createFont(Font.TRUETYPE_FONT, ApplicationFont.class.getResourceAsStream(fontPath)).deriveFont(DEFAULT_SIZE);
+            Font f = Font.createFont(Font.TRUETYPE_FONT, ApplicationFont.class.getResourceAsStream(fontPath)).deriveFont(DEFAULT_SIZE);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(f);
+            return f;
         } catch (FontFormatException | IOException ex) {
             return null;
         }

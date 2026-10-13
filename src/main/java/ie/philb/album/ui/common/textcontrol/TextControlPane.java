@@ -28,6 +28,9 @@ import javax.swing.text.StyledDocument;
 public class TextControlPane extends JPanel {
 
     private final List<TextControlPaneListener> listeners = new ArrayList<>();
+    private boolean isBold;
+    private boolean isItalic;
+    private boolean isUnderline;
 
     private final JTextPane textPane = new JTextPane();
 
@@ -70,16 +73,29 @@ public class TextControlPane extends JPanel {
         }
     }
 
-    @Override
-    public void setFont(Font font) {
+    public void setDisplayFont(Font font, Color color, boolean isBold, boolean isItalic, boolean isUnderline) {
+        
         if (textPane == null) {
             return;
         }
+
+        this.isBold = isBold;
+        this.isItalic = isItalic;
+        this.isUnderline = isUnderline;
+        
         textPane.setFont(font);
+        
+        super.setForeground(color);
+        textPane.setForeground(color);
+        
+        applyCharacterAttributes();
+        applyCenterAlignment();
+        repaint();
     }
 
     @Override
     public Font getFont() {
+        
         if (textPane == null) {
             return null;
         }
@@ -88,6 +104,7 @@ public class TextControlPane extends JPanel {
 
     public final void setText(String text) {
         textPane.setText(text);
+        applyCharacterAttributes();
         applyCenterAlignment();
     }
 
@@ -114,6 +131,25 @@ public class TextControlPane extends JPanel {
         textPane.select(0, 0);  // clear selection
         textPane.getCaret().setVisible(false);
 
+    }
+
+    private void applyCharacterAttributes() {
+        Font font = textPane.getFont();
+        Color color = textPane.getForeground();
+        StyledDocument doc = textPane.getStyledDocument();
+
+        SimpleAttributeSet attrs = new SimpleAttributeSet();
+        StyleConstants.setFontFamily(attrs, font.getFamily());
+        StyleConstants.setFontSize(attrs, font.getSize());
+        StyleConstants.setBold(attrs, isBold);
+        StyleConstants.setItalic(attrs, isItalic);
+        StyleConstants.setUnderline(attrs, isUnderline);
+        StyleConstants.setForeground(attrs, color);
+
+        // Style the existing text...
+        doc.setCharacterAttributes(0, doc.getLength(), attrs, false);
+        // ...and make new/edited text inherit it too.
+        textPane.setCharacterAttributes(attrs, false);
     }
 
     void setEditorEnabled(boolean enabled) {

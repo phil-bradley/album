@@ -81,8 +81,10 @@ public class TextControl extends JPanel implements TextControlChangeListener {
                 setEditEnabled(false);
             }
         });
-        
+
         model.addChangeListener(this);
+        formatUpdated(model);
+        textControlPane.setText(model.getText());
     }
 
     public boolean isPreviewMode() {
@@ -107,6 +109,13 @@ public class TextControl extends JPanel implements TextControlChangeListener {
         setEditEnabled(false);
     }
 
+    @Override
+    public void formatUpdated(TextControlModel model) {
+        System.out.println("Setting font: " + model.getDisplayFont(1));
+        textControlPane.setDisplayFont(model.getDisplayFont(1), model.getFontColor(), model.isBold(), model.isItalic(), model.isUnderline());
+        textControlPane.setForeground(model.getFontColor());
+    }
+
     public void setEditEnabled(boolean isEnabled) {
         textControlPane.setEditorEnabled(isEnabled);
         toolBar.setVisible(isEnabled);
@@ -129,7 +138,6 @@ public class TextControl extends JPanel implements TextControlChangeListener {
     public void setPhysicalToViewScalingFactor(double physicalToViewScalingFactor) {
 //        viewEditPanel.setFontScalingFactor(physicalToViewScalingFactor);
     }
-    
 
     public static void main(String[] args) {
 
