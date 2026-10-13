@@ -26,7 +26,7 @@ public class TextControl extends JPanel implements TextControlChangeListener {
     private Dimension physicalSize = new Dimension(0, 0);
     private boolean previewMode = false;
     private TextControlEditorToolBar toolBar;
-    private TextControlViewEditPanel viewEditPanel;
+    private TextControlPane textControlPane;
     private JLayeredPane layeredPane = new JLayeredPane();
     private final TextControlModel model;
 
@@ -34,13 +34,13 @@ public class TextControl extends JPanel implements TextControlChangeListener {
 
         this.model = model;
 
-        viewEditPanel = new TextControlViewEditPanel(model);
+        textControlPane = new TextControlPane();
         toolBar = new TextControlEditorToolBar(model);
 
         setLayout(new GridBagLayout());
         setOpaque(false);
 
-        layeredPane.add(viewEditPanel, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(textControlPane, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(toolBar, JLayeredPane.POPUP_LAYER);
         toolBar.setBounds(0, 0, 300, 30);
 
@@ -51,21 +51,23 @@ public class TextControl extends JPanel implements TextControlChangeListener {
             @Override
             public void componentResized(ComponentEvent e) {
                 Dimension size = layeredPane.getSize();
-                viewEditPanel.setBounds(0, 0, size.width, size.height);
+                textControlPane.setBounds(0, 0, size.width, size.height);
                 toolBar.setBounds(0, 0, size.width, 30);
                 revalidate();
             }
         });
 
-        viewEditPanel.addMouseListener(new MouseAdapter() {
+        textControlPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
+                System.out.println("Clicked");
                 if (previewMode) {
                     return;
                 }
 
                 if (e.getClickCount() == 2) {
+                    System.out.println("Seting editor enabled");
                     setEditEnabled(true);
                 }
             }
@@ -73,6 +75,13 @@ public class TextControl extends JPanel implements TextControlChangeListener {
 
         toolBar.setVisible(false);
 
+        textControlPane.addListener(new TextControlPaneListener() {
+            @Override
+            public void editingCompleted() {
+                setEditEnabled(false);
+            }
+        });
+        
         model.addChangeListener(this);
     }
 
@@ -94,11 +103,12 @@ public class TextControl extends JPanel implements TextControlChangeListener {
 
     @Override
     public void textUpdated(TextControlModel model) {
+        textControlPane.setText(model.getText());
         setEditEnabled(false);
     }
 
     public void setEditEnabled(boolean isEnabled) {
-        viewEditPanel.setEditor(isEnabled);
+        textControlPane.setEditorEnabled(isEnabled);
         toolBar.setVisible(isEnabled);
 
         if (isEnabled) {
@@ -108,7 +118,7 @@ public class TextControl extends JPanel implements TextControlChangeListener {
 
     @Override
     public void requestFocus() {
-        viewEditPanel.requestFocus();
+        textControlPane.requestFocus();
     }
 
     @Override
@@ -117,8 +127,9 @@ public class TextControl extends JPanel implements TextControlChangeListener {
     }
 
     public void setPhysicalToViewScalingFactor(double physicalToViewScalingFactor) {
-        viewEditPanel.setFontScalingFactor(physicalToViewScalingFactor);
+//        viewEditPanel.setFontScalingFactor(physicalToViewScalingFactor);
     }
+    
 
     public static void main(String[] args) {
 
@@ -126,7 +137,7 @@ public class TextControl extends JPanel implements TextControlChangeListener {
         frame.getContentPane().setBackground(Color.yellow);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setLayout(new GridBagLayout());
-        frame.setPreferredSize(new Dimension(400, 250));
+        frame.setPreferredSize(new Dimension(600, 400));
         frame.setSize(frame.getPreferredSize());
 
         TextControlModel model = new TextControlModel();
@@ -136,7 +147,7 @@ public class TextControl extends JPanel implements TextControlChangeListener {
 
         TextControl ctrl = new TextControl(model);
 
-        ctrl.setPreferredSize(new Dimension(300, 200));
+        ctrl.setPreferredSize(new Dimension(500, 300));
         ctrl.setSize(ctrl.getPreferredSize());
 
         frame.add(ctrl);
