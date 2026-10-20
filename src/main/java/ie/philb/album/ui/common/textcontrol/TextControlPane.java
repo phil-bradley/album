@@ -148,6 +148,10 @@ public class TextControlPane extends JPanel {
         applyCenterAlignment();
     }
 
+    public String getText() {
+        return textPane.getText();
+    }
+    
     private void applyCenterAlignment() {
         StyledDocument doc = textPane.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();

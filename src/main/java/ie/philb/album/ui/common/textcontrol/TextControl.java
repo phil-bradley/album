@@ -95,6 +95,10 @@ public class TextControl extends JPanel implements TextControlChangeListener {
             return;
         }
 
+        if (e.getClickCount() == 1) {
+            setEditEnabled(false);
+        }
+
         if (e.getClickCount() == 2) {
             System.out.println("Seting editor enabled");
             setEditEnabled(true);
