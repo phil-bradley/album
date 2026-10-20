@@ -154,7 +154,7 @@ public class TextControl extends JPanel implements TextControlChangeListener {
     }
 
     public void setPhysicalToViewScalingFactor(double physicalToViewScalingFactor) {
-//        viewEditPanel.setFontScalingFactor(physicalToViewScalingFactor);
+        textControlPane.setFontScalingFactor(physicalToViewScalingFactor, model);
     }
 
     public static void main(String[] args) {

@@ -39,6 +39,7 @@ public class TextControlPane extends JPanel {
     private boolean isUnderline;
     private final Border activeBorder = BorderFactory.createDashedBorder(Color.LIGHT_GRAY, 1, 3, 1, true);
     private final Border inActiveBorder = BorderFactory.createLineBorder(Color.WHITE, 1);
+    private double fontScalingFactor = 1;
 
     private final JTextPane textPane = new JTextPane();
     private String originalText = "";
@@ -151,7 +152,7 @@ public class TextControlPane extends JPanel {
     public String getText() {
         return textPane.getText();
     }
-    
+
     private void applyCenterAlignment() {
         StyledDocument doc = textPane.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
@@ -216,6 +217,11 @@ public class TextControlPane extends JPanel {
             textPane.setBorder(inActiveBorder);
             finishEditing();
         }
+    }
+
+    void setFontScalingFactor(double fontScalingFactor, TextControlModel model) {
+        this.fontScalingFactor = fontScalingFactor;
+        this.setDisplayFont(model.getDisplayFont(fontScalingFactor), model.getFontColor(), model.isBold(), model.isItalic(), model.isUnderline());
     }
 
 }
