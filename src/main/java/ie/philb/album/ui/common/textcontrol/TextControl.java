@@ -60,31 +60,45 @@ public class TextControl extends JPanel implements TextControlChangeListener {
         textControlPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
-                System.out.println("Clicked");
-                if (previewMode) {
-                    return;
-                }
-
-                if (e.getClickCount() == 2) {
-                    System.out.println("Seting editor enabled");
-                    setEditEnabled(true);
-                }
+                handleMouseClick(e);
             }
         });
 
         toolBar.setVisible(false);
 
         textControlPane.addListener(new TextControlPaneListener() {
+
+            @Override
+            public void editingCancelled() {
+                setEditEnabled(false);
+            }
+
             @Override
             public void editingCompleted() {
                 setEditEnabled(false);
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                handleMouseClick(e);
             }
         });
 
         model.addChangeListener(this);
         formatUpdated(model);
         textControlPane.setText(model.getText());
+    }
+
+    private void handleMouseClick(MouseEvent e) {
+        System.out.println("Mouse Clicked");
+        if (previewMode) {
+            return;
+        }
+
+        if (e.getClickCount() == 2) {
+            System.out.println("Seting editor enabled");
+            setEditEnabled(true);
+        }
     }
 
     public boolean isPreviewMode() {

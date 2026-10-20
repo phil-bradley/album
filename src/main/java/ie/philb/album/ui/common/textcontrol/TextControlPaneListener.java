@@ -4,6 +4,8 @@
  */
 package ie.philb.album.ui.common.textcontrol;
 
+import java.awt.event.MouseEvent;
+
 /**
  *
  * @author philb
@@ -14,5 +16,8 @@ public interface TextControlPaneListener {
     }
 
     default void editingCompleted() {
+    }
+
+    default void mouseClicked(MouseEvent e){        
     }
 }

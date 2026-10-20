@@ -9,14 +9,20 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import java.awt.event.KeyEvent;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import static javax.swing.JComponent.WHEN_FOCUSED;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import static javax.swing.KeyStroke.getKeyStroke;
+import javax.swing.border.Border;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -31,8 +37,11 @@ public class TextControlPane extends JPanel {
     private boolean isBold;
     private boolean isItalic;
     private boolean isUnderline;
+    private final Border activeBorder = BorderFactory.createDashedBorder(Color.LIGHT_GRAY, 1, 3, 1, true);
+    private final Border inActiveBorder = BorderFactory.createLineBorder(Color.WHITE, 1);
 
     private final JTextPane textPane = new JTextPane();
+    private String originalText = "";
 
     public TextControlPane() {
         setOpaque(true);
@@ -40,23 +49,42 @@ public class TextControlPane extends JPanel {
         setLayout(new GridBagLayout());   // centers a non-filling child both ways
 
         textPane.setBorder(null);
+        textPane.setBackground(Color.white);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL; // stretch width, keep natural height
         gbc.weightx = 1.0;
         add(textPane, gbc);
 
-        textPane.getInputMap(WHEN_FOCUSED).put(getKeyStroke(VK_ESCAPE, 0), "stopEditing");
+        textPane.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                fireMouseClicked(e);
+            }
 
-        textPane.getActionMap().put("stopEditing", new AbstractAction() {
+        });
+
+        textPane.getInputMap(WHEN_FOCUSED).put(getKeyStroke(VK_ESCAPE, 0), "cancelEditing");
+
+        textPane.getActionMap().put("cancelEditing", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                stopEditing();
+                cancelEditing();
+                fireEditingCancelled();
+            }
+        });
+
+        textPane.getInputMap(WHEN_FOCUSED).put(getKeyStroke(KeyEvent.VK_ENTER, CTRL_DOWN_MASK), "finishEditing");
+
+        textPane.getActionMap().put("finishEditing", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                finishEditing();
                 fireEditingCompleted();
             }
         });
 
-        stopEditing();
+        finishEditing();
     }
 
     public void addListener(TextControlPaneListener l) {
@@ -73,8 +101,20 @@ public class TextControlPane extends JPanel {
         }
     }
 
+    private void fireEditingCancelled() {
+        for (TextControlPaneListener l : listeners) {
+            l.editingCancelled();
+        }
+    }
+
+    private void fireMouseClicked(MouseEvent e) {
+        for (TextControlPaneListener l : listeners) {
+            l.mouseClicked(e);
+        }
+    }
+
     public void setDisplayFont(Font font, Color color, boolean isBold, boolean isItalic, boolean isUnderline) {
-        
+
         if (textPane == null) {
             return;
         }
@@ -82,12 +122,12 @@ public class TextControlPane extends JPanel {
         this.isBold = isBold;
         this.isItalic = isItalic;
         this.isUnderline = isUnderline;
-        
+
         textPane.setFont(font);
-        
+
         super.setForeground(color);
         textPane.setForeground(color);
-        
+
         applyCharacterAttributes();
         applyCenterAlignment();
         repaint();
@@ -95,7 +135,7 @@ public class TextControlPane extends JPanel {
 
     @Override
     public Font getFont() {
-        
+
         if (textPane == null) {
             return null;
         }
@@ -116,6 +156,9 @@ public class TextControlPane extends JPanel {
     }
 
     private void startEditing() {
+
+        originalText = textPane.getText();
+
         System.out.println("Starting to edit");
         textPane.setEditable(true);
         textPane.setFocusable(true);
@@ -124,8 +167,16 @@ public class TextControlPane extends JPanel {
         textPane.getCaret().setVisible(true);
     }
 
-    private void stopEditing() {
-        System.out.println("Stopped editing");
+    private void cancelEditing() {
+        setText(originalText);
+        textPane.setEditable(false);
+        textPane.setFocusable(false);
+        textPane.select(0, 0);  // clear selection
+        textPane.getCaret().setVisible(false);
+    }
+
+    private void finishEditing() {
+        System.out.println("Finished editing");
         textPane.setEditable(false);
         textPane.setFocusable(false);
         textPane.select(0, 0);  // clear selection
@@ -153,12 +204,13 @@ public class TextControlPane extends JPanel {
     }
 
     void setEditorEnabled(boolean enabled) {
-        if (enabled && !textPane.isEditable()) {
-            startEditing();
-        }
 
-        if (!enabled && textPane.isEditable()) {
-            stopEditing();
+        if (enabled) {
+            textPane.setBorder(activeBorder);
+            startEditing();
+        } else {
+            textPane.setBorder(inActiveBorder);
+            finishEditing();
         }
     }
 
