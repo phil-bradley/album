@@ -34,7 +34,7 @@ public class TextControl extends JPanel implements TextControlChangeListener {
 
         this.model = model;
 
-        textControlPane = new TextControlPane();
+        textControlPane = new TextControlPane(model);
         toolBar = new TextControlEditorToolBar(model);
 
         setLayout(new GridBagLayout());
@@ -85,8 +85,6 @@ public class TextControl extends JPanel implements TextControlChangeListener {
         });
 
         model.addChangeListener(this);
-        formatUpdated(model);
-        textControlPane.setText(model.getText());
     }
 
     private void handleMouseClick(MouseEvent e) {
@@ -119,19 +117,6 @@ public class TextControl extends JPanel implements TextControlChangeListener {
 
     public void setPhysicalSize(Dimension physicalSize) {
         this.physicalSize = physicalSize;
-    }
-
-    @Override
-    public void textUpdated(TextControlModel model) {
-        textControlPane.setText(model.getText());
-        setEditEnabled(false);
-    }
-
-    @Override
-    public void formatUpdated(TextControlModel model) {
-        System.out.println("Setting font: " + model.getDisplayFont(1));
-        textControlPane.setDisplayFont(model.getDisplayFont(1), model.getFontColor(), model.isBold(), model.isItalic(), model.isUnderline());
-        textControlPane.setForeground(model.getFontColor());
     }
 
     public void setEditEnabled(boolean isEnabled) {

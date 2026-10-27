@@ -31,24 +31,26 @@ import javax.swing.text.StyledDocument;
  *
  * @author philb
  */
-public class TextControlPane extends JPanel {
+public class TextControlPane extends JPanel implements TextControlChangeListener {
 
     private final List<TextControlPaneListener> listeners = new ArrayList<>();
-    private boolean isBold;
-    private boolean isItalic;
-    private boolean isUnderline;
+//    private boolean isBold;
+//    private boolean isItalic;
+//    private boolean isUnderline;
     private final Border activeBorder = BorderFactory.createDashedBorder(Color.LIGHT_GRAY, 1, 3, 1, true);
     private final Border inActiveBorder = BorderFactory.createLineBorder(Color.WHITE, 1);
     private double fontScalingFactor = 1;
-
+    private final TextControlModel model;
     private final JTextPane textPane = new JTextPane();
     private String originalText = "";
 
-    public TextControlPane() {
+    public TextControlPane(TextControlModel model) {
+        this.model = model;
         setOpaque(true);
         setBackground(Color.white);
         setLayout(new GridBagLayout());   // centers a non-filling child both ways
 
+        setText(model.getText());
         textPane.setBorder(null);
         textPane.setBackground(Color.white);
 
@@ -85,6 +87,7 @@ public class TextControlPane extends JPanel {
             }
         });
 
+        model.addChangeListener(this);
         finishEditing();
     }
 
@@ -114,25 +117,25 @@ public class TextControlPane extends JPanel {
         }
     }
 
-    public void setDisplayFont(Font font, Color color, boolean isBold, boolean isItalic, boolean isUnderline) {
-
-        if (textPane == null) {
-            return;
-        }
-
-        this.isBold = isBold;
-        this.isItalic = isItalic;
-        this.isUnderline = isUnderline;
-
-        textPane.setFont(font);
-
-        super.setForeground(color);
-        textPane.setForeground(color);
-
-        applyCharacterAttributes();
-        applyCenterAlignment();
-        repaint();
-    }
+//    public void setDisplayFont(Font font, Color color, boolean isBold, boolean isItalic, boolean isUnderline) {
+//
+//        if (textPane == null) {
+//            return;
+//        }
+//
+    ////        this.isBold = isBold;
+////        this.isItalic = isItalic;
+////        this.isUnderline = isUnderline;
+//
+//        textPane.setFont(font);
+//
+//        super.setForeground(color);
+//        textPane.setForeground(color);
+//
+//        applyCharacterAttributes();
+//        applyCenterAlignment();
+//        repaint();
+//    }
 
     @Override
     public Font getFont() {
@@ -158,6 +161,7 @@ public class TextControlPane extends JPanel {
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
+        repaint();
     }
 
     private void startEditing() {
@@ -186,26 +190,30 @@ public class TextControlPane extends JPanel {
         textPane.setFocusable(false);
         textPane.select(0, 0);  // clear selection
         textPane.getCaret().setVisible(false);
+        model.setText(getText());
 
     }
 
     private void applyCharacterAttributes() {
-        Font font = textPane.getFont();
-        Color color = textPane.getForeground();
+
+        Font font = model.getDisplayFont(fontScalingFactor);
+
         StyledDocument doc = textPane.getStyledDocument();
 
         SimpleAttributeSet attrs = new SimpleAttributeSet();
         StyleConstants.setFontFamily(attrs, font.getFamily());
         StyleConstants.setFontSize(attrs, font.getSize());
-        StyleConstants.setBold(attrs, isBold);
-        StyleConstants.setItalic(attrs, isItalic);
-        StyleConstants.setUnderline(attrs, isUnderline);
-        StyleConstants.setForeground(attrs, color);
+        StyleConstants.setBold(attrs, model.isBold());
+        StyleConstants.setItalic(attrs, model.isItalic());
+        StyleConstants.setUnderline(attrs, model.isUnderline());
+        StyleConstants.setForeground(attrs, model.getFontColor());
 
         // Style the existing text...
         doc.setCharacterAttributes(0, doc.getLength(), attrs, false);
         // ...and make new/edited text inherit it too.
         textPane.setCharacterAttributes(attrs, false);
+        
+        repaint();
     }
 
     void setEditorEnabled(boolean enabled) {
@@ -221,7 +229,21 @@ public class TextControlPane extends JPanel {
 
     void setFontScalingFactor(double fontScalingFactor, TextControlModel model) {
         this.fontScalingFactor = fontScalingFactor;
-        this.setDisplayFont(model.getDisplayFont(fontScalingFactor), model.getFontColor(), model.isBold(), model.isItalic(), model.isUnderline());
+        applyCharacterAttributes();
+        applyCenterAlignment();
     }
 
+    @Override
+    public void formatUpdated(TextControlModel model) {
+        System.out.println("Setting font: " + model.getDisplayFont(1));
+        setForeground(model.getFontColor());
+        applyCharacterAttributes();
+        applyCenterAlignment();
+        repaint();
+    }
+
+    @Override
+    public void textUpdated(TextControlModel model) {
+        setText(model.getText());
+    }
 }
