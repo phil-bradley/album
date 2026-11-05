@@ -4,10 +4,14 @@
  */
 package ie.philb.album.ui.common.textcontrol;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import java.awt.event.KeyEvent;
@@ -20,12 +24,21 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import static javax.swing.JComponent.WHEN_FOCUSED;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.JViewport;
 import static javax.swing.KeyStroke.getKeyStroke;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
+import static javax.swing.SwingConstants.CENTER;
 import javax.swing.border.Border;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import javax.swing.text.View;
 
 /**
  *
@@ -41,23 +54,65 @@ public class TextControlPane extends JPanel implements TextControlChangeListener
     private final Border inActiveBorder = BorderFactory.createLineBorder(Color.WHITE, 1);
     private double fontScalingFactor = 1;
     private final TextControlModel model;
-    private final JTextPane textPane = new JTextPane();
+    private final JTextPane textPane;
     private String originalText = "";
 
     public TextControlPane(TextControlModel model) {
         this.model = model;
+
+        textPane = new JTextPane() {
+            @Override
+            public Dimension getPreferredSize() {
+                // Always measure the text as if there were unlimited width,
+                // so it never wraps and the height doesn't depend on current size.
+                View root = getUI().getRootView(this);
+                Document doc = getDocument();
+                float w, h;
+                if (doc instanceof AbstractDocument) {
+                    ((AbstractDocument) doc).readLock();
+                }
+                try {
+                    root.setSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
+                    w = root.getPreferredSpan(View.X_AXIS);
+                    h = root.getPreferredSpan(View.Y_AXIS);
+                } finally {
+                    if (doc instanceof AbstractDocument) {
+                        ((AbstractDocument) doc).readUnlock();
+                    }
+                }
+                Insets in = getInsets();
+                return new Dimension((int) Math.ceil(w) + in.left + in.right,
+                        (int) Math.ceil(h) + in.top + in.bottom);
+            }
+
+            @Override
+            public Dimension getMinimumSize() {
+                return getPreferredSize(); // stops GridBagLayout shrinking it
+            }
+        };
+
         setOpaque(true);
         setBackground(Color.white);
-        setLayout(new GridBagLayout());   // centers a non-filling child both ways
+        setLayout(new BorderLayout());
 
         setText(model.getText());
         textPane.setBorder(null);
         textPane.setBackground(Color.white);
 
+        CenteringPanel holder = new CenteringPanel();
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL; // stretch width, keep natural height
-        gbc.weightx = 1.0;
-        add(textPane, gbc);
+        gbc.fill = GridBagConstraints.HORIZONTAL; // border fills width when there's room
+        gbc.weightx = 1.0;                        // weighty stays 0 -> centred vertically
+        gbc.anchor = GridBagConstraints.CENTER;
+        holder.add(textPane, gbc);
+
+        JScrollPane sp = new JScrollPane(holder);
+        sp.setBorder(null);
+        sp.getViewport().setBackground(Color.white);
+        sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        add(sp, CENTER);
 
         textPane.addMouseListener(new MouseAdapter() {
             @Override
@@ -212,7 +267,7 @@ public class TextControlPane extends JPanel implements TextControlChangeListener
         doc.setCharacterAttributes(0, doc.getLength(), attrs, false);
         // ...and make new/edited text inherit it too.
         textPane.setCharacterAttributes(attrs, false);
-        
+
         repaint();
     }
 
@@ -245,5 +300,43 @@ public class TextControlPane extends JPanel implements TextControlChangeListener
     @Override
     public void textUpdated(TextControlModel model) {
         setText(model.getText());
+    }
+
+    private static class CenteringPanel extends JPanel implements Scrollable {
+
+        CenteringPanel() {
+            super(new GridBagLayout());
+            setOpaque(true);
+            setBackground(Color.white);
+        }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            return getPreferredSize();
+        }
+
+        @Override
+        public int getScrollableUnitIncrement(Rectangle r, int orientation, int direction) {
+            return 16;
+        }
+
+        @Override
+        public int getScrollableBlockIncrement(Rectangle r, int orientation, int direction) {
+            return orientation == SwingConstants.HORIZONTAL ? r.width : r.height;
+        }
+
+        // Fill the viewport when the content fits (this gives the centring);
+        // otherwise keep the natural size and let the scroll pane clip.
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            return getParent() instanceof JViewport
+                    && getPreferredSize().width <= getParent().getWidth();
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportHeight() {
+            return getParent() instanceof JViewport
+                    && getPreferredSize().height <= getParent().getHeight();
+        }
     }
 }
