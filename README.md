@@ -17,3 +17,5 @@ Image placeholders can also be used to present text in multiple fonts and styles
 can then be exported to PDF.
 
 [Code coverage report here.](https://phil-bradley.github.io/album/)
+
+
