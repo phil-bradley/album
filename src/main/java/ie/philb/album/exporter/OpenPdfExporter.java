@@ -39,7 +39,7 @@ public class OpenPdfExporter implements AlbumExporter {
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenPdfExporter.class);
     private static final FontProvider fontProvider = new FontProvider();
-    
+
     public OpenPdfExporter() {
     }
 
@@ -88,6 +88,10 @@ public class OpenPdfExporter implements AlbumExporter {
 
         TextControlModel tcm = pageEntryModel.getTextControlModel();
         String text = tcm.getText();
+        if (text == null || text.isEmpty()) {
+            return;
+        }
+
         ApplicationFont appFont = ApplicationFont.byFamilyName(tcm.getFontFamily());
         int fontSize = tcm.getFontSize();
         BaseFont font = fontProvider.getFont(appFont, tcm.isBold(), tcm.isItalic());
@@ -96,28 +100,50 @@ public class OpenPdfExporter implements AlbumExporter {
         Point cellLocation = geometryMapper.getCellLocationOnView(pageEntryModel.getCell());
         Dimension cellSize = geometryMapper.getCellSizeOnView(pageEntryModel);
 
-        int centerX = cellLocation.x + (cellSize.width / 2);
-        int centerY = cellLocation.y + (cellSize.height / 2);
+        float centerX = cellLocation.x + (cellSize.width / 2f);
+        float centerY = cellLocation.y + (cellSize.height / 2f);
+
+        // Normalise line endings and split, keeping empty lines
+        String[] lines = text.replace("\r\n", "\n").replace('\r', '\n').split("\n", -1);
+
+        float lineHeight = fontSize * 1.2f;
+        float ascent = font.getFontDescriptor(BaseFont.ASCENT, fontSize);
+        float descent = font.getFontDescriptor(BaseFont.DESCENT, fontSize); // negative value
+
+        // Total height of the text block, then the baseline of the first line so
+        // the block as a whole is vertically centred on centerY.
+        float blockHeight = (lines.length - 1) * lineHeight + (ascent - descent);
+        float firstBaselineY = centerY + (blockHeight / 2f) - ascent;
 
         PdfContentByte cb = writer.getDirectContent();
         cb.setColorFill(fontColor);
         cb.beginText();
         cb.setFontAndSize(font, fontSize);
-        cb.showTextAligned(Element.ALIGN_CENTER, text, centerX, centerY, 0);
+
+        for (int i = 0; i < lines.length; i++) {
+            float y = firstBaselineY - (i * lineHeight);
+            cb.showTextAligned(Element.ALIGN_CENTER, lines[i], centerX, y, 0);
+        }
         cb.endText();
 
-        // Underline is not handled directly, we just have to draw a horizontal line manually
+        // Underline is not handled directly, so draw a horizontal line under each line
         if (tcm.isUnderline()) {
-            float textWidth = font.getWidthPoint(text, fontSize);
-            float underlineY = centerY - 4f;
-            float underlineX = centerX - (textWidth / 2);
-
-            // Draw the line
             cb.setLineWidth(2f);
             cb.setColorStroke(fontColor);
-            cb.moveTo(underlineX, underlineY);
-            cb.lineTo(underlineX + textWidth, underlineY);
-            cb.stroke();
+
+            for (int i = 0; i < lines.length; i++) {
+                if (lines[i].isEmpty()) {
+                    continue;
+                }
+                float textWidth = font.getWidthPoint(lines[i], fontSize);
+                float baselineY = firstBaselineY - (i * lineHeight);
+                float underlineY = baselineY - 4f;
+                float underlineX = centerX - (textWidth / 2f);
+
+                cb.moveTo(underlineX, underlineY);
+                cb.lineTo(underlineX + textWidth, underlineY);
+                cb.stroke();
+            }
         }
     }
 
@@ -167,7 +193,7 @@ public class OpenPdfExporter implements AlbumExporter {
         img.setAbsolutePosition(imageLocation.x, imageLocation.y);
         doc.add(img);
     }
-    
+
     private void writeBlank(Document doc, PdfWriter writer) {
         PdfContentByte cb = writer.getDirectContent();
         Rectangle pageSize = doc.getPageSize();

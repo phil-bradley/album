@@ -36,7 +36,9 @@ import javax.swing.border.Border;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.View;
 
@@ -262,6 +264,10 @@ public class TextControlPane extends JPanel implements TextControlChangeListener
         StyleConstants.setItalic(attrs, model.isItalic());
         StyleConstants.setUnderline(attrs, model.isUnderline());
         StyleConstants.setForeground(attrs, model.getFontColor());
+
+        // Make the default style carry the font, so new/empty paragraphs inherit it
+        Style defaultStyle = doc.getStyle(StyleContext.DEFAULT_STYLE);
+        defaultStyle.addAttributes(attrs);
 
         // Style the existing text...
         doc.setCharacterAttributes(0, doc.getLength(), attrs, false);
